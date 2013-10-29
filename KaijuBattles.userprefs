@@ -1,0 +1,17 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Controllers/GamepadInfo.cs">
+    <Files>
+      <File FileName="Assets/Scripts/Helper Scripts/Constants.cs" Line="10" Column="36" />
+      <File FileName="Assets/Scripts/Model Objects/KBGameObject.cs" Line="4" Column="39" />
+      <File FileName="Assets/Scripts/Player.cs" Line="4" Column="1" />
+      <File FileName="Assets/Scripts/Managers/GameManager.cs" Line="30" Column="3" />
+      <File FileName="Assets/Scripts/Controllers/GamepadInfo.cs" Line="13" Column="9" />
+      <File FileName="Assets/Scripts/Controllers/GamepadInfoHandler.cs" Line="104" Column="13" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
