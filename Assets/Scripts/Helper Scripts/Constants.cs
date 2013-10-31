@@ -12,5 +12,14 @@ namespace KBConstants {
         };
         public static IDictionary<type, string> PREFAB_NAMES { get { return prefabNames; } }
 	}
+
+    public class PlayerConstants {
+        public static float PLAYER_MOVEMENT_SPEED = 0.25f;
+
+    }
+
+    public class GameManagerConstants {
+        
+    }
 }
 

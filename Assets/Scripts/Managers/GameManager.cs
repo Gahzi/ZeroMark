@@ -5,9 +5,9 @@ using KBConstants;
 public class GameManager : MonoBehaviour {
 	
 	List<Player> players;
-	
+    private GamepadInfoHandler gamepadHandler;
+
 	private static GameManager instance;
-	
 	public static GameManager Instance
     {
         // Here we use the ?? operator, to return 'instance' if 'instance' does not equal null
@@ -18,10 +18,17 @@ public class GameManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
-		players = new List<Player>(1);
+        instance = this;
 		
-		instance = this;
+        gamepadHandler = GamepadInfoHandler.Instance;
+
+        players = new List<Player>(gamepadHandler.getNumberOfConnectedControllers());
 		
+        
+
+		//TODO:Create Players based on number of controllers available.
+		
+        
 		GameObject player = (GameObject)Instantiate(Resources.Load("Player"));
 		Player playerScript = player.GetComponent<Player>();
 		
@@ -29,6 +36,7 @@ public class GameManager : MonoBehaviour {
 		{
 			players.Add(playerScript);
 		}
+        
 	}
 	
 	// Update is called once per frame

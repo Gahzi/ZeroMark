@@ -12,8 +12,8 @@ public class GamepadInfoHandler : MonoBehaviour
     /// the data for an entire gamepad being an object that you can reference by
     /// gamepad rather than individual axis/button names.
     /// </summary>
-    
-    private int NumberOfActiveControllers;
+
+    private int numberOfConnectedControllers;
     private int controllerNumber;
     
 	public Dictionary<GamepadInfo,Player> gamepadPlayerDictionary;
@@ -27,15 +27,22 @@ public class GamepadInfoHandler : MonoBehaviour
         get { return instance ?? (instance = new GameObject("Gamepad Handler").AddComponent<GamepadInfoHandler>()); }
     }
 
+    public int getNumberOfConnectedControllers()
+    {
+        return numberOfConnectedControllers;
+    }
+
     void Start()
     {
 		instance = this;
 		
-		NumberOfActiveControllers = Input.GetJoystickNames().Length;
+		numberOfConnectedControllers = Input.GetJoystickNames().Length;
 		gamepadPlayerDictionary = new Dictionary<GamepadInfo, Player>(); 
-		gamepads = new GamepadInfo[NumberOfActiveControllers];
+		gamepads = new GamepadInfo[numberOfConnectedControllers];
+
+        Debug.Log("Found " + numberOfConnectedControllers.ToString() + " Controllers.");
 		
-        for (int i = 0; i < NumberOfActiveControllers; i++)
+        for (int i = 0; i < numberOfConnectedControllers; i++)
         {
             GamepadInfo gamepadInfoPrefab;
             gamepadInfoPrefab = (GamepadInfo)Instantiate(Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Gamepad],typeof(GamepadInfo)));
@@ -62,11 +69,15 @@ public class GamepadInfoHandler : MonoBehaviour
 	
 	public void AttachControllerToPlayer(Player unattachedPlayer)
 	{
+        Debug.Log("Getting Free Gamepad");
 		GamepadInfo freeGamepad = GetFreeController();
+        Debug.Log("Got past GetFreeController()");
 		if(freeGamepad == null) Debug.LogError("Error: Can't find a free controller to attach to" + unattachedPlayer.gameObject.name);
 		else
 		{
+            Debug.Log("Free gamepad is not null");
 			gamepadPlayerDictionary[freeGamepad] = unattachedPlayer;
+            Debug.Log("Attempting to call Player.setGamepad");
 			unattachedPlayer.SetGamepad(freeGamepad);
 		}
 		
@@ -84,7 +95,7 @@ public class GamepadInfoHandler : MonoBehaviour
 
     void GetJoystickData()
     {    
-        for (int i = 1; i < NumberOfActiveControllers+1; i++)
+        for (int i = 1; i < numberOfConnectedControllers+1; i++)
         {
             string leftX = "L_XAxis_" + i.ToString();
             string leftY = "L_YAxis_" + i.ToString();
