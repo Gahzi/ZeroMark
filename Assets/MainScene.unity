@@ -150,11 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d95fe86f048664d0ab43db774a238c0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gamepadInfo:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  gamepads: []
 --- !u!1 &1428771539
 GameObject:
   m_ObjectHideFlags: 0
