@@ -34,7 +34,5 @@ public class Player : KBGameObject {
             newPosition += movementDelta;
             transform.position = newPosition;
         }
-        
-        
 	}   
 }

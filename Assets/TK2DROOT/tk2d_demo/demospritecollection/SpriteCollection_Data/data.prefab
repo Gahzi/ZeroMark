@@ -5,7 +5,7 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 3
+  serializedVersion: 4
   m_Component:
   - 4: {fileID: 400000}
   - 114: {fileID: 11400000}
@@ -15,7 +15,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1002 &100001
 EditorExtensionImpl:
   serializedVersion: 6
@@ -41,8 +41,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d546f34a90531a14eaba82a43b05b86b, type: 1}
+  m_Script: {fileID: 11500000, guid: d546f34a90531a14eaba82a43b05b86b, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   version: 3
   materialIdsValid: 1
   needMaterialInstance: 0
@@ -2156,7 +2157,7 @@ MonoBehaviour:
   materials:
   - {fileID: 2100000, guid: 32286741c6a400a44a969d7d318b1ca5, type: 2}
   textures:
-  - {fileID: 2800000, guid: 8b590bbce5acef3498615fcb7abfec2f, type: 1}
+  - {fileID: 2800000, guid: 8b590bbce5acef3498615fcb7abfec2f, type: 3}
   allowMultipleAtlases: 0
   spriteCollectionGUID: 71d75aef51c47034082eca27f2eb6e30
   spriteCollectionName: DemoSpriteCollection
@@ -2164,7 +2165,7 @@ MonoBehaviour:
   loadable: 0
   invOrthoSize: 1
   halfTargetHeight: 320
-  buildKey: 692026982
+  buildKey: 984964197
   dataGuid: b5aec6ebd1a8ffc458a2e46a3236acab
   managedSpriteCollection: 0
   hasPlatformData: 0

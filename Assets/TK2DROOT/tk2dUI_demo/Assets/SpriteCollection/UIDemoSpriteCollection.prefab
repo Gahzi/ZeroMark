@@ -5,7 +5,7 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 3
+  serializedVersion: 4
   m_Component:
   - 4: {fileID: 400000}
   - 114: {fileID: 11400000}
@@ -15,7 +15,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &400000
 Transform:
   m_ObjectHideFlags: 1
@@ -35,15 +35,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84c7a4b4ee15890498f818262bca0312, type: 1}
+  m_Script: {fileID: 11500000, guid: 84c7a4b4ee15890498f818262bca0312, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   textures: []
   textureRefs: []
   spriteSheets: []
   fonts:
   - active: 1
-    bmFont: {fileID: 102900000, guid: 808a946c029624f44ac2a5e622547b87, type: 1}
-    texture: {fileID: 2800000, guid: 8f7e84ecd5f59054cae053593359b469, type: 1}
+    bmFont: {fileID: 102900000, guid: 808a946c029624f44ac2a5e622547b87, type: 3}
+    texture: {fileID: 2800000, guid: 8f7e84ecd5f59054cae053593359b469, type: 3}
     dupeCaps: 0
     flipTextureY: 0
     charPadX: 0
@@ -70,9 +71,9 @@ MonoBehaviour:
   forcedTextureHeight: 1024
   textureCompression: 0
   atlasWidth: 256
-  atlasHeight: 512
+  atlasHeight: 256
   forceSquareAtlas: 0
-  atlasWastage: 10.0921631
+  atlasWastage: 35.3912354
   allowMultipleAtlases: 0
   removeDuplicates: 1
   textureParams:
@@ -80,7 +81,7 @@ MonoBehaviour:
     disableTrimming: 0
     additive: 0
     scale: {x: 1, y: 1, z: 1}
-    texture: {fileID: 2800000, guid: 10b038b1b05b3d44998364213b44a84b, type: 1}
+    texture: {fileID: 2800000, guid: 10b038b1b05b3d44998364213b44a84b, type: 3}
     materialId: 0
     anchor: 4
     anchorX: 33
@@ -92,6 +93,7 @@ MonoBehaviour:
     dice: 0
     diceUnitX: 64
     diceUnitY: 0
+    diceFilter: 0
     pad: 0
     extraPadding: 0
     source: 0
@@ -119,7 +121,7 @@ MonoBehaviour:
     disableTrimming: 0
     additive: 0
     scale: {x: 1, y: 1, z: 1}
-    texture: {fileID: 2800000, guid: cdb8375bd7d44bf4c91ea5d1757cbc23, type: 1}
+    texture: {fileID: 2800000, guid: cdb8375bd7d44bf4c91ea5d1757cbc23, type: 3}
     materialId: 0
     anchor: 4
     anchorX: 8
@@ -131,6 +133,7 @@ MonoBehaviour:
     dice: 0
     diceUnitX: 64
     diceUnitY: 0
+    diceFilter: 0
     pad: 0
     extraPadding: 0
     source: 0
@@ -158,7 +161,7 @@ MonoBehaviour:
     disableTrimming: 0
     additive: 0
     scale: {x: 1, y: 1, z: 1}
-    texture: {fileID: 2800000, guid: f3237190127778749a1642dc2a51c774, type: 1}
+    texture: {fileID: 2800000, guid: f3237190127778749a1642dc2a51c774, type: 3}
     materialId: 0
     anchor: 4
     anchorX: 33
@@ -170,6 +173,7 @@ MonoBehaviour:
     dice: 0
     diceUnitX: 64
     diceUnitY: 0
+    diceFilter: 0
     pad: 0
     extraPadding: 0
     source: 0
@@ -197,7 +201,7 @@ MonoBehaviour:
     disableTrimming: 0
     additive: 0
     scale: {x: 1, y: 1, z: 1}
-    texture: {fileID: 2800000, guid: c7b713dc540174c40a68af7867190a07, type: 1}
+    texture: {fileID: 2800000, guid: c7b713dc540174c40a68af7867190a07, type: 3}
     materialId: 0
     anchor: 4
     anchorX: 23
@@ -209,6 +213,7 @@ MonoBehaviour:
     dice: 0
     diceUnitX: 64
     diceUnitY: 0
+    diceFilter: 0
     pad: 0
     extraPadding: 0
     source: 0
@@ -236,7 +241,7 @@ MonoBehaviour:
     disableTrimming: 0
     additive: 0
     scale: {x: 1, y: 1, z: 1}
-    texture: {fileID: 2800000, guid: a0607e12e73242f48a033d14fa2296a7, type: 1}
+    texture: {fileID: 2800000, guid: a0607e12e73242f48a033d14fa2296a7, type: 3}
     materialId: 0
     anchor: 4
     anchorX: 23
@@ -248,6 +253,7 @@ MonoBehaviour:
     dice: 0
     diceUnitX: 64
     diceUnitY: 0
+    diceFilter: 0
     pad: 0
     extraPadding: 0
     source: 0
@@ -275,7 +281,7 @@ MonoBehaviour:
     disableTrimming: 0
     additive: 0
     scale: {x: 1, y: 1, z: 1}
-    texture: {fileID: 2800000, guid: a894d1cc513d8194b80c2ee2188a02f3, type: 1}
+    texture: {fileID: 2800000, guid: a894d1cc513d8194b80c2ee2188a02f3, type: 3}
     materialId: 0
     anchor: 4
     anchorX: 28
@@ -287,6 +293,7 @@ MonoBehaviour:
     dice: 0
     diceUnitX: 64
     diceUnitY: 0
+    diceFilter: 0
     pad: 0
     extraPadding: 0
     source: 0
@@ -314,7 +321,7 @@ MonoBehaviour:
     disableTrimming: 0
     additive: 0
     scale: {x: 1, y: 1, z: 1}
-    texture: {fileID: 2800000, guid: 39bdc26444063be478543fbf0138d23e, type: 1}
+    texture: {fileID: 2800000, guid: 39bdc26444063be478543fbf0138d23e, type: 3}
     materialId: 0
     anchor: 4
     anchorX: 16
@@ -326,6 +333,7 @@ MonoBehaviour:
     dice: 0
     diceUnitX: 64
     diceUnitY: 0
+    diceFilter: 0
     pad: 0
     extraPadding: 0
     source: 0
@@ -353,7 +361,7 @@ MonoBehaviour:
     disableTrimming: 0
     additive: 0
     scale: {x: 1, y: 1, z: 1}
-    texture: {fileID: 2800000, guid: 9d92e7051c626e94b9b9cf19dcaa2a66, type: 1}
+    texture: {fileID: 2800000, guid: 9d92e7051c626e94b9b9cf19dcaa2a66, type: 3}
     materialId: 0
     anchor: 4
     anchorX: 28
@@ -365,6 +373,7 @@ MonoBehaviour:
     dice: 0
     diceUnitX: 64
     diceUnitY: 0
+    diceFilter: 0
     pad: 0
     extraPadding: 0
     source: 0
@@ -392,7 +401,7 @@ MonoBehaviour:
     disableTrimming: 0
     additive: 0
     scale: {x: 1, y: 1, z: 1}
-    texture: {fileID: 2800000, guid: a0b5fdbef0d8b8c498985af59a362e9f, type: 1}
+    texture: {fileID: 2800000, guid: a0b5fdbef0d8b8c498985af59a362e9f, type: 3}
     materialId: 0
     anchor: 4
     anchorX: 10
@@ -404,6 +413,7 @@ MonoBehaviour:
     dice: 0
     diceUnitX: 64
     diceUnitY: 0
+    diceFilter: 0
     pad: 0
     extraPadding: 0
     source: 0
@@ -431,7 +441,7 @@ MonoBehaviour:
     disableTrimming: 0
     additive: 0
     scale: {x: 1, y: 1, z: 1}
-    texture: {fileID: 2800000, guid: f633ebe752e68f44f984163a0b5f19b0, type: 1}
+    texture: {fileID: 2800000, guid: f633ebe752e68f44f984163a0b5f19b0, type: 3}
     materialId: 0
     anchor: 4
     anchorX: 19
@@ -443,6 +453,7 @@ MonoBehaviour:
     dice: 0
     diceUnitX: 64
     diceUnitY: 0
+    diceFilter: 0
     pad: 0
     extraPadding: 0
     source: 0
@@ -470,7 +481,7 @@ MonoBehaviour:
     disableTrimming: 0
     additive: 0
     scale: {x: 1, y: 1, z: 1}
-    texture: {fileID: 2800000, guid: 501566f271035e14ea9d5deca292ad9c, type: 1}
+    texture: {fileID: 2800000, guid: 501566f271035e14ea9d5deca292ad9c, type: 3}
     materialId: 0
     anchor: 4
     anchorX: 19
@@ -482,6 +493,7 @@ MonoBehaviour:
     dice: 0
     diceUnitX: 64
     diceUnitY: 0
+    diceFilter: 0
     pad: 0
     extraPadding: 0
     source: 0
@@ -509,7 +521,7 @@ MonoBehaviour:
     disableTrimming: 0
     additive: 0
     scale: {x: 1, y: 1, z: 1}
-    texture: {fileID: 2800000, guid: accb00e270a9cec42addd7602ee0264c, type: 1}
+    texture: {fileID: 2800000, guid: accb00e270a9cec42addd7602ee0264c, type: 3}
     materialId: 0
     anchor: 4
     anchorX: 33
@@ -521,6 +533,7 @@ MonoBehaviour:
     dice: 0
     diceUnitX: 64
     diceUnitY: 0
+    diceFilter: 0
     pad: 0
     extraPadding: 0
     source: 0
@@ -548,7 +561,7 @@ MonoBehaviour:
     disableTrimming: 0
     additive: 0
     scale: {x: 1, y: 1, z: 1}
-    texture: {fileID: 2800000, guid: e4c720a60ede1944b957ba5ae82437bb, type: 1}
+    texture: {fileID: 2800000, guid: e4c720a60ede1944b957ba5ae82437bb, type: 3}
     materialId: 0
     anchor: 4
     anchorX: 23
@@ -560,6 +573,7 @@ MonoBehaviour:
     dice: 0
     diceUnitX: 64
     diceUnitY: 0
+    diceFilter: 0
     pad: 0
     extraPadding: 0
     source: 0
@@ -587,7 +601,7 @@ MonoBehaviour:
     disableTrimming: 0
     additive: 0
     scale: {x: 1, y: 1, z: 1}
-    texture: {fileID: 2800000, guid: 8b1d935dde7b96146bbc799a60202c2c, type: 1}
+    texture: {fileID: 2800000, guid: 8b1d935dde7b96146bbc799a60202c2c, type: 3}
     materialId: 0
     anchor: 4
     anchorX: 33
@@ -599,6 +613,7 @@ MonoBehaviour:
     dice: 0
     diceUnitX: 64
     diceUnitY: 0
+    diceFilter: 0
     pad: 0
     extraPadding: 0
     source: 0
@@ -626,7 +641,7 @@ MonoBehaviour:
     disableTrimming: 0
     additive: 0
     scale: {x: 1, y: 1, z: 1}
-    texture: {fileID: 2800000, guid: bee881e7b06f83347a7986eaecec6ef3, type: 1}
+    texture: {fileID: 2800000, guid: bee881e7b06f83347a7986eaecec6ef3, type: 3}
     materialId: 0
     anchor: 4
     anchorX: 18
@@ -638,6 +653,7 @@ MonoBehaviour:
     dice: 0
     diceUnitX: 64
     diceUnitY: 0
+    diceFilter: 0
     pad: 0
     extraPadding: 0
     source: 0
@@ -665,7 +681,7 @@ MonoBehaviour:
     disableTrimming: 0
     additive: 0
     scale: {x: 1, y: 1, z: 1}
-    texture: {fileID: 2800000, guid: 2b9bd56306a6a814984f2763a3fb1c00, type: 1}
+    texture: {fileID: 2800000, guid: 2b9bd56306a6a814984f2763a3fb1c00, type: 3}
     materialId: 0
     anchor: 4
     anchorX: 18
@@ -677,6 +693,7 @@ MonoBehaviour:
     dice: 0
     diceUnitX: 64
     diceUnitY: 0
+    diceFilter: 0
     pad: 0
     extraPadding: 0
     source: 0
@@ -704,7 +721,7 @@ MonoBehaviour:
     disableTrimming: 0
     additive: 0
     scale: {x: 1, y: 1, z: 1}
-    texture: {fileID: 2800000, guid: 55998978b6504b14ba04ec09e5082488, type: 1}
+    texture: {fileID: 2800000, guid: 55998978b6504b14ba04ec09e5082488, type: 3}
     materialId: 0
     anchor: 4
     anchorX: 17
@@ -716,6 +733,7 @@ MonoBehaviour:
     dice: 0
     diceUnitX: 64
     diceUnitY: 0
+    diceFilter: 0
     pad: 0
     extraPadding: 0
     source: 0
@@ -743,7 +761,7 @@ MonoBehaviour:
     disableTrimming: 0
     additive: 0
     scale: {x: 1, y: 1, z: 1}
-    texture: {fileID: 2800000, guid: eeaa80b602fa40a42a265023dc9cc359, type: 1}
+    texture: {fileID: 2800000, guid: eeaa80b602fa40a42a265023dc9cc359, type: 3}
     materialId: 0
     anchor: 4
     anchorX: 17
@@ -755,6 +773,7 @@ MonoBehaviour:
     dice: 0
     diceUnitX: 64
     diceUnitY: 0
+    diceFilter: 0
     pad: 0
     extraPadding: 0
     source: 0
@@ -782,7 +801,7 @@ MonoBehaviour:
     disableTrimming: 0
     additive: 0
     scale: {x: 1, y: 1, z: 1}
-    texture: {fileID: 2800000, guid: 4334843461093dd42b9d4810d7595958, type: 1}
+    texture: {fileID: 2800000, guid: 4334843461093dd42b9d4810d7595958, type: 3}
     materialId: 0
     anchor: 0
     anchorX: 0
@@ -794,6 +813,7 @@ MonoBehaviour:
     dice: 0
     diceUnitX: 64
     diceUnitY: 0
+    diceFilter: 0
     pad: 2
     extraPadding: 0
     source: 0
@@ -821,7 +841,7 @@ MonoBehaviour:
     disableTrimming: 0
     additive: 0
     scale: {x: 1, y: 1, z: 1}
-    texture: {fileID: 2800000, guid: 20bf45e2e89271c43b72895d440f6ab7, type: 1}
+    texture: {fileID: 2800000, guid: 20bf45e2e89271c43b72895d440f6ab7, type: 3}
     materialId: 0
     anchor: 0
     anchorX: 0
@@ -833,6 +853,7 @@ MonoBehaviour:
     dice: 0
     diceUnitX: 64
     diceUnitY: 0
+    diceFilter: 0
     pad: 2
     extraPadding: 0
     source: 0
@@ -872,6 +893,7 @@ MonoBehaviour:
     dice: 0
     diceUnitX: 64
     diceUnitY: 0
+    diceFilter: 0
     pad: 0
     extraPadding: 0
     source: 0
@@ -899,7 +921,7 @@ MonoBehaviour:
     disableTrimming: 1
     additive: 0
     scale: {x: 1, y: 1, z: 1}
-    texture: {fileID: 2800000, guid: 197a84f0983385f41a1d2b3cb0a99dd9, type: 1}
+    texture: {fileID: 2800000, guid: 197a84f0983385f41a1d2b3cb0a99dd9, type: 3}
     materialId: 0
     anchor: 4
     anchorX: 8
@@ -917,6 +939,7 @@ MonoBehaviour:
     dice: 0
     diceUnitX: 64
     diceUnitY: 0
+    diceFilter: 0
     pad: 2
     extraPadding: 0
     source: 0
@@ -947,7 +970,7 @@ MonoBehaviour:
   atlasMaterials:
   - {fileID: 2100000, guid: c588c2d12d3f5514195827aeb65feb8a, type: 2}
   atlasTextures:
-  - {fileID: 2800000, guid: f39d3bfc119f6814682c6cd15facf88a, type: 1}
+  - {fileID: 2800000, guid: f39d3bfc119f6814682c6cd15facf88a, type: 3}
   useTk2dCamera: 0
   targetHeight: 640
   targetOrthoSize: 1
