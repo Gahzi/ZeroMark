@@ -18,13 +18,41 @@ public class GamepadInfoHandler : MonoBehaviour
     
 	public Dictionary<GamepadInfo,Player> gamepadPlayerDictionary;
 	public GamepadInfo[] gamepads;
+    public int managerCount = 1;
 	
 	private static GamepadInfoHandler instance;
 	public static GamepadInfoHandler Instance
     {
         // Here we use the ?? operator, to return 'instance' if 'instance' does not equal null
         // otherwise we assign instance to a new component and return that
-        get { return instance ?? (instance = new GameObject("Gamepad Handler").AddComponent<GamepadInfoHandler>()); }
+        get 
+        {
+            if (instance == null)
+            {
+                GameObject gamepadManagerObject = (GameObject.FindGameObjectWithTag("GamepadManager"));
+                if (gamepadManagerObject != null)
+                {
+                    instance = gamepadManagerObject.GetComponent<GamepadInfoHandler>();
+                    instance.managerCount = (GameObject.FindGameObjectsWithTag("GamepadManager")).Length;
+
+                    if (instance != null)
+                    {
+                        Debug.Log("Instance Count : " + instance.managerCount.ToString());
+                        return instance;
+                    }
+                    else
+                    {
+                        instance = new GameObject("Gamepad Handler").AddComponent<GamepadInfoHandler>();
+                        instance.managerCount += 1;
+                        Debug.Log("Instance Count : " + instance.managerCount.ToString());
+                        return instance;
+                    }
+                }
+            }
+
+            Debug.Log("Instance Count : " + instance.managerCount.ToString());
+            return instance;
+        }
     }
 
     public int getNumberOfConnectedControllers()
@@ -32,15 +60,19 @@ public class GamepadInfoHandler : MonoBehaviour
         return numberOfConnectedControllers;
     }
 
+    void Awake()
+    {
+        instance = this;
+    }
+
     void Start()
     {
-		instance = this;
-		
-		numberOfConnectedControllers = Input.GetJoystickNames().Length;
+        numberOfConnectedControllers = Input.GetJoystickNames().Length;
+
 		gamepadPlayerDictionary = new Dictionary<GamepadInfo, Player>(); 
 		gamepads = new GamepadInfo[numberOfConnectedControllers];
 
-        Debug.Log("Found " + numberOfConnectedControllers.ToString() + " Controllers.");
+        Debug.Log("Found " + numberOfConnectedControllers.ToString() + " Controllers." + "with " + this.gameObject.name.ToString());
 		
         for (int i = 0; i < numberOfConnectedControllers; i++)
         {

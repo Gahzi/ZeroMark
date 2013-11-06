@@ -18,7 +18,22 @@ namespace KBConstants {
 
     }
 
-    public class GameManagerConstants {
+    public class ManagerConstants {
+        public enum type { GameManager, GamepadManager };
+
+        private static readonly IDictionary<type, string> prefabNames = new Dictionary<type, string>
+        {
+            {type.GameManager,"GameManager"},
+			{type.GamepadManager, "GamepadManager"}
+        };
+        public static IDictionary<type, string> PREFAB_NAMES { get { return prefabNames; } }
+
+        private static readonly IDictionary<type, string> prefabTags = new Dictionary<type, string>
+        {
+            {type.GameManager,"GameManager"},
+			{type.GamepadManager, "GamepadManager"}
+        };
+        public static IDictionary<type, string> PREFAB_TAGS { get { return prefabTags; } }
         
     }
 }
