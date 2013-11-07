@@ -16,6 +16,9 @@ public class Player : KBGameObject {
 		GamepadInfoHandler gamepadHandler = GamepadInfoHandler.Instance;
         Debug.Log("Attempting to attach Controller");
 		gamepadHandler.AttachControllerToPlayer(this);
+        //TODO: Prefer to do this stuff in code as seen below instead of dragging bullshit in Unity Editor.
+        //this.photonView.observed = this.transform;
+        //this.photonView.synchronization = ViewSynchronization.ReliableDeltaCompressed;
 	}
 	
 	public void SetGamepad(GamepadInfo newGamepad)
@@ -33,6 +36,8 @@ public class Player : KBGameObject {
             //Vector3 newPosition = transform.position;
             Vector3 movementDelta = new Vector3(gamepad.leftStick.x * PlayerConstants.PLAYER_MOVEMENT_SPEED, gamepad.leftStick.y * PlayerConstants.PLAYER_MOVEMENT_SPEED, 0);
 
+
+            //TODO: Write some movement prediction math to smooth out player movement over network.
             fraction = fraction + Time.deltaTime * 9;
             onUpdatePos += movementDelta;
             //transform.position = newPosition;

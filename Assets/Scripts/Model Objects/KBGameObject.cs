@@ -8,6 +8,7 @@ using System.Collections;
 public class KBGameObject : Photon.MonoBehaviour {
 	
 	tk2dSprite sprite;
+    PhotonView photonView;
 	GameManager gm;
 
     void Awake()
@@ -25,6 +26,8 @@ public class KBGameObject : Photon.MonoBehaviour {
 	{
 	 	this.sprite = gameObject.GetComponent<tk2dSprite>();
 		gm = GameManager.Instance;
+
+        photonView = this.GetComponent<PhotonView>();
 	}
 	
 	// Update is called once per frame
