@@ -2,12 +2,10 @@
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 using System.Collections;
 
-[RequireComponent(typeof(tk2dSprite))]
 [RequireComponent(typeof(PhotonView))]
 
 public class KBGameObject : Photon.MonoBehaviour {
-	
-	tk2dSprite sprite;
+
     PhotonView photonView;
 	GameManager gm;
 
@@ -24,9 +22,7 @@ public class KBGameObject : Photon.MonoBehaviour {
 	// Use this for initialization
 	void Start() 
 	{
-	 	this.sprite = gameObject.GetComponent<tk2dSprite>();
 		gm = GameManager.Instance;
-
         photonView = this.GetComponent<PhotonView>();
 	}
 	
