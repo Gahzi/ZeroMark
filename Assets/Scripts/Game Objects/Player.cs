@@ -42,8 +42,9 @@ public class Player : KBGameObject {
             onUpdatePos += movementDelta;
             //transform.position = newPosition;
             Vector3 lerpVector = Vector3.Lerp(onUpdatePos, latestCorrectPos, fraction);
-            Debug.Log(lerpVector.ToString());
-            transform.position = onUpdatePos;
+            Debug.Log("onUpdatePosition:" + onUpdatePos.ToString());
+            
+            transform.position = onUpdatePos;//lerpVector;
         }
 	}
 
