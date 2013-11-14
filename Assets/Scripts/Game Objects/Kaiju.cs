@@ -46,7 +46,7 @@ public class Kaiju : KBControllableGameObject
 
         if (isPlayerAttached())
         {
-
+            //attachedPlayer.gamepad.
         }
 
     }
