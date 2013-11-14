@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// This class is meant to be the link between the moveable game objects and the player object that currently exists.
+/// </summary>
 public class KBControllableGameObject : KBGameObject {
 
     public Player attachedPlayer = null;
@@ -33,5 +36,13 @@ public class KBControllableGameObject : KBGameObject {
         {
             return false;
         }
+    }
+
+    /// <summary>
+    /// Unnattach the player from the game object
+    /// </summary>
+    void unattachedPlayer()
+    {
+
     }
 }

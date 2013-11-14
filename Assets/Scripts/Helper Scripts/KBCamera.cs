@@ -6,7 +6,7 @@ public class KBCamera : MonoBehaviour
 
     private Vector3 CAMERA_FOLLOW_DISTANCE = new Vector3(0, 20, -65);
 
-    public Player attachedPlayer;
+    public KBGameObject attachedObject;
 
     // Use this for initialization
     void Start()
@@ -17,11 +17,11 @@ public class KBCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (attachedPlayer != null)
+        if (attachedObject != null)
         {
             //Set position and rotation
-            Vector3 newFollowPosition = attachedPlayer.transform.position + CAMERA_FOLLOW_DISTANCE;
-            Quaternion newFollowRotation = attachedPlayer.transform.rotation;
+            Vector3 newFollowPosition = attachedObject.transform.position + CAMERA_FOLLOW_DISTANCE;
+            Quaternion newFollowRotation = attachedObject.transform.rotation;
 
             transform.position = newFollowPosition;
             transform.rotation = newFollowRotation;

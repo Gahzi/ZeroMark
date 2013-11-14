@@ -31,7 +31,7 @@ GameObject:
   - 114: {fileID: 11400002}
   m_Layer: 0
   m_Name: Camera
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -148,7 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbdb8f328d1dfd24391ec85a593dce44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attachedPlayer: {fileID: 0}
+  attachedObject: {fileID: 0}
 --- !u!124 &12400000
 Behaviour:
   m_ObjectHideFlags: 1

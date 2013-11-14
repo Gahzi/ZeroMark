@@ -2,25 +2,42 @@
 using System.Collections;
 using KBConstants;
 
+/// <summary>
+/// Our model object for game items. This should be extended by every game item in the game.
+/// </summary>
 public class Item : KBGameObject {
 
     public enum ItemState { isDown, isPickedUp };
 
     ItemState state;
 
-	// Use this for initialization
+    /// <summary>
+    /// Use this for initialization
+    /// </summary>
 	void Start () {
 
 	}
 	
-	// Update is called once per frame
+    /// <summary>
+    /// Update is called once per frame
+    /// </summary>
 	void Update () {
 	
 	}
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="collision"></param>
     void OnCollisionEnter(Collision collision)
     {
-        state = ItemState.isPickedUp;
-        Debug.Log("GameItem was Picked Up");
+        Digger colDigger = collision.gameObject.GetComponent<Digger>();
+
+        if (colDigger != null)
+        {
+            colDigger.itemInventory.Add(this);
+            Destroy(this);
+        }
+        
     }
 }

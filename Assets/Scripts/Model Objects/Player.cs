@@ -3,11 +3,15 @@ using System.Collections;
 using KBConstants;
 
 [RequireComponent(typeof(GamepadInfo))]
+[RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(PhotonView))]
 
 public class Player : KBGameObject {
-	
-	private GamepadInfo gamepad;
+
+    public static float PLAYER_MOVEMENT_SPEED = 0.25f;
+    CharacterController test;
+
+	public GamepadInfo gamepad;
     private Vector3 latestCorrectPos;
     private Vector3 onUpdatePos;
     private float fraction;
@@ -23,9 +27,11 @@ public class Player : KBGameObject {
 
         GameObject newCameraObject = (GameObject)GameObject.Instantiate(Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Camera]), Vector3.zero, Quaternion.identity);
         KBCamera cameraScript = newCameraObject.GetComponent<KBCamera>();
-        cameraScript.attachedPlayer = this;
+        cameraScript.attachedObject = this;
 
         photonView = this.GetComponent<PhotonView>();
+
+        test = GetComponent<CharacterController>();
         //TODO: Prefer to do this stuff in code as seen below instead of dragging bullshit in Unity Editor.
         //this.photonView.observed = this.transform;
         //this.photonView.synchronization = ViewSynchronization.ReliableDeltaCompressed;
@@ -44,16 +50,14 @@ public class Player : KBGameObject {
         {
            
             //Vector3 newPosition = transform.position;
-            Vector3 movementDelta = new Vector3(gamepad.leftStick.x * PlayerConstants.PLAYER_MOVEMENT_SPEED, 0, gamepad.leftStick.y * PlayerConstants.PLAYER_MOVEMENT_SPEED);
-
+            Vector3 movementDelta = new Vector3(gamepad.leftStick.x * PLAYER_MOVEMENT_SPEED, 0, gamepad.leftStick.y * PLAYER_MOVEMENT_SPEED);
 
             //TODO: Write some movement prediction math to smooth out player movement over network.
             fraction = fraction + Time.deltaTime * 9;
             onUpdatePos += movementDelta;
             //transform.position = newPosition;
-            Vector3 lerpVector = Vector3.Lerp(onUpdatePos, latestCorrectPos, fraction);
-            
-            transform.position = onUpdatePos;//lerpVector;
+            test.Move(onUpdatePos);
+            //transform.position = onUpdatePos;//lerpVector;
         }
 	}
 
@@ -94,6 +98,37 @@ public class Player : KBGameObject {
             transform.localRotation = rot;          // this sample doesn't smooth rotation
         }
     }
+
+    void attachPlayerToControllableGameObject(KBControllableGameObject newGameObject)
+    {
+        newGameObject.attachedPlayer = this;
+        this.renderer.enabled = false;
+        KBCamera cameraScript = Camera.main.gameObject.GetComponent<KBCamera>();
+
+        if (cameraScript != null)
+        {
+            cameraScript.attachedObject = newGameObject;
+        }
+    }
+
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        Debug.Log("OnControllerColliderHit!");
+        KBControllableGameObject colControllablePlayerObject = hit.collider.gameObject.GetComponent<KBControllableGameObject>();
+        if (colControllablePlayerObject != null)
+        {
+            attachPlayerToControllableGameObject(colControllablePlayerObject);
+        }
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log("OnCollisionEnter!");
+    }
+    
+    
+
+
 
 
 }
