@@ -3,12 +3,14 @@
 namespace KBConstants {
 	
 	public class ObjectConstants {
-		public enum type { Player,Gamepad };
+		public enum type { Player,Gamepad,Item,Camera };
 		
 		private static readonly IDictionary<type, string> prefabNames = new Dictionary<type, string>
         {
             {type.Player,"Player"},
-			{type.Gamepad, "Gamepad"}
+			{type.Gamepad, "Gamepad"},
+            {type.Item, "Item"},
+            {type.Camera, "Camera"}
         };
         public static IDictionary<type, string> PREFAB_NAMES { get { return prefabNames; } }
 	}
@@ -33,8 +35,7 @@ namespace KBConstants {
             {type.GameManager,"GameManager"},
 			{type.GamepadManager, "GamepadManager"}
         };
-        public static IDictionary<type, string> PREFAB_TAGS { get { return prefabTags; } }
-        
+        public static IDictionary<type, string> PREFAB_TAGS { get { return prefabTags; } }   
     }
 }
 

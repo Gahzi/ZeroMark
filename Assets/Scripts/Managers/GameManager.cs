@@ -111,6 +111,11 @@ public class GameManager : MonoBehaviour {
                 players.Add(newPlayer);
 				break;
 			}
+
+            case ObjectConstants.type.Item:
+            {
+                break;
+            }
 			
 			default:
 			break;
