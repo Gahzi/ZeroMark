@@ -9,7 +9,8 @@ using KBConstants;
 public class Player : KBGameObject {
 
     public static float PLAYER_MOVEMENT_SPEED = 0.25f;
-    CharacterController test;
+
+    CharacterController charController;
 
 	public GamepadInfo gamepad;
     private Vector3 latestCorrectPos;
@@ -31,7 +32,7 @@ public class Player : KBGameObject {
 
         photonView = this.GetComponent<PhotonView>();
 
-        test = GetComponent<CharacterController>();
+        charController = GetComponent<CharacterController>();
         //TODO: Prefer to do this stuff in code as seen below instead of dragging bullshit in Unity Editor.
         //this.photonView.observed = this.transform;
         //this.photonView.synchronization = ViewSynchronization.ReliableDeltaCompressed;
@@ -56,7 +57,7 @@ public class Player : KBGameObject {
             fraction = fraction + Time.deltaTime * 9;
             onUpdatePos += movementDelta;
             //transform.position = newPosition;
-            test.Move(onUpdatePos);
+            charController.Move(onUpdatePos);
             //transform.position = onUpdatePos;//lerpVector;
         }
 	}
