@@ -7,7 +7,7 @@ using KBConstants;
 
 public class Player : KBGameObject {
 	
-	private GamepadInfo gamepad;
+	public GamepadInfo gamepad;
     private Vector3 latestCorrectPos;
     private Vector3 onUpdatePos;
     private float fraction;

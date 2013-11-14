@@ -18,15 +18,8 @@ namespace KBConstants {
     public class PlayerConstants {
         public static float PLAYER_MOVEMENT_SPEED = 0.25f;
 
-        public static enum coreNames { red, blue, green, black };
-
     }
 
-    public class KaijuConstants
-    {
-        public static int CORE_HEALTH_DEFAULT = 100;
-
-    }
 
     public class ManagerConstants {
         public enum type { GameManager, GamepadManager };
