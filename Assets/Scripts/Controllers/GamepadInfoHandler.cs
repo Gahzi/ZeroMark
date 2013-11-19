@@ -14,7 +14,6 @@ public class GamepadInfoHandler : MonoBehaviour
     /// </summary>
 
     private int numberOfConnectedControllers;
-    private int controllerNumber;
     
 	public Dictionary<GamepadInfo,Player> gamepadPlayerDictionary;
 	public GamepadInfo[] gamepads;
@@ -112,17 +111,11 @@ public class GamepadInfoHandler : MonoBehaviour
             Debug.Log("Attempting to call Player.setGamepad");
 			unattachedPlayer.SetGamepad(freeGamepad);
 		}
-		
 	}
 
     void Update()
     {
         GetJoystickData();
-    }
-
-    void SetControllerNumber(int val)
-    {
-        controllerNumber = val;
     }
 
     void GetJoystickData()

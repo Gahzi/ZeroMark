@@ -32,9 +32,8 @@ public class TimerScript : MonoBehaviour
                 return i;
             }
         }
-        return 99;
         Debug.LogError("Ran out of timers!");
-
+        return 99;
     }
 
     public void EndTimerForcefully(int timerNumber) { }

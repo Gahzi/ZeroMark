@@ -60,7 +60,6 @@ public class Digger : KBControllableGameObject {
     /// <param name="collision"> The object that is generated during a collision</param>
     void OnCollisionEnter(Collision collision)
     {
-        Player colPlayer = collision.gameObject.GetComponent<Player>();
         //if(colPlayer !=DIGGER_MOVEMENT_SPEED)
     }
 
