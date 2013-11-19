@@ -8,7 +8,7 @@ using KBConstants;
 
 public class Player : KBGameObject {
 
-    public static float PLAYER_MOVEMENT_SPEED = 0.25f;
+    public static float PLAYER_MOVEMENT_SPEED = 50f;
 
 	public GamepadInfo gamepad;
     private Vector3 latestCorrectPos;
@@ -49,12 +49,23 @@ public class Player : KBGameObject {
            
             //Vector3 newPosition = transform.position;
             Vector3 movementDelta = new Vector3(gamepad.leftStick.x * PLAYER_MOVEMENT_SPEED, 0, gamepad.leftStick.y * PLAYER_MOVEMENT_SPEED);
-
+            //Debug.Log("MovementDelta: " + movementDelta.ToString());
             //TODO: Write some movement prediction math to smooth out player movement over network.
-            fraction = fraction + Time.deltaTime * 9;
-            onUpdatePos += movementDelta;
+            //fraction = fraction + Time.deltaTime * 9;
+            //Debug.Log("Fraction: " + fraction.ToString());
+            //onUpdatePos += movementDelta;
+            //Debug.Log("onUpdatePos: " + onUpdatePos.ToString());
             //transform.position = newPosition;
-            rigidbody.AddForce(onUpdatePos, ForceMode.VelocityChange);
+            if (movementDelta.Equals(Vector3.zero))
+            {
+                rigidbody.velocity = Vector3.zero;
+            }
+            else
+            {
+                rigidbody.velocity = movementDelta;
+                //rigidbody.AddForce(movementDelta, ForceMode.VelocityChange);
+            }
+         
             //transform.position = onUpdatePos;//lerpVector;
         }
 	}
@@ -109,19 +120,18 @@ public class Player : KBGameObject {
         }
     }
 
-    void OnControllerColliderHit(ControllerColliderHit hit)
+    /// <summary>
+    /// Collision method that is called when rigidbody hits another game object 
+    /// </summary>
+    /// <param name="collision"></param>
+    void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("OnControllerColliderHit!");
-        KBControllableGameObject colControllablePlayerObject = hit.collider.gameObject.GetComponent<KBControllableGameObject>();
+        Debug.Log("OnCollisionEnter!");
+        KBControllableGameObject colControllablePlayerObject = collision.gameObject.GetComponent<KBControllableGameObject>();
         if (colControllablePlayerObject != null)
         {
             attachPlayerToControllableGameObject(colControllablePlayerObject);
         }
-    }
-
-    void OnCollisionEnter(Collision collision)
-    {
-        Debug.Log("OnCollisionEnter!");
     }
     
     
