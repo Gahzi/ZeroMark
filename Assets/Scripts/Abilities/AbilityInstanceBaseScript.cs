@@ -3,13 +3,12 @@ using System.Collections;
 
 [RequireComponent(typeof(Rigidbody))]
 
+/// <summary>
+/// Base class for instances of abilities in the world.
+/// Contains timers & rigidbody/collider/layer setup
+/// </summary>
 abstract public class AbilityInstanceBaseScript : MonoBehaviour
 {
-    
-    /// <summary>
-    /// Base class for instances of abilities in the world.
-    /// Contains timers & rigidbody/collider/layer setup
-    /// </summary>
     
     public float lifetime;
     protected float spawnTime;

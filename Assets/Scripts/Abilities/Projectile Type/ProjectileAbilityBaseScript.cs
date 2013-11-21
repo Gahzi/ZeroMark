@@ -25,7 +25,10 @@ public class ProjectileAbilityBaseScript : AbilitySlotBaseScript
     {
         throw new System.NotImplementedException();
     }
-
+    /// <summary>
+    /// When Used with a direction, the ability will point the instance in the direction.
+    /// </summary>
+    /// <param name="direction">The direction to point the projectile</param>
     public override void Use(Vector3 direction)
     {
         if (!cooldownTimer.IsTimerActive(cooldownTimerNumber))

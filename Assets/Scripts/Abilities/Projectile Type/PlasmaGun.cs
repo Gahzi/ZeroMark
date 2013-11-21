@@ -2,6 +2,9 @@
 using System.Collections;
 using KBConstants;
 
+/// <summary>
+/// PlasmaGuns are a ProjectileAbility that shoots PlasmaBullet prefabs
+/// </summary>
 public class PlasmaGun : ProjectileAbilityBaseScript
 {
 
