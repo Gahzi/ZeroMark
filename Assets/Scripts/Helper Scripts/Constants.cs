@@ -3,7 +3,7 @@
 namespace KBConstants {
 	
 	public class ObjectConstants {
-		public enum type { Player,Gamepad,Item,Camera,PlasmaBullet,Kaiju };
+		public enum type { Player,Gamepad,Item,Camera,PlasmaBullet,Kaiju,BasicRigidbodyCube };
 		
 		private static readonly IDictionary<type, string> prefabNames = new Dictionary<type, string>
         {
@@ -12,7 +12,8 @@ namespace KBConstants {
             {type.Item, "Item"},
             {type.Camera, "Camera"},
             {type.PlasmaBullet, "Abilities/PlasmaBullet"},
-            {type.Kaiju, "Kaiju/Kaiju"}
+            {type.Kaiju, "Kaiju/Kaiju"},
+            {type.BasicRigidbodyCube, "Environment/BasicRigidbodyCube"}
         };
         public static IDictionary<type, string> PREFAB_NAMES { get { return prefabNames; } }
 	}

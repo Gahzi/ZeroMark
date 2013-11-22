@@ -12,7 +12,7 @@ public class StartupScript : MonoBehaviour {
         GameManager newManager = (GameManager)Instantiate(Resources.Load(ManagerConstants.PREFAB_NAMES[ManagerConstants.type.GameManager], typeof(GameManager)));
         newManager.tag = ManagerConstants.PREFAB_TAGS[ManagerConstants.type.GameManager];
 
-        Kaiju kaiju = (Kaiju)Instantiate(Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Kaiju], typeof(Kaiju)), new Vector3(0, 0, 0), Quaternion.identity);
+        //Kaiju kaiju = (Kaiju)Instantiate(Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Kaiju], typeof(Kaiju)), new Vector3(0, 0, 0), Quaternion.identity);
 	}
 	
 	// Update is called once per frame

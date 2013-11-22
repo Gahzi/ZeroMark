@@ -6,23 +6,25 @@ using KBConstants;
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(PhotonView))]
 
-public class Player : KBGameObject {
+public class Player : KBGameObject
+{
 
     public static float PLAYER_MOVEMENT_SPEED = 50f;
+    public static float PLAYER_MOVEMENT_DEADZONE = 0.3f;
 
-	public GamepadInfo gamepad;
+    public GamepadInfo gamepad;
     private Vector3 latestCorrectPos;
     private Vector3 onUpdatePos;
     private float fraction;
-    
+
     protected PhotonView photonView;
-	
-	// Use this for initialization
-	void Start () 
-	{
-		GamepadInfoHandler gamepadHandler = GamepadInfoHandler.Instance;
+
+    // Use this for initialization
+    void Start()
+    {
+        GamepadInfoHandler gamepadHandler = GamepadInfoHandler.Instance;
         Debug.Log("Attempting to attach Controller");
-		gamepadHandler.AttachControllerToPlayer(this);
+        gamepadHandler.AttachControllerToPlayer(this);
 
         GameObject newCameraObject = (GameObject)GameObject.Instantiate(Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Camera]), Vector3.zero, Quaternion.identity);
         KBCamera cameraScript = newCameraObject.GetComponent<KBCamera>();
@@ -33,20 +35,21 @@ public class Player : KBGameObject {
         //TODO: Prefer to do this stuff in code as seen below instead of dragging bullshit in Unity Editor.
         //this.photonView.observed = this.transform;
         //this.photonView.synchronization = ViewSynchronization.ReliableDeltaCompressed;
-	}
-	
-	public void SetGamepad(GamepadInfo newGamepad)
-	{
-		gamepad = newGamepad;
+    }
+
+    public void SetGamepad(GamepadInfo newGamepad)
+    {
+        gamepad = newGamepad;
         Debug.Log("Gamepad was set to Player");
-	}
-	
-	// Update is called once per frame
-	void Update () 
+    }
+
+    // Update is called once per frame
+    void Update() 
 	{
         if (gamepad != null)
         {
-           
+            transform.Rotate(Vector3.up, Mathf.Atan2(gamepad.rightStick.x, 0));
+
             //Vector3 newPosition = transform.position;
             Vector3 movementDelta = new Vector3(gamepad.leftStick.x * PLAYER_MOVEMENT_SPEED, 0, gamepad.leftStick.y * PLAYER_MOVEMENT_SPEED);
             //Debug.Log("MovementDelta: " + movementDelta.ToString());
@@ -56,17 +59,19 @@ public class Player : KBGameObject {
             //onUpdatePos += movementDelta;
             //Debug.Log("onUpdatePos: " + onUpdatePos.ToString());
             //transform.position = newPosition;
-            if (movementDelta.Equals(Vector3.zero))
+            if (movementDelta.normalized.magnitude > PLAYER_MOVEMENT_DEADZONE)
+            {
+                    rigidbody.velocity = transform.localRotation * movementDelta;
+            }
+            else// if (movementDelta.Equals(Vector3.zero))
             {
                 rigidbody.velocity = Vector3.zero;
             }
-            else
-            {
-                rigidbody.velocity = movementDelta;
-                //rigidbody.AddForce(movementDelta, ForceMode.VelocityChange);
-            }
+
          
             //transform.position = onUpdatePos;//lerpVector;
+
+
         }
 	}
 
@@ -133,8 +138,8 @@ public class Player : KBGameObject {
             attachPlayerToControllableGameObject(colControllablePlayerObject);
         }
     }
-    
-    
+
+
 
 
 

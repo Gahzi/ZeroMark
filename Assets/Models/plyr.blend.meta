@@ -1,13 +1,20 @@
 fileFormatVersion: 2
-guid: 28c71d268855bcb4f9a76bbcce9e35a6
+guid: fe72958097c0c7d4ba98684009e76f96
 ModelImporter:
   serializedVersion: 15
   fileIDToRecycleName:
-    100000: //RootNode
-    400000: //RootNode
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: Cube
+    100000: body
+    100002: Cube_001
+    100004: //RootNode
+    400000: body
+    400002: Cube_001
+    400004: //RootNode
+    2300000: body
+    2300002: Cube_001
+    3300000: body
+    3300002: Cube_001
+    4300000: Cube_001
+    4300002: body
     7400000: Default Take
     9500000: //RootNode
   materials:
@@ -17,11 +24,13 @@ ModelImporter:
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
+    optimizeGameObjects: 0
     animationCompression: 1
     animationRotationError: .5
     animationPositionError: .5
     animationScaleError: .5
     animationWrapMode: 0
+    extraExposedTransformPaths: []
     clipAnimations: []
     isReadable: 1
   meshes:
@@ -49,7 +58,6 @@ ModelImporter:
   humanDescription:
     human: []
     skeleton: []
-    handles: []
     armTwist: .5
     foreArmTwist: .5
     upperLegTwist: .5
@@ -59,6 +67,5 @@ ModelImporter:
     feetSpacing: 0
     rootMotionBoneName: 
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  additionalBone: 1
   animationType: 2
   userData: 
