@@ -9,13 +9,24 @@ using KBConstants;
 public class Player : KBGameObject
 {
 
-    public static float PLAYER_MOVEMENT_SPEED = 50f;
+    public static float PLAYER_MOVEMENT_SPEED = 25f;
+    public static float PLAYER_PULL_SPEED = 5f;
+    public static float PLAYER_PULL_ROTATE_SPEED = 0.3f;
     public static float PLAYER_MOVEMENT_DEADZONE = 0.3f;
+    public static float PLAYER_ROTATE_SPEED = 3.0f;
+    public static float PLAYER_PULL_DISTANCE = 15f;
+
+    //TODO: MOVE THESE TO TOWER OR SOMETHING
+    public static float PLAYER_OBJECT_PUSH_LERP_STRENGTH = 0.75f;
+
+    private float currentMovespeed;
+    private float currentRotateSpeed;
 
     public GamepadInfo gamepad;
     private Vector3 latestCorrectPos;
     private Vector3 onUpdatePos;
     private float fraction;
+    private GUISelectCube selectCube;
 
     protected PhotonView photonView;
 
@@ -26,6 +37,9 @@ public class Player : KBGameObject
         Debug.Log("Attempting to attach Controller");
         gamepadHandler.AttachControllerToPlayer(this);
 
+        GameObject.Instantiate(Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.GUISelectCube]), Vector3.zero, Quaternion.identity);
+        selectCube = GameObject.FindObjectOfType<GUISelectCube>();
+        selectCube.renderer.enabled = false;
         GameObject newCameraObject = (GameObject)GameObject.Instantiate(Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Camera]), Vector3.zero, Quaternion.identity);
         KBCamera cameraScript = newCameraObject.GetComponent<KBCamera>();
         cameraScript.attachedObject = this;
@@ -48,10 +62,43 @@ public class Player : KBGameObject
 	{
         if (gamepad != null)
         {
-            transform.Rotate(Vector3.up, Mathf.Atan2(gamepad.rightStick.x, 0));
+            // Raycasting for "pushable"
+            Vector3 fwd = transform.TransformDirection(Vector3.forward);
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position, fwd, out hit, PLAYER_PULL_DISTANCE))
+            {
+                print("raycasthit");
+                selectCube.transform.parent = hit.collider.transform;
+                selectCube.renderer.enabled = true;
+                if (gamepad.button[0])
+                {
+                    //hit.rigidbody.velocity = transform.localRotation * new Vector3(gamepad.leftStick.x * PLAYER_PULL_SPEED, 0, gamepad.leftStick.y * PLAYER_PULL_SPEED);
+                    //hit.transform.position.Set(10 * fwd.x, 10 * fwd.y, transform.position.z);
+                    currentMovespeed = PLAYER_PULL_SPEED;
+                    currentRotateSpeed = PLAYER_PULL_ROTATE_SPEED;
+                    Vector3 objVec = hit.transform.position;
+                    objVec = transform.position + PLAYER_PULL_DISTANCE * fwd;
+                    objVec.y = hit.transform.position.y;
+                    //objVec.x = transform.position.x + 10 * fwd.x;
+                    //objVec.z = transform.position.x + 10 * fwd.z;
+                    hit.transform.position = Vector3.Lerp(hit.transform.position, objVec, PLAYER_OBJECT_PUSH_LERP_STRENGTH * Time.deltaTime);
+                }
+                else
+                {
+                    currentMovespeed = PLAYER_MOVEMENT_SPEED;
+                }
+            }
+            else
+            {
+                selectCube.renderer.enabled = false;
+                currentMovespeed = PLAYER_MOVEMENT_SPEED;
+                currentRotateSpeed = PLAYER_ROTATE_SPEED;
+            }
+            
+            transform.Rotate(Vector3.up, currentRotateSpeed * Mathf.Atan2(gamepad.rightStick.x, 0));
 
             //Vector3 newPosition = transform.position;
-            Vector3 movementDelta = new Vector3(gamepad.leftStick.x * PLAYER_MOVEMENT_SPEED, 0, gamepad.leftStick.y * PLAYER_MOVEMENT_SPEED);
+            Vector3 movementDelta = new Vector3(gamepad.leftStick.x * currentMovespeed, 0, gamepad.leftStick.y * currentMovespeed);
             //Debug.Log("MovementDelta: " + movementDelta.ToString());
             //TODO: Write some movement prediction math to smooth out player movement over network.
             //fraction = fraction + Time.deltaTime * 9;
@@ -70,6 +117,7 @@ public class Player : KBGameObject
 
          
             //transform.position = onUpdatePos;//lerpVector;
+
 
 
         }
@@ -131,15 +179,13 @@ public class Player : KBGameObject
     /// <param name="collision"></param>
     void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("OnCollisionEnter!");
+        //Debug.Log("OnCollisionEnter!");
         KBControllableGameObject colControllablePlayerObject = collision.gameObject.GetComponent<KBControllableGameObject>();
         if (colControllablePlayerObject != null)
         {
             attachPlayerToControllableGameObject(colControllablePlayerObject);
         }
     }
-
-
 
 
 

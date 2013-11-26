@@ -12,7 +12,7 @@ public class KBCamera : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
+        camera.fieldOfView = 90.0f;
     }
 
     // Update is called once per frame
@@ -31,7 +31,6 @@ public class KBCamera : MonoBehaviour
 
             Player player = (Player)attachedObject;
             float targetUpRotation = (Mathf.Rad2Deg * Mathf.Atan2(player.gamepad.rightStick.y, 0) / 90) * 20;
-            Debug.Log(targetUpRotation);
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(targetUpRotation, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z), 10.0f * Time.deltaTime);
 
 

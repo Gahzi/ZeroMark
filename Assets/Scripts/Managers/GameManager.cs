@@ -106,7 +106,7 @@ public class GameManager : MonoBehaviour {
 		{
 			case ObjectConstants.type.Player:
 			{
-                GameObject newPlayerObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Player],Vector3.zero, Quaternion.identity, 0);
+                GameObject newPlayerObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Player], new Vector3(0, 2, 0), Quaternion.identity, 0);
                 Player newPlayer = newPlayerObject.GetComponent<Player>();
                 players.Add(newPlayer);
 				break;
