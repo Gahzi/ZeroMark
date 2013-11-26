@@ -4,7 +4,7 @@ using System.Collections;
 public class KBCamera : MonoBehaviour
 {
 
-    private Vector3 CAMERA_FOLLOW_DISTANCE = new Vector3(0, 20 / 4, -65 / 8);
+    private Vector3 CAMERA_FOLLOW_DISTANCE = new Vector3(0, 20 / 5, -65 / 12);
     private Quaternion targetCameraUpRotation;
 
     public KBGameObject attachedObject;

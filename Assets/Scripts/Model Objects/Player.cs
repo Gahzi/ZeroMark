@@ -6,18 +6,19 @@ using KBConstants;
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(PhotonView))]
 
-public class Player : KBGameObject
+public class Player : KBControllableGameObject
 {
 
     public static float PLAYER_MOVEMENT_SPEED = 25f;
     public static float PLAYER_PULL_SPEED = 5f;
-    public static float PLAYER_PULL_ROTATE_SPEED = 0.3f;
+    public static float PLAYER_PULL_ROTATE_SPEED = 0.1f;
     public static float PLAYER_MOVEMENT_DEADZONE = 0.3f;
     public static float PLAYER_ROTATE_SPEED = 3.0f;
     public static float PLAYER_PULL_DISTANCE = 15f;
 
     //TODO: MOVE THESE TO TOWER OR SOMETHING
-    public static float PLAYER_OBJECT_PUSH_LERP_STRENGTH = 0.75f;
+    public static float PLAYER_TOWER_PUSH_LERP_STRENGTH = 0.75f;
+    public static float PLAYER_ITEM_PUSH_LERP_STRENGTH = 10.0f;
 
     private float currentMovespeed;
     private float currentRotateSpeed;
@@ -28,11 +29,15 @@ public class Player : KBGameObject
     private float fraction;
     private GUISelectCube selectCube;
 
+    public Team team;
+
     protected PhotonView photonView;
 
     // Use this for initialization
     void Start()
     {
+        team = Team.red;
+        
         GamepadInfoHandler gamepadHandler = GamepadInfoHandler.Instance;
         Debug.Log("Attempting to attach Controller");
         gamepadHandler.AttachControllerToPlayer(this);
@@ -65,27 +70,37 @@ public class Player : KBGameObject
             // Raycasting for "pushable"
             Vector3 fwd = transform.TransformDirection(Vector3.forward);
             RaycastHit hit;
-            if (Physics.Raycast(transform.position, fwd, out hit, PLAYER_PULL_DISTANCE))
+            Vector3 rayStart = transform.position;
+            rayStart.y = rayStart.y + 2.0f;
+            //rayStart = Vector3.RotateTowards(rayStart, PLAYER_PULL_DISTANCE * fwd, Mathf.PI*2, 1000f);
+            if (Physics.Raycast(rayStart, fwd, out hit, PLAYER_PULL_DISTANCE))
             {
-                print("raycasthit");
                 selectCube.transform.parent = hit.collider.transform;
                 selectCube.renderer.enabled = true;
                 if (gamepad.button[0])
                 {
-                    //hit.rigidbody.velocity = transform.localRotation * new Vector3(gamepad.leftStick.x * PLAYER_PULL_SPEED, 0, gamepad.leftStick.y * PLAYER_PULL_SPEED);
-                    //hit.transform.position.Set(10 * fwd.x, 10 * fwd.y, transform.position.z);
-                    currentMovespeed = PLAYER_PULL_SPEED;
-                    currentRotateSpeed = PLAYER_PULL_ROTATE_SPEED;
                     Vector3 objVec = hit.transform.position;
-                    objVec = transform.position + PLAYER_PULL_DISTANCE * fwd;
-                    objVec.y = hit.transform.position.y;
-                    //objVec.x = transform.position.x + 10 * fwd.x;
-                    //objVec.z = transform.position.x + 10 * fwd.z;
-                    hit.transform.position = Vector3.Lerp(hit.transform.position, objVec, PLAYER_OBJECT_PUSH_LERP_STRENGTH * Time.deltaTime);
+
+
+                    if (hit.transform.gameObject.CompareTag("Item"))
+                    {
+                        objVec = transform.position + 4 * fwd;
+                        objVec.y = hit.transform.position.y;
+                        hit.transform.position = Vector3.Lerp(hit.transform.position, objVec, PLAYER_ITEM_PUSH_LERP_STRENGTH * Time.deltaTime);
+                    }
+                    else
+                    {
+                        currentMovespeed = PLAYER_PULL_SPEED;
+                        currentRotateSpeed = PLAYER_PULL_ROTATE_SPEED;
+                        objVec = transform.position + PLAYER_PULL_DISTANCE * fwd;
+                        objVec.y = hit.transform.position.y;
+                        hit.transform.position = Vector3.Lerp(hit.transform.position, objVec, PLAYER_TOWER_PUSH_LERP_STRENGTH * Time.deltaTime);
+                    }
                 }
                 else
                 {
                     currentMovespeed = PLAYER_MOVEMENT_SPEED;
+                    currentRotateSpeed = PLAYER_ROTATE_SPEED;
                 }
             }
             else
@@ -94,11 +109,12 @@ public class Player : KBGameObject
                 currentMovespeed = PLAYER_MOVEMENT_SPEED;
                 currentRotateSpeed = PLAYER_ROTATE_SPEED;
             }
-            
-            transform.Rotate(Vector3.up, currentRotateSpeed * Mathf.Atan2(gamepad.rightStick.x, 0));
+
+            transform.Rotate(Vector3.up, currentRotateSpeed * gamepad.leftStick.x);
 
             //Vector3 newPosition = transform.position;
-            Vector3 movementDelta = new Vector3(gamepad.leftStick.x * currentMovespeed, 0, gamepad.leftStick.y * currentMovespeed);
+            //Vector3 movementDelta = new Vector3(gamepad.leftStick.x * currentMovespeed, 0, gamepad.leftStick.y * currentMovespeed);
+            Vector3 movementDelta = new Vector3(gamepad.rightStick.x * currentMovespeed/2, 0, gamepad.leftStick.y * currentMovespeed);
             //Debug.Log("MovementDelta: " + movementDelta.ToString());
             //TODO: Write some movement prediction math to smooth out player movement over network.
             //fraction = fraction + Time.deltaTime * 9;
