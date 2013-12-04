@@ -23,6 +23,39 @@ public class ScoreboardScript : MonoBehaviour
         transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y + 180f, 0);
 
         TextMesh t = gameObject.GetComponent<TextMesh>();
-        t.text = "Red: " + Math.Round((double)transform.parent.gameObject.GetComponent<GoalZone>().redTeamTime).ToString() + " Blue: " + Math.Round((double) transform.parent.gameObject.GetComponent<GoalZone>().blueTeamTime).ToString();
+
+        GoalZone parentZone = transform.parent.gameObject.GetComponent<GoalZone>();
+
+        switch (parentZone.state)
+        {
+            case GoalZone.GoalState.NotCaptured:
+                {
+                    if (parentZone.goalScore > 0)
+                    {
+                        t.text = "Red: " + parentZone.goalScore.ToString();
+                    }
+                    else if (parentZone.goalScore < 0)
+                    {
+                        t.text = "Blue: " + parentZone.goalScore.ToString();
+                    }
+                    else if (parentZone.goalScore == 0)
+                    {
+                        t.text = "Unoccupied:";
+                    }
+                }
+                break;
+            case GoalZone.GoalState.BlueCaptured:
+                {
+                    t.text = "Blue Captured";
+                    break;
+                }
+
+            case GoalZone.GoalState.RedCaptured:
+                {
+                    t.text = "Red Captured";
+                    break;
+                }
+        }
+        //t.text = "Red: " + Math.Round((double)transform.parent.gameObject.GetComponent<GoalZone>().goalScore).ToString() + " Blue: " + Math.Round((double) transform.parent.gameObject.GetComponent<GoalZone>().blueTeamTime).ToString();
     }
 }

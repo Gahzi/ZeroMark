@@ -36,7 +36,7 @@ public class Player : KBControllableGameObject
     // Use this for initialization
     void Start()
     {
-        team = Team.red;
+        team = Team.Red;
         
         GamepadInfoHandler gamepadHandler = GamepadInfoHandler.Instance;
         Debug.Log("Attempting to attach Controller");
