@@ -5,11 +5,11 @@ TagManager:
   tags:
   - GamepadManager
   - GameManager
-  - 
+  - Tower
   - Hitbox
   - Item
-  - 
-  - 
+  - Factory
+  - GoalZone
   - 
   - 
   - 

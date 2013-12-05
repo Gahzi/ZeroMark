@@ -19,7 +19,11 @@ public class ScoreboardScript : MonoBehaviour
         {
             target = GameObject.FindGameObjectWithTag("Player");
         }
-        transform.LookAt(target.transform);
+        else
+        {
+            transform.LookAt(target.transform);
+        }
+        
         transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y + 180f, 0);
 
         TextMesh t = gameObject.GetComponent<TextMesh>();

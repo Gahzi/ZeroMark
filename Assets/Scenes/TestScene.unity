@@ -5985,8 +5985,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33f7bca4ee05ece429ebe0e99ebf3696, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  redTeamTime: 0
-  blueTeamTime: 0
+  state: 0
+  goalScore: 0
 --- !u!1 &192024114
 GameObject:
   m_ObjectHideFlags: 0
