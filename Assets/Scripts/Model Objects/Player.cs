@@ -36,6 +36,8 @@ public class Player : KBControllableGameObject
     // Use this for initialization
     void Start()
     {
+        health = 100;
+        
         team = Team.Red;
         
         GamepadInfoHandler gamepadHandler = GamepadInfoHandler.Instance;
@@ -203,7 +205,10 @@ public class Player : KBControllableGameObject
         }
     }
 
-
+    public override void takeDamage(int amount)
+    {
+        health -= amount;
+    }
 
 
 }

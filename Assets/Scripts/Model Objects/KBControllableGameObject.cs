@@ -8,8 +8,6 @@ using System.Collections;
 /// </summary>
 public class KBControllableGameObject : KBGameObject {
 
-    public enum Team { Red, Blue, None };
-
     public Player attachedPlayer = null;
 
 	/// <summary>

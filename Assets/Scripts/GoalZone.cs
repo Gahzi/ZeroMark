@@ -12,8 +12,8 @@ public class GoalZone : MonoBehaviour
     public enum GoalState { NotCaptured, RedCaptured, BlueCaptured };
     public GoalState state = GoalState.NotCaptured;
 
-    int redPlayerCount = 0;
-    int bluePlayerCount = 0;
+    int redTowerCount = 0;
+    int blueTowerCount = 0;
 
     public int goalScore = 0;
 
@@ -27,7 +27,7 @@ public class GoalZone : MonoBehaviour
     {
         if (state == GoalState.NotCaptured)
         {
-            if (redPlayerCount > 0 || bluePlayerCount > 0) goalScore += (redPlayerCount * RED_TEAM_CAPTURE_RATE) + (bluePlayerCount * BLUE_TEAM_CAPTURE_RATE);
+            if (redTowerCount > 0 || blueTowerCount > 0) goalScore += (redTowerCount * RED_TEAM_CAPTURE_RATE) + (blueTowerCount * BLUE_TEAM_CAPTURE_RATE);
             else
             {
                 if (goalScore > 0) goalScore -= 1;
@@ -89,19 +89,19 @@ public class GoalZone : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-         if (other.gameObject.CompareTag("Player"))
+         if (other.gameObject.CompareTag("Tower"))
         {
-            Player p = other.gameObject.GetComponent<Player>();
+            Tower p = other.gameObject.GetComponent<Tower>();
             switch (p.team)
             {
                 case KBControllableGameObject.Team.Red:
                     {
-                        redPlayerCount += 1;
+                        redTowerCount += 1;
                         break;
                     }
                 case KBControllableGameObject.Team.Blue:
                     {
-                        bluePlayerCount += 1;
+                        blueTowerCount += 1;
                         break;
                     }
             }
@@ -110,20 +110,20 @@ public class GoalZone : MonoBehaviour
     
     void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag("Tower"))
         {
-            Player p = other.gameObject.GetComponent<Player>();
+            Tower p = other.gameObject.GetComponent<Tower>();
             switch (p.team)
             {
                 case KBControllableGameObject.Team.Red:
                     {
-                        redPlayerCount -= 1;
+                        redTowerCount -= 1;
                         break;
                     
                     }
                 case KBControllableGameObject.Team.Blue:
                     {
-                        bluePlayerCount -= 1;
+                        blueTowerCount -= 1;
                         break;
                     }
             }

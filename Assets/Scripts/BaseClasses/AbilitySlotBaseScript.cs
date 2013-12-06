@@ -17,6 +17,7 @@ abstract public class AbilitySlotBaseScript : MonoBehaviour
     protected TimerScript cooldownTimer;
     //public List<AbilityConstants.properties> abilityProps;
     protected int cooldownTimerNumber;
+    public bool abilityActive;
 
     public virtual void Start()
     {
@@ -30,6 +31,7 @@ abstract public class AbilitySlotBaseScript : MonoBehaviour
         }
         cooldownTimer = GetComponent<TimerScript>();
         audio.clip = sound;
+        abilityActive = false;
 
         //abilityProps = new List<AbilityConstants.properties>();
     }
@@ -39,9 +41,13 @@ abstract public class AbilitySlotBaseScript : MonoBehaviour
 
     }
 
-    public abstract void Use();
+    public void ActivateAbility() { abilityActive = true; }
+    public void ToggleAbility() { abilityActive = !abilityActive; }
+    public bool GetActive() { return abilityActive; }
 
-    public abstract void Use(Vector3 direction);
+    //public virtual T ActivateAbility<T>() { return default(T); }
+    //public virtual T ActivateAbility<T>(int maxRange) { return default(T); }
+    //public virtual T ActivateAbility<T>(Vector3 direction) { return default(T); }
 
 
 }

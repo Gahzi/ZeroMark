@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Factory : MonoBehaviour
+public class Factory : KBGameObject
 {
 
     public bool itemSelected;
@@ -19,7 +19,7 @@ public class Factory : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Item"))
+        if (other.gameObject.CompareTag("Item")) // TODO This is probably broken
         {
             particleSystem.Play();
             Destroy(other.gameObject);

@@ -9,7 +9,7 @@ public class PlasmaGun : ProjectileAbilityBaseScript
 {
 
     #region CONSTANTS
-    public static float PLASMAGUN_COOLDOWN = 1.0f;
+    public static float PLASMAGUN_COOLDOWN = 0.001f;
     #endregion
 
     public override void Start()
@@ -19,13 +19,4 @@ public class PlasmaGun : ProjectileAbilityBaseScript
         cooldown = PLASMAGUN_COOLDOWN;
     }
 
-    public override void Use()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public override void Use(Vector3 direction)
-    {
-        base.Use(direction);
-    }
 }
