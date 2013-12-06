@@ -84,9 +84,9 @@ GameObject:
   m_Component:
   - 4: {fileID: 400008}
   - 136: {fileID: 13600000}
-  m_Layer: 0
-  m_Name: AttackRange
-  m_TagString: TowerAttackRangeTrigger
+  m_Layer: 10
+  m_Name: RangeTrigger
+  m_TagString: RangeTrigger
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -127,7 +127,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100002}
   m_LocalRotation: {x: 0, y: .999994874, z: 0, w: -.00320943957}
-  m_LocalPosition: {x: -.00233615562, y: 15.1914673, z: 91.8747025}
+  m_LocalPosition: {x: .33484596, y: 15.1914673, z: 144.403641}
   m_LocalScale: {x: 20, y: 65, z: 20}
   m_Children:
   - {fileID: 400008}
@@ -414,8 +414,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bdb3dee42236fb4a8f1269ba70830ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  team: 0
   health: 0
+  team: 0
+  maxRange: 0
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -429,6 +430,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sound: {fileID: 0}
   cooldown: .00100000005
+  abilityActive: 0
 --- !u!114 &11400004
 MonoBehaviour:
   m_ObjectHideFlags: 1
