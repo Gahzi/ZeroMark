@@ -28,18 +28,30 @@ public class Player : KBControllableGameObject
     private Vector3 onUpdatePos;
     private float fraction;
     private GUISelectCube selectCube;
+    private GameObject selectedObj;
 
     public Team team;
 
     protected PhotonView photonView;
 
+    int layerMask;
+
     // Use this for initialization
     void Start()
     {
+        currentMovespeed = PLAYER_MOVEMENT_SPEED;
+        currentRotateSpeed = PLAYER_ROTATE_SPEED;
+        
+        int itemLayer = 8;
+        int towerLayer = 13;
+        int layerMask1 = 1 << itemLayer;
+        int layerMask2 = 1 << towerLayer;
+        layerMask = layerMask1 | layerMask2;
+
         health = 100;
-        
+
         team = Team.Red;
-        
+
         GamepadInfoHandler gamepadHandler = GamepadInfoHandler.Instance;
         Debug.Log("Attempting to attach Controller");
         gamepadHandler.AttachControllerToPlayer(this);
@@ -65,58 +77,77 @@ public class Player : KBControllableGameObject
     }
 
     // Update is called once per frame
-    void Update() 
-	{
+    void Update()
+    {
+        if (selectCube == null)
+        {
+            GameObject.Instantiate(Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.GUISelectCube]), Vector3.zero, Quaternion.identity);
+            selectCube = GameObject.FindObjectOfType<GUISelectCube>();
+            selectCube.renderer.enabled = false;
+        }
+
         if (gamepad != null)
         {
-            // Raycasting for "pushable"
             Vector3 fwd = transform.TransformDirection(Vector3.forward);
-            RaycastHit hit;
-            Vector3 rayStart = transform.position;
-            rayStart.y = rayStart.y + 2.0f;
-            //rayStart = Vector3.RotateTowards(rayStart, PLAYER_PULL_DISTANCE * fwd, Mathf.PI*2, 1000f);
-            if (Physics.Raycast(rayStart, fwd, out hit, PLAYER_PULL_DISTANCE))
+            if (selectedObj == null)
             {
-                selectCube.transform.parent = hit.collider.transform;
-                selectCube.renderer.enabled = true;
-                if (gamepad.button[0])
+                // Raycasting for "pushable"
+                RaycastHit hit;
+                Vector3 rayStart = transform.position;
+                rayStart.y = rayStart.y + 2.0f;
+                //rayStart = Vector3.RotateTowards(rayStart, PLAYER_PULL_DISTANCE * fwd, Mathf.PI*2, 1000f);
+                if (Physics.Raycast(rayStart, fwd, out hit, PLAYER_PULL_DISTANCE, layerMask))
                 {
-                    Vector3 objVec = hit.transform.position;
-
-
-                    if (hit.transform.gameObject.CompareTag("Item"))
+                    selectCube.transform.parent = hit.collider.transform;
+                    selectCube.renderer.enabled = true;
+                    if (gamepad.buttonDown[0] && selectedObj == null)
                     {
-                        objVec = transform.position + 4 * fwd;
-                        objVec.y = hit.transform.position.y;
-                        hit.transform.position = Vector3.Lerp(hit.transform.position, objVec, PLAYER_ITEM_PUSH_LERP_STRENGTH * Time.deltaTime);
-                    }
-                    else
-                    {
-                        currentMovespeed = PLAYER_PULL_SPEED;
-                        currentRotateSpeed = PLAYER_PULL_ROTATE_SPEED;
-                        objVec = transform.position + PLAYER_PULL_DISTANCE * fwd;
-                        objVec.y = hit.transform.position.y;
-                        hit.transform.position = Vector3.Lerp(hit.transform.position, objVec, PLAYER_TOWER_PUSH_LERP_STRENGTH * Time.deltaTime);
+                        selectedObj = hit.collider.gameObject;
                     }
                 }
                 else
                 {
-                    currentMovespeed = PLAYER_MOVEMENT_SPEED;
-                    currentRotateSpeed = PLAYER_ROTATE_SPEED;
+                    selectCube.renderer.enabled = false;
+                }
+            } 
+            else if (selectedObj != null)
+            {
+                if (gamepad.button[0])
+                {
+                    Vector3 objVec = selectedObj.transform.position;
+
+                    if (selectedObj.CompareTag("Item"))
+                    {
+                        Item i = selectedObj.GetComponent<Item>();
+                        if (i.CanPickup)
+                        {
+                            objVec = transform.position + 4 * fwd;
+                            objVec.y = selectedObj.transform.position.y;
+                            i.targetPosition = objVec;
+                        }
+                    }
+                    else if (selectedObj.CompareTag("Tower"))
+                    {
+                        Tower t = selectedObj.GetComponent<Tower>();
+                        objVec = transform.position + PLAYER_PULL_DISTANCE * fwd;
+                        objVec.y = selectedObj.transform.position.y;
+                        t.targetPosition = objVec;
+                    }
                 }
             }
-            else
+
+
+
+            if (gamepad.buttonUp[0] && selectedObj != null)
             {
-                selectCube.renderer.enabled = false;
-                currentMovespeed = PLAYER_MOVEMENT_SPEED;
-                currentRotateSpeed = PLAYER_ROTATE_SPEED;
+                selectedObj = null;
             }
 
             transform.Rotate(Vector3.up, currentRotateSpeed * gamepad.leftStick.x);
 
             //Vector3 newPosition = transform.position;
             //Vector3 movementDelta = new Vector3(gamepad.leftStick.x * currentMovespeed, 0, gamepad.leftStick.y * currentMovespeed);
-            Vector3 movementDelta = new Vector3(gamepad.rightStick.x * currentMovespeed/2, 0, gamepad.leftStick.y * currentMovespeed);
+            Vector3 movementDelta = new Vector3(gamepad.rightStick.x * currentMovespeed / 2, 0, gamepad.leftStick.y * currentMovespeed);
             //Debug.Log("MovementDelta: " + movementDelta.ToString());
             //TODO: Write some movement prediction math to smooth out player movement over network.
             //fraction = fraction + Time.deltaTime * 9;
@@ -126,20 +157,20 @@ public class Player : KBControllableGameObject
             //transform.position = newPosition;
             if (movementDelta.normalized.magnitude > PLAYER_MOVEMENT_DEADZONE)
             {
-                    rigidbody.velocity = transform.localRotation * movementDelta;
+                rigidbody.velocity = transform.localRotation * movementDelta;
             }
             else// if (movementDelta.Equals(Vector3.zero))
             {
                 rigidbody.velocity = Vector3.zero;
             }
 
-         
+
             //transform.position = onUpdatePos;//lerpVector;
 
 
 
         }
-	}
+    }
 
     /// <summary>
     /// While script is observed (in a PhotonView), this is called by PUN with a stream to write or read.

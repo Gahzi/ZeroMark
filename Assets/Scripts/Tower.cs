@@ -21,10 +21,13 @@ public class Tower : KBGameObject
     private CapsuleCollider attackRangeTrigger;
     private GameObject target;
     public int maxRange;
+    public Vector3 targetPosition;
 
     // Use this for initialization
     void Start()
     {
+        targetPosition = transform.position;
+        
         health = TOWER_DEFAULT_HEALTH;
         maxRange = TOWER_DEFAULT_RANGE / 2;
 
@@ -42,6 +45,8 @@ public class Tower : KBGameObject
     // Update is called once per frame
     void Update()
     {
+        transform.position = Vector3.Lerp(transform.position, targetPosition, 5.0f * Time.deltaTime);
+        
         Vector3 fwd = transform.InverseTransformDirection(Vector3.forward);
 
         if (target != null)
