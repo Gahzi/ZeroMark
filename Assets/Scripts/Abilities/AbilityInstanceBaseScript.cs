@@ -21,7 +21,7 @@ abstract public class AbilityInstanceBaseScript : MonoBehaviour
         rigidbody.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY;
         rigidbody.isKinematic = true;
         collider.isTrigger = true;
-        gameObject.layer = LayerMask.NameToLayer("Hitboxes1");
+        //gameObject.layer = LayerMask.NameToLayer("Hitboxes1");
     }
 
     // Update is called once per frame
@@ -34,4 +34,5 @@ abstract public class AbilityInstanceBaseScript : MonoBehaviour
     }
 
     public abstract void OnTriggerEnter(Collider other);
+
 }

@@ -7,6 +7,9 @@ using KBConstants;
 
 public class KBGameObject : Photon.MonoBehaviour {
 
+    public enum Team { Red, Blue, None };
+    public int health;
+
 	protected GameManager gm;
 
     void Awake()
@@ -31,6 +34,8 @@ public class KBGameObject : Photon.MonoBehaviour {
 	{
 		
 	}
+
+    public virtual void takeDamage(int amount) { }
     
 
 }

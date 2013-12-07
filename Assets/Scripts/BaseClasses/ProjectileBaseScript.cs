@@ -14,15 +14,17 @@ using System.Collections;
 abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
 {
 
-    [Range(1.0f, 50.0f)]
+    [Range(1.0f, 100.0f)]
     public float projectileSpeed;
     protected Vector3 direction;
     public bool physicsProjectile;
+    protected bool collideWithProjectiles;
 
     public virtual void Start()
     {
         base.Start();
         gameObject.tag = "Projectile";
+        collideWithProjectiles = true;
 
         if (physicsProjectile)
         {
@@ -33,14 +35,18 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
         }
     }
 
-    public virtual void SetDirection(Vector3 dir)
-    {
-        direction = dir;
-        direction.Normalize();
-        direction.z = 0;
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        transform.eulerAngles = new Vector3(0, 0, angle);
-    }
+    /// <summary>
+    /// For 2D directions.
+    /// </summary>
+    /// <param name="dir"></param>
+    //public virtual void SetDirection2D(Vector3 dir)
+    //{
+    //    direction = dir;
+    //    direction.Normalize();
+    //    direction.z = 0;
+    //    float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+    //    transform.eulerAngles = new Vector3(0, 0, angle);
+    //}
 
     public virtual void Update()
     {
@@ -52,19 +58,7 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
         }
         else
         {
-            transform.Translate(new Vector3(1, 0, 0) * projectileSpeed * Time.deltaTime);
-        }
-    }
-
-    public void FixedUpdate()
-    {
-    }
-
-    void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Environment"))
-        {
-            Destroy(gameObject);
+            transform.Translate(Vector3.forward * projectileSpeed * Time.deltaTime);
         }
     }
 
@@ -76,14 +70,18 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
             //target.TakeDamage(damage);
             //Destroy(gameObject);
         }
-        if (other.gameObject.CompareTag("Projectile"))
-        {
-            Destroy(gameObject);
-        }
 
-        if (other.gameObject.CompareTag("Environment"))
+        if (collideWithProjectiles)
         {
-            Destroy(gameObject);
+            if (other.gameObject.CompareTag("Projectile"))
+            {
+                Destroy(gameObject);
+            }
         }
+    }
+
+    public void setLifetimeForMaxRange(int maxRange)
+    {
+        lifetime = maxRange / projectileSpeed;
     }
 }

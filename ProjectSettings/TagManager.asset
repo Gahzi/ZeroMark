@@ -10,6 +10,7 @@ TagManager:
   - Item
   - Factory
   - GoalZone
+  - RangeTrigger
   - 
   - 
   - 
@@ -20,6 +21,9 @@ TagManager:
   - 
   - 
   - 
+  - 
+  - 
+  - Projectile
   - 
   - 
   - 
@@ -33,9 +37,9 @@ TagManager:
   Builtin Layer 7: 
   User Layer 8: Items
   User Layer 9: Structures
-  User Layer 10: 
-  User Layer 11: 
-  User Layer 12: 
+  User Layer 10: RangeTriggerLayer
+  User Layer 11: HitboxLayer
+  User Layer 12: ProjectileLayer
   User Layer 13: 
   User Layer 14: 
   User Layer 15: 
