@@ -25,14 +25,14 @@ public class PlasmaBullet : ProjectileBaseScript
     
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Tower"))
-        {
-            Debug.Log("Hit tower");
-        }
+        //if (other.gameObject.CompareTag("Tower"))
+        //{
+        //    //Debug.Log("Hit tower");
+        //}
 
         if (other.gameObject.CompareTag("Hitbox"))
         {
-            Debug.Log("Hit hitbox");
+            //Debug.Log("Hit hitbox");
             KBGameObject o = other.gameObject.transform.parent.GetComponent<KBGameObject>();
             o.takeDamage(PLASMABULLET_DAMAGE);
         }

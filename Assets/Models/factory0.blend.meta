@@ -120,6 +120,29 @@ ModelImporter:
     4300040: tank_large
     4300042: main_bldg
     4300044: door0
+    6400000: Cube
+    6400002: Cube_000
+    6400004: Cube_001
+    6400006: Cube_002
+    6400008: Cube_003
+    6400010: Cube_004
+    6400012: Cylinder_001
+    6400014: Cylinder_003
+    6400016: Cylinder_006
+    6400018: Cylinder_007
+    6400020: Cylinder_008
+    6400022: door0
+    6400024: large_exit
+    6400026: main_bldg
+    6400028: pipe0
+    6400030: pipe1
+    6400032: pipe2
+    6400034: pipe2_005
+    6400036: pipe2_006
+    6400038: roof_tank
+    6400040: small_vent
+    6400042: tank_large
+    6400044: tank_small
     7400000: Default Take
     9500000: //RootNode
   materials:
@@ -142,7 +165,7 @@ ModelImporter:
     lODScreenPercentages: []
     globalScale: 1
     meshCompression: 0
-    addColliders: 0
+    addColliders: 1
     importBlendShapes: 1
     swapUVChannels: 0
     generateSecondaryUV: 0

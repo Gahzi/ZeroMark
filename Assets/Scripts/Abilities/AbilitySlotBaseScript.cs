@@ -42,6 +42,7 @@ abstract public class AbilitySlotBaseScript : MonoBehaviour
     }
 
     public void ActivateAbility() { abilityActive = true; }
+    public void DeactivateAbility() { abilityActive = false; }
     public void ToggleAbility() { abilityActive = !abilityActive; }
     public bool GetActive() { return abilityActive; }
 

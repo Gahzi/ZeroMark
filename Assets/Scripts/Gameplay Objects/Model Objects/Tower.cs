@@ -13,20 +13,21 @@ using KBConstants;
 public class Tower : KBGameObject
 {
     #region CONSTANTS
-    public static int TOWER_DEFAULT_HEALTH = 100000;
+    public static int TOWER_DEFAULT_HEALTH = 1000;
     public static int TOWER_DEFAULT_RANGE = 250; // In global units
     #endregion
 
     public Team team;
     private ProjectileAbilityBaseScript gun;
     private CapsuleCollider attackRangeTrigger;
-    private GameObject target;
+    public GameObject target;
     public int maxRange;
     public Vector3 targetPosition;
 
     // Use this for initialization
     void Start()
     {
+        transform.position = new Vector3(transform.position.x, transform.localScale.y / 2, transform.position.z);
         targetPosition = transform.position;
         
         health = TOWER_DEFAULT_HEALTH;
@@ -46,6 +47,9 @@ public class Tower : KBGameObject
     // Update is called once per frame
     void Update()
     {
+        //float dx = Mathf.Lerp(transform.position.x, targetPosition.x, 5.0f * Time.deltaTime);
+        //float dz = Mathf.Lerp(transform.position.y, targetPosition.y, 5.0f * Time.deltaTime);
+        //transform.position.Set(dx, transform.position.y, dz);
         transform.position = Vector3.Lerp(transform.position, targetPosition, 5.0f * Time.deltaTime);
         
         Vector3 fwd = transform.InverseTransformDirection(Vector3.forward);
@@ -57,6 +61,10 @@ public class Tower : KBGameObject
                 gun.ActivateAbility();
             }
             gun.transform.LookAt(target.transform);
+        }
+        else
+        {
+            gun.DeactivateAbility();
         }
 
         if (health < 0)
@@ -92,6 +100,7 @@ public class Tower : KBGameObject
             if (target != null)
             {
                 target = null;
+                gun.DeactivateAbility();
                 Debug.Log("Target out of range");
             }
         }
@@ -109,7 +118,7 @@ public class Tower : KBGameObject
     private void DestroyTower()
     {
         // TODO : Instantiate some goodies to spawn @ TOD
-        Destroy(gameObject);
+        PhotonNetwork.Destroy(gameObject);
     }
 
 }

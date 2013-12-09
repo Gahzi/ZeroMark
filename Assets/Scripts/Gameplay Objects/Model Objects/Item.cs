@@ -55,6 +55,8 @@ public class Item : KBGameObject
             default:
                 break;
         }
+        transform.Rotate(Vector3.forward, 45);
+        transform.Rotate(Vector3.right, 33.3f);
     }
 
     /// <summary>

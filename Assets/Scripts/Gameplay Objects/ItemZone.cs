@@ -19,20 +19,23 @@ public class ItemZone : MonoBehaviour
         numberOfColumns = 5;
         numberOfRows = 5;
 
+
+    }
+
+    public void GenerateItems()
+    {
         for (int i = 0; i < numberOfRows; i++)
         {
             for (int j = 0; j < numberOfColumns; j++)
             {
-                GameObject obj = (GameObject) GameObject.Instantiate(
-                    Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Item]),
-                    new Vector3(
-                        transform.position.x - (width/2) + (i * width/numberOfRows),
-                        2.0f,
-                        transform.position.z - (height/2) + (j * height/numberOfColumns)),
-                    Quaternion.identity);
-                obj.transform.Rotate(Vector3.forward, 45);
-                obj.transform.Rotate(Vector3.right, 33.3f);
 
+                PhotonNetwork.Instantiate(
+                    ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Item],
+                    new Vector3(
+                        transform.position.x - (width / 2) + (i * width / numberOfRows),
+                        2.0f,
+                        transform.position.z - (height / 2) + (j * height / numberOfColumns)),
+                    Quaternion.identity, 0);
             }
         }
     }

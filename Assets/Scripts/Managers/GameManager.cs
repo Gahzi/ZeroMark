@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour {
     List<Tower> towers;
     List<GoalZone> goalZones;
     List<Item> items;
+    List<ItemZone> itemZones;
 
     
 
@@ -74,8 +75,7 @@ public class GameManager : MonoBehaviour {
     public void OnJoinedRoom()
     {
         Debug.Log("Joined Room Succesfully");
-        createObject(ObjectConstants.type.Player);
-       
+        StartGame();       
     }
 
     // This is one of the callback/event methods called by PUN (read more in PhotonNetworkingMessage enumeration)
@@ -118,13 +118,14 @@ public class GameManager : MonoBehaviour {
         GameObject[] loadedTowers = GameObject.FindGameObjectsWithTag("Tower");
         GameObject[] loadedGoalZones = GameObject.FindGameObjectsWithTag("GoalZone");
         GameObject[] loadedItems = GameObject.FindGameObjectsWithTag("Item");
+        //GameObject[] loadedItemZones = GameObject.FindGameObjectsWithTag("ItemZone");
+        ItemZone[] loadedItemZones = FindObjectsOfType<ItemZone>();
 
-
-        List<Factory> factories = new List<Factory>(loadedFactories.Length);
-        List<Tower> towers = new List<Tower>(loadedTowers.Length);
-        List<GoalZone> goalZones = new List<GoalZone>(loadedTowers.Length);
-        List<Item> items = new List<Item>(loadedItems.Length);
-
+        factories = new List<Factory>(loadedFactories.Length);
+        towers = new List<Tower>(loadedTowers.Length);
+        goalZones = new List<GoalZone>(loadedTowers.Length);
+        items = new List<Item>(loadedItems.Length);
+        itemZones = new List<ItemZone>(loadedItemZones.Length);
 
         for (int i = 0; i < loadedFactories.Length; i++)
         {
@@ -145,6 +146,11 @@ public class GameManager : MonoBehaviour {
         {
             items.Add(loadedItems[i].GetComponent<Item>());
         }
+
+        foreach (ItemZone z in loadedItemZones)
+        {
+            itemZones.Add(z);
+        }
 	}
 
     // Update is called once per frame
@@ -155,9 +161,21 @@ public class GameManager : MonoBehaviour {
 
     void StartGame()
     {
+        createObject(ObjectConstants.type.Player, new Vector3(20, 2, 20), Quaternion.identity);
+        Quaternion q = Quaternion.identity;
+        q = Quaternion.AngleAxis(180.0f, Vector3.up);
+        createObject(ObjectConstants.type.FactoryGroup, new Vector3(200, 0, 100), q);
+        createObject(ObjectConstants.type.FactoryGroup, new Vector3(-200, 0, 100), q);
+        createObject(ObjectConstants.type.FactoryGroup, new Vector3(200, 0, -100), Quaternion.identity);
+        createObject(ObjectConstants.type.FactoryGroup, new Vector3(-200, 0, -100), Quaternion.identity);
+        foreach (ItemZone z in itemZones)
+        {
+            z.GenerateItems();
+        }
+        
         // Spawn 
         /*
-                     * Factories,
+            * Factories,
             Goal Zone,
             Items,
             Tower
@@ -188,25 +206,47 @@ public class GameManager : MonoBehaviour {
         }
     }
 	
-	void createObject(KBConstants.ObjectConstants.type objectType)
+	GameObject createObject(KBConstants.ObjectConstants.type objectType, Vector3 position, Quaternion rotation)
 	{
 		switch (objectType) 
 		{
 			case ObjectConstants.type.Player:
 			{
-                GameObject newPlayerObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Player], new Vector3(0, 2, 0), Quaternion.identity, 0);
+                GameObject newPlayerObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Player], position, rotation, 0);
                 Player newPlayer = newPlayerObject.GetComponent<Player>();
                 players.Add(newPlayer);
-				break;
+				return newPlayerObject;
 			}
 
             case ObjectConstants.type.Item:
             {
-                break;
+                GameObject newItemObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Item], position, rotation, 0);
+                Item newItem = newItemObject.GetComponent<Item>();
+                items.Add(newItem);
+                return newItemObject;
+            }
+
+            case ObjectConstants.type.Tower:
+            {
+                GameObject newTowerObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Tower], position, rotation, 0);
+                Tower newTower = newTowerObject.GetComponent<Tower>();
+                towers.Add(newTower);
+                return newTowerObject;
+            }
+
+            case ObjectConstants.type.FactoryGroup:
+            {
+                GameObject newFactoryGroupObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.FactoryGroup], position, rotation, 0);
+                FactoryGroup newFactoryGroup = newFactoryGroupObject.GetComponent<FactoryGroup>();
+                foreach (Factory f in newFactoryGroup.factory)
+                {
+                    factories.Add(f);
+                }
+                return newFactoryGroupObject;
             }
 			
 			default:
-			break;
+			return null;
 		}
 	}
 
@@ -227,8 +267,6 @@ public class GameManager : MonoBehaviour {
                 break;
         }
         // TODO : Towers have different spawn properties based on towerSpawnInfo.itemType
-
-        Tower newTower = (Tower) Instantiate(Resources.Load<Tower>(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Tower]), spawnLocation, Quaternion.identity);
-        //towers.Add(newTower);
+        GameObject newTower = createObject(ObjectConstants.type.Tower, spawnLocation, Quaternion.identity);
     }
 }

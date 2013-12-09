@@ -4,7 +4,8 @@ using KBConstants;
 
 public class FactoryGroup : MonoBehaviour
 {
-    private Factory[] factory;
+    public Factory[] factory;
+    public Factory[] Factories { get { return factory; } } // TODO This returns null?
     private TowerSpawnInfo towerSpawnInfo;
     private Team team;
 
@@ -15,14 +16,16 @@ public class FactoryGroup : MonoBehaviour
         factory = new Factory[3];
         for (int i = 0; i < factory.Length; i++)
         {
-            factory[i] = (Factory) Instantiate(
-                Resources.Load<Factory>(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Factory]),
+            GameObject newFac = PhotonNetwork.Instantiate(
+                ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Factory],
                 new Vector3(
                     transform.position.x + 50 * i,
                     transform.position.y,
                     transform.position.z
                     ),
-                Quaternion.identity);
+                transform.rotation,
+                0);
+            factory[i] = newFac.GetComponent<Factory>();
         }
     }
 
@@ -32,7 +35,7 @@ public class FactoryGroup : MonoBehaviour
         int factoriesReady = 0;
         foreach (Factory f in factory)
         {
-            if (f.ready)
+            if (f.state == Factory.State.ready)
             {
                 factoriesReady++;
             }

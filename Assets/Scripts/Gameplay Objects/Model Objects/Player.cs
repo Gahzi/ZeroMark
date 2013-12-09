@@ -143,11 +143,11 @@ public class Player : KBControllableGameObject
                 selectedObj = null;
             }
 
-            transform.Rotate(Vector3.up, currentRotateSpeed * gamepad.leftStick.x);
+            transform.Rotate(Vector3.up, currentRotateSpeed * gamepad.rightStick.x);
 
             //Vector3 newPosition = transform.position;
             //Vector3 movementDelta = new Vector3(gamepad.leftStick.x * currentMovespeed, 0, gamepad.leftStick.y * currentMovespeed);
-            Vector3 movementDelta = new Vector3(gamepad.rightStick.x * currentMovespeed / 2, 0, gamepad.leftStick.y * currentMovespeed);
+            Vector3 movementDelta = new Vector3(gamepad.leftStick.x * currentMovespeed / 2, 0, gamepad.leftStick.y * currentMovespeed);
             //Debug.Log("MovementDelta: " + movementDelta.ToString());
             //TODO: Write some movement prediction math to smooth out player movement over network.
             //fraction = fraction + Time.deltaTime * 9;

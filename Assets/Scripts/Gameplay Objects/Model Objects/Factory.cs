@@ -6,11 +6,13 @@ using KBConstants;
 public class Factory : KBGameObject
 {
 
+    public enum State { acceptingItems, ready };
+    public State state = State.acceptingItems;
+
     private Collider itemCollider;
     TimerScript timer;
     int[] itemTimer;
     Item[] item;
-    public bool ready;
     private int numberOfItems;
 
     public ItemType itemType; // Temporary
@@ -21,7 +23,6 @@ public class Factory : KBGameObject
         itemType = ItemType.undefined;
         item = new Item[3];
         itemTimer = new int[3];
-        ready = false;
         numberOfItems = 0;
 
         if (GetComponent<TimerScript>() == null)
@@ -50,7 +51,7 @@ public class Factory : KBGameObject
     {
         if (numberOfItems == 3)
         {
-            ready = true;
+            state = State.ready;
         }
 
         for (int i = 0; i < itemTimer.Length; i++)
@@ -100,13 +101,13 @@ public class Factory : KBGameObject
 
     public void ResetFactory()
     {
-        ready = false;
+        state = State.acceptingItems;
         numberOfItems = 0;
         foreach (Item i in item)
         {
             if (i != null)
             {
-                Destroy(i.gameObject);
+                PhotonNetwork.Destroy(i.gameObject);
             }
 
         }
