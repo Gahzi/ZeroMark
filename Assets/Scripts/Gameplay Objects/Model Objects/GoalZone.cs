@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using KBConstants;
 
 public class GoalZone : MonoBehaviour
 {
@@ -94,12 +95,12 @@ public class GoalZone : MonoBehaviour
             Tower p = other.gameObject.GetComponent<Tower>();
             switch (p.team)
             {
-                case KBControllableGameObject.Team.Red:
+                case Team.Red:
                     {
                         redTowerCount += 1;
                         break;
                     }
-                case KBControllableGameObject.Team.Blue:
+                case Team.Blue:
                     {
                         blueTowerCount += 1;
                         break;
@@ -115,13 +116,13 @@ public class GoalZone : MonoBehaviour
             Tower p = other.gameObject.GetComponent<Tower>();
             switch (p.team)
             {
-                case KBControllableGameObject.Team.Red:
+                case Team.Red:
                     {
                         redTowerCount -= 1;
                         break;
                     
                     }
-                case KBControllableGameObject.Team.Blue:
+                case Team.Blue:
                     {
                         blueTowerCount -= 1;
                         break;
@@ -130,17 +131,17 @@ public class GoalZone : MonoBehaviour
         }
     }
 
-    void IncrementGoalZoneScore(Player.Team team)
+    void IncrementGoalZoneScore(Team team)
     {
         switch (team)
         {
-            case KBControllableGameObject.Team.Red:
+            case KBConstants.Team.Red:
                 goalScore += 1;
                 break;
-            case KBControllableGameObject.Team.Blue:
+            case KBConstants.Team.Blue:
                 goalScore -= 1;
                 break;
-            case KBControllableGameObject.Team.None:
+            case KBConstants.Team.None:
                 break;
             default:
                 break;

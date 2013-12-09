@@ -100,7 +100,7 @@ public class Player : KBControllableGameObject
                 {
                     selectCube.transform.parent = hit.collider.transform;
                     selectCube.renderer.enabled = true;
-                    if (gamepad.buttonDown[0] && selectedObj == null)
+                    if (gamepad.buttonDown[9] && selectedObj == null)
                     {
                         selectedObj = hit.collider.gameObject;
                     }
@@ -112,7 +112,7 @@ public class Player : KBControllableGameObject
             } 
             else if (selectedObj != null)
             {
-                if (gamepad.button[0])
+                if (gamepad.button[9])
                 {
                     Vector3 objVec = selectedObj.transform.position;
 
@@ -138,7 +138,7 @@ public class Player : KBControllableGameObject
 
 
 
-            if (gamepad.buttonUp[0] && selectedObj != null)
+            if (gamepad.buttonUp[9] && selectedObj != null)
             {
                 selectedObj = null;
             }

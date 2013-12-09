@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using KBConstants;
 
 [RequireComponent(typeof(TimerScript))]
 public class Factory : KBGameObject
@@ -9,12 +10,19 @@ public class Factory : KBGameObject
     TimerScript timer;
     int[] itemTimer;
     Item[] item;
+    public bool ready;
+    private int numberOfItems;
+
+    public ItemType itemType; // Temporary
 
 
     void Start()
     {
+        itemType = ItemType.undefined;
         item = new Item[3];
         itemTimer = new int[3];
+        ready = false;
+        numberOfItems = 0;
 
         if (GetComponent<TimerScript>() == null)
         {
@@ -40,13 +48,18 @@ public class Factory : KBGameObject
     // Update is called once per frame
     void Update()
     {
+        if (numberOfItems == 3)
+        {
+            ready = true;
+        }
+
         for (int i = 0; i < itemTimer.Length; i++)
         {
             if (!timer.IsTimerActive(i))
             {
                 if (item[i] != null)
                 {
-                    Destroy(item[i].gameObject);
+                    //Destroy(item[i].gameObject);
                 }
             }
         }
@@ -56,22 +69,46 @@ public class Factory : KBGameObject
     {
         if (other.gameObject.CompareTag("Item"))
         {
-            for (int i = 0; i < item.Length; i++)
+            Item o = other.gameObject.GetComponent<Item>();
+            if (itemType == ItemType.undefined)
             {
-                if (item[i] == null)
+                itemType = o.itemType;
+            }
+            if (itemType == o.itemType)
+            {
+                for (int i = 0; i < item.Length; i++)
                 {
-                    item[i] = other.gameObject.GetComponent<Item>();
-                    itemTimer[i] = timer.StartTimer(3.0f);
-                    item[i].State = Item.ItemState.isInFactory;
-                    item[i].targetPosition = new Vector3(transform.position.x, transform.position.y + 10.0f, transform.position.z + 10.0f);
-                    particleSystem.Play();
-                    break;
+                    if (item[i] == null)
+                    {
+                        item[i] = o;
+                        itemTimer[i] = timer.StartTimer(3.0f);
+                        item[i].State = Item.ItemState.isInFactory;
+                        item[i].targetPosition = new Vector3(transform.position.x, transform.position.y + 10.0f, transform.position.z + 10.0f);
+                        particleSystem.Play();
+                        numberOfItems++;
+                        break;
+                    }
                 }
             }
+
         }
         else
         {
             particleSystem.Stop();
+        }
+    }
+
+    public void ResetFactory()
+    {
+        ready = false;
+        numberOfItems = 0;
+        foreach (Item i in item)
+        {
+            if (i != null)
+            {
+                Destroy(i.gameObject);
+            }
+
         }
     }
 
