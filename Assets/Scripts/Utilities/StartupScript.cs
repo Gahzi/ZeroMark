@@ -12,6 +12,8 @@ public class StartupScript : MonoBehaviour {
         GameManager newManager = (GameManager)Instantiate(Resources.Load(ManagerConstants.PREFAB_NAMES[ManagerConstants.type.GameManager], typeof(GameManager)));
         newManager.tag = ManagerConstants.PREFAB_TAGS[ManagerConstants.type.GameManager];
 
+        Instantiate(Resources.Load<FactoryGroup>(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.FactoryGroup]), new Vector3(-200, 0, -100), Quaternion.identity);
+
         //Kaiju kaiju = (Kaiju)Instantiate(Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Kaiju], typeof(Kaiju)), new Vector3(0, 0, 0), Quaternion.identity);
 	}
 	

@@ -29,7 +29,7 @@ GameObject:
   - 23: {fileID: 2300000}
   - 114: {fileID: 11400000}
   - 54: {fileID: 5400000}
-  m_Layer: 9
+  m_Layer: 13
   m_Name: Tower
   m_TagString: Tower
   m_Icon: {fileID: 0}
@@ -126,8 +126,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100002}
-  m_LocalRotation: {x: 0, y: .999994874, z: 0, w: -.00320943957}
-  m_LocalPosition: {x: .33484596, y: 15.1914673, z: 144.403641}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 275.520416, y: 34.5274277, z: -8.71311188}
   m_LocalScale: {x: 20, y: 65, z: 20}
   m_Children:
   - {fileID: 400008}
@@ -417,6 +417,7 @@ MonoBehaviour:
   health: 0
   team: 0
   maxRange: 0
+  targetPosition: {x: 0, y: 0, z: 0}
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1

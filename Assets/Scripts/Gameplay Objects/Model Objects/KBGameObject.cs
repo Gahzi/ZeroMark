@@ -7,7 +7,6 @@ using KBConstants;
 
 public class KBGameObject : Photon.MonoBehaviour {
 
-    public enum Team { Red, Blue, None };
     public int health;
 
 	protected GameManager gm;

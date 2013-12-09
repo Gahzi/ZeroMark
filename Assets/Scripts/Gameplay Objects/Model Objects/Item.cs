@@ -7,7 +7,7 @@ using KBConstants;
 /// </summary>
 public class Item : KBGameObject
 {
-
+    public ItemType itemType;
     public enum ItemState { isDown, isPickedUp, isInFactory };
     ItemState state;
     public ItemState State
@@ -37,6 +37,24 @@ public class Item : KBGameObject
     void Start()
     {
         targetPosition = transform.position;
+        int r = Random.Range(1, 4);
+        switch (r)
+        {
+            case 1:
+                itemType = ItemType.one;
+                renderer.material = Resources.Load<Material>(MaterialConstants.MATERIAL_NAMES[MaterialConstants.type.ItemOneMat]);
+                break;
+            case 2:
+                itemType = ItemType.two;
+                renderer.material = Resources.Load<Material>(MaterialConstants.MATERIAL_NAMES[MaterialConstants.type.ItemTwoMat]);
+                break;
+            case 3:
+                itemType = ItemType.three;
+                renderer.material = Resources.Load<Material>(MaterialConstants.MATERIAL_NAMES[MaterialConstants.type.ItemThreeMat]);
+                break;
+            default:
+                break;
+        }
     }
 
     /// <summary>

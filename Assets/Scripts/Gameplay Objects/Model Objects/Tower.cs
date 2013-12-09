@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using KBConstants;
 
 /// <summary>
 /// Towers are composed of:

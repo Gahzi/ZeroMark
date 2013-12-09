@@ -209,4 +209,26 @@ public class GameManager : MonoBehaviour {
 			break;
 		}
 	}
+
+    public void SpawnTower(TowerSpawnInfo towerSpawnInfo)
+    {
+        Vector3 spawnLocation = new Vector3(0, 50, 0);
+        switch (towerSpawnInfo.team)
+        {
+            case Team.Red:
+                // Change spawn location
+                break;
+            case Team.Blue:
+                // Change spawn location
+                break;
+            case Team.None:
+                break;
+            default:
+                break;
+        }
+        // TODO : Towers have different spawn properties based on towerSpawnInfo.itemType
+
+        Tower newTower = (Tower) Instantiate(Resources.Load<Tower>(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Tower]), spawnLocation, Quaternion.identity);
+        //towers.Add(newTower);
+    }
 }
