@@ -151,8 +151,9 @@ public class Factory : KBGameObject
             {
                 PhotonNetwork.Destroy(i.gameObject);
             }
-
         }
+        item = new Item[3];
+        itemType = ItemType.undefined;
     }
 
 }

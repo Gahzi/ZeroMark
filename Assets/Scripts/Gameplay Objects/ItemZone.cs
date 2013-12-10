@@ -7,7 +7,7 @@ using KBConstants;
 public class ItemZone : MonoBehaviour
 {
 
-    private float width, height;
+    private float width, height = 100f;
     private int numberOfRows;
     private int numberOfColumns;
 
@@ -21,7 +21,27 @@ public class ItemZone : MonoBehaviour
 
     void Start()
     {
+
+        //GenerateItems();
     }
+    
+    void OnDrawGizmos()
+    {
+        //for (int i = 0; i < numberOfRows; i++)
+        //{
+        //    for (int j = 0; j < numberOfColumns; j++)
+        //    {
+        //        PhotonNetwork.Instantiate(
+        //            ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Item],
+        //            new Vector3(
+        //                transform.position.x - (width / 2) + (i * width / numberOfRows),
+        //                2.0f,
+        //                transform.position.z - (height / 2) + (j * height / numberOfColumns)),
+        //            Quaternion.identity, 0);
+        //    }
+        //}
+    }
+    
 
     public void GenerateItems()
     {

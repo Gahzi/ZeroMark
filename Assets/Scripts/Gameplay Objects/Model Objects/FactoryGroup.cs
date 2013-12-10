@@ -8,11 +8,19 @@ public class FactoryGroup : KBGameObject
     public Factory[] Factories { get { return factory; } } // TODO This returns null?
     private TowerInfo towerInfo;
 
-    void Start()
+    void Awake()
     {
         towerInfo.itemType = new ItemType[3];
-        
         factory = new Factory[3];
+    }
+
+    void Start()
+    {
+
+    }
+
+    public void CreateFactories()
+    {
         for (int i = 0; i < factory.Length; i++)
         {
             GameObject newFac = PhotonNetwork.Instantiate(
@@ -26,7 +34,33 @@ public class FactoryGroup : KBGameObject
                 0);
             factory[i] = newFac.GetComponent<Factory>();
         }
+        setTeam(team);
+        resetFactories();
     }
+
+    void OnDrawGizmos()
+    {
+        Matrix4x4 rotationMatrix = Matrix4x4.TRS(transform.position, transform.rotation, transform.lossyScale);
+        //Gizmos.matrix = rotationMatrix;
+
+        for (int i = 0; i < 3; i++)
+        {
+            Gizmos.color = new Color(0, 255, 0, 155f);
+            Gizmos.DrawWireCube(
+                //new Vector3(
+                //    50 * i,
+                //    0,
+                //    0
+                //    ),
+                new Vector3(
+                    transform.position.x + 50 * i,
+                    transform.position.y,
+                    transform.position.z
+                    ),
+                    new Vector3(20, 20, 20));
+        }
+    }
+
 
     // Update is called once per frame
     void Update()

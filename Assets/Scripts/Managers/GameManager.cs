@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour {
     List<GoalZone> goalZones;
     List<Item> items;
     List<ItemZone> itemZones;
+    List<FactoryGroup> factoryGroups;
 
     int redTeamScore = 0;
     int blueTeamScore = 0;
@@ -113,14 +114,15 @@ public class GameManager : MonoBehaviour {
         GameObject[] loadedTowers           = GameObject.FindGameObjectsWithTag("Tower");
         GameObject[] loadedGoalZones        = GameObject.FindGameObjectsWithTag("GoalZone");
         GameObject[] loadedItems            = GameObject.FindGameObjectsWithTag("Item");
-        //GameObject[] loadedItemZones      = GameObject.FindGameObjectsWithTag("ItemZone");
         ItemZone[] loadedItemZones          = FindObjectsOfType<ItemZone>();
+        FactoryGroup[] loadedFactoryGroups  = FindObjectsOfType<FactoryGroup>();
 
         factories                           = new List<Factory>(loadedFactories.Length);
         towers                              = new List<Tower>(loadedTowers.Length);
         goalZones                           = new List<GoalZone>(loadedTowers.Length);
         items                               = new List<Item>(loadedItems.Length);
         itemZones                           = new List<ItemZone>(loadedItemZones.Length);
+        factoryGroups                       = new List<FactoryGroup>(loadedFactoryGroups.Length);
 
         for (int i = 0; i < loadedFactories.Length; i++)
         {
@@ -146,6 +148,11 @@ public class GameManager : MonoBehaviour {
         {
             itemZones.Add(z);
         }
+
+        foreach (FactoryGroup g in loadedFactoryGroups)
+        {
+            factoryGroups.Add(g);
+        }
 	}
 
     // Update is called once per frame
@@ -159,50 +166,55 @@ public class GameManager : MonoBehaviour {
         GameObject newObj;
         
         newObj = createObject(ObjectConstants.type.Player, new Vector3(20, 2, 20), Quaternion.identity);
-        newObj = createObject(ObjectConstants.type.ItemZone, new Vector3(200, 0, 0), Quaternion.identity);
-        newObj = createObject(ObjectConstants.type.ItemZone, new Vector3(-200, 0, 0), Quaternion.identity);
+        //newObj = createObject(ObjectConstants.type.ItemZone, new Vector3(200, 0, 0), Quaternion.identity);
+        //newObj = createObject(ObjectConstants.type.ItemZone, new Vector3(-200, 0, 0), Quaternion.identity);
 
-        for (int i = 0; i < 4; i++)
+        //for (int i = 0; i < 4; i++)
+        //{
+        //    Quaternion q = Quaternion.identity;
+        //    float x = 0.0f;
+        //    float z = 0.0f;
+        //    Team t = Team.None;
+        //    switch (i)
+        //    {
+        //        case 0:
+        //            x = 200.0f;
+        //            z = 100.0f;
+        //            t = Team.Red;
+        //            q = Quaternion.AngleAxis(180.0f, Vector3.up);
+        //            break;
+        //        case 1:
+        //            x = 200.0f;
+        //            z = -100.0f;
+        //            t = Team.Red;
+        //            break;
+
+        //        case 2:
+        //            x = -200.0f;
+        //            z = 100.0f;
+        //            t = Team.Blue;
+        //            q = Quaternion.AngleAxis(180.0f, Vector3.up);
+        //            break;
+        //        case 3:
+        //            x = -200.0f;
+        //            z = -100.0f;
+        //            t = Team.Blue;
+        //            break;
+        //        default:
+        //            Debug.LogError("Factory generation error");
+        //            break;
+        //    }
+        //    GameObject g = createObject(ObjectConstants.type.FactoryGroup, new Vector3(x, 0, z), q);
+        //    FactoryGroup f = g.GetComponent<FactoryGroup>();
+        //    f.resetFactories();
+        //    f.setTeam(t);
+        //}
+
+        foreach (FactoryGroup g in factoryGroups)
         {
-            Quaternion q = Quaternion.identity;
-            float x = 0.0f;
-            float z = 0.0f;
-            Team t = Team.None;
-            switch (i)
-            {
-                case 0:
-                    x = 200.0f;
-                    z = 100.0f;
-                    t = Team.Red;
-                    q = Quaternion.AngleAxis(180.0f, Vector3.up);
-                    break;
-                case 1:
-                    x = 200.0f;
-                    z = -100.0f;
-                    t = Team.Red;
-                    break;
-
-                case 2:
-                    x = -200.0f;
-                    z = 100.0f;
-                    t = Team.Blue;
-                    q = Quaternion.AngleAxis(180.0f, Vector3.up);
-                    break;
-                case 3:
-                    x = -200.0f;
-                    z = -100.0f;
-                    t = Team.Blue;
-                    break;
-                default:
-                    Debug.LogError("Factory generation error");
-                    break;
-            }
-            GameObject g = createObject(ObjectConstants.type.FactoryGroup, new Vector3(x, 0, z), q);
-            FactoryGroup f = g.GetComponent<FactoryGroup>();
-            f.resetFactories();
-            f.setTeam(t);
+            g.CreateFactories();
         }
-        
+
         foreach (ItemZone z in itemZones)
         {
             z.GenerateItems();
@@ -264,10 +276,10 @@ public class GameManager : MonoBehaviour {
             {
                 GameObject newFactoryGroupObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.FactoryGroup], position, rotation, 0);
                 FactoryGroup newFactoryGroup = newFactoryGroupObject.GetComponent<FactoryGroup>();
-                foreach (Factory f in newFactoryGroup.factory)
-                {
-                    factories.Add(f);
-                }
+                //foreach (Factory f in newFactoryGroup.factory)
+                //{
+                //    factories.Add(f);
+                //}
                 return newFactoryGroupObject;
             }
 
@@ -305,6 +317,5 @@ public class GameManager : MonoBehaviour {
         Tower t = newTower.GetComponent<Tower>();
         t.Team = towerInfo.team;
         t.TowerInfo = towerInfo;
-
     }
 }
