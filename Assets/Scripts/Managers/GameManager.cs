@@ -70,15 +70,14 @@ public class GameManager : MonoBehaviour {
     // This is one of the callback/event methods called by PUN (read more in PhotonNetworkingMessage enumeration)
     public void OnJoinedRoom()
     {
-        Debug.Log("Joined Room Succesfully");
-        StartGame();       
+        Debug.Log("Joined Room Succesfully");      
     }
 
     // This is one of the callback/event methods called by PUN (read more in PhotonNetworkingMessage enumeration)
     public void OnCreatedRoom()
     {
         Debug.Log("Created Room Succesfully");
-     
+        StartGame();
        //Application.LoadLevel(Application.loadedLevel);
     }
 
