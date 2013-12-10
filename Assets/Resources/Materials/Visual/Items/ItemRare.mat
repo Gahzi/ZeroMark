@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: ItemTwo
+  m_Name: ItemRare
   m_Shader: {fileID: 22, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: []
   m_CustomRenderQueue: -1
@@ -36,12 +36,12 @@ Material:
       data:
         first:
           name: _Color
-        second: {r: .903448224, g: 1, b: 0, a: 1}
+        second: {r: .944827557, g: 1, b: 0, a: 1}
       data:
         first:
           name: _SpecColor
-        second: {r: .147058845, g: 1, b: 1, a: 1}
+        second: {r: 1, g: 1, b: 1, a: 1}
       data:
         first:
           name: _ReflectColor
-        second: {r: 1, g: .397058845, b: .397058845, a: .501960814}
+        second: {r: .867647052, g: .609904885, b: .223291531, a: .501960814}

@@ -8,6 +8,18 @@ using KBConstants;
 public class KBGameObject : Photon.MonoBehaviour {
 
     public int health;
+    private Team team;
+    public Team Team
+    {
+        get
+        {
+            return team;
+        }
+        set
+        {
+            team = value;
+        }
+    }
 
 	protected GameManager gm;
 

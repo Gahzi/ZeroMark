@@ -12,11 +12,14 @@ public class Factory : KBGameObject
     private Collider itemCollider;
     TimerScript timer;
     int[] itemTimer;
-    Item[] item;
+    public Item[] item;
     private int numberOfItems;
 
     public ItemType itemType; // Temporary
+    AudioClip itemAccept;
+    AudioClip itemFinish;
 
+    ItemDropZone itemDropZone;
 
     void Start()
     {
@@ -24,6 +27,9 @@ public class Factory : KBGameObject
         item = new Item[3];
         itemTimer = new int[3];
         numberOfItems = 0;
+
+        itemAccept = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.FactoryItemAccept]);
+        itemFinish = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.FactoryItemFinish]);
 
         if (GetComponent<TimerScript>() == null)
         {
@@ -44,6 +50,8 @@ public class Factory : KBGameObject
         {
             Debug.LogError("Factory could not find its itemZone collider");
         }
+
+        itemDropZone = (ItemDropZone) GetComponentInChildren<ItemDropZone>();
     }
 
     // Update is called once per frame
@@ -54,16 +62,48 @@ public class Factory : KBGameObject
             state = State.ready;
         }
 
-        for (int i = 0; i < itemTimer.Length; i++)
+        for (int i = 0; i < item.Length; i++)
         {
-            if (!timer.IsTimerActive(i))
+            Vector3 p = itemDropZone.gameObject.transform.position;
+            if (item[i] != null)
             {
-                if (item[i] != null)
+                switch (i)
                 {
-                    //Destroy(item[i].gameObject);
+                    case 0:
+                        item[i].targetPosition.Set(p.x, p.y, p.z);
+                        break;
+                    case 1:
+                        item[i].targetPosition.Set(p.x, p.y + item[i].transform.localScale.y, p.z);
+                        break;
+                    case 2:
+                        item[i].targetPosition.Set(p.x, p.y - item[i].transform.localScale.y, p.z);
+                        break;
+                    default:
+                        break;
                 }
             }
         }
+
+        //foreach (Item i in item)
+        //{
+        //    i.targetPosition = itemDropZone.gameObject.transform.position;   
+        //}
+
+        //for (int i = 0; i < itemTimer.Length; i++)
+        //{
+        //    if (!timer.IsTimerActive(i))
+        //    {
+        //        if (item[i] != null)
+        //        {
+        //            //Destroy(item[i].gameObject);
+        //            //audio.PlayOneShot(itemFinish);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        item[i].targetPosition = itemDropZone.gameObject.transform.position;
+        //    }
+        //}
     }
 
     void OnTriggerEnter(Collider other)
@@ -75,19 +115,20 @@ public class Factory : KBGameObject
             {
                 itemType = o.itemType;
             }
+
             if (itemType == o.itemType)
             {
                 for (int i = 0; i < item.Length; i++)
                 {
-                    if (item[i] == null)
+                    if (item[i] == null && o.State != Item.ItemState.isInFactory)
                     {
                         item[i] = o;
                         itemTimer[i] = timer.StartTimer(3.0f);
                         item[i].State = Item.ItemState.isInFactory;
-                        item[i].targetPosition = new Vector3(transform.position.x, transform.position.y + 10.0f, transform.position.z + 10.0f);
+                        item[i].StartGrowAnimation();
                         particleSystem.Play();
                         numberOfItems++;
-                        break;
+                        audio.PlayOneShot(itemAccept);
                     }
                 }
             }
@@ -101,6 +142,7 @@ public class Factory : KBGameObject
 
     public void ResetFactory()
     {
+        audio.PlayOneShot(itemFinish);
         state = State.acceptingItems;
         numberOfItems = 0;
         foreach (Item i in item)

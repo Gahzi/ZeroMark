@@ -8,7 +8,6 @@ public class GameManager : MonoBehaviour {
 
     enum GameState { PreGame, InGame, RedWins, BlueWins, Tie };
 
-
 	List<Player> players;
     List<Factory> factories;
     List<Tower> towers;
@@ -16,12 +15,9 @@ public class GameManager : MonoBehaviour {
     List<Item> items;
     List<ItemZone> itemZones;
 
-    
-
     int redTeamScore = 0;
     int blueTeamScore = 0;
     GameState state = GameState.PreGame;
-
 
     private GamepadInfoHandler gamepadHandler;
 
@@ -114,18 +110,18 @@ public class GameManager : MonoBehaviour {
         redTeamScore = 0;
         blueTeamScore= 0;
 
-        GameObject[] loadedFactories = GameObject.FindGameObjectsWithTag("Factory");
-        GameObject[] loadedTowers = GameObject.FindGameObjectsWithTag("Tower");
-        GameObject[] loadedGoalZones = GameObject.FindGameObjectsWithTag("GoalZone");
-        GameObject[] loadedItems = GameObject.FindGameObjectsWithTag("Item");
-        //GameObject[] loadedItemZones = GameObject.FindGameObjectsWithTag("ItemZone");
-        ItemZone[] loadedItemZones = FindObjectsOfType<ItemZone>();
+        GameObject[] loadedFactories        = GameObject.FindGameObjectsWithTag("Factory");
+        GameObject[] loadedTowers           = GameObject.FindGameObjectsWithTag("Tower");
+        GameObject[] loadedGoalZones        = GameObject.FindGameObjectsWithTag("GoalZone");
+        GameObject[] loadedItems            = GameObject.FindGameObjectsWithTag("Item");
+        //GameObject[] loadedItemZones      = GameObject.FindGameObjectsWithTag("ItemZone");
+        ItemZone[] loadedItemZones          = FindObjectsOfType<ItemZone>();
 
-        factories = new List<Factory>(loadedFactories.Length);
-        towers = new List<Tower>(loadedTowers.Length);
-        goalZones = new List<GoalZone>(loadedTowers.Length);
-        items = new List<Item>(loadedItems.Length);
-        itemZones = new List<ItemZone>(loadedItemZones.Length);
+        factories                           = new List<Factory>(loadedFactories.Length);
+        towers                              = new List<Tower>(loadedTowers.Length);
+        goalZones                           = new List<GoalZone>(loadedTowers.Length);
+        items                               = new List<Item>(loadedItems.Length);
+        itemZones                           = new List<ItemZone>(loadedItemZones.Length);
 
         for (int i = 0; i < loadedFactories.Length; i++)
         {
@@ -161,27 +157,58 @@ public class GameManager : MonoBehaviour {
 
     void StartGame()
     {
-        createObject(ObjectConstants.type.Player, new Vector3(20, 2, 20), Quaternion.identity);
-        Quaternion q = Quaternion.identity;
-        q = Quaternion.AngleAxis(180.0f, Vector3.up);
-        createObject(ObjectConstants.type.FactoryGroup, new Vector3(200, 0, 100), q);
-        createObject(ObjectConstants.type.FactoryGroup, new Vector3(-200, 0, 100), q);
-        createObject(ObjectConstants.type.FactoryGroup, new Vector3(200, 0, -100), Quaternion.identity);
-        createObject(ObjectConstants.type.FactoryGroup, new Vector3(-200, 0, -100), Quaternion.identity);
+        GameObject newObj;
+        
+        newObj = createObject(ObjectConstants.type.Player, new Vector3(20, 2, 20), Quaternion.identity);
+        newObj = createObject(ObjectConstants.type.ItemZone, new Vector3(200, 0, 0), Quaternion.identity);
+        newObj = createObject(ObjectConstants.type.ItemZone, new Vector3(-200, 0, 0), Quaternion.identity);
+
+        for (int i = 0; i < 4; i++)
+        {
+            Quaternion q = Quaternion.identity;
+            float x = 0.0f;
+            float z = 0.0f;
+            Team t = Team.None;
+            switch (i)
+            {
+                case 0:
+                    x = 200.0f;
+                    z = 100.0f;
+                    t = Team.Red;
+                    q = Quaternion.AngleAxis(180.0f, Vector3.up);
+                    break;
+                case 1:
+                    x = 200.0f;
+                    z = -100.0f;
+                    t = Team.Red;
+                    break;
+
+                case 2:
+                    x = -200.0f;
+                    z = 100.0f;
+                    t = Team.Blue;
+                    q = Quaternion.AngleAxis(180.0f, Vector3.up);
+                    break;
+                case 3:
+                    x = -200.0f;
+                    z = -100.0f;
+                    t = Team.Blue;
+                    break;
+                default:
+                    Debug.LogError("Factory generation error");
+                    break;
+            }
+            GameObject g = createObject(ObjectConstants.type.FactoryGroup, new Vector3(x, 0, z), q);
+            FactoryGroup f = g.GetComponent<FactoryGroup>();
+            f.resetFactories();
+            f.setTeam(t);
+        }
+        
         foreach (ItemZone z in itemZones)
         {
             z.GenerateItems();
         }
         
-        // Spawn 
-        /*
-            * Factories,
-            Goal Zone,
-            Items,
-            Tower
-         * */
-
-
     }
 
     /// <summary>
@@ -206,7 +233,7 @@ public class GameManager : MonoBehaviour {
         }
     }
 	
-	GameObject createObject(KBConstants.ObjectConstants.type objectType, Vector3 position, Quaternion rotation)
+	public GameObject createObject(KBConstants.ObjectConstants.type objectType, Vector3 position, Quaternion rotation)
 	{
 		switch (objectType) 
 		{
@@ -244,22 +271,30 @@ public class GameManager : MonoBehaviour {
                 }
                 return newFactoryGroupObject;
             }
+
+            case ObjectConstants.type.ItemZone:
+            {
+                GameObject newItemZoneObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.ItemZone], position, rotation, 0);
+                ItemZone newItemZone = newItemZoneObject.GetComponent<ItemZone>();
+                itemZones.Add(newItemZone);
+                return newItemZoneObject;
+            }
 			
 			default:
 			return null;
 		}
 	}
 
-    public void SpawnTower(TowerSpawnInfo towerSpawnInfo)
+    public void SpawnTower(TowerInfo towerInfo)
     {
         Vector3 spawnLocation = new Vector3(0, 50, 0);
-        switch (towerSpawnInfo.team)
+        switch (towerInfo.team)
         {
             case Team.Red:
-                // Change spawn location
+                spawnLocation = new Vector3(275.0f, 0, 0);
                 break;
             case Team.Blue:
-                // Change spawn location
+                spawnLocation = new Vector3(-275.0f, 0, 0);
                 break;
             case Team.None:
                 break;
@@ -268,5 +303,9 @@ public class GameManager : MonoBehaviour {
         }
         // TODO : Towers have different spawn properties based on towerSpawnInfo.itemType
         GameObject newTower = createObject(ObjectConstants.type.Tower, spawnLocation, Quaternion.identity);
+        Tower t = newTower.GetComponent<Tower>();
+        t.Team = towerInfo.team;
+        t.TowerInfo = towerInfo;
+
     }
 }

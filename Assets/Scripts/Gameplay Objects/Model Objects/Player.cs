@@ -9,11 +9,11 @@ using KBConstants;
 public class Player : KBControllableGameObject
 {
 
-    public static float PLAYER_MOVEMENT_SPEED = 25f;
+    public static float PLAYER_MOVEMENT_SPEED = 30f;
     public static float PLAYER_PULL_SPEED = 5f;
     public static float PLAYER_PULL_ROTATE_SPEED = 0.1f;
     public static float PLAYER_MOVEMENT_DEADZONE = 0.3f;
-    public static float PLAYER_ROTATE_SPEED = 3.0f;
+    public static float PLAYER_ROTATE_SPEED = 7.0f;
     public static float PLAYER_PULL_DISTANCE = 15f;
 
     //TODO: MOVE THESE TO TOWER OR SOMETHING
@@ -30,15 +30,17 @@ public class Player : KBControllableGameObject
     private GUISelectCube selectCube;
     private GameObject selectedObj;
 
-    public Team team;
-
     protected PhotonView photonView;
 
     int layerMask;
 
+    public AudioClip grabSound;
+
     // Use this for initialization
     void Start()
     {
+        grabSound = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.ItemGrab]);
+        
         currentMovespeed = PLAYER_MOVEMENT_SPEED;
         currentRotateSpeed = PLAYER_ROTATE_SPEED;
         
@@ -50,7 +52,7 @@ public class Player : KBControllableGameObject
 
         health = 100;
 
-        team = Team.Red;
+        Team = Team.Red;
 
         GamepadInfoHandler gamepadHandler = GamepadInfoHandler.Instance;
         Debug.Log("Attempting to attach Controller");
@@ -76,7 +78,6 @@ public class Player : KBControllableGameObject
         Debug.Log("Gamepad was set to Player");
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (selectCube == null)
@@ -103,6 +104,7 @@ public class Player : KBControllableGameObject
                     if (gamepad.buttonDown[9] && selectedObj == null)
                     {
                         selectedObj = hit.collider.gameObject;
+                        audio.PlayOneShot(grabSound);
                     }
                 }
                 else
@@ -119,7 +121,7 @@ public class Player : KBControllableGameObject
                     if (selectedObj.CompareTag("Item"))
                     {
                         Item i = selectedObj.GetComponent<Item>();
-                        if (i.CanPickup)
+                        if (i.State == Item.ItemState.isDown)
                         {
                             objVec = transform.position + 4 * fwd;
                             objVec.y = selectedObj.transform.position.y;
@@ -147,7 +149,7 @@ public class Player : KBControllableGameObject
 
             //Vector3 newPosition = transform.position;
             //Vector3 movementDelta = new Vector3(gamepad.leftStick.x * currentMovespeed, 0, gamepad.leftStick.y * currentMovespeed);
-            Vector3 movementDelta = new Vector3(gamepad.leftStick.x * currentMovespeed / 2, 0, gamepad.leftStick.y * currentMovespeed);
+            Vector3 movementDelta = new Vector3(gamepad.leftStick.x * currentMovespeed, 0, gamepad.leftStick.y * currentMovespeed);
             //Debug.Log("MovementDelta: " + movementDelta.ToString());
             //TODO: Write some movement prediction math to smooth out player movement over network.
             //fraction = fraction + Time.deltaTime * 9;

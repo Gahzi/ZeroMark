@@ -17,19 +17,31 @@ public class Tower : KBGameObject
     public static int TOWER_DEFAULT_RANGE = 250; // In global units
     #endregion
 
-    public Team team;
+    TowerInfo towerInfo;
+    public TowerInfo TowerInfo
+    {
+        get { return towerInfo; }
+        set { towerInfo = value; }
+    }
     private ProjectileAbilityBaseScript gun;
     private CapsuleCollider attackRangeTrigger;
     public GameObject target;
     public int maxRange;
     public Vector3 targetPosition;
 
+    AudioClip ambient;
+
     // Use this for initialization
     void Start()
     {
+        ambient = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.TowerAmbient]);
+        audio.clip = ambient;
+        audio.Play();
+        audio.loop = true;
+
         transform.position = new Vector3(transform.position.x, transform.localScale.y / 2, transform.position.z);
         targetPosition = transform.position;
-        
+
         health = TOWER_DEFAULT_HEALTH;
         maxRange = TOWER_DEFAULT_RANGE / 2;
 
@@ -51,7 +63,7 @@ public class Tower : KBGameObject
         //float dz = Mathf.Lerp(transform.position.y, targetPosition.y, 5.0f * Time.deltaTime);
         //transform.position.Set(dx, transform.position.y, dz);
         transform.position = Vector3.Lerp(transform.position, targetPosition, 5.0f * Time.deltaTime);
-        
+
         Vector3 fwd = transform.InverseTransformDirection(Vector3.forward);
 
         if (target != null)
@@ -81,7 +93,7 @@ public class Tower : KBGameObject
 
     void OnTriggerEnter(Collider other)
     {
-        
+
         if (other.CompareTag("Tower"))
         {
             if (target == null)
@@ -117,7 +129,21 @@ public class Tower : KBGameObject
 
     private void DestroyTower()
     {
-        // TODO : Instantiate some goodies to spawn @ TOD
+        // TODO : Make the items not overlap
+        // TODO : Items randomize their type @ init so the code below doesn't matter
+        //foreach (ItemType t in towerInfo.itemType)
+        //{
+        //    for (int i = 0; i < 3; i++)
+        //    {
+        //        GameManager.Instance.createObject(ObjectConstants.type.Item, new Vector3(transform.position.x + Random.Range(-5.0f, 5.0f), 2.0f, transform.position.z + Random.Range(-5.0f, 5.0f)), transform.rotation);
+        //    }
+        //}
+
+        for (int i = 0; i < 9; i++)
+        {
+            GameManager.Instance.createObject(ObjectConstants.type.Item, new Vector3(transform.position.x + Random.Range(-5.0f, 5.0f), 2.0f, transform.position.z + Random.Range(-5.0f, 5.0f)), transform.rotation);
+        }
+
         PhotonNetwork.Destroy(gameObject);
     }
 

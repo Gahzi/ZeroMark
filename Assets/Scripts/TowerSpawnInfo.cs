@@ -5,7 +5,7 @@ using KBConstants;
 /// <summary>
 /// Container for the three properties sent by the factories to the factory group
 /// </summary>
-public struct TowerSpawnInfo
+public struct TowerInfo
 {
     public ItemType[] itemType;
     public Team team;

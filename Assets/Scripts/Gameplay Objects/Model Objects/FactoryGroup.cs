@@ -2,16 +2,15 @@
 using System.Collections;
 using KBConstants;
 
-public class FactoryGroup : MonoBehaviour
+public class FactoryGroup : KBGameObject
 {
     public Factory[] factory;
     public Factory[] Factories { get { return factory; } } // TODO This returns null?
-    private TowerSpawnInfo towerSpawnInfo;
-    private Team team;
+    private TowerInfo towerInfo;
 
     void Start()
     {
-        towerSpawnInfo.itemType = new ItemType[3];
+        towerInfo.itemType = new ItemType[3];
         
         factory = new Factory[3];
         for (int i = 0; i < factory.Length; i++)
@@ -42,22 +41,31 @@ public class FactoryGroup : MonoBehaviour
         }
         if (factoriesReady == factory.Length)
         {
-            setTowerSpawnInfo();
-            GameManager.Instance.SpawnTower(towerSpawnInfo);
+            setTowerInfo();
+            GameManager.Instance.SpawnTower(towerInfo);
             resetFactories();
         }
     }
 
-    void setTowerSpawnInfo()
+    public void setTeam(KBConstants.Team team)
     {
-        towerSpawnInfo.team = team;
-        for (int i = 0; i < towerSpawnInfo.itemType.Length; i++)
+        this.Team = team;
+        foreach (Factory f in factory)
         {
-            towerSpawnInfo.itemType[i] = factory[i].itemType;
+            f.Team = team;
         }
     }
 
-    void resetFactories()
+    void setTowerInfo()
+    {
+        towerInfo.team = Team;
+        for (int i = 0; i < towerInfo.itemType.Length; i++)
+        {
+            towerInfo.itemType[i] = factory[i].itemType;
+        }
+    }
+
+    public void resetFactories()
     {
         foreach (Factory f in factory)
         {

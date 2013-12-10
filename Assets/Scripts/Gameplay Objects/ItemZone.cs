@@ -11,15 +11,16 @@ public class ItemZone : MonoBehaviour
     private int numberOfRows;
     private int numberOfColumns;
 
-    void Start()
+    void Awake()
     {
         width = 100f;
         height = width;
+        numberOfColumns = 10;
+        numberOfRows = 10;
+    }
 
-        numberOfColumns = 5;
-        numberOfRows = 5;
-
-
+    void Start()
+    {
     }
 
     public void GenerateItems()
@@ -28,7 +29,6 @@ public class ItemZone : MonoBehaviour
         {
             for (int j = 0; j < numberOfColumns; j++)
             {
-
                 PhotonNetwork.Instantiate(
                     ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Item],
                     new Vector3(

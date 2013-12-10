@@ -93,7 +93,7 @@ public class GoalZone : MonoBehaviour
          if (other.gameObject.CompareTag("Tower"))
         {
             Tower p = other.gameObject.GetComponent<Tower>();
-            switch (p.team)
+            switch (p.Team)
             {
                 case Team.Red:
                     {
@@ -114,7 +114,7 @@ public class GoalZone : MonoBehaviour
         if (other.gameObject.CompareTag("Tower"))
         {
             Tower p = other.gameObject.GetComponent<Tower>();
-            switch (p.team)
+            switch (p.Team)
             {
                 case Team.Red:
                     {
