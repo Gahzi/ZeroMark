@@ -30,6 +30,7 @@ public class Tower : KBGameObject
     public Vector3 targetPosition;
 
     AudioClip ambient;
+    AudioClip death;
 
     // Use this for initialization
     void Start()
@@ -38,6 +39,8 @@ public class Tower : KBGameObject
         audio.clip = ambient;
         audio.Play();
         audio.loop = true;
+
+        death = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.TowerDie]);
 
         transform.position = new Vector3(transform.position.x, transform.localScale.y / 2, transform.position.z);
         targetPosition = transform.position;
@@ -138,6 +141,8 @@ public class Tower : KBGameObject
         //        GameManager.Instance.createObject(ObjectConstants.type.Item, new Vector3(transform.position.x + Random.Range(-5.0f, 5.0f), 2.0f, transform.position.z + Random.Range(-5.0f, 5.0f)), transform.rotation);
         //    }
         //}
+
+        audio.PlayOneShot(death);
 
         for (int i = 0; i < 9; i++)
         {

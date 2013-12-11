@@ -10,13 +10,14 @@ public class FactoryGroup : KBGameObject
 
     void Awake()
     {
-        towerInfo.itemType = new ItemType[3];
-        factory = new Factory[3];
+
     }
 
     void Start()
     {
-
+        towerInfo.itemType = new ItemType[3];
+        factory = new Factory[3];
+        //CreateFactories();
     }
 
     public void CreateFactories()

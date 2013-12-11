@@ -164,51 +164,7 @@ public class GameManager : MonoBehaviour {
     void StartGame()
     {
         GameObject newObj;
-        
         newObj = createObject(ObjectConstants.type.Player, new Vector3(20, 2, 20), Quaternion.identity);
-        //newObj = createObject(ObjectConstants.type.ItemZone, new Vector3(200, 0, 0), Quaternion.identity);
-        //newObj = createObject(ObjectConstants.type.ItemZone, new Vector3(-200, 0, 0), Quaternion.identity);
-
-        //for (int i = 0; i < 4; i++)
-        //{
-        //    Quaternion q = Quaternion.identity;
-        //    float x = 0.0f;
-        //    float z = 0.0f;
-        //    Team t = Team.None;
-        //    switch (i)
-        //    {
-        //        case 0:
-        //            x = 200.0f;
-        //            z = 100.0f;
-        //            t = Team.Red;
-        //            q = Quaternion.AngleAxis(180.0f, Vector3.up);
-        //            break;
-        //        case 1:
-        //            x = 200.0f;
-        //            z = -100.0f;
-        //            t = Team.Red;
-        //            break;
-
-        //        case 2:
-        //            x = -200.0f;
-        //            z = 100.0f;
-        //            t = Team.Blue;
-        //            q = Quaternion.AngleAxis(180.0f, Vector3.up);
-        //            break;
-        //        case 3:
-        //            x = -200.0f;
-        //            z = -100.0f;
-        //            t = Team.Blue;
-        //            break;
-        //        default:
-        //            Debug.LogError("Factory generation error");
-        //            break;
-        //    }
-        //    GameObject g = createObject(ObjectConstants.type.FactoryGroup, new Vector3(x, 0, z), q);
-        //    FactoryGroup f = g.GetComponent<FactoryGroup>();
-        //    f.resetFactories();
-        //    f.setTeam(t);
-        //}
 
         foreach (FactoryGroup g in factoryGroups)
         {

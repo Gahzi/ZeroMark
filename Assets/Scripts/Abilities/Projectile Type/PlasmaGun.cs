@@ -9,7 +9,7 @@ public class PlasmaGun : ProjectileAbilityBaseScript
 {
 
     #region CONSTANTS
-    public static float PLASMAGUN_COOLDOWN = 0.001f;
+    public static float PLASMAGUN_COOLDOWN = 0.5f;
     #endregion
 
     public override void Start()
@@ -17,6 +17,8 @@ public class PlasmaGun : ProjectileAbilityBaseScript
         base.Start();
         projectileType = (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.PlasmaBullet], typeof(ProjectileBaseScript));
         cooldown = PLASMAGUN_COOLDOWN;
+        sound = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.PlasmaGunFire]);
+        audio.clip = sound;
     }
 
 }

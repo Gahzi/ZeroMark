@@ -14,7 +14,7 @@ MonoBehaviour:
   HostType: 1
   ServerAddress: app-us.exitgamescloud.com
   ServerPort: 5055
-  AppID: e2d6c744-5dc7-48d6-9645-91efb9bbb0b5
+  AppID: 52dc8f01-02e1-4545-9696-4aa1afc90949
   RpcList:
   - Marco
   - Polo

@@ -18,10 +18,16 @@ public class GoalZone : MonoBehaviour
 
     public int goalScore = 0;
 
+    AudioClip captureProgress;
+    AudioClip captureComplete;
+
     void Start()
     {
         goalScore = 0;
         state = GoalState.NotCaptured;
+
+        captureComplete = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.CaptureComplete]);
+        captureProgress = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.CaptureProgress]);
     }
 
     void Update()
@@ -44,10 +50,12 @@ public class GoalZone : MonoBehaviour
         if (goalScore >= RED_TEAM_CAPTURE_COUNT)
         {
             state = GoalState.RedCaptured;
+            audio.PlayOneShot(captureComplete);
         }
         else if (goalScore <= BLUE_TEAM_CAPTURE_COUNT)
         {
             state = GoalState.BlueCaptured;
+            audio.PlayOneShot(captureComplete);
         }
     }
 
@@ -106,6 +114,9 @@ public class GoalZone : MonoBehaviour
                         break;
                     }
             }
+            audio.clip = captureProgress;
+            audio.Play();
+            audio.loop = true;
         }
     }
     
@@ -128,6 +139,7 @@ public class GoalZone : MonoBehaviour
                         break;
                     }
             }
+            audio.Stop();
         }
     }
 

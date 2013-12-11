@@ -13,16 +13,16 @@ public class ItemZone : MonoBehaviour
 
     void Awake()
     {
-        width = 100f;
-        height = width;
-        numberOfColumns = 10;
-        numberOfRows = 10;
+
     }
 
     void Start()
     {
-
-        //GenerateItems();
+        width = 100f;
+        height = width;
+        numberOfColumns = 10;
+        numberOfRows = 10;
+        GenerateItems();
     }
     
     void OnDrawGizmos()

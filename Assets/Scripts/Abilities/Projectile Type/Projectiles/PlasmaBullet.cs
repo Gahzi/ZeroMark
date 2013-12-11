@@ -6,7 +6,7 @@ public class PlasmaBullet : ProjectileBaseScript
 
     #region CONSTANTS
     //public static float PLASMABULLET_LIFETIME = 0.0f;
-    public static int PLASMABULLET_DAMAGE = 10;
+    public static int PLASMABULLET_DAMAGE = 100;
     #endregion
 
     // Use this for initialization
