@@ -22,7 +22,7 @@ public class ItemZone : MonoBehaviour
         height = width;
         numberOfColumns = 10;
         numberOfRows = 10;
-        GenerateItems();
+        //GenerateItems();
     }
     
     void OnDrawGizmos()

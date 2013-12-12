@@ -61,9 +61,9 @@ public class Player : KBControllableGameObject
         GameObject.Instantiate(Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.GUISelectCube]), Vector3.zero, Quaternion.identity);
         selectCube = GameObject.FindObjectOfType<GUISelectCube>();
         selectCube.renderer.enabled = false;
-        GameObject newCameraObject = (GameObject)GameObject.Instantiate(Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Camera]), Vector3.zero, Quaternion.identity);
-        KBCamera cameraScript = newCameraObject.GetComponent<KBCamera>();
-        cameraScript.attachedObject = this;
+        //GameObject newCameraObject = (GameObject)GameObject.Instantiate(Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Camera]), Vector3.zero, Quaternion.identity);
+        //KBCamera cameraScript = newCameraObject.GetComponent<KBCamera>();
+        //cameraScript.attachedObject = this;
 
         photonView = this.GetComponent<PhotonView>();
 
