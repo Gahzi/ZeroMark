@@ -156,8 +156,27 @@ public class Tower : KBGameObject
             GameManager.Instance.createObject(ObjectConstants.type.Item, new Vector3(transform.position.x + Random.Range(-5.0f, 5.0f), 2.0f, transform.position.z + Random.Range(-5.0f, 5.0f)), transform.rotation);
         }
 
-        transform.Translate(Vector3.forward * 10000);
         //yield return new WaitForFixedUpdate();
+        GameObject g = null;
+        switch (teamScript.Team)
+        {
+            case Team.Red:
+                g = GameManager.Instance.createObject(ObjectConstants.type.Core, new Vector3(-100, 0, -45), Quaternion.identity);
+
+                break;
+            case Team.Blue:
+                g = GameManager.Instance.createObject(ObjectConstants.type.Core, new Vector3(100, 0, 45), Quaternion.identity);
+
+                break;
+            case Team.None:
+                break;
+            default:
+                break;
+        }
+
+        Core c = g.GetComponent<Core>();
+        c.teamScript.Team = this.teamScript.Team;
+        transform.Translate(Vector3.forward * 10000);
         PhotonNetwork.Destroy(gameObject);
     }
 

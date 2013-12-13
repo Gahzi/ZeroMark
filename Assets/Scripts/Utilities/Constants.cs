@@ -7,7 +7,7 @@ namespace KBConstants
 
     public class ObjectConstants
     {
-        public enum type { Player, Gamepad, Item, Camera, PlasmaBullet, Kaiju, BasicRigidbodyCube, GUISelectCube, Factory, FactoryGroup, Tower, ItemZone };
+        public enum type { Core, Player, Gamepad, Item, Camera, PlasmaBullet, Kaiju, BasicRigidbodyCube, GUISelectCube, Factory, FactoryGroup, Tower, ItemZone };
 
         private static readonly IDictionary<type, string> prefabNames = new Dictionary<type, string>
         {
@@ -22,7 +22,8 @@ namespace KBConstants
             {type.Factory, "Factory"},
             {type.FactoryGroup, "FactoryGroup"},
             {type.Tower, "Tower/Tower"},
-            {type.ItemZone, "Items/ItemZone"}
+            {type.ItemZone, "Items/ItemZone"},
+            {type.Core, "Core"}
         };
         public static IDictionary<type, string> PREFAB_NAMES { get { return prefabNames; } }
     }

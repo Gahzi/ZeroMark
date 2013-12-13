@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     List<GoalZone> goalZones;
     List<Item> items;
     List<ItemZone> itemZones;
+    List<Core> cores;
 
     //int redTeamScore = 0;
     //int blueTeamScore = 0;
@@ -128,12 +129,14 @@ public class GameManager : MonoBehaviour
         GameObject[] loadedGoalZones = GameObject.FindGameObjectsWithTag("GoalZone");
         GameObject[] loadedItems = GameObject.FindGameObjectsWithTag("Item");
         ItemZone[] loadedItemZones = FindObjectsOfType<ItemZone>();
+        Core[] loadedCores = FindObjectsOfType<Core>();
 
         factories = new List<Factory>(loadedFactories.Length);
         towers = new List<Tower>(loadedTowers.Length);
         goalZones = new List<GoalZone>(loadedTowers.Length);
         items = new List<Item>(loadedItems.Length);
         itemZones = new List<ItemZone>(loadedItemZones.Length);
+        cores = new List<Core>(loadedCores.Length);
 
         for (int i = 0; i < loadedFactories.Length; i++)
         {
@@ -158,6 +161,11 @@ public class GameManager : MonoBehaviour
         foreach (ItemZone z in loadedItemZones)
         {
             itemZones.Add(z);
+        }
+
+        foreach (var c in loadedCores)
+        {
+            cores.Add(c);
         }
 
         StartGame();
@@ -199,17 +207,19 @@ public class GameManager : MonoBehaviour
         bool red = true;
         for (int i = 0; i < gamepadHandler.getNumberOfConnectedControllers(); i++)
         {
-            GameObject newObj;
-            newObj = createObject(ObjectConstants.type.Player, new Vector3(20, 2, 20), Quaternion.identity);
-            Player p = newObj.GetComponent<Player>();
+            GameObject newObj = null;
 
             if (red)
             {
+                newObj = createObject(ObjectConstants.type.Player, new Vector3(-55, 2, -30), Quaternion.identity);
+                Player p = newObj.GetComponent<Player>();
                 newObj.renderer.material = Resources.Load<Material>(MaterialConstants.MATERIAL_NAMES[MaterialConstants.type.CoreRed]);
                 p.teamScript.Team = KBConstants.Team.Red;
             }
             else
             {
+                newObj = createObject(ObjectConstants.type.Player, new Vector3(55, 2, 30), Quaternion.identity);
+                Player p = newObj.GetComponent<Player>();
                 newObj.renderer.material = Resources.Load<Material>(MaterialConstants.MATERIAL_NAMES[MaterialConstants.type.CoreBlue]);
                 p.teamScript.Team = KBConstants.Team.Blue;
             }
@@ -300,6 +310,14 @@ public class GameManager : MonoBehaviour
                     ItemZone newItemZone = newItemZoneObject.GetComponent<ItemZone>();
                     itemZones.Add(newItemZone);
                     return newItemZoneObject;
+                }
+
+            case ObjectConstants.type.Core:
+                {
+                    GameObject newItemObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Core], position, rotation, 0);
+                    Core newItem = newItemObject.GetComponent<Core>();
+                    cores.Add(newItem);
+                    return newItemObject;
                 }
 
             default:
