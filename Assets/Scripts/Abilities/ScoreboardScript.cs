@@ -36,11 +36,12 @@ public class ScoreboardScript : MonoBehaviour
                 {
                     if (parentZone.goalScore > 0)
                     {
-                        t.text = "Red: " + parentZone.goalScore.ToString();
+                        t.text = "Red: " + parentZone.goalScore.ToString() + "/" + GoalZone.CAPTURE_REQUIRED;
                     }
                     else if (parentZone.goalScore < 0)
                     {
-                        t.text = "Blue: " + parentZone.goalScore.ToString();
+                        int s = parentZone.goalScore * -1;
+                        t.text = "Blue: " + s.ToString() + "/" + GoalZone.CAPTURE_REQUIRED;
                     }
                     else if (parentZone.goalScore == 0)
                     {
@@ -57,6 +58,11 @@ public class ScoreboardScript : MonoBehaviour
             case GoalZone.GoalState.RedCaptured:
                 {
                     t.text = "Red Captured";
+                    break;
+                }
+            case GoalZone.GoalState.Contested:
+                {
+                    t.text = "Contested!";
                     break;
                 }
         }

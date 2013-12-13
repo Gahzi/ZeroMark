@@ -36,6 +36,7 @@ public class Item : KBGameObject
     /// </summary>
     void Start()
     {
+        base.Start();
         gameObject.tag = "Item";
 
         transform.position = new Vector3(transform.position.x, 2.0f, transform.position.z);

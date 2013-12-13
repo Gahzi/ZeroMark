@@ -26,19 +26,19 @@ public class ItemZone : MonoBehaviour
     
     void OnDrawGizmos()
     {
-        //for (int i = 0; i < numberOfRows; i++)
-        //{
-        //    for (int j = 0; j < numberOfColumns; j++)
-        //    {
-        //        PhotonNetwork.Instantiate(
-        //            ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Item],
-        //            new Vector3(
-        //                transform.position.x - (width / 2) + (i * width / numberOfRows),
-        //                2.0f,
-        //                transform.position.z - (height / 2) + (j * height / numberOfColumns)),
-        //            Quaternion.identity, 0);
-        //    }
-        //}
+        for (int i = 0; i < numberOfRows; i++)
+        {
+            for (int j = 0; j < numberOfColumns; j++)
+            {
+                Gizmos.color = new Color(255, 0, 0, 255f);
+                Gizmos.DrawWireCube(
+                    new Vector3(
+                        transform.position.x - (width / 2) + (i * width / numberOfRows),
+                        2.0f,
+                        transform.position.z - (height / 2) + (j * height / numberOfColumns)),
+                        new Vector3(1, 1, 1));
+            }
+        }
     }
     
 

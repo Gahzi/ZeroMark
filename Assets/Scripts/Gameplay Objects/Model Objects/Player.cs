@@ -36,8 +36,9 @@ public class Player : KBControllableGameObject
     public AudioClip grabSound;
 
     // Use this for initialization
-    void Start()
+    public override void Start()
     {
+        base.Start();
         grabSound = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.ItemGrab]);
 
         currentMovespeed = PLAYER_MOVEMENT_SPEED;
@@ -132,7 +133,7 @@ public class Player : KBControllableGameObject
                             {
                                 selectedObj = hit.collider.gameObject;
                             }
-                            
+                        
   
                         } 
                         else if (hit.collider.transform.parent.gameObject.GetComponent<Rigidbody>()) // This is cores

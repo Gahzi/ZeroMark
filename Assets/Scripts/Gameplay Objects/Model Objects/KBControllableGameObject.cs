@@ -13,7 +13,8 @@ public class KBControllableGameObject : KBGameObject {
 	/// <summary>
     /// Use this for initialization
 	/// </summary>
-	void Start () {
+	public override void Start () {
+        base.Start();
         if (rigidbody == null)
         {
             Debug.LogError("ERROR: Controllable Player: " + this.gameObject.name.ToString() + " rigidbody is null");
