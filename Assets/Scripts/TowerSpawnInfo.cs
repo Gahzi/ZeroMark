@@ -9,4 +9,6 @@ public struct TowerInfo
 {
     public ItemType[] itemType;
     public Team team;
+    public Vector3 spawnLocation;
+    public Quaternion spawnRotation;
 }

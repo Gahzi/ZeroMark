@@ -3,23 +3,13 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 using System.Collections;
 using KBConstants;
 
-
+[RequireComponent(typeof(Team))]
 
 public class KBGameObject : Photon.MonoBehaviour {
 
     public int health;
-    public Team team;
-    public Team Team
-    {
-        get
-        {
-            return team;
-        }
-        set
-        {
-            team = value;
-        }
-    }
+    public Vector3 targetPosition;
+    public TeamScript teamScript;
 
 	protected GameManager gm;
 
@@ -37,7 +27,14 @@ public class KBGameObject : Photon.MonoBehaviour {
 	void Start() 
 	{
 		gm = GameManager.Instance;
-        
+
+        if (!GetComponentInChildren<TeamScript>())
+        {
+            gameObject.AddComponent<TeamScript>();
+        }
+
+        teamScript = GetComponentInChildren<TeamScript>();
+
 	}
 	
 	// Update is called once per frame

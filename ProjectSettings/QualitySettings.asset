@@ -13,7 +13,7 @@ QualitySettings:
     shadowResolution: 0
     shadowProjection: 1
     shadowCascades: 1
-    shadowDistance: 15
+    shadowDistance: 1500
     blendWeights: 1
     textureQuality: 1
     anisotropicTextures: 0
@@ -70,7 +70,7 @@ QualitySettings:
     shadowResolution: 1
     shadowProjection: 1
     shadowCascades: 2
-    shadowDistance: 150
+    shadowDistance: 500
     blendWeights: 2
     textureQuality: 0
     anisotropicTextures: 1

@@ -7,9 +7,8 @@ using KBConstants;
 public class ItemZone : MonoBehaviour
 {
 
-    private float width, height = 100f;
-    private int numberOfRows;
-    private int numberOfColumns;
+    public float width, height;
+    public int numberOfRows, numberOfColumns;
 
     void Awake()
     {
@@ -18,11 +17,11 @@ public class ItemZone : MonoBehaviour
 
     void Start()
     {
-        width = 100f;
-        height = width;
-        numberOfColumns = 10;
-        numberOfRows = 10;
-        //GenerateItems();
+        //width = 100f;
+        //height = width;
+        //numberOfColumns = 10;
+        //numberOfRows = 10;
+        GenerateItems();
     }
     
     void OnDrawGizmos()

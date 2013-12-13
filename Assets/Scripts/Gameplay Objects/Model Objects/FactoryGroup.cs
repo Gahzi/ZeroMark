@@ -35,7 +35,7 @@ public class FactoryGroup : KBGameObject
                 0);
             factory[i] = newFac.GetComponent<Factory>();
         }
-        setTeam(team);
+        setTeam(teamScript.Team);
         resetFactories();
     }
 
@@ -84,20 +84,20 @@ public class FactoryGroup : KBGameObject
 
     public void setTeam(KBConstants.Team team)
     {
-        this.Team = team;
-        foreach (Factory f in factory)
-        {
-            f.Team = team;
-        }
+        //this.Team = team;
+        //foreach (Factory f in factory)
+        //{
+        //    f.Team = team;
+        //}
     }
 
     void setTowerInfo()
     {
-        towerInfo.team = Team;
-        for (int i = 0; i < towerInfo.itemType.Length; i++)
-        {
-            towerInfo.itemType[i] = factory[i].itemType;
-        }
+        //towerInfo.team = Team;
+        //for (int i = 0; i < towerInfo.itemType.Length; i++)
+        //{
+        //    towerInfo.itemType[i] = factory[i].itemType;
+        //}
     }
 
     public void resetFactories()

@@ -5,26 +5,26 @@ using System;
 public class ScoreboardScript : MonoBehaviour
 {
 
-    GameObject target;
+    //GameObject target;
     // Use this for initialization
     void Start()
     {
-        target = GameObject.FindGameObjectWithTag("Player");
+        //target = GameObject.FindGameObjectWithTag("Player");
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (target == null)
-        {
-            target = GameObject.FindGameObjectWithTag("Player");
-        }
-        else
-        {
-            transform.LookAt(target.transform);
-        }
+        //if (target == null)
+        //{
+        //    target = GameObject.FindGameObjectWithTag("Player");
+        //}
+        //else
+        //{
+        //    transform.LookAt(target.transform);
+        //}
         
-        transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y + 180f, 0);
+        //transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y + 180f, 0);
 
         TextMesh t = gameObject.GetComponent<TextMesh>();
 

@@ -29,7 +29,6 @@ public class Item : KBGameObject
             return canPickup;
         }
     }
-    public Vector3 targetPosition;
     private Vector3 targetScale;
 
     /// <summary>

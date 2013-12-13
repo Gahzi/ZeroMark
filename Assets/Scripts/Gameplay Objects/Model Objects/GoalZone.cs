@@ -4,14 +4,16 @@ using KBConstants;
 
 public class GoalZone : MonoBehaviour
 {
-    static int RED_TEAM_CAPTURE_COUNT = 5000;
-    static int BLUE_TEAM_CAPTURE_COUNT = -5000;
+    static int RED_TEAM_CAPTURE_COUNT = 500;
+    static int BLUE_TEAM_CAPTURE_COUNT = -500;
     
     static int RED_TEAM_CAPTURE_RATE = 1;
     static int BLUE_TEAM_CAPTURE_RATE = -1;
 
     public enum GoalState { NotCaptured, RedCaptured, BlueCaptured };
     public GoalState state = GoalState.NotCaptured;
+
+    bool playSound = true;
 
     int redTowerCount = 0;
     int blueTowerCount = 0;
@@ -50,12 +52,21 @@ public class GoalZone : MonoBehaviour
         if (goalScore >= RED_TEAM_CAPTURE_COUNT)
         {
             state = GoalState.RedCaptured;
-            audio.PlayOneShot(captureComplete);
+            if (playSound)
+            {
+                audio.PlayOneShot(captureComplete);
+                playSound = false;
+            }
+
         }
         else if (goalScore <= BLUE_TEAM_CAPTURE_COUNT)
         {
             state = GoalState.BlueCaptured;
-            audio.PlayOneShot(captureComplete);
+            if (playSound)
+            {
+                audio.PlayOneShot(captureComplete);
+                playSound = false;
+            }
         }
     }
 
@@ -101,7 +112,7 @@ public class GoalZone : MonoBehaviour
          if (other.gameObject.CompareTag("Tower"))
         {
             Tower p = other.gameObject.GetComponent<Tower>();
-            switch (p.Team)
+            switch (p.teamScript.Team)
             {
                 case Team.Red:
                     {
@@ -125,7 +136,7 @@ public class GoalZone : MonoBehaviour
         if (other.gameObject.CompareTag("Tower"))
         {
             Tower p = other.gameObject.GetComponent<Tower>();
-            switch (p.Team)
+            switch (p.teamScript.Team)
             {
                 case Team.Red:
                     {

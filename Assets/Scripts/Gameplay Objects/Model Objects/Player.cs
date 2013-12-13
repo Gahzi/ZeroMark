@@ -2,7 +2,6 @@
 using System.Collections;
 using KBConstants;
 
-[RequireComponent(typeof(GamepadInfo))]
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(PhotonView))]
 
@@ -12,13 +11,13 @@ public class Player : KBControllableGameObject
     public static float PLAYER_MOVEMENT_SPEED = 30f;
     public static float PLAYER_PULL_SPEED = 5f;
     public static float PLAYER_PULL_ROTATE_SPEED = 0.1f;
-    public static float PLAYER_MOVEMENT_DEADZONE = 0.3f;
+    public static float PLAYER_MOVEMENT_DEADZONE = 0.1f;
     public static float PLAYER_ROTATE_SPEED = 7.0f;
     public static float PLAYER_PULL_DISTANCE = 15f;
 
     //TODO: MOVE THESE TO TOWER OR SOMETHING
     public static float PLAYER_TOWER_PUSH_LERP_STRENGTH = 0.75f;
-    public static float PLAYER_ITEM_PUSH_LERP_STRENGTH = 10.0f;
+    public static float PLAYER_ITEM_PUSH_LERP_STRENGTH = 20.0f;
 
     private float currentMovespeed;
     private float currentRotateSpeed;
@@ -28,7 +27,7 @@ public class Player : KBControllableGameObject
     private Vector3 onUpdatePos;
     private float fraction;
     private GUISelectCube selectCube;
-    private GameObject selectedObj;
+    public GameObject selectedObj;
 
     protected PhotonView photonView;
 
@@ -40,19 +39,19 @@ public class Player : KBControllableGameObject
     void Start()
     {
         grabSound = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.ItemGrab]);
-        
+
         currentMovespeed = PLAYER_MOVEMENT_SPEED;
         currentRotateSpeed = PLAYER_ROTATE_SPEED;
-        
+
         int itemLayer = 8;
         int towerLayer = 13;
+        int modelLayer = 15;
         int layerMask1 = 1 << itemLayer;
         int layerMask2 = 1 << towerLayer;
-        layerMask = layerMask1 | layerMask2;
+        int layerMask3 = 1 << modelLayer;
+        layerMask = layerMask1 | layerMask2 | layerMask3;
 
         health = 100;
-
-        Team = Team.Red;
 
         GamepadInfoHandler gamepadHandler = GamepadInfoHandler.Instance;
         Debug.Log("Attempting to attach Controller");
@@ -78,18 +77,40 @@ public class Player : KBControllableGameObject
         Debug.Log("Gamepad was set to Player");
     }
 
+    void OnDrawGizmos()
+    {
+        Debug.DrawRay(transform.position, transform.TransformDirection(new Vector3(0, 0, 20.0f)), new Color(0, 255, 0, 255), 0.0f);
+    }
+
     void Update()
     {
         if (selectCube == null)
         {
             GameObject.Instantiate(Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.GUISelectCube]), Vector3.zero, Quaternion.identity);
+
+            
             selectCube = GameObject.FindObjectOfType<GUISelectCube>();
             selectCube.renderer.enabled = false;
         }
 
         if (gamepad != null)
         {
+            /*
+             * Movement:
+             * 1> Rotate player transform to face the same direction as gamepad.leftStick
+             * 2> Move player forward & speed
+             * 
+             * Grabbing:
+             * Highlight whatever item is in front of the player
+             */
+
+            if (gamepad.leftStick.magnitude > PLAYER_MOVEMENT_DEADZONE)
+            {
+                transform.LookAt(transform.position + new Vector3(-gamepad.leftStick.x, 0, -gamepad.leftStick.y));
+            }
+
             Vector3 fwd = transform.TransformDirection(Vector3.forward);
+
             if (selectedObj == null)
             {
                 // Raycasting for "pushable"
@@ -97,13 +118,28 @@ public class Player : KBControllableGameObject
                 Vector3 rayStart = transform.position;
                 rayStart.y = rayStart.y + 2.0f;
                 //rayStart = Vector3.RotateTowards(rayStart, PLAYER_PULL_DISTANCE * fwd, Mathf.PI*2, 1000f);
-                if (Physics.Raycast(rayStart, fwd, out hit, PLAYER_PULL_DISTANCE, layerMask))
+                if (Physics.Raycast(rayStart, fwd, out hit, PLAYER_PULL_DISTANCE, layerMask)) // layermask is "item" + "tower" + "model" layers
                 {
+                    
                     selectCube.transform.parent = hit.collider.transform;
                     selectCube.renderer.enabled = true;
                     if (gamepad.buttonDown[9] && selectedObj == null)
                     {
-                        selectedObj = hit.collider.gameObject;
+                        if (hit.collider.gameObject.GetComponent<Rigidbody>()) // This is towers && items
+                        {
+                            TeamScript t = hit.collider.gameObject.GetComponentInChildren<TeamScript>();
+                            if (t.Team == teamScript.Team || t.Team == Team.None)
+                            {
+                                selectedObj = hit.collider.gameObject;
+                            }
+                            
+  
+                        } 
+                        else if (hit.collider.transform.parent.gameObject.GetComponent<Rigidbody>()) // This is cores
+                        {
+                            selectedObj = hit.collider.transform.parent.gameObject;
+                        }
+                       
                         audio.PlayOneShot(grabSound);
                     }
                 }
@@ -123,7 +159,7 @@ public class Player : KBControllableGameObject
                         Item i = selectedObj.GetComponent<Item>();
                         if (i.State == Item.ItemState.isDown)
                         {
-                            objVec = transform.position + 4 * fwd;
+                            objVec = transform.position + 8 * fwd;
                             objVec.y = selectedObj.transform.position.y;
                             i.targetPosition = objVec;
                         }
@@ -145,11 +181,11 @@ public class Player : KBControllableGameObject
                 selectedObj = null;
             }
 
-            transform.Rotate(Vector3.up, currentRotateSpeed * gamepad.rightStick.x);
+            //transform.Rotate(Vector3.up, currentRotateSpeed * gamepad.rightStick.x);
+
 
             //Vector3 newPosition = transform.position;
             //Vector3 movementDelta = new Vector3(gamepad.leftStick.x * currentMovespeed, 0, gamepad.leftStick.y * currentMovespeed);
-            Vector3 movementDelta = new Vector3(gamepad.leftStick.x * currentMovespeed, 0, gamepad.leftStick.y * currentMovespeed);
             //Debug.Log("MovementDelta: " + movementDelta.ToString());
             //TODO: Write some movement prediction math to smooth out player movement over network.
             //fraction = fraction + Time.deltaTime * 9;
@@ -157,9 +193,10 @@ public class Player : KBControllableGameObject
             //onUpdatePos += movementDelta;
             //Debug.Log("onUpdatePos: " + onUpdatePos.ToString());
             //transform.position = newPosition;
-            if (movementDelta.normalized.magnitude > PLAYER_MOVEMENT_DEADZONE)
+            if (gamepad.leftStick.magnitude > PLAYER_MOVEMENT_DEADZONE)
             {
-                rigidbody.velocity = transform.localRotation * movementDelta;
+                //rigidbody.velocity = transform.localRotation * movementDelta;
+                rigidbody.velocity = fwd * currentMovespeed;
             }
             else// if (movementDelta.Equals(Vector3.zero))
             {
@@ -215,7 +252,7 @@ public class Player : KBControllableGameObject
     void attachPlayerToControllableGameObject(KBControllableGameObject newGameObject)
     {
         newGameObject.attachedPlayer = this;
-        this.renderer.enabled = false;
+        //this.renderer.enabled = false;
         KBCamera cameraScript = Camera.main.gameObject.GetComponent<KBCamera>();
 
         if (cameraScript != null)

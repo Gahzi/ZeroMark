@@ -17,7 +17,7 @@ public class GUISelectCube : MonoBehaviour
         {
             transform.position = transform.parent.position;
             transform.rotation = transform.parent.rotation;
-            transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
+            transform.localScale = new Vector3(5f, 5f, 5f);
         }
 
     }

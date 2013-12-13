@@ -48,14 +48,16 @@ namespace KBConstants
 
     public class MaterialConstants
     {
-        public enum type { ItemCommon, ItemUncommon, ItemRare, ItemLegendary };
+        public enum type { ItemCommon, ItemUncommon, ItemRare, ItemLegendary, CoreBlue, CoreRed };
 
         private static readonly IDictionary<type, string> materialNames = new Dictionary<type, string>
         {
             {type.ItemCommon, "Materials/Visual/Items/ItemCommon"},
             {type.ItemUncommon, "Materials/Visual/Items/ItemUncommon"},
             {type.ItemRare, "Materials/Visual/Items/ItemRare"},
-            {type.ItemLegendary, "Materials/Visual/Items/ItemLegendary"}
+            {type.ItemLegendary, "Materials/Visual/Items/ItemLegendary"},
+            {type.CoreBlue, "Materials/Visual/Core/CoreBlueMaterial"},
+            {type.CoreRed, "Materials/Visual/Core/CoreRedMaterial"}
         };
 
         public static IDictionary<type, string> MATERIAL_NAMES { get { return materialNames; } }

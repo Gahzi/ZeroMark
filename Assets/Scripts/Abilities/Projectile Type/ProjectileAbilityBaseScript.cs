@@ -37,7 +37,11 @@ public class ProjectileAbilityBaseScript : AbilitySlotBaseScript
         Collider[] collider = transform.parent.GetComponentsInChildren<Collider>();
         foreach (Collider c in collider)
         {
-            Physics.IgnoreCollision(c, projectile.collider, true);
+            if (c.enabled)
+            {
+                Physics.IgnoreCollision(c, projectile.collider, true); 
+            }
+
         }
         return projectile;
     }

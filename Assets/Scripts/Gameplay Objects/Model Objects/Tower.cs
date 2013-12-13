@@ -14,7 +14,7 @@ public class Tower : KBGameObject
 {
     #region CONSTANTS
     public static int TOWER_DEFAULT_HEALTH = 1000;
-    public static int TOWER_DEFAULT_RANGE = 250; // In global units
+    public static int TOWER_DEFAULT_RANGE = 100; // In global units
     #endregion
 
     TowerInfo towerInfo;
@@ -71,11 +71,14 @@ public class Tower : KBGameObject
 
         if (target != null)
         {
-            if (!gun.GetActive())
+            if (!target.GetComponent<Tower>().teamScript.Team.Equals(teamScript.Team))
             {
-                gun.ActivateAbility();
+                if (!gun.GetActive())
+                {
+                    gun.ActivateAbility();
+                }
+                transform.LookAt(target.transform);
             }
-            gun.transform.LookAt(target.transform);
         }
         else
         {
