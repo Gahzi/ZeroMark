@@ -17,6 +17,8 @@ public class GamepadInfo : MonoBehaviour
 
     // TODO: Separate triggers in input manager
 
+    public enum buttonNames { a, b, x, y, leftStick, rightStick, back, start, leftBumper, rightBumper };
+
     public int gamepadNumber;
     public Vector2 leftStick;
     public Vector2 rightStick;

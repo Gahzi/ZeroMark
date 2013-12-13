@@ -7,7 +7,7 @@ using KBConstants;
 public class GameManager : MonoBehaviour
 {
 
-    enum GameState { PreGame, InGame, RedWins, BlueWins, Tie };
+    enum GameState { PreGame, InGame, RedWins, BlueWins, Tie, EndGame };
 
     List<Player> players;
     List<Factory> factories;
@@ -133,7 +133,7 @@ public class GameManager : MonoBehaviour
 
         factories = new List<Factory>(loadedFactories.Length);
         towers = new List<Tower>(loadedTowers.Length);
-        goalZones = new List<GoalZone>(loadedTowers.Length);
+        goalZones = new List<GoalZone>(loadedGoalZones.Length);
         items = new List<Item>(loadedItems.Length);
         itemZones = new List<ItemZone>(loadedItemZones.Length);
         cores = new List<Core>(loadedCores.Length);
@@ -191,11 +191,24 @@ public class GameManager : MonoBehaviour
                 break;
             case GameState.RedWins:
                 Debug.Log("Red won");
+                state = GameState.EndGame;
                 break;
             case GameState.BlueWins:
                 Debug.Log("Blue won");
+                state = GameState.EndGame;
                 break;
             case GameState.Tie:
+                Debug.Log("Tie");
+                state = GameState.EndGame;
+                break;
+            case GameState.EndGame:
+                foreach (GamepadInfo g in gamepadHandler.gamepads)
+                {
+                    if (g.buttonDown[(int)GamepadInfo.buttonNames.start])
+                    {
+                        Application.LoadLevel("TestScene");
+                    }
+                }
                 break;
             default:
                 break;

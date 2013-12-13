@@ -426,7 +426,7 @@ GameObject:
   - 114: {fileID: 191806505}
   m_Layer: 0
   m_Name: GoalZone
-  m_TagString: Untagged
+  m_TagString: GoalZone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1069,6 +1069,10 @@ Prefab:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: a2f19c2238494044e92826043b18af00, type: 2}
+      propertyPath: m_TagString
+      value: GoalZone
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a2f19c2238494044e92826043b18af00, type: 2}
   m_RootGameObject: {fileID: 1143294539}
@@ -1273,6 +1277,10 @@ Prefab:
     - target: {fileID: 100000, guid: a2f19c2238494044e92826043b18af00, type: 2}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: a2f19c2238494044e92826043b18af00, type: 2}
+      propertyPath: m_TagString
+      value: GoalZone
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a2f19c2238494044e92826043b18af00, type: 2}
@@ -2880,7 +2888,7 @@ GameObject:
   - 114: {fileID: 1143294541}
   m_Layer: 0
   m_Name: GoalZone
-  m_TagString: Untagged
+  m_TagString: GoalZone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3374,6 +3382,10 @@ Prefab:
     - target: {fileID: 100000, guid: a2f19c2238494044e92826043b18af00, type: 2}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: a2f19c2238494044e92826043b18af00, type: 2}
+      propertyPath: m_TagString
+      value: GoalZone
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a2f19c2238494044e92826043b18af00, type: 2}
@@ -4402,7 +4414,7 @@ GameObject:
   - 114: {fileID: 1772278292}
   m_Layer: 0
   m_Name: GoalZone
-  m_TagString: Untagged
+  m_TagString: GoalZone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

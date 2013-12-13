@@ -15,7 +15,7 @@ GameObject:
   - 114: {fileID: 11400002}
   m_Layer: 0
   m_Name: GoalZone
-  m_TagString: Untagged
+  m_TagString: GoalZone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -211,7 +211,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33f7bca4ee05ece429ebe0e99ebf3696, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  health: 0
+  targetPosition: {x: 0, y: 0, z: 0}
+  teamScript: {fileID: 0}
   state: 0
+  towers: []
   goalScore: 0
 --- !u!136 &13600000
 CapsuleCollider:
