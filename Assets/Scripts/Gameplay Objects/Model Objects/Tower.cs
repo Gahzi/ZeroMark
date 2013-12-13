@@ -102,7 +102,9 @@ public class Tower : KBGameObject
 
         if (other.CompareTag("Tower"))
         {
-            if (target == null)
+            Tower towerInRange = other.GetComponent<Tower>();
+
+            if (target == null && !towerInRange.teamScript.team.Equals(teamScript.team))
             {
                 target = other.gameObject;
                 Debug.Log("Tower in range");
@@ -115,7 +117,9 @@ public class Tower : KBGameObject
     {
         if (other.CompareTag("Tower"))
         {
-            if (target != null)
+            Tower towerInRange = other.GetComponent<Tower>();
+
+            if (target != null && !towerInRange.teamScript.team.Equals(teamScript.team))
             {
                 target = null;
                 gun.DeactivateAbility();
