@@ -15,13 +15,20 @@ public class GameManager : MonoBehaviour
     List<GoalZone> goalZones;
     List<Item> items;
     List<ItemZone> itemZones;
-    List<FactoryGroup> factoryGroups;
 
-    int redTeamScore = 0;
-    int blueTeamScore = 0;
+    //int redTeamScore = 0;
+    //int blueTeamScore = 0;
     GameState state = GameState.PreGame;
 
     private GamepadInfoHandler gamepadHandler;
+    private GameObject startImg;
+    private GameObject redWinImg;
+    private GameObject blueWinImg;
+    private GameObject tieImg;
+
+    private float startImgScreenTime = 3.0f;
+
+    private float startTime;
 
     private static GameManager instance;
     public static GameManager Instance
@@ -94,7 +101,11 @@ public class GameManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        startTime = Time.time;
+
         state = GameState.PreGame;
+        startImg = GameObject.Find("StartImage");
+        startImg.SetActive(true);
 
         gamepadHandler = GamepadInfoHandler.Instance;
 
@@ -109,22 +120,20 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        redTeamScore = 0;
-        blueTeamScore = 0;
+        //redTeamScore = 0;
+        //blueTeamScore = 0;
 
         GameObject[] loadedFactories = GameObject.FindGameObjectsWithTag("Factory");
         GameObject[] loadedTowers = GameObject.FindGameObjectsWithTag("Tower");
         GameObject[] loadedGoalZones = GameObject.FindGameObjectsWithTag("GoalZone");
         GameObject[] loadedItems = GameObject.FindGameObjectsWithTag("Item");
         ItemZone[] loadedItemZones = FindObjectsOfType<ItemZone>();
-        //FactoryGroup[] loadedFactoryGroups  = FindObjectsOfType<FactoryGroup>();
 
         factories = new List<Factory>(loadedFactories.Length);
         towers = new List<Tower>(loadedTowers.Length);
         goalZones = new List<GoalZone>(loadedTowers.Length);
         items = new List<Item>(loadedItems.Length);
         itemZones = new List<ItemZone>(loadedItemZones.Length);
-        //factoryGroups                       = new List<FactoryGroup>(loadedFactoryGroups.Length);
 
         for (int i = 0; i < loadedFactories.Length; i++)
         {
@@ -151,18 +160,38 @@ public class GameManager : MonoBehaviour
             itemZones.Add(z);
         }
 
-        //foreach (FactoryGroup g in loadedFactoryGroups)
-        //{
-        //    factoryGroups.Add(g);
-        //}
-
         StartGame();
     }
 
     // Update is called once per frame
     void Update()
     {
-        CheckWinConditions();
+        switch (state)
+        {
+            case GameState.PreGame:
+                foreach (GamepadInfo g in gamepadHandler.gamepads)
+                {
+                    if (g.buttonDown[0])
+                    {
+                        startImg.GetComponent<FadeOut>().startFading(1.0f);
+                        state = GameState.InGame;
+                    }
+                }
+                break;
+            case GameState.InGame:
+                CheckWinConditions();
+                break;
+            case GameState.RedWins:
+                Debug.Log("Red won");
+                break;
+            case GameState.BlueWins:
+                Debug.Log("Blue won");
+                break;
+            case GameState.Tie:
+                break;
+            default:
+                break;
+        }
     }
 
     void StartGame()
@@ -186,19 +215,6 @@ public class GameManager : MonoBehaviour
             }
             red = !red;
         }
-
-
-
-        //foreach (FactoryGroup g in factoryGroups)
-        //{
-        //    g.CreateFactories();
-        //}
-
-        //foreach (ItemZone z in itemZones)
-        //{
-        //    z.GenerateItems();
-        //}
-
     }
 
     /// <summary>
@@ -206,21 +222,37 @@ public class GameManager : MonoBehaviour
     /// </summary>
     void CheckWinConditions()
     {
-        if (redTeamScore >= 50 && blueTeamScore >= 50)
+        int redCaps = 0;
+        int blueCaps = 0;
+        foreach (GoalZone g in goalZones)
         {
-            //Game State is Tie
-            state = GameState.Tie;
+            switch (g.state)
+            {
+                case GoalZone.GoalState.NotCaptured:
+                    break;
+                case GoalZone.GoalState.RedCaptured:
+                    redCaps++;
+                    break;
+                case GoalZone.GoalState.BlueCaptured:
+                    blueCaps++;
+                    break;
+                default:
+                    break;
+            }
         }
-        else if (redTeamScore >= 50)
+        if (redCaps >= 2)
         {
-            //Game state is Red Wins
             state = GameState.RedWins;
         }
-        else if (blueTeamScore >= 50)
+        else if (blueCaps >= 2)
         {
-            //Game state is Blue Wins
             state = GameState.BlueWins;
         }
+    }
+
+    void CheckGoalZones()
+    {
+
     }
 
     public GameObject createObject(KBConstants.ObjectConstants.type objectType, Vector3 position, Quaternion rotation)

@@ -22,8 +22,9 @@ public class Core : KBGameObject
 
     ItemDropZone itemDropZone;
 
-    void Start()
+    public override void Start()
     {
+        base.Start();
         towerInfo.itemType = new ItemType[3];
         itemType = ItemType.undefined;
         item = new Item[3];

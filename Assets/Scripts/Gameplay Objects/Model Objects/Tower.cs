@@ -27,7 +27,7 @@ public class Tower : KBGameObject
     private CapsuleCollider attackRangeTrigger;
     public GameObject target;
     public int maxRange;
-    public Vector3 targetPosition;
+    //public Vector3 targetPosition;
 
     AudioClip ambient;
     AudioClip death;
@@ -35,6 +35,7 @@ public class Tower : KBGameObject
     // Use this for initialization
     void Start()
     {
+        base.Start();
         ambient = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.TowerAmbient]);
         audio.clip = ambient;
         audio.Play();
@@ -99,7 +100,7 @@ public class Tower : KBGameObject
 
     void OnTriggerEnter(Collider other)
     {
-
+        base.OnTriggerEnter(other);
         if (other.CompareTag("Tower"))
         {
             if (target == null)
@@ -113,6 +114,7 @@ public class Tower : KBGameObject
 
     void OnTriggerExit(Collider other)
     {
+        base.OnTriggerExit(other);
         if (other.CompareTag("Tower"))
         {
             if (target != null)
@@ -135,6 +137,8 @@ public class Tower : KBGameObject
 
     private void DestroyTower()
     {
+        KBDestroy();
+        
         // TODO : Make the items not overlap
         // TODO : Items randomize their type @ init so the code below doesn't matter
         //foreach (ItemType t in towerInfo.itemType)
@@ -152,6 +156,8 @@ public class Tower : KBGameObject
             GameManager.Instance.createObject(ObjectConstants.type.Item, new Vector3(transform.position.x + Random.Range(-5.0f, 5.0f), 2.0f, transform.position.z + Random.Range(-5.0f, 5.0f)), transform.rotation);
         }
 
+        transform.Translate(Vector3.forward * 10000);
+        //yield return new WaitForFixedUpdate();
         PhotonNetwork.Destroy(gameObject);
     }
 
