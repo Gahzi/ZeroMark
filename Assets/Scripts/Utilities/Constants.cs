@@ -11,19 +11,19 @@ namespace KBConstants
 
         private static readonly IDictionary<type, string> prefabNames = new Dictionary<type, string>
         {
-            {type.Player,"Player"},
-			{type.Gamepad, "Gamepad"},
+            {type.Player,"Characters/Player"},
+			{type.Gamepad, "Gamepads/Gamepad"},
             {type.Item, "Items/Item"},
-            {type.Camera, "Camera"},
+            {type.Camera, "Camera/Camera"},
             {type.PlasmaBullet, "Abilities/PlasmaBullet"},
-            {type.Kaiju, "Kaiju/Kaiju"},
+            {type.Kaiju, "Characters/Kaiju"},
             {type.BasicRigidbodyCube, "Environment/BasicRigidbodyCube"},
             {type.GUISelectCube, "GUI/GUISelectCube"},
-            {type.Factory, "Factory"},
-            {type.FactoryGroup, "FactoryGroup"},
-            {type.Tower, "Tower/Tower"},
-            {type.ItemZone, "Items/ItemZone"},
-            {type.Core, "Core"}
+            {type.Factory, "Characters/Factory"},
+            {type.FactoryGroup, "Groups/FactoryGroup"},
+            {type.Tower, "Characters/Tower"},
+            {type.ItemZone, "Zones/ItemZone"},
+            {type.Core, "Characters/Core"}
         };
         public static IDictionary<type, string> PREFAB_NAMES { get { return prefabNames; } }
     }
@@ -34,8 +34,8 @@ namespace KBConstants
 
         private static readonly IDictionary<type, string> prefabNames = new Dictionary<type, string>
         {
-            {type.GameManager,"GameManager"},
-			{type.GamepadManager, "GamepadManager"}
+            {type.GameManager,"Managers/GameManager"},
+			{type.GamepadManager, "Managers/GamepadManager"}
         };
         public static IDictionary<type, string> PREFAB_NAMES { get { return prefabNames; } }
 
