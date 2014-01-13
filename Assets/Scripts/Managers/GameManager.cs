@@ -1,25 +1,18 @@
-﻿using UnityEngine;
-using ExitGames.Client.Photon;
+﻿using KBConstants;
 using System.Collections.Generic;
-using Hashtable = ExitGames.Client.Photon.Hashtable;
-using KBConstants;
+using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    private enum GameState { PreGame, InGame, RedWins, BlueWins, Tie, EndGame };
 
-    enum GameState { PreGame, InGame, RedWins, BlueWins, Tie, EndGame };
-
-    List<Player> players;
-    List<Factory> factories;
-    List<Tower> towers;
-    List<GoalZone> goalZones;
-    List<Item> items;
-    List<ItemZone> itemZones;
-    List<Core> cores;
+    private List<Player> players;
+    private List<CaptureZone> captureZones;
+    private List<Item> items;
 
     //int redTeamScore = 0;
     //int blueTeamScore = 0;
-    GameState state = GameState.PreGame;
+    private GameState state = GameState.PreGame;
 
     private GamepadInfoHandler gamepadHandler;
     private GameObject startImg;
@@ -32,6 +25,7 @@ public class GameManager : MonoBehaviour
     private float startTime;
 
     private static GameManager instance;
+
     public static GameManager Instance
     {
         // Here we use the ?? operator, to return 'instance' if 'instance' does not equal null
@@ -57,7 +51,6 @@ public class GameManager : MonoBehaviour
             }
 
             return instance;
-
         }
     }
 
@@ -92,15 +85,15 @@ public class GameManager : MonoBehaviour
         //Application.LoadLevel(Application.loadedLevel);
     }
 
-    #endregion
+    #endregion PHOTON CONNECTION HANDLING
 
-    void Awake()
+    private void Awake()
     {
         instance = this;
     }
 
     // Use this for initialization
-    void Start()
+    private void Start()
     {
         startTime = Time.time;
 
@@ -120,37 +113,19 @@ public class GameManager : MonoBehaviour
                 PhotonNetwork.ConnectUsingSettings("1");
             }
         }
-
         //redTeamScore = 0;
         //blueTeamScore = 0;
 
-        GameObject[] loadedFactories = GameObject.FindGameObjectsWithTag("Factory");
-        GameObject[] loadedTowers = GameObject.FindGameObjectsWithTag("Tower");
         GameObject[] loadedGoalZones = GameObject.FindGameObjectsWithTag("GoalZone");
         GameObject[] loadedItems = GameObject.FindGameObjectsWithTag("Item");
         ItemZone[] loadedItemZones = FindObjectsOfType<ItemZone>();
-        Core[] loadedCores = FindObjectsOfType<Core>();
 
-        factories = new List<Factory>(loadedFactories.Length);
-        towers = new List<Tower>(loadedTowers.Length);
-        goalZones = new List<GoalZone>(loadedGoalZones.Length);
+        captureZones = new List<CaptureZone>(loadedGoalZones.Length);
         items = new List<Item>(loadedItems.Length);
-        itemZones = new List<ItemZone>(loadedItemZones.Length);
-        cores = new List<Core>(loadedCores.Length);
-
-        for (int i = 0; i < loadedFactories.Length; i++)
-        {
-            factories.Add(loadedFactories[i].GetComponent<Factory>());
-        }
-
-        for (int i = 0; i < loadedTowers.Length; i++)
-        {
-            towers.Add(loadedTowers[i].GetComponent<Tower>());
-        }
 
         for (int i = 0; i < loadedGoalZones.Length; i++)
         {
-            goalZones.Add(loadedGoalZones[i].GetComponent<GoalZone>());
+            captureZones.Add(loadedGoalZones[i].GetComponent<CaptureZone>());
         }
 
         for (int i = 0; i < loadedItems.Length; i++)
@@ -158,21 +133,11 @@ public class GameManager : MonoBehaviour
             items.Add(loadedItems[i].GetComponent<Item>());
         }
 
-        foreach (ItemZone z in loadedItemZones)
-        {
-            itemZones.Add(z);
-        }
-
-        foreach (var c in loadedCores)
-        {
-            cores.Add(c);
-        }
-
         StartGame();
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         switch (state)
         {
@@ -181,26 +146,31 @@ public class GameManager : MonoBehaviour
                 {
                     if (g.buttonDown[0])
                     {
-                        startImg.GetComponent<FadeOut>().startFading(1.0f);
+                        //startImg.GetComponent<FadeOut>().startFading(1.0f);
                         state = GameState.InGame;
                     }
                 }
                 break;
+
             case GameState.InGame:
                 CheckWinConditions();
                 break;
+
             case GameState.RedWins:
                 Debug.Log("Red won");
                 state = GameState.EndGame;
                 break;
+
             case GameState.BlueWins:
                 Debug.Log("Blue won");
                 state = GameState.EndGame;
                 break;
+
             case GameState.Tie:
                 Debug.Log("Tie");
                 state = GameState.EndGame;
                 break;
+
             case GameState.EndGame:
                 foreach (GamepadInfo g in gamepadHandler.gamepads)
                 {
@@ -210,12 +180,13 @@ public class GameManager : MonoBehaviour
                     }
                 }
                 break;
+
             default:
                 break;
         }
     }
 
-    void StartGame()
+    private void StartGame()
     {
         bool red = true;
         for (int i = 0; i < gamepadHandler.getNumberOfConnectedControllers(); i++)
@@ -243,22 +214,25 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Checks to see if the game has reached one of it's win conditions and changes state appropriately.
     /// </summary>
-    void CheckWinConditions()
+    private void CheckWinConditions()
     {
         int redCaps = 0;
         int blueCaps = 0;
-        foreach (GoalZone g in goalZones)
+        foreach (CaptureZone g in captureZones)
         {
             switch (g.state)
             {
-                case GoalZone.GoalState.NotCaptured:
+                case CaptureZone.GoalState.NotCaptured:
                     break;
-                case GoalZone.GoalState.RedCaptured:
+
+                case CaptureZone.GoalState.RedCaptured:
                     redCaps++;
                     break;
-                case GoalZone.GoalState.BlueCaptured:
+
+                case CaptureZone.GoalState.BlueCaptured:
                     blueCaps++;
                     break;
+
                 default:
                     break;
             }
@@ -273,9 +247,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void CheckGoalZones()
+    private void CheckGoalZones()
     {
-
     }
 
     public GameObject createObject(KBConstants.ObjectConstants.type objectType, Vector3 position, Quaternion rotation)
@@ -298,68 +271,8 @@ public class GameManager : MonoBehaviour
                     return newItemObject;
                 }
 
-            case ObjectConstants.type.Tower:
-                {
-                    GameObject newTowerObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Tower], position, rotation, 0);
-                    Tower newTower = newTowerObject.GetComponent<Tower>();
-                    towers.Add(newTower);
-                    return newTowerObject;
-                }
-
-            case ObjectConstants.type.FactoryGroup:
-                {
-                    GameObject newFactoryGroupObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.FactoryGroup], position, rotation, 0);
-                    FactoryGroup newFactoryGroup = newFactoryGroupObject.GetComponent<FactoryGroup>();
-                    //foreach (Factory f in newFactoryGroup.factory)
-                    //{
-                    //    factories.Add(f);
-                    //}
-                    return newFactoryGroupObject;
-                }
-
-            case ObjectConstants.type.ItemZone:
-                {
-                    GameObject newItemZoneObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.ItemZone], position, rotation, 0);
-                    ItemZone newItemZone = newItemZoneObject.GetComponent<ItemZone>();
-                    itemZones.Add(newItemZone);
-                    return newItemZoneObject;
-                }
-
-            case ObjectConstants.type.Core:
-                {
-                    GameObject newItemObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Core], position, rotation, 0);
-                    Core newItem = newItemObject.GetComponent<Core>();
-                    cores.Add(newItem);
-                    return newItemObject;
-                }
-
             default:
                 return null;
         }
-    }
-
-    public void SpawnTower(TowerInfo towerInfo)
-    {
-        // TODO : Towers have different spawn properties based on towerSpawnInfo.itemType
-        GameObject newTower = createObject(ObjectConstants.type.Tower, towerInfo.spawnLocation, towerInfo.spawnRotation);
-
-        switch (towerInfo.team)
-        {
-            case Team.Red:
-                newTower.renderer.material = Resources.Load<Material>(MaterialConstants.MATERIAL_NAMES[MaterialConstants.type.CoreRed]);
-                break;
-            case Team.Blue:
-                newTower.renderer.material = Resources.Load<Material>(MaterialConstants.MATERIAL_NAMES[MaterialConstants.type.CoreBlue]);
-                break;
-            case Team.None:
-                break;
-            default:
-                break;
-        }
-
-        Tower t = newTower.GetComponent<Tower>();
-        t.teamScript.Team = towerInfo.team;
-        t.TowerInfo = towerInfo;
-
     }
 }

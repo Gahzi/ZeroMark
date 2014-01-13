@@ -1,88 +1,122 @@
-﻿using UnityEngine;
+﻿using KBConstants;
 using System.Collections.Generic;
-using KBConstants;
+using UnityEngine;
 
-public class GoalZone : KBGameObject
+public class CaptureZone : KBGameObject
 {
     public static int CAPTURE_REQUIRED = 1000;
-    static int RED_TEAM_CAPTURE_COUNT = CAPTURE_REQUIRED;
-    static int BLUE_TEAM_CAPTURE_COUNT = -CAPTURE_REQUIRED;
+    private static int RED_TEAM_CAPTURE_COUNT = CAPTURE_REQUIRED;
+    private static int BLUE_TEAM_CAPTURE_COUNT = -CAPTURE_REQUIRED;
 
-    static int RED_TEAM_CAPTURE_RATE = 1;
-    static int BLUE_TEAM_CAPTURE_RATE = -1;
+    private static int RED_TEAM_CAPTURE_RATE = 1;
+    private static int BLUE_TEAM_CAPTURE_RATE = -1;
 
     public enum GoalState { NotCaptured, RedCaptured, BlueCaptured, Contested };
+
     public GoalState state = GoalState.NotCaptured;
 
-    bool playSound = true;
+    public CaptureZone[] zoneDependencies = new CaptureZone[3];
 
-    int redTowerCount = 0;
-    int blueTowerCount = 0;
+    private bool playSound = true;
 
-    public List<Tower> towers;
+    private int redPlayerCount = 0;
+    private int bluePlayerCount = 0;
+
+    public List<Player> players;
 
     public int goalScore = 0;
 
-    AudioClip captureProgress;
-    AudioClip captureComplete;
+    private AudioClip captureProgress;
+    private AudioClip captureComplete;
 
-    void Start()
+    private void Start()
     {
         base.Start();
         goalScore = 0;
         state = GoalState.NotCaptured;
-        towers = new List<Tower>(10);
+        players = new List<Player>(10);
 
         captureComplete = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.CaptureComplete]);
         captureProgress = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.CaptureProgress]);
     }
 
-    void Update()
+    private void Update()
     {
-        redTowerCount = 0;
-        blueTowerCount = 0;
+        redPlayerCount = 0;
+        bluePlayerCount = 0;
+        bool redUnlocked = false;
+        bool blueUnlocked = false;
+
+        foreach (var z in zoneDependencies)
+        {
+            switch (z.state)
+            {
+                case GoalState.NotCaptured:
+                    break;
+
+                case GoalState.RedCaptured:
+                    redUnlocked = true;
+                    break;
+
+                case GoalState.BlueCaptured:
+                    blueUnlocked = true;
+                    break;
+
+                case GoalState.Contested:
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
         foreach (KBGameObject o in collisionObjects)
         {
-            Tower t = o.gameObject.GetComponentInChildren<Tower>();
+            Player t = o.gameObject.GetComponentInChildren<Player>();
             if (t != null)
             {
                 switch (t.teamScript.Team)
                 {
                     case Team.Red:
-                        redTowerCount++;
+                        if (redUnlocked)
+                        {
+                            redPlayerCount++;
+                        }
+
                         break;
+
                     case Team.Blue:
-                        blueTowerCount++;
+                        if (blueUnlocked)
+                        {
+                            bluePlayerCount++;
+                        }
+
                         break;
+
                     case Team.None:
                         break;
+
                     default:
                         break;
                 }
             }
-            //if (t == null)
-            //{
-            //    Debug.Log("Null tower");
-            //    break;
-            //}
-
         }
-        
+
         switch (state)
         {
             case GoalState.NotCaptured:
 
-                if (redTowerCount > 0 && blueTowerCount > 0)
+                if (redPlayerCount > 0 && bluePlayerCount > 0)
                 {
-                    if (redTowerCount == blueTowerCount)
+                    if (redPlayerCount == bluePlayerCount)
                     {
                         state = GoalState.Contested;
                     }
                 }
 
-                if (redTowerCount > 0 || blueTowerCount > 0)
+                if (redPlayerCount > 0 || bluePlayerCount > 0)
                 {
-                    goalScore += (redTowerCount * RED_TEAM_CAPTURE_RATE) + (blueTowerCount * BLUE_TEAM_CAPTURE_RATE);
+                    goalScore += (redPlayerCount * RED_TEAM_CAPTURE_RATE) + (bluePlayerCount * BLUE_TEAM_CAPTURE_RATE);
                 }
                 else
                 {
@@ -90,16 +124,20 @@ public class GoalZone : KBGameObject
                     else if (goalScore < 0) goalScore += 1;
                 }
                 break;
+
             case GoalState.RedCaptured:
                 break;
+
             case GoalState.BlueCaptured:
                 break;
+
             case GoalState.Contested:
-                if (redTowerCount > blueTowerCount || blueTowerCount > redTowerCount)
+                if (redPlayerCount > bluePlayerCount || bluePlayerCount > redPlayerCount)
                 {
                     state = GoalState.NotCaptured;
                 }
                 break;
+
             default:
                 break;
         }
@@ -107,7 +145,7 @@ public class GoalZone : KBGameObject
         CheckCaptured();
     }
 
-    void CheckCaptured()
+    private void CheckCaptured()
     {
         if (goalScore >= RED_TEAM_CAPTURE_COUNT)
         {
@@ -117,7 +155,6 @@ public class GoalZone : KBGameObject
                 audio.PlayOneShot(captureComplete);
                 playSound = false;
             }
-
         }
         else if (goalScore <= BLUE_TEAM_CAPTURE_COUNT)
         {
@@ -130,83 +167,49 @@ public class GoalZone : KBGameObject
         }
     }
 
-
-    void OnTriggerStay(Collider other)
+    private void OnTriggerStay(Collider other)
     {
-        //towers.Clear();
-        //if (other.gameObject.CompareTag("Tower"))
-        //{
-        //    Tower p = other.gameObject.GetComponent<Tower>();
-        //    towers.Add(p);
-        //    //IncrementGoalZoneScore(other.gameObject.GetComponent<Tower>().teamScript.Team);
-        //}
     }
 
-
-    void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         base.OnTriggerEnter(other);
         if (other.gameObject.CompareTag("Tower"))
         {
-
-            Tower p = other.gameObject.GetComponent<Tower>();
-            towers.Add(p);
-            //switch (p.teamScript.Team)
-            //{
-            //    case Team.Red:
-            //        {
-            //            redTowerCount += 1;
-            //            break;
-            //        }
-            //    case Team.Blue:
-            //        {
-            //            blueTowerCount += 1;
-            //            break;
-            //        }
-            //}
+            Player p = other.gameObject.GetComponent<Player>();
+            players.Add(p);
             audio.clip = captureProgress;
             audio.Play();
             audio.loop = true;
         }
     }
 
-    void OnTriggerExit(Collider other)
+    private void OnTriggerExit(Collider other)
     {
         base.OnTriggerExit(other);
         if (other.gameObject.CompareTag("Tower"))
         {
-            Tower p = other.gameObject.GetComponent<Tower>();
-            towers.Remove(p);
-            //switch (p.teamScript.Team)
-            //{
-            //    case Team.Red:
-            //        {
-            //            redTowerCount -= 1;
-            //            break;
-
-            //        }
-            //    case Team.Blue:
-            //        {
-            //            blueTowerCount -= 1;
-            //            break;
-            //        }
-            //}
+            Player p = other.gameObject.GetComponent<Player>();
+            players.Remove(p);
             audio.Stop();
         }
     }
 
-    void IncrementGoalZoneScore(Team team)
+    private void IncrementGoalZoneScore(Team team)
     {
         switch (team)
         {
             case KBConstants.Team.Red:
                 goalScore += 1;
                 break;
+
             case KBConstants.Team.Blue:
                 goalScore -= 1;
                 break;
+
             case KBConstants.Team.None:
                 break;
+
             default:
                 break;
         }

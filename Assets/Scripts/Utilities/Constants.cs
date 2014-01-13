@@ -3,11 +3,12 @@
 namespace KBConstants
 {
     public enum Team { Red, Blue, None };
+    public enum PlayerType { attack, recon, defense };
     public enum ItemType { common, uncommon, rare, legendary, undefined };
 
     public class ObjectConstants
     {
-        public enum type { Core, Player, Gamepad, Item, Camera, PlasmaBullet, Kaiju, BasicRigidbodyCube, GUISelectCube, Factory, FactoryGroup, Tower, ItemZone };
+        public enum type { Player, Gamepad, Item, Camera, PlasmaBullet, BasicRigidbodyCube };
 
         private static readonly IDictionary<type, string> prefabNames = new Dictionary<type, string>
         {
@@ -16,14 +17,7 @@ namespace KBConstants
             {type.Item, "Items/Item"},
             {type.Camera, "Camera/Camera"},
             {type.PlasmaBullet, "Abilities/PlasmaBullet"},
-            {type.Kaiju, "Characters/Kaiju"},
             {type.BasicRigidbodyCube, "Environment/BasicRigidbodyCube"},
-            {type.GUISelectCube, "GUI/GUISelectCube"},
-            {type.Factory, "Characters/Factory"},
-            {type.FactoryGroup, "Groups/FactoryGroup"},
-            {type.Tower, "Characters/Tower"},
-            {type.ItemZone, "Zones/ItemZone"},
-            {type.Core, "Characters/Core"}
         };
         public static IDictionary<type, string> PREFAB_NAMES { get { return prefabNames; } }
     }

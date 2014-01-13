@@ -28,20 +28,20 @@ public class ScoreboardScript : MonoBehaviour
 
         TextMesh t = gameObject.GetComponent<TextMesh>();
 
-        GoalZone parentZone = transform.parent.gameObject.GetComponent<GoalZone>();
+        CaptureZone parentZone = transform.parent.gameObject.GetComponent<CaptureZone>();
 
         switch (parentZone.state)
         {
-            case GoalZone.GoalState.NotCaptured:
+            case CaptureZone.GoalState.NotCaptured:
                 {
                     if (parentZone.goalScore > 0)
                     {
-                        t.text = "Red: " + parentZone.goalScore.ToString() + "/" + GoalZone.CAPTURE_REQUIRED;
+                        t.text = "Red: " + parentZone.goalScore.ToString() + "/" + CaptureZone.CAPTURE_REQUIRED;
                     }
                     else if (parentZone.goalScore < 0)
                     {
                         int s = parentZone.goalScore * -1;
-                        t.text = "Blue: " + s.ToString() + "/" + GoalZone.CAPTURE_REQUIRED;
+                        t.text = "Blue: " + s.ToString() + "/" + CaptureZone.CAPTURE_REQUIRED;
                     }
                     else if (parentZone.goalScore == 0)
                     {
@@ -49,18 +49,18 @@ public class ScoreboardScript : MonoBehaviour
                     }
                 }
                 break;
-            case GoalZone.GoalState.BlueCaptured:
+            case CaptureZone.GoalState.BlueCaptured:
                 {
                     t.text = "Blue Captured";
                     break;
                 }
 
-            case GoalZone.GoalState.RedCaptured:
+            case CaptureZone.GoalState.RedCaptured:
                 {
                     t.text = "Red Captured";
                     break;
                 }
-            case GoalZone.GoalState.Contested:
+            case CaptureZone.GoalState.Contested:
                 {
                     t.text = "Contested!";
                     break;
