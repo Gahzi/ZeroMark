@@ -10,18 +10,15 @@ public class GameManager : MonoBehaviour
     private List<CaptureZone> captureZones;
     private List<Item> items;
 
-    //int redTeamScore = 0;
-    //int blueTeamScore = 0;
     private GameState state = GameState.PreGame;
 
-    private GamepadInfoHandler gamepadHandler;
+    //private GamepadInfoHandler gamepadHandler;
     private GameObject startImg;
     private GameObject redWinImg;
     private GameObject blueWinImg;
     private GameObject tieImg;
 
     private float startImgScreenTime = 3.0f;
-
     private float startTime;
 
     private static GameManager instance;
@@ -92,29 +89,28 @@ public class GameManager : MonoBehaviour
         instance = this;
     }
 
-    // Use this for initialization
     private void Start()
     {
         startTime = Time.time;
 
         state = GameState.PreGame;
-        startImg = GameObject.Find("StartImage");
-        startImg.SetActive(true);
+        //startImg = GameObject.Find("StartImage");
+        //startImg.SetActive(true);
 
-        gamepadHandler = GamepadInfoHandler.Instance;
+        // TODO : Code below needs to be refactored to use KBaM with conditional controller support
 
-        players = new List<Player>(gamepadHandler.getNumberOfConnectedControllers());
+        //gamepadHandler = GamepadInfoHandler.Instance;
 
-        if (gamepadHandler.getNumberOfConnectedControllers() > 0)
-        {
-            if (!PhotonNetwork.connected)
-            {
-                PhotonNetwork.autoJoinLobby = false;
-                PhotonNetwork.ConnectUsingSettings("1");
-            }
-        }
-        //redTeamScore = 0;
-        //blueTeamScore = 0;
+        //players = new List<Player>(gamepadHandler.getNumberOfConnectedControllers());
+
+        //if (gamepadHandler.getNumberOfConnectedControllers() > 0)
+        //{
+        //    if (!PhotonNetwork.connected)
+        //    {
+        //        PhotonNetwork.autoJoinLobby = false;
+        //        PhotonNetwork.ConnectUsingSettings("1");
+        //    }
+        //}
 
         GameObject[] loadedGoalZones = GameObject.FindGameObjectsWithTag("GoalZone");
         GameObject[] loadedItems = GameObject.FindGameObjectsWithTag("Item");
@@ -136,20 +132,12 @@ public class GameManager : MonoBehaviour
         StartGame();
     }
 
-    // Update is called once per frame
     private void Update()
     {
         switch (state)
         {
             case GameState.PreGame:
-                foreach (GamepadInfo g in gamepadHandler.gamepads)
-                {
-                    if (g.buttonDown[0])
-                    {
-                        //startImg.GetComponent<FadeOut>().startFading(1.0f);
-                        state = GameState.InGame;
-                    }
-                }
+
                 break;
 
             case GameState.InGame:
@@ -172,13 +160,7 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameState.EndGame:
-                foreach (GamepadInfo g in gamepadHandler.gamepads)
-                {
-                    if (g.buttonDown[(int)GamepadInfo.buttonNames.start])
-                    {
-                        Application.LoadLevel("TestScene");
-                    }
-                }
+
                 break;
 
             default:
@@ -188,27 +170,6 @@ public class GameManager : MonoBehaviour
 
     private void StartGame()
     {
-        bool red = true;
-        for (int i = 0; i < gamepadHandler.getNumberOfConnectedControllers(); i++)
-        {
-            GameObject newObj = null;
-
-            if (red)
-            {
-                newObj = createObject(ObjectConstants.type.Player, new Vector3(-55, 2, -30), Quaternion.identity);
-                Player p = newObj.GetComponent<Player>();
-                newObj.renderer.material = Resources.Load<Material>(MaterialConstants.MATERIAL_NAMES[MaterialConstants.type.CoreRed]);
-                p.teamScript.Team = KBConstants.Team.Red;
-            }
-            else
-            {
-                newObj = createObject(ObjectConstants.type.Player, new Vector3(55, 2, 30), Quaternion.identity);
-                Player p = newObj.GetComponent<Player>();
-                newObj.renderer.material = Resources.Load<Material>(MaterialConstants.MATERIAL_NAMES[MaterialConstants.type.CoreBlue]);
-                p.teamScript.Team = KBConstants.Team.Blue;
-            }
-            red = !red;
-        }
     }
 
     /// <summary>
@@ -222,14 +183,14 @@ public class GameManager : MonoBehaviour
         {
             switch (g.state)
             {
-                case CaptureZone.GoalState.NotCaptured:
+                case CaptureZone.ZoneState.NotCaptured:
                     break;
 
-                case CaptureZone.GoalState.RedCaptured:
+                case CaptureZone.ZoneState.RedCaptured:
                     redCaps++;
                     break;
 
-                case CaptureZone.GoalState.BlueCaptured:
+                case CaptureZone.ZoneState.BlueCaptured:
                     blueCaps++;
                     break;
 

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(Rigidbody))]
+//[RequireComponent(typeof(Rigidbody))]
 
 /// <summary>
 /// This class is meant to be the link between the moveable game objects and the player object that currently exists.
@@ -15,14 +15,14 @@ public class KBControllableGameObject : KBGameObject {
 	/// </summary>
 	public override void Start () {
         base.Start();
-        if (rigidbody == null)
-        {
-            Debug.LogError("ERROR: Controllable Player: " + this.gameObject.name.ToString() + " rigidbody is null");
-        }
-        else
-        {
-            rigidbody.useGravity = false;
-        }
+        //if (rigidbody == null)
+        //{
+        //    Debug.LogError("ERROR: Controllable Player: " + this.gameObject.name.ToString() + " rigidbody is null");
+        //}
+        //else
+        //{
+        //    rigidbody.useGravity = false;
+        //}
 
 	
 	}

@@ -1,46 +1,50 @@
 ﻿using KBConstants;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(PhotonView))]
+[RequireComponent(typeof(CharacterController))]
 public class Player : KBControllableGameObject
 {
     public PlayerType type;
-
-    //public static float PLAYER_MOVEMENT_SPEED = 30f;
-    public static float PLAYER_MOVEMENT_DEADZONE = 0.1f;
-
-    //public static float PLAYER_ROTATE_SPEED = 7.0f;
-
     public PlayerStats stats;
-
-    private float currentMovespeed;
-    private float currentRotateSpeed;
-
-    public GamepadInfo gamepad;
+    [Range(1, 5)]
+    public int level;
+    private float movespeed;
+    private float lowerbodyRotateSpeed;
+    private float upperbodyRotateSpeed;
+    private GamepadInfo gamepad;
+    private CharacterController controller;
     private Vector3 latestCorrectPos;
     private Vector3 onUpdatePos;
     private float fraction;
-    public GameObject heldItem;
-    private ProjectileAbilityBaseScript gun;
-    public GameObject top;
-    public GameObject bottom;
-
     protected PhotonView photonView;
-
     private int layerMask;
-
     public AudioClip grabSound;
+    public GameObject upperBody;
+    public Camera camera;
+    public Vector3 mousePos;
+    public Vector3 playerPositionOnScreen;
+    public Vector3 mousePlayerDiff;
+    public ProjectileAbilityBaseScript gun;
 
-    // Use this for initialization
+    private Vector3 lookRotation;
+
+    public int upgradePoints;
+
+    public int[] pointToLevel = new int[4];
+
     public override void Start()
     {
         base.Start();
+        controller = GetComponent<CharacterController>();
         InitializeStats(type);
         grabSound = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.ItemGrab]);
 
-        currentMovespeed = stats.speed;
-        currentRotateSpeed = stats.rotationSpeed;
+        gun = gameObject.GetComponentInChildren<ProjectileAbilityBaseScript>();
+        gun.SetMaxRange(100);
+
+        movespeed = stats.speed;
+        lowerbodyRotateSpeed = stats.lowerbodyRotationSpeed;
 
         int itemLayer = 8;
         int towerLayer = 13;
@@ -50,16 +54,14 @@ public class Player : KBControllableGameObject
         int layerMask3 = 1 << modelLayer;
         layerMask = layerMask1 | layerMask2 | layerMask3;
 
-        health = 100;
-
-        GamepadInfoHandler gamepadHandler = GamepadInfoHandler.Instance;
-        Debug.Log("Attempting to attach Controller");
-        gamepadHandler.AttachControllerToPlayer(this);
+        //GamepadInfoHandler gamepadHandler = GamepadInfoHandler.Instance;
+        //Debug.Log("Attempting to attach Controller");
+        //gamepadHandler.AttachControllerToPlayer(this);
 
         photonView = this.GetComponent<PhotonView>();
 
-        gun = gameObject.GetComponentInChildren<ProjectileAbilityBaseScript>();
-        gun.SetMaxRange(stats.attackRange);
+        //gun = gameObject.GetComponentInChildren<ProjectileAbilityBaseScript>();
+        //gun.SetMaxRange(stats.attackRange);
 
         //TODO: Prefer to do this stuff in code as seen below instead of dragging bullshit in Unity Editor.
         //this.photonView.observed = this.transform;
@@ -79,7 +81,8 @@ public class Player : KBControllableGameObject
                 stats.attack = 1;
                 stats.attackRange = 1;
                 stats.captureSpeed = 1;
-                stats.rotationSpeed = 1;
+                stats.lowerbodyRotationSpeed = 1;
+                stats.upperbodyRotationSpeed = 1;
                 stats.speed = 1;
                 stats.visionRange = 1;
                 break;
@@ -88,8 +91,9 @@ public class Player : KBControllableGameObject
                 stats.health = 3;
                 stats.attack = 1;
                 stats.attackRange = 1;
-                stats.captureSpeed = 1;
-                stats.rotationSpeed = 5;
+                stats.captureSpeed = 2;
+                stats.lowerbodyRotationSpeed = 1;
+                stats.upperbodyRotationSpeed = 5;
                 stats.speed = 10;
                 stats.visionRange = 1;
                 break;
@@ -99,11 +103,46 @@ public class Player : KBControllableGameObject
                 stats.attack = 1;
                 stats.attackRange = 1;
                 stats.captureSpeed = 1;
-                stats.rotationSpeed = 1;
+                stats.lowerbodyRotationSpeed = 1;
+                stats.upperbodyRotationSpeed = 1;
                 stats.speed = 1;
                 stats.visionRange = 1;
                 break;
 
+            default:
+                break;
+        }
+
+        level = 1;
+        health = stats.health;
+        movespeed = stats.speed;
+        lowerbodyRotateSpeed = stats.lowerbodyRotationSpeed;
+        upperbodyRotateSpeed = stats.upperbodyRotationSpeed;
+        upgradePoints = 0;
+    }
+
+    private void CheckUpgradePoints()
+    {
+        if (upgradePoints >= pointToLevel[level - 1])
+        {
+            LevelUp();
+        }
+    }
+
+    public void LevelUp()
+    {
+        level++;
+        switch (type)
+        {
+            case PlayerType.attack:
+                break;
+            case PlayerType.recon:
+                stats.captureSpeed++;
+                stats.speed += 5;
+                stats.upperbodyRotationSpeed++;
+                break;
+            case PlayerType.defense:
+                break;
             default:
                 break;
         }
@@ -117,44 +156,25 @@ public class Player : KBControllableGameObject
 
     private void OnDrawGizmos()
     {
-        Debug.DrawRay(bottom.transform.position, bottom.transform.TransformDirection(new Vector3(0, 0, 20.0f)), new Color(0, 255, 0, 255), 0.0f);
-        Debug.DrawRay(top.transform.position, top.transform.TransformDirection(new Vector3(0, 0, 20.0f)), new Color(255, 0, 0, 255), 0.0f);
+        Debug.DrawRay(upperBody.transform.position, upperBody.transform.TransformDirection(new Vector3(0, 0, 5.0f)), new Color(255, 0, 0, 255), 0.0f);
     }
 
     private void Update()
     {
+        mousePos = Input.mousePosition;
+        playerPositionOnScreen = camera.WorldToScreenPoint(transform.position);
+        mousePlayerDiff = playerPositionOnScreen - mousePos;
+
         if (gamepad != null)
         {
-            if (gamepad.leftStick.magnitude > PLAYER_MOVEMENT_DEADZONE)
-            {
-                bottom.transform.LookAt(transform.position + new Vector3(-gamepad.leftStick.x, bottom.transform.position.y, -gamepad.leftStick.y));
-                Vector3 fwd = bottom.transform.TransformDirection(Vector3.forward);
-                rigidbody.velocity = fwd * currentMovespeed;
-
-            }
-            else
-            {
-                rigidbody.velocity = Vector3.Lerp(rigidbody.velocity, Vector3.zero, 0.5f * Time.deltaTime);
-            }
-
-            if (gamepad.rightStick.magnitude > PLAYER_MOVEMENT_DEADZONE)
-            {
-                top.transform.LookAt(transform.position + new Vector3(-gamepad.rightStick.x, top.transform.position.y, -gamepad.rightStick.y));
-            }
-
-            if (gamepad.button[0])
-            {
-                if (!gun.GetActive())
-                {
-                    gun.ActivateAbility();
-                }
-            }
-
-            if (gamepad.buttonUp[0])
-            {
-                gun.DeactivateAbility();
-            }
+            //ControlGamepad();
         }
+        else
+        {
+            ControlKBAM();
+        }
+
+        CheckUpgradePoints();
     }
 
     /// <summary>
@@ -214,11 +234,11 @@ public class Player : KBControllableGameObject
     private void OnCollisionEnter(Collision collision)
     {
         //Debug.Log("OnCollisionEnter!");
-        KBControllableGameObject colControllablePlayerObject = collision.gameObject.GetComponent<KBControllableGameObject>();
-        if (colControllablePlayerObject != null)
-        {
-            attachPlayerToControllableGameObject(colControllablePlayerObject);
-        }
+        //KBControllableGameObject colControllablePlayerObject = collision.gameObject.GetComponent<KBControllableGameObject>();
+        //if (colControllablePlayerObject != null)
+        //{
+        //    attachPlayerToControllableGameObject(colControllablePlayerObject);
+        //}
 
         // TODO: Handle collision with items here
     }
@@ -226,5 +246,61 @@ public class Player : KBControllableGameObject
     public override void takeDamage(int amount)
     {
         health -= amount;
+    }
+
+    private void ControlGamepad()
+    {
+        //if (gamepad.leftStick.magnitude > PLAYER_MOVEMENT_DEADZONE)
+        //{
+        //    bottom.transform.LookAt(transform.position + new Vector3(-gamepad.leftStick.x, bottom.transform.position.y, -gamepad.leftStick.y));
+        //    Vector3 fwd = bottom.transform.TransformDirection(Vector3.forward);
+        //    rigidbody.velocity = fwd * currentMovespeed;
+        //}
+        //else
+        //{
+        //    rigidbody.velocity = Vector3.Lerp(rigidbody.velocity, Vector3.zero, 0.5f * Time.deltaTime);
+        //}
+
+        //if (gamepad.rightStick.magnitude > PLAYER_MOVEMENT_DEADZONE)
+        //{
+        //    top.transform.LookAt(transform.position + new Vector3(-gamepad.rightStick.x, top.transform.position.y, -gamepad.rightStick.y));
+        //}
+
+        //if (gamepad.button[0])
+        //{
+        //    if (!gun.GetActive())
+        //    {
+        //        gun.ActivateAbility();
+        //    }
+        //}
+
+        //if (gamepad.buttonUp[0])
+        //{
+        //    gun.DeactivateAbility();
+        //}
+    }
+
+    private void ControlKBAM()
+    {
+        //Vector3 m = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        //controller.SimpleMove(m.normalized * movespeed);
+
+        float m = movespeed * Input.GetAxis("Vertical");
+        controller.SimpleMove(transform.TransformDirection(Vector3.forward) * m);
+        transform.Rotate(0, Input.GetAxis("Horizontal") * lowerbodyRotateSpeed, 0);
+
+        //Quaternion newRot = Quaternion.LookRotation(upperBody.transform.position + new Vector3(mousePlayerDiff.x, 0, mousePlayerDiff.y));
+        //upperBody.transform.rotation = Quaternion.Lerp(upperBody.transform.rotation, newRot, upperbodyRotateSpeed * Time.deltaTime);
+        //transform.rotation = Quaternion.Lerp(transform.rotation, newRot, lowerbodyRotateSpeed * Time.deltaTime);
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            gun.ActivateAbility();
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+            gun.DeactivateAbility();
+        }
+
     }
 }

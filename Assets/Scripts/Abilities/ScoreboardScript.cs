@@ -32,37 +32,32 @@ public class ScoreboardScript : MonoBehaviour
 
         switch (parentZone.state)
         {
-            case CaptureZone.GoalState.NotCaptured:
+            case CaptureZone.ZoneState.NotCaptured:
                 {
-                    if (parentZone.goalScore > 0)
+                    if (parentZone.captureTotal > 0)
                     {
-                        t.text = "Red: " + parentZone.goalScore.ToString() + "/" + CaptureZone.CAPTURE_REQUIRED;
+                        t.text = "Red: " + parentZone.captureTotal.ToString() + "/" + CaptureZone.CAPTURE_REQUIRED;
                     }
-                    else if (parentZone.goalScore < 0)
+                    else if (parentZone.captureTotal < 0)
                     {
-                        int s = parentZone.goalScore * -1;
+                        int s = parentZone.captureTotal * -1;
                         t.text = "Blue: " + s.ToString() + "/" + CaptureZone.CAPTURE_REQUIRED;
                     }
-                    else if (parentZone.goalScore == 0)
+                    else if (parentZone.captureTotal == 0)
                     {
                         t.text = "Unoccupied:";
                     }
                 }
                 break;
-            case CaptureZone.GoalState.BlueCaptured:
+            case CaptureZone.ZoneState.BlueCaptured:
                 {
                     t.text = "Blue Captured";
                     break;
                 }
 
-            case CaptureZone.GoalState.RedCaptured:
+            case CaptureZone.ZoneState.RedCaptured:
                 {
                     t.text = "Red Captured";
-                    break;
-                }
-            case CaptureZone.GoalState.Contested:
-                {
-                    t.text = "Contested!";
                     break;
                 }
         }

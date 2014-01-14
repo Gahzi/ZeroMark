@@ -1,23 +1,16 @@
-﻿using UnityEngine;
-using Hashtable = ExitGames.Client.Photon.Hashtable;
-using System.Collections;
+﻿using KBConstants;
 using System.Collections.Generic;
-using KBConstants;
+using UnityEngine;
 
 [RequireComponent(typeof(Team))]
-
 public class KBGameObject : Photon.MonoBehaviour
 {
-
     public int health;
-    public Vector3 targetPosition;
     public TeamScript teamScript;
-
     protected GameManager gm;
-
     protected List<KBGameObject> collisionObjects;
 
-    void Awake()
+    private void Awake()
     {
         /*
         if (photonView.isMine)
@@ -30,8 +23,6 @@ public class KBGameObject : Photon.MonoBehaviour
 
     public virtual void Start()
     {
-
-
         gm = GameManager.Instance;
 
         if (!GetComponentInChildren<TeamScript>())
@@ -40,31 +31,19 @@ public class KBGameObject : Photon.MonoBehaviour
         }
 
         teamScript = GetComponentInChildren<TeamScript>();
-
     }
 
-    void Update()
+    private void Update()
     {
-
     }
 
-    public virtual void takeDamage(int amount) { }
-
-    public IEnumerator MoveObject(Transform thisTransform, Vector3 startPos, Vector3 endPos, float time)
+    public virtual void takeDamage(int amount)
     {
-        float i = 0.0f;
-        float rate = 1.0f / time;
-        while (i < 1.0)
-        {
-            i += Time.deltaTime * rate;
-            thisTransform.position = Vector3.Lerp(startPos, endPos, i);
-            yield break;
-        }
     }
 
     protected void OnTriggerEnter(Collider other)
     {
-        KBGameObject o = (KBGameObject) other.gameObject.GetComponentInChildren<KBGameObject>();
+        KBGameObject o = (KBGameObject)other.gameObject.GetComponentInChildren<KBGameObject>();
         if (o != null)
         {
             collisionObjects.Add(o);
@@ -73,7 +52,7 @@ public class KBGameObject : Photon.MonoBehaviour
 
     protected void OnTriggerExit(Collider other)
     {
-        KBGameObject o = (KBGameObject) other.gameObject.GetComponentInChildren<KBGameObject>();
+        KBGameObject o = (KBGameObject)other.gameObject.GetComponentInChildren<KBGameObject>();
         if (o != null)
         {
             collisionObjects.Remove(o);
@@ -92,5 +71,4 @@ public class KBGameObject : Photon.MonoBehaviour
             o.hasDied(this);
         }
     }
-
 }

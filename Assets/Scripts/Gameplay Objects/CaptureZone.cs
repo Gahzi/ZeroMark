@@ -7,90 +7,138 @@ public class CaptureZone : KBGameObject
     public static int CAPTURE_REQUIRED = 1000;
     private static int RED_TEAM_CAPTURE_COUNT = CAPTURE_REQUIRED;
     private static int BLUE_TEAM_CAPTURE_COUNT = -CAPTURE_REQUIRED;
+    public int captureTotal;
+    public float capturePercent;
+    public int upgradePointsOnCapture;
 
-    private static int RED_TEAM_CAPTURE_RATE = 1;
-    private static int BLUE_TEAM_CAPTURE_RATE = -1;
+    public enum ZoneState { NotCaptured, RedCaptured, BlueCaptured };
+    public enum ZoneTier { A, B, C };
+    public ZoneTier tier;
+    public ZoneState state = ZoneState.NotCaptured;
 
-    public enum GoalState { NotCaptured, RedCaptured, BlueCaptured, Contested };
+    public CaptureZone[] requiredZones = new CaptureZone[0];
 
-    public GoalState state = GoalState.NotCaptured;
-
-    public CaptureZone[] zoneDependencies = new CaptureZone[3];
-
-    private bool playSound = true;
-
-    private int redPlayerCount = 0;
-    private int bluePlayerCount = 0;
-
+    private bool switchState = true;
     public List<Player> players;
-
-    public int goalScore = 0;
 
     private AudioClip captureProgress;
     private AudioClip captureComplete;
 
+    private bool redUnlocked, blueUnlocked;
+
     private void Start()
     {
         base.Start();
-        goalScore = 0;
-        state = GoalState.NotCaptured;
+        capturePercent = 50.0f;
+        captureTotal = 0;
+        state = ZoneState.NotCaptured;
         players = new List<Player>(10);
 
         captureComplete = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.CaptureComplete]);
         captureProgress = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.CaptureProgress]);
+
+        upgradePointsOnCapture = 100;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Vector3 p = new Vector3(transform.position.x, 5, transform.position.z);
+        if (requiredZones.Length > 0)
+        {
+            foreach (var z in requiredZones)
+            {
+                Color c = Color.black;
+                switch (z.tier)
+                {
+                    case ZoneTier.A:
+                        c = Color.green;
+                        break;
+
+                    case ZoneTier.B:
+                        c = Color.yellow;
+                        break;
+
+                    case ZoneTier.C:
+                        c = Color.magenta;
+                        break;
+
+                    default:
+                        break;
+                }
+                Gizmos.color = c;
+                Gizmos.DrawLine(p, new Vector3(z.transform.position.x, 5, z.transform.position.z));
+                //Debug.DrawLine(new Vector3(transform.position.x, 5, transform.position.z), new Vector3(z.transform.position.x, 5, z.transform.position.z), c);
+            }
+        }
+        if (redUnlocked)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(p + Vector3.left, 1);
+        }
+        if (blueUnlocked)
+        {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawSphere(p + Vector3.right, 1);
+        }
     }
 
     private void Update()
     {
-        redPlayerCount = 0;
-        bluePlayerCount = 0;
-        bool redUnlocked = false;
-        bool blueUnlocked = false;
+        #region Unlock Handling
 
-        foreach (var z in zoneDependencies)
+        redUnlocked = false;
+        blueUnlocked = false;
+        if (requiredZones.Length > 0)
         {
-            switch (z.state)
+            foreach (var z in requiredZones)
             {
-                case GoalState.NotCaptured:
-                    break;
+                switch (z.state)
+                {
+                    case ZoneState.NotCaptured:
+                        break;
 
-                case GoalState.RedCaptured:
-                    redUnlocked = true;
-                    break;
+                    case ZoneState.RedCaptured:
+                        redUnlocked = true;
+                        break;
 
-                case GoalState.BlueCaptured:
-                    blueUnlocked = true;
-                    break;
+                    case ZoneState.BlueCaptured:
+                        blueUnlocked = true;
+                        break;
 
-                case GoalState.Contested:
-                    break;
-
-                default:
-                    break;
+                    default:
+                        break;
+                }
             }
         }
+        else
+        {
+            redUnlocked = true;
+            blueUnlocked = true;
+        }
+
+        #endregion Unlock Handling
+
+        int captureDelta = 0;
 
         foreach (KBGameObject o in collisionObjects)
         {
-            Player t = o.gameObject.GetComponentInChildren<Player>();
-            if (t != null)
+            Player p = o.gameObject.GetComponentInChildren<Player>();
+            if (p != null)
             {
-                switch (t.teamScript.Team)
+                switch (p.teamScript.Team)
                 {
                     case Team.Red:
                         if (redUnlocked)
                         {
-                            redPlayerCount++;
+                            captureDelta += p.stats.captureSpeed;  
                         }
-
                         break;
 
                     case Team.Blue:
                         if (blueUnlocked)
                         {
-                            bluePlayerCount++;
+                            captureDelta -= p.stats.captureSpeed;  
                         }
-
                         break;
 
                     case Team.None:
@@ -104,38 +152,16 @@ public class CaptureZone : KBGameObject
 
         switch (state)
         {
-            case GoalState.NotCaptured:
-
-                if (redPlayerCount > 0 && bluePlayerCount > 0)
-                {
-                    if (redPlayerCount == bluePlayerCount)
-                    {
-                        state = GoalState.Contested;
-                    }
-                }
-
-                if (redPlayerCount > 0 || bluePlayerCount > 0)
-                {
-                    goalScore += (redPlayerCount * RED_TEAM_CAPTURE_RATE) + (bluePlayerCount * BLUE_TEAM_CAPTURE_RATE);
-                }
-                else
-                {
-                    if (goalScore > 0) goalScore -= 1;
-                    else if (goalScore < 0) goalScore += 1;
-                }
+            case ZoneState.NotCaptured:
+                captureTotal += captureDelta;
                 break;
 
-            case GoalState.RedCaptured:
+            case ZoneState.RedCaptured:
+                //captureTotal += captureDelta;
                 break;
 
-            case GoalState.BlueCaptured:
-                break;
-
-            case GoalState.Contested:
-                if (redPlayerCount > bluePlayerCount || bluePlayerCount > redPlayerCount)
-                {
-                    state = GoalState.NotCaptured;
-                }
+            case ZoneState.BlueCaptured:
+                //captureTotal += captureDelta;
                 break;
 
             default:
@@ -147,22 +173,70 @@ public class CaptureZone : KBGameObject
 
     private void CheckCaptured()
     {
-        if (goalScore >= RED_TEAM_CAPTURE_COUNT)
+        if (captureTotal >= RED_TEAM_CAPTURE_COUNT)
         {
-            state = GoalState.RedCaptured;
-            if (playSound)
+            state = ZoneState.RedCaptured;
+            if (switchState)
             {
                 audio.PlayOneShot(captureComplete);
-                playSound = false;
+                switchState = false;
+
+                foreach (KBGameObject o in collisionObjects)
+                {
+                    Player p = o.gameObject.GetComponentInChildren<Player>();
+                    if (p != null)
+                    {
+                        switch (p.teamScript.Team)
+                        {
+                            case Team.Red:
+                                p.upgradePoints += upgradePointsOnCapture;
+                                break;
+
+                            case Team.Blue:
+                                break;
+
+                            case Team.None:
+                                break;
+
+                            default:
+                                break;
+                        }
+                    }
+                }
+
             }
         }
-        else if (goalScore <= BLUE_TEAM_CAPTURE_COUNT)
+        else if (captureTotal <= BLUE_TEAM_CAPTURE_COUNT)
         {
-            state = GoalState.BlueCaptured;
-            if (playSound)
+            state = ZoneState.BlueCaptured;
+            if (switchState)
             {
                 audio.PlayOneShot(captureComplete);
-                playSound = false;
+                switchState = false;
+
+                foreach (KBGameObject o in collisionObjects)
+                {
+                    Player p = o.gameObject.GetComponentInChildren<Player>();
+                    if (p != null)
+                    {
+                        switch (p.teamScript.Team)
+                        {
+                            case Team.Red:
+
+                                break;
+
+                            case Team.Blue:
+                                p.upgradePoints += upgradePointsOnCapture;
+                                break;
+
+                            case Team.None:
+                                break;
+
+                            default:
+                                break;
+                        }
+                    }
+                }
             }
         }
     }
@@ -174,44 +248,25 @@ public class CaptureZone : KBGameObject
     private void OnTriggerEnter(Collider other)
     {
         base.OnTriggerEnter(other);
-        if (other.gameObject.CompareTag("Tower"))
-        {
-            Player p = other.gameObject.GetComponent<Player>();
-            players.Add(p);
-            audio.clip = captureProgress;
-            audio.Play();
-            audio.loop = true;
-        }
+        //if (other.gameObject.CompareTag("Player"))
+        //{
+        //    Player p = other.gameObject.GetComponent<Player>();
+        //    players.Add(p);
+        //    audio.clip = captureProgress;
+        //    audio.Play();
+        //    audio.loop = true;
+        //}
     }
 
     private void OnTriggerExit(Collider other)
     {
         base.OnTriggerExit(other);
-        if (other.gameObject.CompareTag("Tower"))
-        {
-            Player p = other.gameObject.GetComponent<Player>();
-            players.Remove(p);
-            audio.Stop();
-        }
+        //if (other.gameObject.CompareTag("Player"))
+        //{
+        //    Player p = other.gameObject.GetComponent<Player>();
+        //    players.Remove(p);
+        //    audio.Stop();
+        //}
     }
 
-    private void IncrementGoalZoneScore(Team team)
-    {
-        switch (team)
-        {
-            case KBConstants.Team.Red:
-                goalScore += 1;
-                break;
-
-            case KBConstants.Team.Blue:
-                goalScore -= 1;
-                break;
-
-            case KBConstants.Team.None:
-                break;
-
-            default:
-                break;
-        }
-    }
 }

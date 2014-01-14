@@ -41,7 +41,7 @@ public class Item : KBGameObject
 
         transform.position = new Vector3(transform.position.x, 2.0f, transform.position.z);
 
-        targetPosition = transform.position;
+        //targetPosition = transform.position;
         targetScale = Vector3.one;
         int r = Random.Range(0, 100); // TODO : Need a way of creating items without random types
 
@@ -100,7 +100,7 @@ public class Item : KBGameObject
     /// </summary>
     void Update()
     {
-        transform.position = Vector3.Lerp(transform.position, targetPosition, 5.0f * Time.deltaTime);
+        //transform.position = Vector3.Lerp(transform.position, targetPosition, 5.0f * Time.deltaTime);
         transform.localScale = Vector3.Lerp(transform.localScale, targetScale, 1.0f * Time.deltaTime);
 
         switch (state)
