@@ -4,7 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(PhotonView))]
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(TimerScript))]
-public class Player : KBControllableGameObject
+public class PlayerLocal : KBControllableGameObject
 {
     public enum ControlStyle { ThirdPerson, TopDown };
 
@@ -179,6 +179,15 @@ public class Player : KBControllableGameObject
     {
         Debug.DrawRay(upperBody.transform.position, upperBody.transform.TransformDirection(new Vector3(0, 0, 5.0f)), new Color(255, 0, 0, 255), 0.0f);
     }
+    
+    void OnGUI()
+    {
+        //GUI.Box(new Rect(0, 0, 100, 50), "Top-left");
+        GUI.Box(new Rect(Screen.width - 200, 0, 200, 200), GameManager.GetCaptureZoneStateString());
+        //GUI.Box(new Rect(0, Screen.height - 50, 100, 50), "Bottom-left");
+        //GUI.Box(new Rect(Screen.width - 100, Screen.height - 50, 100, 50), "Bottom-right");
+    }
+    
 
     private void Update()
     {

@@ -6,11 +6,11 @@ public class GameManager : MonoBehaviour
 {
     private enum GameState { PreGame, InGame, RedWins, BlueWins, Tie, EndGame };
 
-    private List<Player> players;
+    private List<PlayerLocal> players;
     private List<CaptureZone> captureZones;
     private List<Item> items;
     private List<PlayerSpawnZone> playerSpawnZones;
-
+    private CaptureZone victoryZone;
     private GameState state = GameState.PreGame;
 
     //private GamepadInfoHandler gamepadHandler;
@@ -127,6 +127,10 @@ public class GameManager : MonoBehaviour
         foreach (CaptureZone c in loadedCaptureZones)
         {
             captureZones.Add(c);
+            if (c.tier == CaptureZone.ZoneTier.C)
+            {
+                victoryZone = c;
+            }
         }
 
         foreach (PlayerSpawnZone p in loadedPSpawns)
@@ -175,6 +179,7 @@ public class GameManager : MonoBehaviour
 
     private void StartGame()
     {
+        state = GameState.InGame;
     }
 
     /// <summary>
@@ -182,39 +187,22 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void CheckWinConditions()
     {
-        int redCaps = 0;
-        int blueCaps = 0;
-        foreach (CaptureZone g in captureZones)
+        if (victoryZone.state != CaptureZone.ZoneState.Unoccupied)
         {
-            switch (g.state)
+            switch (victoryZone.state)
             {
-                case CaptureZone.ZoneState.NotCaptured:
+                case CaptureZone.ZoneState.Unoccupied:
                     break;
-
-                case CaptureZone.ZoneState.RedCaptured:
-                    redCaps++;
+                case CaptureZone.ZoneState.Red:
+                    state = GameState.RedWins;
                     break;
-
-                case CaptureZone.ZoneState.BlueCaptured:
-                    blueCaps++;
+                case CaptureZone.ZoneState.Blue:
+                    state = GameState.BlueWins;
                     break;
-
                 default:
                     break;
             }
         }
-        if (redCaps >= 2)
-        {
-            state = GameState.RedWins;
-        }
-        else if (blueCaps >= 2)
-        {
-            state = GameState.BlueWins;
-        }
-    }
-
-    private void CheckGoalZones()
-    {
     }
 
     public GameObject createObject(KBConstants.ObjectConstants.type objectType, Vector3 position, Quaternion rotation)
@@ -224,7 +212,7 @@ public class GameManager : MonoBehaviour
             case ObjectConstants.type.Player:
                 {
                     GameObject newPlayerObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Player], position, rotation, 0);
-                    Player newPlayer = newPlayerObject.GetComponent<Player>();
+                    PlayerLocal newPlayer = newPlayerObject.GetComponent<PlayerLocal>();
                     players.Add(newPlayer);
                     return newPlayerObject;
                 }
@@ -245,5 +233,25 @@ public class GameManager : MonoBehaviour
     private void SendGlobalMessageToPlayers(string msg)
     {
         // TODO
+    }
+
+    public static string GetCaptureZoneStateString()
+    {
+        string tab = "     ";
+        string spacer = " : ";
+        GameManager gm = GameManager.instance;
+        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+        //sb.Append(gm.victoryZone.tier.ToString() + spacer + gm.victoryZone.state.ToString() + System.Environment.NewLine);
+        sb.Append(gm.victoryZone.descriptiveName + spacer + gm.victoryZone.scoreboard.txt + System.Environment.NewLine);
+        foreach (CaptureZone c in gm.victoryZone.requiredZones)
+        {
+            sb.Append(tab + c.descriptiveName + spacer + c.scoreboard.txt + System.Environment.NewLine);
+
+            foreach (CaptureZone d in c.requiredZones)
+            {
+                sb.Append(tab + tab + d.descriptiveName + spacer + d.scoreboard.txt + System.Environment.NewLine);
+            }
+        }
+        return sb.ToString();
     }
 }

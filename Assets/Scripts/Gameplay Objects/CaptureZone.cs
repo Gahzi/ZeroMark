@@ -9,21 +9,24 @@ public class CaptureZone : KBGameObject
     private static int BLUE_TEAM_CAPTURE_COUNT = -CAPTURE_REQUIRED;
     private int captureDelta;
     public int captureTotal;
+    public int captureDecayOnUnoccupied;
     public float capturePercent;
     public int upgradePointsOnCapture;
+    public ScoreboardScript scoreboard;
+    public string descriptiveName;
 
-    public enum ZoneState { NotCaptured, RedCaptured, BlueCaptured };
+    public enum ZoneState { Unoccupied, Red, Blue };
 
     public enum ZoneTier { A, B, C };
 
     public ZoneTier tier;
-    public ZoneState state = ZoneState.NotCaptured;
+    public ZoneState state = ZoneState.Unoccupied;
 
     public CaptureZone[] requiredZones = new CaptureZone[0];
     public ItemSpawn[] connectedItemSpawns = new ItemSpawn[0];
 
     private bool canSwitchState = true;
-    public List<Player> players;
+    public List<PlayerLocal> players;
 
     private AudioClip captureProgress;
     private AudioClip captureComplete;
@@ -35,8 +38,8 @@ public class CaptureZone : KBGameObject
         base.Start();
         capturePercent = 50.0f;
         captureTotal = 0;
-        state = ZoneState.NotCaptured;
-        players = new List<Player>(10);
+        state = ZoneState.Unoccupied;
+        players = new List<PlayerLocal>(10);
 
         captureComplete = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.CaptureComplete]);
         captureProgress = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.CaptureProgress]);
@@ -107,14 +110,14 @@ public class CaptureZone : KBGameObject
             {
                 switch (z.state)
                 {
-                    case ZoneState.NotCaptured:
+                    case ZoneState.Unoccupied:
                         break;
 
-                    case ZoneState.RedCaptured:
+                    case ZoneState.Red:
                         redUnlocked = true;
                         break;
 
-                    case ZoneState.BlueCaptured:
+                    case ZoneState.Blue:
                         blueUnlocked = true;
                         break;
 
@@ -135,7 +138,7 @@ public class CaptureZone : KBGameObject
 
         foreach (KBGameObject o in collisionObjects)
         {
-            Player p = o.gameObject.GetComponentInChildren<Player>();
+            PlayerLocal p = o.gameObject.GetComponentInChildren<PlayerLocal>();
             if (p != null)
             {
                 switch (p.teamScript.Team)
@@ -183,14 +186,31 @@ public class CaptureZone : KBGameObject
             }
         }
 
-        if (state == ZoneState.BlueCaptured && captureTotal >= 0) // Blue has lost control
+        if (state == ZoneState.Blue && captureTotal >= 0) // Blue has lost control
         {
             CaptureEvent(Team.None);
         }
 
-        if (state == ZoneState.RedCaptured && captureTotal <= 0) // Red has lost control
+        if (state == ZoneState.Red && captureTotal <= 0) // Red has lost control
         {
             CaptureEvent(Team.None);
+        }
+
+        if (state == ZoneState.Unoccupied && captureDelta == 0)
+        {
+            if (Mathf.Abs(captureTotal) <= captureDecayOnUnoccupied)
+            {
+                captureTotal = 0;
+            }
+            if (captureTotal > 0)
+            {
+                captureTotal -= captureDecayOnUnoccupied;
+            }
+            else if (captureTotal < 0)
+            {
+                captureTotal += captureDecayOnUnoccupied;
+            }
+
         }
     }
 
@@ -217,19 +237,19 @@ public class CaptureZone : KBGameObject
         {
             case Team.Red:
                 audio.PlayOneShot(captureComplete);
-                state = ZoneState.RedCaptured;
+                state = ZoneState.Red;
                 // TODO : some kind of global message notifying a change in state
                 break;
 
             case Team.Blue:
                 audio.PlayOneShot(captureComplete);
-                state = ZoneState.BlueCaptured;
+                state = ZoneState.Blue;
                 // TODO : some kind of global message notifying a change in state
                 break;
 
             case Team.None:
                 // TODO : Sound for loss of control;
-                state = ZoneState.NotCaptured;
+                state = ZoneState.Unoccupied;
                 canSwitchState = true;
                 // TODO : some kind of global message notifying a change in state
                 break;
@@ -242,7 +262,7 @@ public class CaptureZone : KBGameObject
         {
             foreach (KBGameObject o in collisionObjects)
             {
-                Player p = o.gameObject.GetComponentInChildren<Player>();
+                PlayerLocal p = o.gameObject.GetComponentInChildren<PlayerLocal>();
                 if (p != null)
                 {
                     switch (p.teamScript.team)

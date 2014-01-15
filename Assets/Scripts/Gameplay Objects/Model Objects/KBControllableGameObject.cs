@@ -8,7 +8,7 @@ using System.Collections;
 /// </summary>
 public class KBControllableGameObject : KBGameObject {
 
-    public Player attachedPlayer = null;
+    public PlayerLocal attachedPlayer = null;
 
 	/// <summary>
     /// Use this for initialization

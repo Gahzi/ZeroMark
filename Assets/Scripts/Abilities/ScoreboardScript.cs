@@ -5,62 +5,59 @@ using System;
 public class ScoreboardScript : MonoBehaviour
 {
 
-    //GameObject target;
-    // Use this for initialization
+    public string txt;
+    public Color color;
+
     void Start()
     {
-        //target = GameObject.FindGameObjectWithTag("Player");
     }
 
-    // Update is called once per frame
     void Update()
     {
-        //if (target == null)
-        //{
-        //    target = GameObject.FindGameObjectWithTag("Player");
-        //}
-        //else
-        //{
-        //    transform.LookAt(target.transform);
-        //}
-        
-        //transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y + 180f, 0);
-
         TextMesh t = gameObject.GetComponent<TextMesh>();
 
         CaptureZone parentZone = transform.parent.gameObject.GetComponent<CaptureZone>();
 
         switch (parentZone.state)
         {
-            case CaptureZone.ZoneState.NotCaptured:
+            case CaptureZone.ZoneState.Unoccupied:
                 {
                     if (parentZone.captureTotal > 0)
                     {
-                        t.text = "Red: " + parentZone.captureTotal.ToString() + "/" + CaptureZone.CAPTURE_REQUIRED;
+                        txt = "Red: " + parentZone.captureTotal.ToString() + "/" + CaptureZone.CAPTURE_REQUIRED;
+                        color = Color.red;
                     }
                     else if (parentZone.captureTotal < 0)
                     {
-                        int s = parentZone.captureTotal * -1;
-                        t.text = "Blue: " + s.ToString() + "/" + CaptureZone.CAPTURE_REQUIRED;
+                        int i = parentZone.captureTotal * -1;
+                        txt = "Blue: " + i.ToString() + "/" + CaptureZone.CAPTURE_REQUIRED;
+                        color = Color.blue;
                     }
                     else if (parentZone.captureTotal == 0)
                     {
-                        t.text = "Unoccupied:";
+                        txt = parentZone.captureTotal.ToString() + "/" + CaptureZone.CAPTURE_REQUIRED;
+                        color = Color.white;
                     }
                 }
                 break;
-            case CaptureZone.ZoneState.BlueCaptured:
+            case CaptureZone.ZoneState.Blue:
                 {
-                    t.text = "Blue Captured";
+                    txt = "Blue Captured";
+                    color = Color.blue;
                     break;
                 }
 
-            case CaptureZone.ZoneState.RedCaptured:
+            case CaptureZone.ZoneState.Red:
                 {
-                    t.text = "Red Captured";
+                    txt = "Red Captured";
+                    color = Color.red;
                     break;
                 }
+            default:
+                txt = "";
+                break;
         }
-        //t.text = "Red: " + Math.Round((double)transform.parent.gameObject.GetComponent<GoalZone>().goalScore).ToString() + " Blue: " + Math.Round((double) transform.parent.gameObject.GetComponent<GoalZone>().blueTeamTime).ToString();
+        t.text = txt;
+        t.color = color;
     }
 }

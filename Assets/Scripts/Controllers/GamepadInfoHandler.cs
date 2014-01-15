@@ -15,7 +15,7 @@ public class GamepadInfoHandler : MonoBehaviour
 
     private int numberOfConnectedControllers;
     
-	public Dictionary<GamepadInfo,Player> gamepadPlayerDictionary;
+	public Dictionary<GamepadInfo,PlayerLocal> gamepadPlayerDictionary;
 	public GamepadInfo[] gamepads;
     public int managerCount = 1;
 	
@@ -68,7 +68,7 @@ public class GamepadInfoHandler : MonoBehaviour
     {
         numberOfConnectedControllers = Input.GetJoystickNames().Length;
 
-		gamepadPlayerDictionary = new Dictionary<GamepadInfo, Player>(); 
+		gamepadPlayerDictionary = new Dictionary<GamepadInfo, PlayerLocal>(); 
 		gamepads = new GamepadInfo[numberOfConnectedControllers];
 
         Debug.Log("Found " + numberOfConnectedControllers.ToString() + " Controllers." + "with " + this.gameObject.name.ToString());
@@ -87,7 +87,7 @@ public class GamepadInfoHandler : MonoBehaviour
 		GamepadInfo freeGamepad = null;
 		//do we have an entry where the value is null? (open gamepad)
 		//get the key where the value is null
-		foreach (KeyValuePair<GamepadInfo, Player> pair in gamepadPlayerDictionary)
+		foreach (KeyValuePair<GamepadInfo, PlayerLocal> pair in gamepadPlayerDictionary)
 		{
 		    if(pair.Key is GamepadInfo && pair.Value == null)
 			{
@@ -98,7 +98,7 @@ public class GamepadInfoHandler : MonoBehaviour
 		return freeGamepad;
 	}
 	
-	public void AttachControllerToPlayer(Player unattachedPlayer)
+	public void AttachControllerToPlayer(PlayerLocal unattachedPlayer)
 	{
         Debug.Log("Getting Free Gamepad");
 		GamepadInfo freeGamepad = GetFreeController();

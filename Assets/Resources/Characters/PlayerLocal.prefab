@@ -20,7 +20,7 @@ GameObject:
   - 114: {fileID: 11400004}
   - 143: {fileID: 14300000}
   m_Layer: 0
-  m_Name: Player
+  m_Name: PlayerLocal
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -600,7 +600,10 @@ MonoBehaviour:
   attachedPlayer: {fileID: 0}
   controlStyle: 0
   type: 1
+  acceptingInputs: 0
+  waitingForRespawn: 0
   level: 0
+  timer: {fileID: 0}
   grabSound: {fileID: 0}
   upperBody: {fileID: 100012}
   camera: {fileID: 2000000}
@@ -611,6 +614,7 @@ MonoBehaviour:
   spawnZone: {fileID: 0}
   respawnTime: 0
   upgradePoints: 0
+  maxHealth: 0
   pointToLevel: 64000000c80000002c01000090010000
 --- !u!114 &11400002
 MonoBehaviour:
