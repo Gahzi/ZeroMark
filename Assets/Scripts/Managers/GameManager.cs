@@ -12,9 +12,19 @@ public class GameManager : MonoBehaviour
     private List<PlayerSpawnZone> playerSpawnZones;
     private CaptureZone victoryZone;
     private GameState state = GameState.PreGame;
+    public int redTeamScore;
+    public int blueTeamScore;
+    public float lastTick;
+    public int secondsPerTick;
+    public int ticksPerGame;
+    public int tick = 0;
+    public int redCaptures = 0;
+    public int blueCaptures = 0;
+
 
     //private GamepadInfoHandler gamepadHandler;
     private GameObject startImg;
+
     private GameObject redWinImg;
     private GameObject blueWinImg;
     private GameObject tieImg;
@@ -93,7 +103,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         startTime = Time.time;
-
+        lastTick = Time.time;
         state = GameState.PreGame;
         //startImg = GameObject.Find("StartImage");
         //startImg.SetActive(true);
@@ -112,7 +122,6 @@ public class GameManager : MonoBehaviour
         //        PhotonNetwork.ConnectUsingSettings("1");
         //    }
         //}
-
 
         // TODO : Some way of making the list of players
         CaptureZone[] loadedCaptureZones = FindObjectsOfType<CaptureZone>();
@@ -143,6 +152,11 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+        if (Time.time > lastTick + secondsPerTick)
+        {
+            NextTick();
+        }
+
         switch (state)
         {
             case GameState.PreGame:
@@ -182,6 +196,14 @@ public class GameManager : MonoBehaviour
         state = GameState.InGame;
     }
 
+    private void NextTick()
+    {
+        lastTick = Time.time;
+        tick++;
+        redTeamScore += redCaptures;
+        blueTeamScore += blueCaptures;
+    }
+
     /// <summary>
     /// Checks to see if the game has reached one of it's win conditions and changes state appropriately.
     /// </summary>
@@ -193,14 +215,64 @@ public class GameManager : MonoBehaviour
             {
                 case CaptureZone.ZoneState.Unoccupied:
                     break;
+
                 case CaptureZone.ZoneState.Red:
                     state = GameState.RedWins;
                     break;
+
                 case CaptureZone.ZoneState.Blue:
                     state = GameState.BlueWins;
                     break;
+
                 default:
                     break;
+            }
+        }
+
+        redCaptures = 0;
+        blueCaptures = 0;
+
+        foreach (var c in captureZones)
+        {
+            switch (c.state)
+            {
+                case CaptureZone.ZoneState.Unoccupied:
+                    break;
+
+                case CaptureZone.ZoneState.Red:
+                    redCaptures++;
+                    break;
+
+                case CaptureZone.ZoneState.Blue:
+                    blueCaptures++;
+                    break;
+
+                default:
+                    break;
+            }
+        }
+        if (redCaptures >= captureZones.Count - 1)
+        {
+            state = GameState.RedWins;
+        }
+        else if (blueCaptures >= captureZones.Count - 1)
+        {
+            state = GameState.BlueWins;
+        }
+
+        if (tick >= ticksPerGame)
+        {
+            if (redTeamScore > blueTeamScore)
+            {
+                state = GameState.RedWins;
+            }
+            else if (blueTeamScore > redTeamScore)
+            {
+                state = GameState.BlueWins;
+            }
+            else if (blueTeamScore == redTeamScore)
+            {
+                state = GameState.Tie;
             }
         }
     }
@@ -252,6 +324,18 @@ public class GameManager : MonoBehaviour
                 sb.Append(tab + tab + d.descriptiveName + spacer + d.scoreboard.txt + System.Environment.NewLine);
             }
         }
+        return sb.ToString();
+    }
+
+    public static string GetTeamScoreString()
+    {
+        string tab = "     ";
+        string spacer = " : ";
+        GameManager gm = GameManager.instance;
+        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+        sb.Append("Tick " + gm.tick + "/" + gm.ticksPerGame + System.Environment.NewLine);
+        sb.Append("Red" + spacer + gm.redTeamScore + System.Environment.NewLine);
+        sb.Append("Blue" + spacer + gm.blueTeamScore + System.Environment.NewLine);
         return sb.ToString();
     }
 }

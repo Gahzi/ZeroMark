@@ -86,6 +86,15 @@ public class CaptureZone : KBGameObject
                 //Debug.DrawLine(new Vector3(transform.position.x, 5, transform.position.z), new Vector3(z.transform.position.x, 5, z.transform.position.z), c);
             }
         }
+        if (connectedItemSpawns.Length > 0)
+        {
+            foreach (var i in connectedItemSpawns)
+            {
+                Gizmos.color = Color.magenta;
+                Gizmos.DrawLine(p, new Vector3(i.transform.position.x, 5, i.transform.position.z));
+            }
+        }
+
         if (redUnlocked)
         {
             Gizmos.color = Color.red;
@@ -144,14 +153,14 @@ public class CaptureZone : KBGameObject
                 switch (p.teamScript.Team)
                 {
                     case Team.Red:
-                        if (redUnlocked)
+                        if (redUnlocked && p.health > 0)
                         {
                             captureDelta += p.stats.captureSpeed;
                         }
                         break;
 
                     case Team.Blue:
-                        if (blueUnlocked)
+                        if (blueUnlocked && p.health > 0)
                         {
                             captureDelta -= p.stats.captureSpeed;
                         }

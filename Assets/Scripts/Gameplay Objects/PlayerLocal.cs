@@ -184,7 +184,7 @@ public class PlayerLocal : KBControllableGameObject
     {
         //GUI.Box(new Rect(0, 0, 100, 50), "Top-left");
         GUI.Box(new Rect(Screen.width - 200, 0, 200, 200), GameManager.GetCaptureZoneStateString());
-        //GUI.Box(new Rect(0, Screen.height - 50, 100, 50), "Bottom-left");
+        GUI.Box(new Rect(0, Screen.height - 50, 100, 50), GameManager.GetTeamScoreString());
         //GUI.Box(new Rect(Screen.width - 100, Screen.height - 50, 100, 50), "Bottom-right");
     }
     
@@ -328,9 +328,8 @@ public class PlayerLocal : KBControllableGameObject
                 Vector3 m = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
                 controller.SimpleMove(m.normalized * movespeed);
 
-                Quaternion newRot = Quaternion.LookRotation(upperBody.transform.position + new Vector3(mousePlayerDiff.x, 0, mousePlayerDiff.y));
+                Quaternion newRot = Quaternion.LookRotation(upperBody.transform.position + new Vector3(-mousePlayerDiff.x, 0, -mousePlayerDiff.y));
                 upperBody.transform.rotation = Quaternion.Lerp(upperBody.transform.rotation, newRot, upperbodyRotateSpeed * Time.deltaTime);
-
                 break;
 
             default:

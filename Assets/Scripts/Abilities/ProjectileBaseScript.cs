@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 [RequireComponent(typeof(Rigidbody))]
 
@@ -7,15 +6,15 @@ using System.Collections;
 /// Basic projectile class.
 /// Defaults to Kinematic Rigidbody Trigger Collider.
 /// Changes to Rigidbody Trigger Collider if flagged as physics projectile (e.g. arrow)
-/// 
+///
 /// NOTES: Projectiles collide with colliders tagged "Hitbox", but only affect
 /// objects with CompetitorModules (any child of CompetitivePlayerBaseScript)
 /// </summary>
 abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
 {
-
     [Range(1.0f, 100.0f)]
     public float projectileSpeed;
+
     protected Vector3 direction;
     public bool physicsProjectile;
     protected bool collideWithProjectiles;
@@ -35,19 +34,6 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
         }
     }
 
-    /// <summary>
-    /// For 2D directions.
-    /// </summary>
-    /// <param name="dir"></param>
-    //public virtual void SetDirection2D(Vector3 dir)
-    //{
-    //    direction = dir;
-    //    direction.Normalize();
-    //    direction.z = 0;
-    //    float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-    //    transform.eulerAngles = new Vector3(0, 0, angle);
-    //}
-
     public virtual void Update()
     {
         base.Update();
@@ -64,13 +50,6 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
 
     public override void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Hitbox"))
-        {
-            //SOMECLASS target = (SOMECLASS)other.transform.parent.GetComponent<SOMECLASS>();
-            //target.TakeDamage(damage);
-            //Destroy(gameObject);
-        }
-
         if (collideWithProjectiles)
         {
             if (other.gameObject.CompareTag("Projectile"))
