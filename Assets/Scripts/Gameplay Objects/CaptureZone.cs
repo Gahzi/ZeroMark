@@ -7,18 +7,22 @@ public class CaptureZone : KBGameObject
     public static int CAPTURE_REQUIRED = 1000;
     private static int RED_TEAM_CAPTURE_COUNT = CAPTURE_REQUIRED;
     private static int BLUE_TEAM_CAPTURE_COUNT = -CAPTURE_REQUIRED;
+    private int captureDelta;
     public int captureTotal;
     public float capturePercent;
     public int upgradePointsOnCapture;
 
     public enum ZoneState { NotCaptured, RedCaptured, BlueCaptured };
+
     public enum ZoneTier { A, B, C };
+
     public ZoneTier tier;
     public ZoneState state = ZoneState.NotCaptured;
 
     public CaptureZone[] requiredZones = new CaptureZone[0];
+    public ItemSpawn[] connectedItemSpawns = new ItemSpawn[0];
 
-    private bool switchState = true;
+    private bool canSwitchState = true;
     public List<Player> players;
 
     private AudioClip captureProgress;
@@ -37,7 +41,16 @@ public class CaptureZone : KBGameObject
         captureComplete = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.CaptureComplete]);
         captureProgress = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.CaptureProgress]);
 
-        upgradePointsOnCapture = 100;
+        if (upgradePointsOnCapture == 0)
+        {
+            upgradePointsOnCapture = 100;
+            Debug.LogWarning("Upgrade points on capture for CZ#" + gameObject.GetInstanceID() + " not set. Defaulting to 100");
+        }
+
+        foreach (ItemSpawn i in connectedItemSpawns)
+        {
+            i.connectedCaptureZone = this;
+        }
     }
 
     private void OnDrawGizmos()
@@ -118,7 +131,7 @@ public class CaptureZone : KBGameObject
 
         #endregion Unlock Handling
 
-        int captureDelta = 0;
+        captureDelta = 0;
 
         foreach (KBGameObject o in collisionObjects)
         {
@@ -130,14 +143,14 @@ public class CaptureZone : KBGameObject
                     case Team.Red:
                         if (redUnlocked)
                         {
-                            captureDelta += p.stats.captureSpeed;  
+                            captureDelta += p.stats.captureSpeed;
                         }
                         break;
 
                     case Team.Blue:
                         if (blueUnlocked)
                         {
-                            captureDelta -= p.stats.captureSpeed;  
+                            captureDelta -= p.stats.captureSpeed;
                         }
                         break;
 
@@ -150,91 +163,103 @@ public class CaptureZone : KBGameObject
             }
         }
 
-        switch (state)
-        {
-            case ZoneState.NotCaptured:
-                captureTotal += captureDelta;
-                break;
-
-            case ZoneState.RedCaptured:
-                //captureTotal += captureDelta;
-                break;
-
-            case ZoneState.BlueCaptured:
-                //captureTotal += captureDelta;
-                break;
-
-            default:
-                break;
-        }
+        captureTotal += captureDelta;
+        captureTotal = captureTotal.LimitToRange(-1000, 1000);
 
         CheckCaptured();
     }
 
     private void CheckCaptured()
     {
-        if (captureTotal >= RED_TEAM_CAPTURE_COUNT)
+        if (canSwitchState)
         {
-            state = ZoneState.RedCaptured;
-            if (switchState)
+            if (captureTotal >= RED_TEAM_CAPTURE_COUNT) // 1000
             {
-                audio.PlayOneShot(captureComplete);
-                switchState = false;
-
-                foreach (KBGameObject o in collisionObjects)
-                {
-                    Player p = o.gameObject.GetComponentInChildren<Player>();
-                    if (p != null)
-                    {
-                        switch (p.teamScript.Team)
-                        {
-                            case Team.Red:
-                                p.upgradePoints += upgradePointsOnCapture;
-                                break;
-
-                            case Team.Blue:
-                                break;
-
-                            case Team.None:
-                                break;
-
-                            default:
-                                break;
-                        }
-                    }
-                }
-
+                CaptureEvent(Team.Red);
+            }
+            else if (captureTotal <= BLUE_TEAM_CAPTURE_COUNT) // -1000
+            {
+                CaptureEvent(Team.Blue);
             }
         }
-        else if (captureTotal <= BLUE_TEAM_CAPTURE_COUNT)
+
+        if (state == ZoneState.BlueCaptured && captureTotal >= 0) // Blue has lost control
         {
-            state = ZoneState.BlueCaptured;
-            if (switchState)
-            {
+            CaptureEvent(Team.None);
+        }
+
+        if (state == ZoneState.RedCaptured && captureTotal <= 0) // Red has lost control
+        {
+            CaptureEvent(Team.None);
+        }
+    }
+
+    /// <summary>
+    /// This method handles any one-off events that should take place when a capture point is captured for the first time
+    ///
+    /// Relevant events:
+    /// Players earn upgrade points
+    /// Any connected item spawns begin spawning items
+    /// GUI notifications
+    /// State change
+    /// </summary>
+    /// <param name="t">The team that has captures the zone</param>
+    private void CaptureEvent(Team t)
+    {
+        canSwitchState = false;
+
+        foreach (ItemSpawn i in connectedItemSpawns)
+        {
+            i.ReceiveActivationEvent(t);
+        }
+
+        switch (t)
+        {
+            case Team.Red:
                 audio.PlayOneShot(captureComplete);
-                switchState = false;
+                state = ZoneState.RedCaptured;
+                // TODO : some kind of global message notifying a change in state
+                break;
 
-                foreach (KBGameObject o in collisionObjects)
+            case Team.Blue:
+                audio.PlayOneShot(captureComplete);
+                state = ZoneState.BlueCaptured;
+                // TODO : some kind of global message notifying a change in state
+                break;
+
+            case Team.None:
+                // TODO : Sound for loss of control;
+                state = ZoneState.NotCaptured;
+                canSwitchState = true;
+                // TODO : some kind of global message notifying a change in state
+                break;
+
+            default:
+                break;
+        }
+
+        if (t == Team.Red || t == Team.Blue)
+        {
+            foreach (KBGameObject o in collisionObjects)
+            {
+                Player p = o.gameObject.GetComponentInChildren<Player>();
+                if (p != null)
                 {
-                    Player p = o.gameObject.GetComponentInChildren<Player>();
-                    if (p != null)
+                    switch (p.teamScript.team)
                     {
-                        switch (p.teamScript.Team)
-                        {
-                            case Team.Red:
+                        case Team.Red:
+                            p.upgradePoints += upgradePointsOnCapture;
+                            break;
 
-                                break;
+                        case Team.Blue:
+                            p.upgradePoints += upgradePointsOnCapture;
+                            break;
 
-                            case Team.Blue:
-                                p.upgradePoints += upgradePointsOnCapture;
-                                break;
+                        case Team.None:
+                            break;
 
-                            case Team.None:
-                                break;
-
-                            default:
-                                break;
-                        }
+                        default:
+                            break;
                     }
                 }
             }
@@ -268,5 +293,4 @@ public class CaptureZone : KBGameObject
         //    audio.Stop();
         //}
     }
-
 }

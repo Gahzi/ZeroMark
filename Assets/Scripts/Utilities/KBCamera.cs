@@ -2,30 +2,43 @@
 
 public class KBCamera : MonoBehaviour
 {
-    private Vector3 CAMERA_FOLLOW_DISTANCE = new Vector3(0, 3.0f, -2.0f);
+    private Vector3 CAMERA_FOLLOW_DISTANCE;
     private Quaternion targetCameraUpRotation;
+    public Player attachedPlayer;
+    public Camera camera;
 
-    public KBGameObject attachedObject;
-
-    // Use this for initialization
     private void Start()
     {
+        camera = GetComponent<Camera>();
         camera.fieldOfView = 90.0f;
         transform.rotation = Quaternion.identity;
-        transform.parent = attachedObject.transform;
-        transform.localPosition = CAMERA_FOLLOW_DISTANCE;
-        transform.Rotate(Vector3.right, 15);
+        transform.parent = attachedPlayer.transform;
+        switch (attachedPlayer.controlStyle)
+        {
+            case Player.ControlStyle.ThirdPerson:
+                camera.isOrthoGraphic = false;
+                CAMERA_FOLLOW_DISTANCE = new Vector3(0, 3.0f, -2.0f);
+                transform.localPosition = CAMERA_FOLLOW_DISTANCE;
+                transform.Rotate(Vector3.right, 15);
+                break;
+
+            case Player.ControlStyle.TopDown:
+                camera.isOrthoGraphic = true;
+                CAMERA_FOLLOW_DISTANCE = new Vector3(0, 20, 0);
+                transform.Rotate(Vector3.right, 90);
+                transform.localPosition = CAMERA_FOLLOW_DISTANCE;
+                break;
+
+            default:
+                break;
+        }
     }
 
-    // Update is called once per frame
     private void Update()
     {
-        if (attachedObject != null)
+        if (attachedPlayer != null)
         {
             transform.localPosition = CAMERA_FOLLOW_DISTANCE;
-            //Player player = (Player)attachedObject;
-            //float targetUpRotation = (Mathf.Rad2Deg * Mathf.Atan2(player.gamepad.rightStick.y, 0) / 90) * 20;
-            //transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(targetUpRotation, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z), 10.0f * Time.deltaTime);
         }
     }
 }

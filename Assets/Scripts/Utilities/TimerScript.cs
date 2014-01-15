@@ -1,14 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Basic timer. Counts down.
+/// 
+/// </summary>
 public class TimerScript : MonoBehaviour
 {
-
-    /// <summary>
-    /// Basic timer. Counts down.
-    /// 
-    /// </summary>
-
     //private float startTime;
     public const int numberOfTimers = 10;
     private float[] timerLength = new float[numberOfTimers];

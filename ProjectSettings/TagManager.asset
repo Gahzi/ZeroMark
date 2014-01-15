@@ -9,7 +9,7 @@ TagManager:
   - Hitbox
   - Item
   - Factory
-  - GoalZone
+  - CaptureZone
   - RangeTrigger
   - ItemZone
   - Core

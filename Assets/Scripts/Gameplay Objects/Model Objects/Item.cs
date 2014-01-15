@@ -8,7 +8,7 @@ using KBConstants;
 public class Item : KBGameObject
 {
     public ItemType itemType;
-    public enum ItemState { isDown, isPickedUp, isInFactory };
+    public enum ItemState { isDown, isPickedUp };
     ItemState state;
     public ItemState State
     {
@@ -110,9 +110,6 @@ public class Item : KBGameObject
                 break;
             case ItemState.isPickedUp:
                 break;
-            case ItemState.isInFactory:
-                canPickup = false;
-                break;
             default:
                 break;
         }
@@ -129,10 +126,6 @@ public class Item : KBGameObject
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Factory"))
-        {
-            State = ItemState.isInFactory;
-        }
     }
 
     public void StartGrowAnimation()

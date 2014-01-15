@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     private List<Player> players;
     private List<CaptureZone> captureZones;
     private List<Item> items;
+    private List<PlayerSpawnZone> playerSpawnZones;
 
     private GameState state = GameState.PreGame;
 
@@ -112,21 +113,25 @@ public class GameManager : MonoBehaviour
         //    }
         //}
 
-        GameObject[] loadedGoalZones = GameObject.FindGameObjectsWithTag("GoalZone");
+
+        // TODO : Some way of making the list of players
+        CaptureZone[] loadedCaptureZones = FindObjectsOfType<CaptureZone>();
         GameObject[] loadedItems = GameObject.FindGameObjectsWithTag("Item");
-        ItemZone[] loadedItemZones = FindObjectsOfType<ItemZone>();
+        ItemSpawn[] loadedItemZones = FindObjectsOfType<ItemSpawn>();
+        PlayerSpawnZone[] loadedPSpawns = FindObjectsOfType<PlayerSpawnZone>();
 
-        captureZones = new List<CaptureZone>(loadedGoalZones.Length);
+        captureZones = new List<CaptureZone>(loadedCaptureZones.Length);
         items = new List<Item>(loadedItems.Length);
+        playerSpawnZones = new List<PlayerSpawnZone>(loadedPSpawns.Length);
 
-        for (int i = 0; i < loadedGoalZones.Length; i++)
+        foreach (CaptureZone c in loadedCaptureZones)
         {
-            captureZones.Add(loadedGoalZones[i].GetComponent<CaptureZone>());
+            captureZones.Add(c);
         }
 
-        for (int i = 0; i < loadedItems.Length; i++)
+        foreach (PlayerSpawnZone p in loadedPSpawns)
         {
-            items.Add(loadedItems[i].GetComponent<Item>());
+            playerSpawnZones.Add(p);
         }
 
         StartGame();
@@ -235,5 +240,10 @@ public class GameManager : MonoBehaviour
             default:
                 return null;
         }
+    }
+
+    private void SendGlobalMessageToPlayers(string msg)
+    {
+        // TODO
     }
 }

@@ -3,12 +3,21 @@ using UnityEngine;
 
 [RequireComponent(typeof(PhotonView))]
 [RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(TimerScript))]
 public class Player : KBControllableGameObject
 {
+    public enum ControlStyle { ThirdPerson, TopDown };
+
+    public ControlStyle controlStyle;
     public PlayerType type;
     public PlayerStats stats;
+    public bool acceptingInputs = true;
+    public bool waitingForRespawn = false;
+
     [Range(1, 5)]
     public int level;
+
+    public TimerScript timer;
     private float movespeed;
     private float lowerbodyRotateSpeed;
     private float upperbodyRotateSpeed;
@@ -26,16 +35,19 @@ public class Player : KBControllableGameObject
     public Vector3 playerPositionOnScreen;
     public Vector3 mousePlayerDiff;
     public ProjectileAbilityBaseScript gun;
-
+    public PlayerSpawnZone spawnZone;
+    public float respawnTime;
     private Vector3 lookRotation;
-
+    private int respawnTimerNumber;
     public int upgradePoints;
-
+    public int maxHealth;
     public int[] pointToLevel = new int[4];
 
     public override void Start()
     {
         base.Start();
+        acceptingInputs = true;
+        waitingForRespawn = false;
         controller = GetComponent<CharacterController>();
         InitializeStats(type);
         grabSound = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.ItemGrab]);
@@ -66,6 +78,8 @@ public class Player : KBControllableGameObject
         //TODO: Prefer to do this stuff in code as seen below instead of dragging bullshit in Unity Editor.
         //this.photonView.observed = this.transform;
         //this.photonView.synchronization = ViewSynchronization.ReliableDeltaCompressed;
+
+        Respawn();
     }
 
     /// <summary>
@@ -78,35 +92,35 @@ public class Player : KBControllableGameObject
         {
             case PlayerType.attack:
                 stats.health = 3;
-                stats.attack = 1;
-                stats.attackRange = 1;
+                stats.attack = 3;
+                stats.attackRange = 7;
                 stats.captureSpeed = 1;
                 stats.lowerbodyRotationSpeed = 1;
                 stats.upperbodyRotationSpeed = 1;
-                stats.speed = 1;
-                stats.visionRange = 1;
+                stats.speed = 5;
+                stats.visionRange = 40;
                 break;
 
             case PlayerType.recon:
                 stats.health = 3;
                 stats.attack = 1;
-                stats.attackRange = 1;
-                stats.captureSpeed = 2;
-                stats.lowerbodyRotationSpeed = 1;
+                stats.attackRange = 5;
+                stats.captureSpeed = 3;
+                stats.lowerbodyRotationSpeed = 2;
                 stats.upperbodyRotationSpeed = 5;
                 stats.speed = 10;
-                stats.visionRange = 1;
+                stats.visionRange = 60;
                 break;
 
             case PlayerType.defense:
-                stats.health = 3;
-                stats.attack = 1;
-                stats.attackRange = 1;
+                stats.health = 6;
+                stats.attack = 2;
+                stats.attackRange = 10;
                 stats.captureSpeed = 1;
                 stats.lowerbodyRotationSpeed = 1;
                 stats.upperbodyRotationSpeed = 1;
                 stats.speed = 1;
-                stats.visionRange = 1;
+                stats.visionRange = 60;
                 break;
 
             default:
@@ -115,6 +129,7 @@ public class Player : KBControllableGameObject
 
         level = 1;
         health = stats.health;
+        maxHealth = health;
         movespeed = stats.speed;
         lowerbodyRotateSpeed = stats.lowerbodyRotationSpeed;
         upperbodyRotateSpeed = stats.upperbodyRotationSpeed;
@@ -136,16 +151,22 @@ public class Player : KBControllableGameObject
         {
             case PlayerType.attack:
                 break;
+
             case PlayerType.recon:
-                stats.captureSpeed++;
+                stats.captureSpeed *= 2;
                 stats.speed += 5;
-                stats.upperbodyRotationSpeed++;
+                stats.upperbodyRotationSpeed *= 2;
                 break;
+
             case PlayerType.defense:
                 break;
+
             default:
                 break;
         }
+
+        health = stats.health;
+        maxHealth = health;
     }
 
     public void SetGamepad(GamepadInfo newGamepad)
@@ -165,16 +186,20 @@ public class Player : KBControllableGameObject
         playerPositionOnScreen = camera.WorldToScreenPoint(transform.position);
         mousePlayerDiff = playerPositionOnScreen - mousePos;
 
-        if (gamepad != null)
+        if (acceptingInputs)
         {
-            //ControlGamepad();
-        }
-        else
-        {
-            ControlKBAM();
+            if (gamepad != null)
+            {
+                ControlGamepad();
+            }
+            else
+            {
+                ControlKBAM();
+            }
         }
 
         CheckUpgradePoints();
+        CheckHealth();
     }
 
     /// <summary>
@@ -215,17 +240,17 @@ public class Player : KBControllableGameObject
         }
     }
 
-    private void attachPlayerToControllableGameObject(KBControllableGameObject newGameObject)
-    {
-        newGameObject.attachedPlayer = this;
-        //this.renderer.enabled = false;
-        KBCamera cameraScript = Camera.main.gameObject.GetComponent<KBCamera>();
+    //private void attachPlayerToControllableGameObject(KBControllableGameObject newGameObject)
+    //{
+    //    newGameObject.attachedPlayer = this;
+    //    //this.renderer.enabled = false;
+    //    KBCamera cameraScript = Camera.main.gameObject.GetComponent<KBCamera>();
 
-        if (cameraScript != null)
-        {
-            cameraScript.attachedObject = newGameObject;
-        }
-    }
+    //    if (cameraScript != null)
+    //    {
+    //        cameraScript.attachedPlayer = newGameObject;
+    //    }
+    //}
 
     /// <summary>
     /// Collision method that is called when rigidbody hits another game object
@@ -282,16 +307,26 @@ public class Player : KBControllableGameObject
 
     private void ControlKBAM()
     {
-        //Vector3 m = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-        //controller.SimpleMove(m.normalized * movespeed);
+        switch (controlStyle)
+        {
+            case ControlStyle.ThirdPerson:
+                float d = movespeed * Input.GetAxis("Vertical");
+                controller.SimpleMove(transform.TransformDirection(Vector3.forward) * d);
+                transform.Rotate(0, Input.GetAxis("Horizontal") * lowerbodyRotateSpeed, 0);
+                break;
 
-        float m = movespeed * Input.GetAxis("Vertical");
-        controller.SimpleMove(transform.TransformDirection(Vector3.forward) * m);
-        transform.Rotate(0, Input.GetAxis("Horizontal") * lowerbodyRotateSpeed, 0);
+            case ControlStyle.TopDown:
+                Vector3 m = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+                controller.SimpleMove(m.normalized * movespeed);
 
-        //Quaternion newRot = Quaternion.LookRotation(upperBody.transform.position + new Vector3(mousePlayerDiff.x, 0, mousePlayerDiff.y));
-        //upperBody.transform.rotation = Quaternion.Lerp(upperBody.transform.rotation, newRot, upperbodyRotateSpeed * Time.deltaTime);
-        //transform.rotation = Quaternion.Lerp(transform.rotation, newRot, lowerbodyRotateSpeed * Time.deltaTime);
+                Quaternion newRot = Quaternion.LookRotation(upperBody.transform.position + new Vector3(mousePlayerDiff.x, 0, mousePlayerDiff.y));
+                upperBody.transform.rotation = Quaternion.Lerp(upperBody.transform.rotation, newRot, upperbodyRotateSpeed * Time.deltaTime);
+
+                break;
+
+            default:
+                break;
+        }
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -301,6 +336,30 @@ public class Player : KBControllableGameObject
         {
             gun.DeactivateAbility();
         }
+    }
 
+    private void CheckHealth()
+    {
+        if (health <= 0 && !waitingForRespawn)
+        {
+            acceptingInputs = false;
+            respawnTimerNumber = timer.StartTimer(respawnTime);
+            waitingForRespawn = true;
+        }
+        else if (waitingForRespawn)
+        {
+            if (!timer.IsTimerActive(respawnTimerNumber))
+            {
+                Respawn();
+            }
+        }
+    }
+
+    private void Respawn()
+    {
+        transform.position = spawnZone.transform.position;
+        waitingForRespawn = false;
+        acceptingInputs = true;
+        health = maxHealth;
     }
 }
