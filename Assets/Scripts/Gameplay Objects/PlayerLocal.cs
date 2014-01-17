@@ -14,7 +14,6 @@ public class PlayerLocal : KBControllableGameObject
     public bool acceptingInputs = true;
     public bool waitingForRespawn = false;
 
-    [Range(1, 5)]
     public int level;
 
     public TimerScript timer;
@@ -49,7 +48,6 @@ public class PlayerLocal : KBControllableGameObject
         acceptingInputs = true;
         waitingForRespawn = false;
         controller = GetComponent<CharacterController>();
-        InitializeStats(type);
         grabSound = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.ItemGrab]);
 
         gun = gameObject.GetComponentInChildren<ProjectileAbilityBaseScript>();
@@ -80,93 +78,6 @@ public class PlayerLocal : KBControllableGameObject
         //this.photonView.synchronization = ViewSynchronization.ReliableDeltaCompressed;
 
         Respawn();
-    }
-
-    /// <summary>
-    /// Initializes player stats based on the player's type as set in the inspector.
-    /// </summary>
-    /// <param name="type">enum PlayerType</param>
-    private void InitializeStats(PlayerType type)
-    {
-        switch (type)
-        {
-            case PlayerType.attack:
-                stats.health = 3;
-                stats.attack = 3;
-                stats.attackRange = 7;
-                stats.captureSpeed = 1;
-                stats.lowerbodyRotationSpeed = 1;
-                stats.upperbodyRotationSpeed = 1;
-                stats.speed = 5;
-                stats.visionRange = 40;
-                break;
-
-            case PlayerType.recon:
-                stats.health = 3;
-                stats.attack = 1;
-                stats.attackRange = 5;
-                stats.captureSpeed = 3;
-                stats.lowerbodyRotationSpeed = 2;
-                stats.upperbodyRotationSpeed = 5;
-                stats.speed = 10;
-                stats.visionRange = 60;
-                break;
-
-            case PlayerType.defense:
-                stats.health = 6;
-                stats.attack = 2;
-                stats.attackRange = 10;
-                stats.captureSpeed = 1;
-                stats.lowerbodyRotationSpeed = 1;
-                stats.upperbodyRotationSpeed = 1;
-                stats.speed = 1;
-                stats.visionRange = 60;
-                break;
-
-            default:
-                break;
-        }
-
-        level = 1;
-        health = stats.health;
-        maxHealth = health;
-        movespeed = stats.speed;
-        lowerbodyRotateSpeed = stats.lowerbodyRotationSpeed;
-        upperbodyRotateSpeed = stats.upperbodyRotationSpeed;
-        upgradePoints = 0;
-    }
-
-    private void CheckUpgradePoints()
-    {
-        if (upgradePoints >= pointToLevel[level - 1])
-        {
-            LevelUp();
-        }
-    }
-
-    public void LevelUp()
-    {
-        level++;
-        switch (type)
-        {
-            case PlayerType.attack:
-                break;
-
-            case PlayerType.recon:
-                stats.captureSpeed *= 2;
-                stats.speed += 5;
-                stats.upperbodyRotationSpeed *= 2;
-                break;
-
-            case PlayerType.defense:
-                break;
-
-            default:
-                break;
-        }
-
-        health = stats.health;
-        maxHealth = health;
     }
 
     public void SetGamepad(GamepadInfo newGamepad)
@@ -207,7 +118,6 @@ public class PlayerLocal : KBControllableGameObject
             }
         }
 
-        CheckUpgradePoints();
         CheckHealth();
     }
 
@@ -267,14 +177,6 @@ public class PlayerLocal : KBControllableGameObject
     /// <param name="collision"></param>
     private void OnCollisionEnter(Collision collision)
     {
-        //Debug.Log("OnCollisionEnter!");
-        //KBControllableGameObject colControllablePlayerObject = collision.gameObject.GetComponent<KBControllableGameObject>();
-        //if (colControllablePlayerObject != null)
-        //{
-        //    attachPlayerToControllableGameObject(colControllablePlayerObject);
-        //}
-
-        // TODO: Handle collision with items here
     }
 
     public override void takeDamage(int amount)
@@ -368,6 +270,11 @@ public class PlayerLocal : KBControllableGameObject
         transform.position = spawnZone.transform.position;
         waitingForRespawn = false;
         acceptingInputs = true;
-        health = maxHealth;
+        health = stats.health;
+        maxHealth = health;
+        movespeed = stats.speed;
+        level = stats.level;
+        lowerbodyRotateSpeed = stats.lowerbodyRotationSpeed;
+        upperbodyRotateSpeed = stats.upperbodyRotationSpeed;
     }
 }

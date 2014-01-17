@@ -24,19 +24,23 @@ namespace KBConstants
 
     public class ManagerConstants
     {
-        public enum type { GameManager, GamepadManager };
+        public enum type { GameManager, GamepadManager, PlayerStats, UpgradePointReqs };
 
         private static readonly IDictionary<type, string> prefabNames = new Dictionary<type, string>
         {
             {type.GameManager,"Managers/GameManager"},
-			{type.GamepadManager, "Managers/GamepadManager"}
+			{type.GamepadManager, "Managers/GamepadManager"},
+            {type.PlayerStats, "PlayerTypeData.csv"},
+            {type.UpgradePointReqs, "UpgradePointReqs.csv"}
         };
         public static IDictionary<type, string> PREFAB_NAMES { get { return prefabNames; } }
 
         private static readonly IDictionary<type, string> prefabTags = new Dictionary<type, string>
         {
             {type.GameManager,"GameManager"},
-			{type.GamepadManager, "GamepadManager"}
+			{type.GamepadManager, "GamepadManager"},
+            {type.PlayerStats, "PlayerStats"},
+            {type.UpgradePointReqs, "UpgradePointReqs"}
         };
         public static IDictionary<type, string> PREFAB_TAGS { get { return prefabTags; } }
     }

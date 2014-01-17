@@ -19,6 +19,7 @@ GameObject:
   - 199: {fileID: 19900000}
   - 114: {fileID: 11400004}
   - 143: {fileID: 14300000}
+  - 114: {fileID: 11400012}
   m_Layer: 0
   m_Name: PlayerLocal
   m_TagString: Player
@@ -63,7 +64,7 @@ GameObject:
   m_IsActive: 1
 --- !u!1 &100006
 GameObject:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
@@ -148,7 +149,6 @@ Transform:
   m_Children:
   - {fileID: 400002}
   - {fileID: 400010}
-  - {fileID: 400006}
   - {fileID: 400012}
   m_Father: {fileID: 0}
 --- !u!4 &400002
@@ -180,10 +180,10 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100006}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1.89340973}
+  m_LocalPosition: {x: 0, y: -1, z: 1.89340973}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 400000}
+  m_Father: {fileID: 400012}
 --- !u!4 &400008
 Transform:
   m_ObjectHideFlags: 1
@@ -218,6 +218,7 @@ Transform:
   m_Children:
   - {fileID: 400008}
   - {fileID: 400004}
+  - {fileID: 400006}
   m_Father: {fileID: 400000}
 --- !u!20 &2000000
 Camera:
@@ -577,7 +578,7 @@ Animator:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: b3eb14b3a2497ab4fb88913a26012a6c, type: 3}
   m_Controller: {fileID: 0}
   m_CullingMode: 0
@@ -598,12 +599,12 @@ MonoBehaviour:
   health: 0
   teamScript: {fileID: 11400004}
   attachedPlayer: {fileID: 0}
-  controlStyle: 0
+  controlStyle: 1
   type: 1
   acceptingInputs: 0
   waitingForRespawn: 0
   level: 0
-  timer: {fileID: 0}
+  timer: {fileID: 11400012}
   grabSound: {fileID: 0}
   upperBody: {fileID: 100012}
   camera: {fileID: 2000000}
@@ -612,7 +613,7 @@ MonoBehaviour:
   mousePlayerDiff: {x: 0, y: 0, z: 0}
   gun: {fileID: 11400006}
   spawnZone: {fileID: 0}
-  respawnTime: 0
+  respawnTime: 2
   upgradePoints: 0
   maxHealth: 0
   pointToLevel: 64000000c80000002c01000090010000
@@ -698,6 +699,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attachedPlayer: {fileID: 11400000}
   camera: {fileID: 2000000}
+--- !u!114 &11400012
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6010c575f19a00e4492e40ee41e27ef4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeRemaining:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  isActive: 00000000000000000000
 --- !u!124 &12400000
 Behaviour:
   m_ObjectHideFlags: 1

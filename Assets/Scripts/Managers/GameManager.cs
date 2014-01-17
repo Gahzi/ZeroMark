@@ -1,12 +1,14 @@
 ﻿using KBConstants;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class GameManager : MonoBehaviour
 {
     private enum GameState { PreGame, InGame, RedWins, BlueWins, Tie, EndGame };
 
-    private List<PlayerLocal> players;
+    public List<PlayerLocal> localPlayers;
+    //public List<PlayerRemote> remotePlayers; // TODO
     private List<CaptureZone> captureZones;
     private List<Item> items;
     private List<PlayerSpawnZone> playerSpawnZones;
@@ -20,7 +22,8 @@ public class GameManager : MonoBehaviour
     public int tick = 0;
     public int redCaptures = 0;
     public int blueCaptures = 0;
-
+    private List<List<String>> playerStatData;
+    private List<List<String>> upgradePointReqData;
 
     //private GamepadInfoHandler gamepadHandler;
     private GameObject startImg;
@@ -102,6 +105,13 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        ReadPlayerStatData();
+        ReadUpgradePointData();
+        foreach (var p in localPlayers)
+        {
+            SetPlayerLevel(p, 1);
+        }
+
         startTime = Time.time;
         lastTick = Time.time;
         state = GameState.PreGame;
@@ -165,6 +175,7 @@ public class GameManager : MonoBehaviour
 
             case GameState.InGame:
                 CheckWinConditions();
+                CheckPlayerUpgradePoints();
                 break;
 
             case GameState.RedWins:
@@ -277,6 +288,18 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void CheckPlayerUpgradePoints()
+    {
+        foreach (var p in localPlayers)
+        {
+            if (p.upgradePoints >= Convert.ToInt32(upgradePointReqData[p.stats.level][0]))
+            {
+                SetPlayerLevel(p, p.stats.level + 1);
+                Debug.Log("Level up!");
+            }
+        }
+    }
+
     public GameObject createObject(KBConstants.ObjectConstants.type objectType, Vector3 position, Quaternion rotation)
     {
         switch (objectType)
@@ -285,7 +308,7 @@ public class GameManager : MonoBehaviour
                 {
                     GameObject newPlayerObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Player], position, rotation, 0);
                     PlayerLocal newPlayer = newPlayerObject.GetComponent<PlayerLocal>();
-                    players.Add(newPlayer);
+                    localPlayers.Add(newPlayer);
                     return newPlayerObject;
                 }
 
@@ -337,5 +360,41 @@ public class GameManager : MonoBehaviour
         sb.Append("Red" + spacer + gm.redTeamScore + System.Environment.NewLine);
         sb.Append("Blue" + spacer + gm.blueTeamScore + System.Environment.NewLine);
         return sb.ToString();
+    }
+
+    private void ReadPlayerStatData()
+    {
+        playerStatData = CSVReader.ReadFile(KBConstants.ManagerConstants.PREFAB_NAMES[ManagerConstants.type.PlayerStats]);
+    }
+
+    private void ReadUpgradePointData()
+    {
+        upgradePointReqData = CSVReader.ReadFile(KBConstants.ManagerConstants.PREFAB_NAMES[ManagerConstants.type.UpgradePointReqs]);
+    }
+
+    public static void SetPlayerLevel(PlayerLocal player, int level)
+    {
+        GameManager gm = GameManager.instance;
+        int numberOfStats = 8;
+        int initStatColumn = 2;
+        int perLevelStatColumn = 3;
+        PlayerStats stats = new PlayerStats();
+        stats.statArray = new float[numberOfStats];
+
+        for (int i = 0; i < stats.statArray.Length; i++) // This loads the raw stats into a float[]
+        {
+            stats.statArray[i] = Convert.ToInt32(gm.playerStatData[i + ((int)player.type * numberOfStats)][initStatColumn]) + ((level-1) * Convert.ToInt32(gm.playerStatData[i + ((int)player.type * numberOfStats)][perLevelStatColumn]));
+        }
+
+        stats.level = level;
+        stats.health = (int)stats.statArray[(int)PlayerStats.PlayerStatNames.Health];
+        stats.attack = (int)stats.statArray[(int)PlayerStats.PlayerStatNames.Attack];
+        stats.attackRange = (int)stats.statArray[(int)PlayerStats.PlayerStatNames.AttackRange];
+        stats.captureSpeed = (int)stats.statArray[(int)PlayerStats.PlayerStatNames.CaptureSpeed];
+        stats.lowerbodyRotationSpeed = (int)stats.statArray[(int)PlayerStats.PlayerStatNames.LBRotationSpeed];
+        stats.upperbodyRotationSpeed = (int)stats.statArray[(int)PlayerStats.PlayerStatNames.UBRotationSpeed];
+        stats.speed = (int)stats.statArray[(int)PlayerStats.PlayerStatNames.MovementSpeed];
+        stats.visionRange = (int)stats.statArray[(int)PlayerStats.PlayerStatNames.VisionRange];
+        player.stats = stats; 
     }
 }
