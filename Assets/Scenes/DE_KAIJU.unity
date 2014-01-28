@@ -12,13 +12,13 @@ SceneSettings:
     backfaceThreshold: 100
 --- !u!104 &2
 RenderSettings:
-  m_Fog: 0
-  m_FogColor: {r: .5, g: .5, b: .5, a: 1}
+  m_Fog: 1
+  m_FogColor: {r: .139273345, g: .131812274, b: .16911763, a: 1}
   m_FogMode: 3
-  m_FogDensity: .00999999978
+  m_FogDensity: .0250000004
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientLight: {r: .200000003, g: .200000003, b: .200000003, a: 1}
+  m_AmbientLight: {r: .191176474, g: .142878234, b: .116673872, a: 1}
   m_SkyboxMaterial: {fileID: 0}
   m_HaloStrength: .5
   m_FlareStrength: 1
@@ -482,6 +482,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   localPlayers:
   - {fileID: 379734734}
+  captureZones: []
+  victoryZone: {fileID: 0}
   redTeamScore: 0
   blueTeamScore: 0
   lastTick: 0

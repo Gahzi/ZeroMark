@@ -9,10 +9,10 @@ public class GameManager : MonoBehaviour
 
     public List<PlayerLocal> localPlayers;
     //public List<PlayerRemote> remotePlayers; // TODO
-    private List<CaptureZone> captureZones;
+    public List<CaptureZone> captureZones;
     private List<Item> items;
     private List<PlayerSpawnZone> playerSpawnZones;
-    private CaptureZone victoryZone;
+    public CaptureZone victoryZone;
     private GameState state = GameState.PreGame;
     public int redTeamScore;
     public int blueTeamScore;
