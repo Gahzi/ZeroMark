@@ -1,6 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
-using KBConstants;
+﻿using KBConstants;
+using UnityEngine;
 
 /// <summary>
 /// Our model object for game items. This should be extended by every game item in the game.
@@ -8,8 +7,13 @@ using KBConstants;
 public class Item : KBGameObject
 {
     public ItemType itemType;
-    public enum ItemState { isDown, isPickedUp };
-    ItemState state;
+    public float respawnTime;
+    private float respawnStart;
+    public enum ItemState { isDown, isPickedUp, respawning };
+
+    public Team team;
+    private ItemState state;
+
     public ItemState State
     {
         set
@@ -21,7 +25,9 @@ public class Item : KBGameObject
             return state;
         }
     }
+
     private bool canPickup;
+
     public bool CanPickup
     {
         get
@@ -29,12 +35,13 @@ public class Item : KBGameObject
             return canPickup;
         }
     }
+
     private Vector3 targetScale;
 
     /// <summary>
     /// Use this for initialization
     /// </summary>
-    void Start()
+    private void Start()
     {
         base.Start();
         gameObject.tag = "Item";
@@ -79,17 +86,22 @@ public class Item : KBGameObject
             case ItemType.common:
                 renderer.material = Resources.Load<Material>(MaterialConstants.MATERIAL_NAMES[MaterialConstants.type.ItemCommon]);
                 break;
+
             case ItemType.uncommon:
                 renderer.material = Resources.Load<Material>(MaterialConstants.MATERIAL_NAMES[MaterialConstants.type.ItemUncommon]);
                 break;
+
             case ItemType.rare:
                 renderer.material = Resources.Load<Material>(MaterialConstants.MATERIAL_NAMES[MaterialConstants.type.ItemRare]);
                 break;
+
             case ItemType.legendary:
                 renderer.material = Resources.Load<Material>(MaterialConstants.MATERIAL_NAMES[MaterialConstants.type.ItemLegendary]);
                 break;
+
             case ItemType.undefined:
                 break;
+
             default:
                 break;
         }
@@ -98,7 +110,7 @@ public class Item : KBGameObject
     /// <summary>
     /// Update is called once per frame
     /// </summary>
-    void Update()
+    private void Update()
     {
         //transform.position = Vector3.Lerp(transform.position, targetPosition, 5.0f * Time.deltaTime);
         transform.localScale = Vector3.Lerp(transform.localScale, targetScale, 1.0f * Time.deltaTime);
@@ -107,29 +119,46 @@ public class Item : KBGameObject
         {
             case ItemState.isDown:
                 canPickup = true;
+                particleSystem.enableEmission = false;
                 break;
+
             case ItemState.isPickedUp:
+                particleSystem.enableEmission = false;
                 break;
+
+            case ItemState.respawning:
+                if (Time.time > respawnStart + respawnTime)
+                {
+                    Destroy(gameObject);
+                }
+                particleSystem.enableEmission = true;
+                break;
+
             default:
                 break;
         }
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="collision"></param>
-    void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision collision)
     {
-    
     }
 
-    void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
     }
 
     public void StartGrowAnimation()
     {
         targetScale = new Vector3(3.0f, 3.0f, 3.0f);
+    }
+
+    public void Respawn()
+    {
+        state = ItemState.respawning;
+        respawnStart = Time.time;
     }
 }

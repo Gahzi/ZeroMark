@@ -41,6 +41,7 @@ public class PlayerLocal : KBControllableGameObject
     public int upgradePoints;
     public int maxHealth;
     public int[] pointToLevel = new int[4];
+    private Item item;
 
     public override void Start()
     {
@@ -90,7 +91,7 @@ public class PlayerLocal : KBControllableGameObject
     {
         Debug.DrawRay(upperBody.transform.position, upperBody.transform.TransformDirection(new Vector3(0, 0, 5.0f)), new Color(255, 0, 0, 255), 0.0f);
     }
-    
+
     void OnGUI()
     {
         //GUI.Box(new Rect(0, 0, 100, 50), "Top-left");
@@ -115,7 +116,7 @@ public class PlayerLocal : KBControllableGameObject
 
 
     }
-    
+
 
     private void Update()
     {
@@ -133,6 +134,12 @@ public class PlayerLocal : KBControllableGameObject
             {
                 ControlKBAM();
             }
+        }
+
+        if (item != null)
+        {
+            item.transform.position = new Vector3(transform.position.x, transform.position.y + 3, transform.position.z);
+            item.State = Item.ItemState.isPickedUp;
         }
 
         CheckHealth();
@@ -194,7 +201,37 @@ public class PlayerLocal : KBControllableGameObject
     /// <param name="collision"></param>
     private void OnCollisionEnter(Collision collision)
     {
+        if (collision.gameObject.CompareTag("Item"))
+        {
+            if (collision.gameObject.GetComponent<Item>().team == teamScript.team)
+            {
+                item = collision.gameObject.GetComponent<Item>();
+                item.collider.isTrigger = true;
+            }
+
+        }
     }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Item"))
+        {
+            if (other.gameObject.GetComponent<Item>().team == teamScript.team)
+            {
+                PickupItem(other.gameObject.GetComponent<Item>());
+            }
+            else
+            {
+                other.gameObject.GetComponent<Item>().Respawn();
+                //other.gameObject.particleSystem.enableEmission = true;
+                ////Destroy(other.gameObject);
+
+            }
+
+        }
+    }
+
+
 
     public override void takeDamage(int amount)
     {
@@ -235,17 +272,27 @@ public class PlayerLocal : KBControllableGameObject
 
     private void ControlKBAM()
     {
+        float modifiedMoveSpeed = 0;
+        if (item != null)
+        {
+            modifiedMoveSpeed = movespeed * 2;
+        }
+        else
+        {
+            modifiedMoveSpeed = movespeed;
+        }
+        
         switch (controlStyle)
         {
             case ControlStyle.ThirdPerson:
-                float d = movespeed * Input.GetAxis("Vertical");
+                float d = modifiedMoveSpeed * Input.GetAxis("Vertical");
                 controller.SimpleMove(transform.TransformDirection(Vector3.forward) * d);
                 transform.Rotate(0, Input.GetAxis("Horizontal") * lowerbodyRotateSpeed, 0);
                 break;
 
             case ControlStyle.TopDown:
                 Vector3 m = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-                controller.SimpleMove(m.normalized * movespeed);
+                controller.SimpleMove(m.normalized * modifiedMoveSpeed);
 
                 Quaternion newRot = Quaternion.LookRotation(upperBody.transform.position + new Vector3(-mousePlayerDiff.x, 0, -mousePlayerDiff.y));
                 upperBody.transform.rotation = Quaternion.Lerp(upperBody.transform.rotation, newRot, upperbodyRotateSpeed * Time.deltaTime);
@@ -258,10 +305,18 @@ public class PlayerLocal : KBControllableGameObject
         if (Input.GetMouseButtonDown(0))
         {
             gun.ActivateAbility();
+            Vector3 fwd = upperBody.transform.TransformDirection(Vector3.forward);
+            //transform.position = upperBody.transform.position - upperBody.transform.forward * 5;
+            //transform.position = new Vector3(transform.position.x - upperBody.transform.forward.x, transform.position.y, transform.position.z - upperBody.transform.forward.z);
         }
         if (Input.GetMouseButtonUp(0))
         {
             gun.DeactivateAbility();
+        }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            DropItem();
         }
     }
 
@@ -271,6 +326,7 @@ public class PlayerLocal : KBControllableGameObject
         {
             acceptingInputs = false;
             respawnTimerNumber = timer.StartTimer(respawnTime);
+            item = null;
             waitingForRespawn = true;
         }
         else if (waitingForRespawn)
@@ -293,5 +349,22 @@ public class PlayerLocal : KBControllableGameObject
         level = stats.level;
         lowerbodyRotateSpeed = stats.lowerbodyRotationSpeed;
         upperbodyRotateSpeed = stats.upperbodyRotationSpeed;
+    }
+
+    private void PickupItem(Item item)
+    {
+        this.item = item;
+        item.State = Item.ItemState.isPickedUp;
+    }
+
+    private void DropItem()
+    {
+        if (item != null)
+        {
+            item.Respawn();
+            //item.State = Item.ItemState.isDown;
+            item = null;
+        }
+
     }
 }

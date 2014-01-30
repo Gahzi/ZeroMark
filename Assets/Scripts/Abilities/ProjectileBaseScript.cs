@@ -19,7 +19,7 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
     public bool physicsProjectile;
     protected bool collideWithProjectiles;
 
-    public virtual void Start()
+    public override void Start()
     {
         base.Start();
         gameObject.tag = "Projectile";

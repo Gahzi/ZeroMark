@@ -11,6 +11,7 @@ public class ProjectileAbilityBaseScript : AbilitySlotBaseScript
 
     protected ProjectileBaseScript projectileType;
     private int maxRange;
+    public bool fired;
 
     public override void Start()
     {
@@ -48,6 +49,7 @@ public class ProjectileAbilityBaseScript : AbilitySlotBaseScript
 
     public ProjectileBaseScript Fire()
     {
+        fired = true;
         return Fire(transform.rotation.eulerAngles);
     }
 

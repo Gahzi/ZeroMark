@@ -10,6 +10,7 @@ public class CaptureZone : KBGameObject
     private int captureDelta;
     public int captureTotal;
     public int captureDecayOnUnoccupied;
+    public float captureAutoPoints;
     public float capturePercent;
     public int upgradePointsOnCapture;
     public ScoreboardScript scoreboard;
@@ -32,6 +33,8 @@ public class CaptureZone : KBGameObject
     private AudioClip captureComplete;
 
     private bool redUnlocked, blueUnlocked;
+
+    private float captureFraction = 0;
 
     private void Start()
     {
@@ -175,6 +178,29 @@ public class CaptureZone : KBGameObject
             }
         }
 
+        foreach (var o in requiredZones)
+        {
+            switch (o.state)
+            {
+                case ZoneState.Unoccupied:
+                    break;
+                case ZoneState.Red:
+                    captureFraction += captureAutoPoints;
+                    //captureDelta += 1;
+                    break;
+                case ZoneState.Blue:
+                    captureFraction -= captureAutoPoints;
+                    //captureDelta -= 1;
+                    break;
+                default:
+                    break;
+            }
+        }
+        if (Mathf.Abs(captureFraction) >= 1)
+        {
+            captureDelta += (int)captureFraction;
+            captureFraction = 0;
+        }
         captureTotal += captureDelta;
         captureTotal = captureTotal.LimitToRange(-1000, 1000);
 
