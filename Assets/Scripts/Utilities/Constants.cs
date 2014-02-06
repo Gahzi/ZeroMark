@@ -8,14 +8,14 @@ namespace KBConstants
 
     public class ObjectConstants
     {
-        public enum type { Player, Gamepad, Item, Camera, PlasmaBullet, BasicRigidbodyCube };
+        public enum type { Player, Gamepad, Item, PlayerCamera, PlasmaBullet, BasicRigidbodyCube };
 
         private static readonly IDictionary<type, string> prefabNames = new Dictionary<type, string>
         {
-            {type.Player,"Characters/Player"},
+            {type.Player,"Characters/PlayerLocal"},
 			{type.Gamepad, "Gamepads/Gamepad"},
             {type.Item, "Items/Item"},
-            {type.Camera, "Camera/Camera"},
+            {type.PlayerCamera, "Cameras/Player Camera"},
             {type.PlasmaBullet, "Abilities/PlasmaBullet"},
             {type.BasicRigidbodyCube, "Environment/BasicRigidbodyCube"},
         };

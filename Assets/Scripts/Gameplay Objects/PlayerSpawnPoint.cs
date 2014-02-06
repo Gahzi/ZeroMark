@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class PlayerSpawnZone : KBGameObject
+public class PlayerSpawnPoint : KBGameObject
 {
 
     private void Start()

@@ -109,4 +109,43 @@ public class ItemSpawn : MonoBehaviour
         }
 
     }
+
+    /// <summary>
+    /// While script is observed (in a PhotonView), this is called by PUN with a stream to write or read.
+    /// </summary>
+    /// <remarks>
+    /// The property stream.isWriting is true for the owner of a PhotonView. This is the only client that
+    /// should write into the stream. Others will receive the content written by the owner and can read it.
+    ///
+    /// Note: Send only what you actually want to consume/use, too!
+    /// Note: If the owner doesn't write something into the stream, PUN won't send anything.
+    /// </remarks>
+    /// <param name="stream">Read or write stream to pass state of this GameObject (or whatever else).</param>
+    /// <param name="info">Some info about the sender of this stream, who is the owner of this PhotonView (and GameObject).</param>
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.isWriting)
+        {
+            Vector3 pos = transform.localPosition;
+            Quaternion rot = transform.localRotation;
+            stream.Serialize(ref pos);
+            stream.Serialize(ref rot);
+        }
+        else
+        {
+            // Receive latest state information
+            Vector3 pos = Vector3.zero;
+            Quaternion rot = Quaternion.identity;
+
+            stream.Serialize(ref pos);
+            stream.Serialize(ref rot);
+
+            //latestCorrectPos = pos;                 // save this to move towards it in FixedUpdate()
+            //onUpdatePos = transform.localPosition;  // we interpolate from here to latestCorrectPos
+            //fraction = 0;                           // reset the fraction we alreay moved. see Update()
+
+            transform.position = pos;
+            transform.localRotation = rot;          // this sample doesn't smooth rotation
+        }
+    }
 }

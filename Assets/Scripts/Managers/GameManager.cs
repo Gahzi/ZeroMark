@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class GameManager : MonoBehaviour
+public class GameManager : Photon.MonoBehaviour
 {
     private enum GameState { PreGame, InGame, RedWins, BlueWins, Tie, EndGame };
 
-    public List<PlayerLocal> localPlayers;
-    //public List<PlayerRemote> remotePlayers; // TODO
+    public PlayerLocal localPlayer;
+    public List<PlayerLocal> players;
+ 
     public List<CaptureZone> captureZones;
     private List<Item> items;
-    private List<PlayerSpawnZone> playerSpawnZones;
+    private List<PlayerSpawnPoint> playerSpawnZones;
     public CaptureZone victoryZone;
     private GameState state = GameState.PreGame;
     public int redTeamScore;
@@ -24,44 +25,24 @@ public class GameManager : MonoBehaviour
     public int blueCaptures = 0;
     private List<List<String>> playerStatData;
     private List<List<String>> upgradePointReqData;
-
-    //private GamepadInfoHandler gamepadHandler;
-    private GameObject startImg;
-
-    private GameObject redWinImg;
-    private GameObject blueWinImg;
-    private GameObject tieImg;
-
-    private float startImgScreenTime = 3.0f;
+   
     private float startTime;
 
     private static GameManager instance;
 
     public static GameManager Instance
     {
-        // Here we use the ?? operator, to return 'instance' if 'instance' does not equal null
-        // otherwise we assign instance to a new component and return that
         get
         {
-            if (instance == null)
+            if (instance != null)
             {
-                GameObject gamepadManagerObject = (GameObject.FindGameObjectWithTag("GameManager"));
-                if (gamepadManagerObject != null)
-                {
-                    instance = gamepadManagerObject.GetComponent<GameManager>();
-                    if (instance != null)
-                    {
-                        return instance;
-                    }
-                    else
-                    {
-                        instance = new GameObject("Game Manager").AddComponent<GameManager>();
-                        return instance;
-                    }
-                }
+                return instance;
             }
-
-            return instance;
+            else
+            {
+                instance = new GameObject("Game Manager").AddComponent<GameManager>();
+                return instance;
+            }
         }
     }
 
@@ -78,7 +59,6 @@ public class GameManager : MonoBehaviour
     public void OnPhotonRandomJoinFailed()
     {
         Debug.Log("Room Creation Failed");
-        PhotonNetwork.offlineMode = true;
         PhotonNetwork.CreateRoom(null, true, true, 4);
     }
 
@@ -86,14 +66,32 @@ public class GameManager : MonoBehaviour
     public void OnJoinedRoom()
     {
         Debug.Log("Joined Room Succesfully");
+        //photonView.RPC("AddPlayer", PhotonTargets.AllBuffered);
+        localPlayer = createObject(ObjectConstants.type.Player, new Vector3(0, 0, 0), Quaternion.identity, Team.Red).GetComponent<PlayerLocal>(); ;
+        photonView.RPC("SetPlayerLevel", PhotonTargets.AllBuffered, PhotonNetwork.player,1);
     }
 
     // This is one of the callback/event methods called by PUN (read more in PhotonNetworkingMessage enumeration)
     public void OnCreatedRoom()
     {
         Debug.Log("Created Room Succesfully");
-        //StartGame();
-        //Application.LoadLevel(Application.loadedLevel);
+
+    }
+
+    void OnPhotonPlayerDisconneced(PhotonPlayer player)
+    {
+        foreach (PlayerLocal currentPlayer in players)
+        {
+            if (currentPlayer.networkPlayer == player)
+            {
+                players.Remove(currentPlayer);
+            }
+        }
+    }
+
+    void OnPhotonPlayerConnected(PhotonPlayer player)
+    {
+        //SHERVIN: SEND A MESSAGE SAYING A NEW PLAYER HAS JOINED
     }
 
     #endregion PHOTON CONNECTION HANDLING
@@ -107,41 +105,27 @@ public class GameManager : MonoBehaviour
     {
         ReadPlayerStatData();
         ReadUpgradePointData();
-        foreach (var p in localPlayers)
-        {
-            SetPlayerLevel(p, 1);
-        }
 
         startTime = Time.time;
         lastTick = Time.time;
         state = GameState.PreGame;
-        //startImg = GameObject.Find("StartImage");
-        //startImg.SetActive(true);
 
-        // TODO : Code below needs to be refactored to use KBaM with conditional controller support
+        if (!PhotonNetwork.connected)
+        {
+            PhotonNetwork.autoJoinLobby = false;
+            PhotonNetwork.ConnectUsingSettings("1");
+        }
 
-        //gamepadHandler = GamepadInfoHandler.Instance;
-
-        //players = new List<Player>(gamepadHandler.getNumberOfConnectedControllers());
-
-        //if (gamepadHandler.getNumberOfConnectedControllers() > 0)
-        //{
-        //    if (!PhotonNetwork.connected)
-        //    {
-        //        PhotonNetwork.autoJoinLobby = false;
-        //        PhotonNetwork.ConnectUsingSettings("1");
-        //    }
-        //}
-
-        // TODO : Some way of making the list of players
         CaptureZone[] loadedCaptureZones = FindObjectsOfType<CaptureZone>();
         GameObject[] loadedItems = GameObject.FindGameObjectsWithTag("Item");
         ItemSpawn[] loadedItemZones = FindObjectsOfType<ItemSpawn>();
-        PlayerSpawnZone[] loadedPSpawns = FindObjectsOfType<PlayerSpawnZone>();
+        PlayerSpawnPoint[] loadedPSpawns = FindObjectsOfType<PlayerSpawnPoint>();
 
+        //TODO:Remove 6 value and replace with constant representing max player size;
+        players = new List<PlayerLocal>(6);
         captureZones = new List<CaptureZone>(loadedCaptureZones.Length);
         items = new List<Item>(loadedItems.Length);
-        playerSpawnZones = new List<PlayerSpawnZone>(loadedPSpawns.Length);
+        playerSpawnZones = new List<PlayerSpawnPoint>(loadedPSpawns.Length);
 
         foreach (CaptureZone c in loadedCaptureZones)
         {
@@ -152,12 +136,10 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        foreach (PlayerSpawnZone p in loadedPSpawns)
+        foreach (PlayerSpawnPoint p in loadedPSpawns)
         {
             playerSpawnZones.Add(p);
         }
-
-        StartGame();
     }
 
     private void Update()
@@ -213,6 +195,25 @@ public class GameManager : MonoBehaviour
         tick++;
         redTeamScore += redCaptures;
         blueTeamScore += blueCaptures;
+    }
+
+    /// <summary>
+    /// Returns the spawnpoints of the specific team.
+    /// </summary>
+    /// <param name="team">The team of your desired spawnpoints</param>
+    public List<PlayerSpawnPoint> GetSpawnPointsWithTeam(Team tm)
+    {
+        List<PlayerSpawnPoint> spawnpoints = new List<PlayerSpawnPoint>();
+
+        foreach (PlayerSpawnPoint zone in playerSpawnZones)
+        {
+            if (zone.teamScript.team == tm)
+            {
+                spawnpoints.Add(zone);
+            }
+        }
+
+        return spawnpoints;
     }
 
     /// <summary>
@@ -290,35 +291,64 @@ public class GameManager : MonoBehaviour
 
     public void CheckPlayerUpgradePoints()
     {
-        foreach (var p in localPlayers)
+        //TODO: Send level up notification to other clients.
+        if (localPlayer.upgradePoints >= Convert.ToInt32(upgradePointReqData[localPlayer.stats.level][0]))
         {
-            if (p.upgradePoints >= Convert.ToInt32(upgradePointReqData[p.stats.level][0]))
-            {
-                SetPlayerLevel(p, p.stats.level + 1);
-                Debug.Log("Level up!");
-            }
+            photonView.RPC("SetPlayerLevel", PhotonTargets.AllBuffered, PhotonNetwork.player, localPlayer.stats.level + 1);
+            Debug.Log("Level up!");
         }
     }
 
-    public GameObject createObject(KBConstants.ObjectConstants.type objectType, Vector3 position, Quaternion rotation)
+    //[RPC]
+    ////Sent by newly connected clients, recieved by server
+    //void AddPlayer(PhotonMessageInfo info)
+    //{
+    //    PhotonPlayer netPlayer = info.sender;
+
+    //    PlayerLocal newEntry = (PlayerLocal)Instantiate(Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Player], typeof(PlayerLocal)));
+    //    newEntry.playerName = netPlayer.name;
+    //    newEntry.networkPlayer = netPlayer;
+
+
+    //    if (netPlayer.isLocal)
+    //    {
+    //        localPlayer = newEntry;
+    //    }
+    //    else
+    //    {
+    //        Destroy(newEntry.GetComponentInChildren<Camera>().gameObject);
+    //        players.Add(newEntry);
+    //    }
+
+    //    //if (PhotonNetwork.isMasterClient)
+    //    //{
+    //    //    chatScript.addGameChatMessage(netPlayer.name + " joined the game");
+    //    //}
+    //}
+
+    //Sent by newly connected clients, recieved by server
+    public GameObject createObject(KBConstants.ObjectConstants.type objectType, Vector3 position, Quaternion rotation, Team newTeam)
     {
         switch (objectType)
         {
             case ObjectConstants.type.Player:
-                {
-                    GameObject newPlayerObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Player], position, rotation, 0);
-                    PlayerLocal newPlayer = newPlayerObject.GetComponent<PlayerLocal>();
-                    localPlayers.Add(newPlayer);
-                    return newPlayerObject;
-                }
+            {
+                GameObject newPlayerObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Player], position, rotation, 0);
+                PlayerLocal newPlayer = newPlayerObject.GetComponent<PlayerLocal>();
+                newPlayer.networkPlayer = PhotonNetwork.player;
+                newPlayer.teamScript.team = newTeam;
+
+                return newPlayerObject;
+            }
 
             case ObjectConstants.type.Item:
-                {
-                    GameObject newItemObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Item], position, rotation, 0);
-                    Item newItem = newItemObject.GetComponent<Item>();
-                    items.Add(newItem);
-                    return newItemObject;
-                }
+            {
+                GameObject newItemObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Item], position, rotation, 0);
+                Item newItem = newItemObject.GetComponent<Item>();
+                newItem.teamScript.team = newTeam;
+                items.Add(newItem);
+                return newItemObject;
+            }
 
             default:
                 return null;
@@ -372,7 +402,29 @@ public class GameManager : MonoBehaviour
         upgradePointReqData = CSVReader.ReadFile(KBConstants.ManagerConstants.PREFAB_NAMES[ManagerConstants.type.UpgradePointReqs]);
     }
 
-    public static void SetPlayerLevel(PlayerLocal player, int level)
+    //[RPC]
+    //void SpawnOnNetwork(Vector3 pos, Quaternion rot, PhotonViewID id1, PhotonPlayer np)
+    //{
+
+    //    Transform newPlayer = Instantiate(playerPrefab, pos, rot) as Transform;
+    //    //Set transform
+    //    PlayerInfo4 pNode = GetPlayer(np);
+    //    pNode.transform = newPlayer;
+    //    //Set photonviewID everywhere!
+    //    SetPhotonViewIDs(newPlayer.gameObject, id1);
+
+    //    if (pNode.IsLocal())
+    //    {
+    //        localPlayerInfo = pNode;
+    //    }
+
+    //    //Maybe call some specific action on the instantiated object?
+    //    //PLAYERSCRIPT tmp = newPlayer.GetComponent<PLAYERSCRIPT>();
+    //    //tmp.SetPlayer(pNode.networkPlayer);
+    //}
+
+    [RPC]
+    public void SetPlayerLevel(PhotonPlayer phPlayer, int playerLevel)
     {
         GameManager gm = GameManager.instance;
         int numberOfStats = 8;
@@ -381,12 +433,39 @@ public class GameManager : MonoBehaviour
         PlayerStats stats = new PlayerStats();
         stats.statArray = new float[numberOfStats];
 
-        for (int i = 0; i < stats.statArray.Length; i++) // This loads the raw stats into a float[]
+        PlayerLocal player = null;
+
+        if (phPlayer.isLocal)
         {
-            stats.statArray[i] = Convert.ToInt32(gm.playerStatData[i + ((int)player.type * numberOfStats)][initStatColumn]) + ((level-1) * Convert.ToInt32(gm.playerStatData[i + ((int)player.type * numberOfStats)][perLevelStatColumn]));
+            player = localPlayer;
+        }
+        else
+        {
+            PlayerLocal currentPlayer;
+            for (int i = 0; i < players.Count; i++)
+            {
+                currentPlayer = players[i];
+                if (currentPlayer.networkPlayer == phPlayer)
+                {
+                    player = currentPlayer;
+                }
+            }
+        }
+        
+
+        if (player == null)
+        {
+            Debug.Log("Warning! Couldn't find player to set level");
+            return;
         }
 
-        stats.level = level;
+        
+        for (int i = 0; i < stats.statArray.Length; i++) // This loads the raw stats into a float[]
+        {
+            stats.statArray[i] = Convert.ToInt32(gm.playerStatData[i + ((int)player.type * numberOfStats)][initStatColumn]) + ((playerLevel - 1) * Convert.ToInt32(gm.playerStatData[i + ((int)player.type * numberOfStats)][perLevelStatColumn]));
+        }
+
+        stats.level = playerLevel;
         stats.health = (int)stats.statArray[(int)PlayerStats.PlayerStatNames.Health];
         stats.attack = (int)stats.statArray[(int)PlayerStats.PlayerStatNames.Attack];
         stats.attackRange = (int)stats.statArray[(int)PlayerStats.PlayerStatNames.AttackRange];
