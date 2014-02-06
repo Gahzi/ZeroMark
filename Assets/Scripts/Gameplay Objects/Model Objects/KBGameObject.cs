@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Team))]
 public class KBGameObject : Photon.MonoBehaviour
 {
+    public Team team;
     public int health;
-    public TeamScript teamScript;
     protected GameManager gm;
     protected List<KBGameObject> collisionObjects;
 
@@ -24,13 +23,6 @@ public class KBGameObject : Photon.MonoBehaviour
     public virtual void Start()
     {
         gm = GameManager.Instance;
-
-        if (!GetComponentInChildren<TeamScript>())
-        {
-            gameObject.AddComponent<TeamScript>();
-        }
-
-        teamScript = GetComponentInChildren<TeamScript>();
     }
 
     private void Update()

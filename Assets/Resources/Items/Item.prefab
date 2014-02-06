@@ -16,9 +16,9 @@ GameObject:
   - 114: {fileID: 11400004}
   - 54: {fileID: 5400000}
   - 114: {fileID: 11400006}
-  - 114: {fileID: 11400002}
   - 198: {fileID: 19800000}
   - 199: {fileID: 19900000}
+  - 114: {fileID: 11400002}
   m_Layer: 8
   m_Name: Item
   m_TagString: Item
@@ -90,7 +90,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 2, y: 2, z: 2}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!108 &10800000
 Light:
@@ -147,10 +147,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10becd8312d2a334698cc4b5516068cf, type: 3}
+  m_Script: {fileID: 11500000, guid: 4a3eb0087c9406746a81e9d8feb1ff76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  team: 2
+  texture: {fileID: 2800000, guid: c2233c64408b43842b9cc1951a167086, type: 3}
+  angle: 0
+  size: {x: 32, y: 32}
+  ScreenpointToAlign: 0
+  relativePosition: {x: 0, y: 0}
 --- !u!114 &11400004
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -162,11 +166,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec77974ddd01d1243a00c6f55051ec83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  team: 0
   health: 0
-  teamScript: {fileID: 11400002}
   itemType: 0
   respawnTime: 0
-  team: 0
+  state: 0
+  disableTime: 0
 --- !u!114 &11400006
 MonoBehaviour:
   m_ObjectHideFlags: 1

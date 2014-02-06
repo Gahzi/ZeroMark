@@ -49,7 +49,6 @@ public class ProjectileAbilityBaseScript : AbilitySlotBaseScript
 
     public ProjectileBaseScript Fire()
     {
-        fired = true;
         return Fire(transform.rotation.eulerAngles);
     }
 

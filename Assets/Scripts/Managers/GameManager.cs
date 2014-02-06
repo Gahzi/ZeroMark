@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
     public int blueCaptures = 0;
     private List<List<String>> playerStatData;
     private List<List<String>> upgradePointReqData;
-
+    public Camera mainCamera;
     //private GamepadInfoHandler gamepadHandler;
     private GameObject startImg;
 
@@ -111,7 +111,7 @@ public class GameManager : MonoBehaviour
         {
             SetPlayerLevel(p, 1);
         }
-
+        mainCamera = FindObjectOfType<Camera>();
         startTime = Time.time;
         lastTick = Time.time;
         state = GameState.PreGame;

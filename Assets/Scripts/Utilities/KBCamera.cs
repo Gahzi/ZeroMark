@@ -26,8 +26,8 @@ public class KBCamera : MonoBehaviour
                 camera.isOrthoGraphic = true;
                 //CAMERA_FOLLOW_DISTANCE = new Vector3(0, 20, 0);
                 //transform.Rotate(Vector3.right, 90);
-                CAMERA_FOLLOW_DISTANCE = new Vector3(0, 100, 0);
-                transform.Rotate(Vector3.right, 90);
+                CAMERA_FOLLOW_DISTANCE = new Vector3(0, 110, -60);
+                transform.Rotate(Vector3.right, 60);
                 transform.localPosition = CAMERA_FOLLOW_DISTANCE;
                 break;
 
