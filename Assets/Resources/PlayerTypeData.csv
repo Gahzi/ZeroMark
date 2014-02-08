@@ -12,7 +12,7 @@ Recon,Health,3,1
 ,Capture Speed,3,1
 ,LB Rotation Speed,5,1
 ,UB Rotation Speed,5,1
-,Movement Speed,20,2
+,Movement Speed,40,2
 ,Vision Range,60,1
 Defense,Health,6,1
 ,Attack,2,1

@@ -8,7 +8,7 @@ public class PlasmaBullet : ProjectileBaseScript
 
     #endregion CONSTANTS
 
-    private void Start()
+    public override void Start()
     {
         base.Start();
         collideWithProjectiles = false;
@@ -26,5 +26,10 @@ public class PlasmaBullet : ProjectileBaseScript
             KBGameObject o = other.gameObject.transform.parent.GetComponent<KBGameObject>();
             o.takeDamage(PLASMABULLET_DAMAGE);
         }
+        if (other.gameObject.CompareTag("Environment"))
+        {
+            Destroy(gameObject);
+        }
     }
+
 }

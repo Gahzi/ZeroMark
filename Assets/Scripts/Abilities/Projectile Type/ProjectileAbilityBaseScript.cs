@@ -11,6 +11,7 @@ public class ProjectileAbilityBaseScript : AbilitySlotBaseScript
 
     protected ProjectileBaseScript projectileType;
     private int maxRange;
+    public bool fired;
 
     public override void Start()
     {

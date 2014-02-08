@@ -4,7 +4,6 @@ using UnityEngine;
 
 [RequireComponent(typeof(PhotonView))]
 [RequireComponent(typeof(CharacterController))]
-[RequireComponent(typeof(TimerScript))]
 public class PlayerLocal : KBControllableGameObject
 {
     public enum ControlStyle { ThirdPerson, TopDown };
@@ -48,6 +47,8 @@ public class PlayerLocal : KBControllableGameObject
     public int upgradePoints;
     public int maxHealth;
     public int[] pointToLevel = new int[4];
+    private Item item;
+    RotatableGuiItem playerGuiSquare;
 
     public override void Start()
     {
@@ -56,7 +57,7 @@ public class PlayerLocal : KBControllableGameObject
         waitingForRespawn = false;
         charController = GetComponent<CharacterController>();
         grabSound = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.ItemGrab]);
-
+        playerGuiSquare = GetComponent<RotatableGuiItem>();
         latestCorrectPos = transform.position;
         onUpdatePos = transform.position;
         isShooting = false;
@@ -97,36 +98,14 @@ public class PlayerLocal : KBControllableGameObject
     {
         Debug.DrawRay(upperBody.transform.position, upperBody.transform.TransformDirection(new Vector3(0, 0, 5.0f)), new Color(255, 0, 0, 255), 0.0f);
     }
-    
-    void OnGUI()
+
+    private void OnGUI()
     {
-        if (photonView.isMine)
-        {
-            //GUI.Box(new Rect(0, 0, 100, 50), "Top-left");
-            GUI.Box(new Rect(Screen.width - 200, 0, 200, 200), GameManager.GetCaptureZoneStateString());
-            GUI.Box(new Rect(0, Screen.height - 50, 100, 50), GameManager.GetTeamScoreString());
-            //GUI.Box(new Rect(Screen.width - 100, Screen.height - 50, 100, 50), "Bottom-right");
-
-
-            foreach (var i in GameManager.Instance.captureZones)
-            {
-                Vector3 t = i.gameObject.transform.position;
-                Vector3 a = camera.WorldToViewportPoint(t);
-                if (a.z > 0)
-                {
-                    if (a.y > 0.35f)
-                    {
-                        a.y = 0.35f;
-                    }
-                    GUI.Label(new Rect(Screen.width * a.x, Screen.height * 0.35f, 100, 50), i.tier.ToString());
-                }
-            }
-        }
     }
-    
 
     private void Update()
     {
+
         mousePos = Input.mousePosition;
         fraction = fraction + Time.deltaTime * 9;
 
@@ -154,10 +133,11 @@ public class PlayerLocal : KBControllableGameObject
             gun.DeactivateAbility();
         }
 
-        //if (!photonView.isMine)
-        //{
-        //    Debug.Log("transform.position: " + transform.position.ToString());
-        //}
+        if (item != null)
+        {
+            item.transform.position = new Vector3(transform.position.x, transform.position.y + 3, transform.position.z);
+            item.State = Item.ItemState.isPickedUp;
+        }
 
         CheckHealth();
     }
@@ -251,11 +231,31 @@ public class PlayerLocal : KBControllableGameObject
     /// <param name="collision"></param>
     private void OnCollisionEnter(Collision collision)
     {
-        PlasmaBullet bullet = collision.gameObject.GetComponent<PlasmaBullet>();
-        if (bullet != null)
+        //if (collision.gameObject.CompareTag("Item"))
+        //{
+        //    if (collision.gameObject.GetComponent<Item>().team == team)
+        //    {
+        //        item = collision.gameObject.GetComponent<Item>();
+        //        item.collider.isTrigger = true;
+        //    }
+        //}
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Item"))
         {
-            Debug.Log("Got Hit!");
-            takeDamage(bullet.damage);
+            Item i = other.gameObject.GetComponent<Item>();
+            if (i.team == team && i.state == Item.ItemState.isDown)
+            {
+                PickupItem(other.gameObject.GetComponent<Item>());
+            }
+            else
+            {
+                other.gameObject.GetComponent<Item>().Respawn();
+                //other.gameObject.particleSystem.enableEmission = true;
+                ////Destroy(other.gameObject);
+            }
         }
     }
 
@@ -267,10 +267,20 @@ public class PlayerLocal : KBControllableGameObject
 
     private void ControlKBAM()
     {
+        float modifiedMoveSpeed = 0;
+        if (item != null)
+        {
+            modifiedMoveSpeed = movespeed * 2;
+        }
+        else
+        {
+            modifiedMoveSpeed = movespeed;
+        }
+
         switch (controlStyle)
         {
             case ControlStyle.ThirdPerson:
-                float d = movespeed * Input.GetAxis("Vertical");
+                float d = modifiedMoveSpeed * Input.GetAxis("Vertical");
                 charController.SimpleMove(transform.TransformDirection(Vector3.forward) * d);
                 transform.Rotate(0, Input.GetAxis("Horizontal") * lowerbodyRotateSpeed, 0);
 
@@ -279,7 +289,7 @@ public class PlayerLocal : KBControllableGameObject
 
             case ControlStyle.TopDown:
                 Vector3 m = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-                charController.SimpleMove(m.normalized * movespeed);
+                charController.SimpleMove(m.normalized * modifiedMoveSpeed);
 
                 Quaternion newRot = Quaternion.LookRotation(upperBody.transform.position + new Vector3(-mousePlayerDiff.x, 0, -mousePlayerDiff.y));
                 upperBody.transform.rotation = Quaternion.Lerp(upperBody.transform.rotation, newRot, upperbodyRotateSpeed * Time.deltaTime);
@@ -291,13 +301,21 @@ public class PlayerLocal : KBControllableGameObject
 
         if (Input.GetMouseButtonDown(0))
         {
-            isShooting = true;
-            gun.ActivateAbility();
+			if (item != null)
+            {
+                 isShooting = true;
+            }
+           
         }
         if (Input.GetMouseButtonUp(0))
         {
             isShooting = false;
-            gun.DeactivateAbility();
+        }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+			//SHERVIN: This must be sent across network.
+            DropItem();
         }
     }
 
@@ -307,6 +325,7 @@ public class PlayerLocal : KBControllableGameObject
         {
             acceptingInputs = false;
             respawnTimerNumber = timer.StartTimer(respawnTime);
+            item = null;
             waitingForRespawn = true;
         }
         else if (waitingForRespawn)
@@ -345,6 +364,22 @@ public class PlayerLocal : KBControllableGameObject
             lowerbodyRotateSpeed = stats.lowerbodyRotationSpeed;
             upperbodyRotateSpeed = stats.upperbodyRotationSpeed;
         }
-        
+	}
+	
+    private void PickupItem(Item _item)
+    {
+        item = _item;
+        item.State = Item.ItemState.isPickedUp;
+    }
+
+    private void DropItem()
+    {
+        if (item != null)
+        {
+            //item.Respawn();
+            item.State = Item.ItemState.disabled;
+            item.disableTime = Time.time;
+            item = null;
+        }
     }
 }

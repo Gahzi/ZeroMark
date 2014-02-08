@@ -25,7 +25,7 @@ public class GameManager : Photon.MonoBehaviour
     public int blueCaptures = 0;
     private List<List<String>> playerStatData;
     private List<List<String>> upgradePointReqData;
-   
+    public Camera mainCamera;
     private float startTime;
 
     private static GameManager instance;
@@ -105,7 +105,7 @@ public class GameManager : Photon.MonoBehaviour
     {
         ReadPlayerStatData();
         ReadUpgradePointData();
-
+        mainCamera = FindObjectOfType<Camera>();
         startTime = Time.time;
         lastTick = Time.time;
         state = GameState.PreGame;

@@ -10,6 +10,7 @@ public class CaptureZone : KBGameObject
     private int captureDelta;
     public int captureTotal;
     public int captureDecayOnUnoccupied;
+    public float captureAutoPoints;
     public float capturePercent;
     public int upgradePointsOnCapture;
     public ScoreboardScript scoreboard;
@@ -32,6 +33,8 @@ public class CaptureZone : KBGameObject
     private AudioClip captureComplete;
 
     private bool redUnlocked, blueUnlocked;
+
+    private float captureFraction = 0;
 
     private void Start()
     {
@@ -150,7 +153,7 @@ public class CaptureZone : KBGameObject
             PlayerLocal p = o.gameObject.GetComponentInChildren<PlayerLocal>();
             if (p != null)
             {
-                switch (p.teamScript.Team)
+                switch (p.team)
                 {
                     case Team.Red:
                         if (redUnlocked && p.health > 0)
@@ -175,10 +178,57 @@ public class CaptureZone : KBGameObject
             }
         }
 
-        captureTotal += captureDelta;
+        foreach (var o in requiredZones)
+        {
+            switch (o.state)
+            {
+                case ZoneState.Unoccupied:
+                    break;
+                case ZoneState.Red:
+                    captureFraction += captureAutoPoints;
+                    //captureDelta += 1;
+                    break;
+                case ZoneState.Blue:
+                    captureFraction -= captureAutoPoints;
+                    //captureDelta -= 1;
+                    break;
+                default:
+                    break;
+            }
+        }
+        if (Mathf.Abs(captureFraction) >= 1)
+        {
+            captureDelta += (int)captureFraction;
+            captureFraction = 0;
+        }
+
+        if (tier == ZoneTier.C)
+        {
+            captureTotal += captureDelta / 10;
+        }
+        else
+        {
+            captureTotal += captureDelta;
+        }
+
         captureTotal = captureTotal.LimitToRange(-1000, 1000);
 
         CheckCaptured();
+
+        if (captureTotal > 0)
+        {
+            renderer.material.color = new Color(captureTotal / 1000.0f, 0, 0, (captureTotal / 1000.0f) * 0.5f);
+
+        }
+        else if (captureTotal < 0)
+        {
+            renderer.material.color = new Color(0, 0, captureTotal / 1000.0f, (captureTotal / 1000.0f) * 0.5f);
+        }
+        else
+        {
+            renderer.material.color = new Color(0, 0, 0, 0.35f);
+        }
+
     }
 
     private void CheckCaptured()
@@ -274,7 +324,7 @@ public class CaptureZone : KBGameObject
                 PlayerLocal p = o.gameObject.GetComponentInChildren<PlayerLocal>();
                 if (p != null)
                 {
-                    switch (p.teamScript.team)
+                    switch (p.team)
                     {
                         case Team.Red:
                             p.upgradePoints += upgradePointsOnCapture;
@@ -297,6 +347,34 @@ public class CaptureZone : KBGameObject
 
     private void OnTriggerStay(Collider other)
     {
+        if (tier == ZoneTier.C)
+        {
+            if (other.gameObject.CompareTag("Item"))
+            {
+                Item i = other.gameObject.GetComponent<Item>();
+                if (i.state == Item.ItemState.isDown)
+                {
+                    switch (i.team)
+                    {
+                        case Team.Red:
+                            captureTotal += 100;
+                            i.Respawn();
+                            break;
+                        case Team.Blue:
+                            captureTotal -= 100;
+                            i.Respawn();
+                            break;
+                        case Team.None:
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else
+                {
+                }
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -310,6 +388,8 @@ public class CaptureZone : KBGameObject
         //    audio.Play();
         //    audio.loop = true;
         //}
+
+        
     }
 
     private void OnTriggerExit(Collider other)

@@ -5,7 +5,7 @@ TagManager:
   tags:
   - GamepadManager
   - GameManager
-  - Tower
+  - Environment
   - Hitbox
   - Item
   - Factory
@@ -27,6 +27,8 @@ TagManager:
   - 
   - 
   - 
+  - GoalZone
+  - 
   Builtin Layer 0: Default
   Builtin Layer 1: TransparentFX
   Builtin Layer 2: Ignore Raycast
@@ -37,7 +39,7 @@ TagManager:
   Builtin Layer 7: 
   User Layer 8: Items
   User Layer 9: Structures
-  User Layer 10: RangeTriggerLayer
+  User Layer 10: 
   User Layer 11: HitboxLayer
   User Layer 12: ProjectileLayer
   User Layer 13: Tower
