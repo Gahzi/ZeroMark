@@ -15,7 +15,7 @@ public class PlayerSpawnPoint : KBGameObject
     {
         Vector3 p = new Vector3(transform.position.x, 5, transform.position.z);
 
-        switch (teamScript.team)
+        switch (team)
         {
             case KBConstants.Team.Red:
                 Gizmos.color = Color.red;

@@ -105,7 +105,6 @@ public class GameManager : Photon.MonoBehaviour
     {
         ReadPlayerStatData();
         ReadUpgradePointData();
-
         startTime = Time.time;
         lastTick = Time.time;
         state = GameState.PreGame;
@@ -207,7 +206,7 @@ public class GameManager : Photon.MonoBehaviour
 
         foreach (PlayerSpawnPoint zone in playerSpawnZones)
         {
-            if (zone.teamScript.team == tm)
+            if (zone.team == tm)
             {
                 spawnpoints.Add(zone);
             }
@@ -336,7 +335,7 @@ public class GameManager : Photon.MonoBehaviour
                 GameObject newPlayerObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Player], position, rotation, 0);
                 PlayerLocal newPlayer = newPlayerObject.GetComponent<PlayerLocal>();
                 newPlayer.networkPlayer = PhotonNetwork.player;
-                newPlayer.teamScript.team = newTeam;
+                newPlayer.team = newTeam;
 
                 return newPlayerObject;
             }
@@ -345,7 +344,7 @@ public class GameManager : Photon.MonoBehaviour
             {
                 GameObject newItemObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Item], position, rotation, 0);
                 Item newItem = newItemObject.GetComponent<Item>();
-                newItem.teamScript.team = newTeam;
+                newItem.team = newTeam;
                 items.Add(newItem);
                 return newItemObject;
             }

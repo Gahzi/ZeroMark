@@ -1,7 +1,6 @@
 ﻿using KBConstants;
 using UnityEngine;
 
-[RequireComponent(typeof(TimerScript))]
 /// <summary>
 /// Spawns items when activating capture zone has been captured.
 /// </summary>
@@ -13,8 +12,7 @@ public class ItemSpawn : MonoBehaviour
     public bool isActive;
     public CaptureZone connectedCaptureZone;
     public float timeUntilItemSpawn;
-    public TimerScript timer;
-    private int timerNumber;
+    private float lastSpawn;
     private GameObject spawnedItem;
 
     private void Start()
@@ -23,12 +21,6 @@ public class ItemSpawn : MonoBehaviour
         {
             Debug.LogWarning("ItemSpawn #" + gameObject.GetInstanceID() + " is missing a reference to its parent CaptureZone");
         }
-
-        if (timer == null)
-        {
-            timer = GetComponent<TimerScript>();
-        }
-
 
         controllingTeam = Team.None;
         isActive = false;
@@ -43,18 +35,20 @@ public class ItemSpawn : MonoBehaviour
                 Gizmos.color = Color.red;
                 Gizmos.DrawSphere(p + Vector3.left, 1);
                 break;
+
             case Team.Blue:
                 Gizmos.color = Color.blue;
                 Gizmos.DrawSphere(p + Vector3.right, 1);
                 break;
+
             case Team.None:
                 Gizmos.color = Color.grey;
                 Gizmos.DrawSphere(p, 1);
                 break;
+
             default:
                 break;
         }
-
     }
 
     public void SpawnItem()
@@ -66,24 +60,28 @@ public class ItemSpawn : MonoBehaviour
                 2.0f,
                 transform.position.z),
             Quaternion.identity, 0);
+        Item i = spawnedItem.GetComponent<Item>();
+        i.team = controllingTeam;
+        lastSpawn = Time.time;
+        isActive = false;
     }
 
     private void Update()
     {
         if (isActive)
         {
-            if (!timer.IsTimerActive(timerNumber))
+            if (Time.time > lastSpawn + timeUntilItemSpawn)
             {
                 SpawnItem();
-                isActive = false;
             }
         }
-
-        if (spawnedItem != null)
+        if (controllingTeam != Team.None)
         {
-            // TODO Something to track whether the item has been destroyed and a new one should be generated.
+            if (spawnedItem == null)
+            {
+                InitiateItemSpawn();
+            }
         }
-
     }
 
     public void ReceiveActivationEvent(Team t)
@@ -92,22 +90,27 @@ public class ItemSpawn : MonoBehaviour
         {
             case Team.Red:
                 controllingTeam = t;
-                isActive = true;
-                timerNumber = timer.StartTimer(timeUntilItemSpawn);
+                InitiateItemSpawn();
                 break;
+
             case Team.Blue:
                 controllingTeam = t;
-                isActive = true;
-                timerNumber = timer.StartTimer(timeUntilItemSpawn);
+                InitiateItemSpawn();
                 break;
+
             case Team.None:
                 controllingTeam = t;
                 isActive = false;
                 break;
+
             default:
                 break;
         }
+    }
 
+    private void InitiateItemSpawn()
+    {
+        isActive = true;
     }
 
     /// <summary>
