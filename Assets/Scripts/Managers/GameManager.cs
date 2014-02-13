@@ -5,16 +5,23 @@ using System;
 
 public class GameManager : Photon.MonoBehaviour
 {
-    private enum GameState { PreGame, InGame, RedWins, BlueWins, Tie, EndGame };
+    public enum GameState { PreGame, InGame, RedWins, BlueWins, Tie, EndGame };
 
     public PlayerLocal localPlayer;
     public List<PlayerLocal> players;
- 
+
     public List<CaptureZone> captureZones;
     private List<Item> items;
     private List<PlayerSpawnPoint> playerSpawnZones;
     public CaptureZone victoryZone;
     private GameState state = GameState.PreGame;
+    public GameState State
+    {
+        get
+        {
+            return state;
+        }
+    }
     public int redTeamScore;
     public int blueTeamScore;
     public float lastTick;
@@ -25,7 +32,7 @@ public class GameManager : Photon.MonoBehaviour
     public int blueCaptures = 0;
     private List<List<String>> playerStatData;
     private List<List<String>> upgradePointReqData;
-   
+
     private float startTime;
 
     private static GameManager instance;
@@ -68,7 +75,7 @@ public class GameManager : Photon.MonoBehaviour
         Debug.Log("Joined Room Succesfully");
         //photonView.RPC("AddPlayer", PhotonTargets.AllBuffered);
         localPlayer = createObject(ObjectConstants.type.Player, new Vector3(0, 0, 0), Quaternion.identity, Team.Red).GetComponent<PlayerLocal>(); ;
-        photonView.RPC("SetPlayerLevel", PhotonTargets.AllBuffered, PhotonNetwork.player,1);
+        photonView.RPC("SetPlayerLevel", PhotonTargets.AllBuffered, PhotonNetwork.player, 1);
     }
 
     // This is one of the callback/event methods called by PUN (read more in PhotonNetworkingMessage enumeration)
@@ -151,12 +158,13 @@ public class GameManager : Photon.MonoBehaviour
         switch (state)
         {
             case GameState.PreGame:
-
+                state = GameState.InGame;
                 break;
 
             case GameState.InGame:
                 CheckWinConditions();
                 CheckPlayerUpgradePoints();
+                RunGui();
                 break;
 
             case GameState.RedWins:
@@ -288,6 +296,24 @@ public class GameManager : Photon.MonoBehaviour
         }
     }
 
+    private void RunGui()
+    {
+        foreach (var c in captureZones)
+        {
+            if ((localPlayer.team == Team.Blue && c.state != CaptureZone.ZoneState.Blue && c.blueUnlocked) || (localPlayer.team == Team.Red && c.state != CaptureZone.ZoneState.Red && c.redUnlocked))
+            {
+                c.rGui.enabled = true;
+                Vector3 sPos = Camera.main.WorldToScreenPoint(c.transform.position);
+                c.rGui.relativePosition = new Vector2(sPos.x, -sPos.y);
+                c.rGui.size = new Vector2((Mathf.Sin(Time.time * 4) + 1) * 32 + 64, (Mathf.Sin(Time.time * 4) + 1) * 32 + 64);
+            }
+            else
+            {
+                c.rGui.enabled = false;
+            }
+        }
+    }
+
     public void CheckPlayerUpgradePoints()
     {
         //TODO: Send level up notification to other clients.
@@ -331,23 +357,23 @@ public class GameManager : Photon.MonoBehaviour
         switch (objectType)
         {
             case ObjectConstants.type.Player:
-            {
-                GameObject newPlayerObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Player], position, rotation, 0);
-                PlayerLocal newPlayer = newPlayerObject.GetComponent<PlayerLocal>();
-                newPlayer.networkPlayer = PhotonNetwork.player;
-                newPlayer.team = newTeam;
+                {
+                    GameObject newPlayerObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Player], position, rotation, 0);
+                    PlayerLocal newPlayer = newPlayerObject.GetComponent<PlayerLocal>();
+                    newPlayer.networkPlayer = PhotonNetwork.player;
+                    newPlayer.team = newTeam;
 
-                return newPlayerObject;
-            }
+                    return newPlayerObject;
+                }
 
             case ObjectConstants.type.Item:
-            {
-                GameObject newItemObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Item], position, rotation, 0);
-                Item newItem = newItemObject.GetComponent<Item>();
-                newItem.team = newTeam;
-                items.Add(newItem);
-                return newItemObject;
-            }
+                {
+                    GameObject newItemObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Item], position, rotation, 0);
+                    Item newItem = newItemObject.GetComponent<Item>();
+                    newItem.team = newTeam;
+                    items.Add(newItem);
+                    return newItemObject;
+                }
 
             default:
                 return null;
@@ -450,7 +476,7 @@ public class GameManager : Photon.MonoBehaviour
                 }
             }
         }
-        
+
 
         if (player == null)
         {
@@ -458,7 +484,7 @@ public class GameManager : Photon.MonoBehaviour
             return;
         }
 
-        
+
         for (int i = 0; i < stats.statArray.Length; i++) // This loads the raw stats into a float[]
         {
             stats.statArray[i] = Convert.ToInt32(gm.playerStatData[i + ((int)player.type * numberOfStats)][initStatColumn]) + ((playerLevel - 1) * Convert.ToInt32(gm.playerStatData[i + ((int)player.type * numberOfStats)][perLevelStatColumn]));
@@ -473,6 +499,6 @@ public class GameManager : Photon.MonoBehaviour
         stats.upperbodyRotationSpeed = (int)stats.statArray[(int)PlayerStats.PlayerStatNames.UBRotationSpeed];
         stats.speed = (int)stats.statArray[(int)PlayerStats.PlayerStatNames.MovementSpeed];
         stats.visionRange = (int)stats.statArray[(int)PlayerStats.PlayerStatNames.VisionRange];
-        player.stats = stats; 
+        player.stats = stats;
     }
 }

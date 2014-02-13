@@ -9,6 +9,7 @@ Material:
   m_Name: PlasmaParticle
   m_Shader: {fileID: 200, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: []
+  m_CustomRenderQueue: -1
   m_SavedProperties:
     serializedVersion: 2
     m_TexEnvs:
@@ -23,7 +24,7 @@ Material:
       data:
         first:
           name: _InvFade
-        second: 1
+        second: .00999999978
     m_Colors:
       data:
         first:
@@ -32,4 +33,4 @@ Material:
       data:
         first:
           name: _TintColor
-        second: {r: .433823526, g: .976571918, b: 1, a: .5}
+        second: {r: .192156851, g: .264583975, b: 1, a: .192156866}

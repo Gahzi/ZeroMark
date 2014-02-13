@@ -13,7 +13,7 @@ PlayerSettings:
   companyName: Team Cordata
   productName: Untitled Alpha
   defaultCursor: {fileID: 2800000, guid: 71bc954d2d8febd4b8eb6b27dcef9cc8, type: 3}
-  cursorHotspot: {x: 0, y: 0}
+  cursorHotspot: {x: 16, y: 16}
   defaultScreenWidth: 1024
   defaultScreenHeight: 768
   defaultScreenWidthWeb: 960

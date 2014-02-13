@@ -32,7 +32,9 @@ public class CaptureZone : KBGameObject
     private AudioClip captureProgress;
     private AudioClip captureComplete;
 
-    private bool redUnlocked, blueUnlocked;
+    public RotatableGuiItem rGui;
+
+    public bool redUnlocked, blueUnlocked;
 
     private float captureFraction = 0;
 
@@ -57,6 +59,15 @@ public class CaptureZone : KBGameObject
         {
             i.connectedCaptureZone = this;
         }
+
+        rGui = GetComponent<RotatableGuiItem>();
+        if (rGui == null)
+        {
+            gameObject.AddComponent<RotatableGuiItem>();
+        }
+        rGui.ScreenpointToAlign = RotatableGuiItem.AlignmentScreenpoint.BottomLeft;
+        rGui.angle = 45;
+        rGui.enabled = false;
     }
 
     private void OnDrawGizmos()
@@ -146,89 +157,131 @@ public class CaptureZone : KBGameObject
 
         #endregion Unlock Handling
 
+        #region GUI STUFF
+
+        //// TODO : Players need to handle this locally
+        //if ((state != ZoneState.Blue && blueUnlocked) || (state != ZoneState.Red && redUnlocked))
+        //{
+        //    rGui.enabled = true;
+        //    Vector3 sPos = Camera.main.WorldToScreenPoint(transform.position);
+        //    rGui.relativePosition = new Vector2(sPos.x, -sPos.y);
+        //    rGui.size = new Vector2((Mathf.Sin(Time.time * 4) + 1) * 32 + 64, (Mathf.Sin(Time.time * 4) + 1) * 32 + 64);
+        //}
+        //else
+        //{
+        //    rGui.enabled = false;
+        //}
+
+        #endregion GUI STUFF
+
         captureDelta = 0;
 
-        foreach (KBGameObject o in collisionObjects)
+        switch (GameManager.Instance.State)
         {
-            PlayerLocal p = o.gameObject.GetComponentInChildren<PlayerLocal>();
-            if (p != null)
-            {
-                switch (p.team)
+            case GameManager.GameState.PreGame:
+                break;
+
+            case GameManager.GameState.InGame:
+                foreach (KBGameObject o in collisionObjects)
                 {
-                    case Team.Red:
-                        if (redUnlocked && p.health > 0)
+                    PlayerLocal p = o.gameObject.GetComponentInChildren<PlayerLocal>();
+                    if (p != null)
+                    {
+                        switch (p.team)
                         {
-                            captureDelta += p.stats.captureSpeed;
+                            case Team.Red:
+                                if (redUnlocked && p.health > 0)
+                                {
+                                    captureDelta += p.stats.captureSpeed;
+                                }
+                                break;
+
+                            case Team.Blue:
+                                if (blueUnlocked && p.health > 0)
+                                {
+                                    captureDelta -= p.stats.captureSpeed;
+                                }
+                                break;
+
+                            case Team.None:
+                                break;
+
+                            default:
+                                break;
                         }
-                        break;
-
-                    case Team.Blue:
-                        if (blueUnlocked && p.health > 0)
-                        {
-                            captureDelta -= p.stats.captureSpeed;
-                        }
-                        break;
-
-                    case Team.None:
-                        break;
-
-                    default:
-                        break;
+                    }
                 }
-            }
-        }
 
-        foreach (var o in requiredZones)
-        {
-            switch (o.state)
-            {
-                case ZoneState.Unoccupied:
-                    break;
-                case ZoneState.Red:
-                    captureFraction += captureAutoPoints;
-                    //captureDelta += 1;
-                    break;
-                case ZoneState.Blue:
-                    captureFraction -= captureAutoPoints;
-                    //captureDelta -= 1;
-                    break;
-                default:
-                    break;
-            }
-        }
-        if (Mathf.Abs(captureFraction) >= 1)
-        {
-            captureDelta += (int)captureFraction;
-            captureFraction = 0;
-        }
+                foreach (var o in requiredZones)
+                {
+                    switch (o.state)
+                    {
+                        case ZoneState.Unoccupied:
+                            break;
 
-        if (tier == ZoneTier.C)
-        {
-            captureTotal += captureDelta / 10;
-        }
-        else
-        {
-            captureTotal += captureDelta;
-        }
+                        case ZoneState.Red:
+                            captureFraction += captureAutoPoints;
+                            //captureDelta += 1;
+                            break;
 
-        captureTotal = captureTotal.LimitToRange(-1000, 1000);
+                        case ZoneState.Blue:
+                            captureFraction -= captureAutoPoints;
+                            //captureDelta -= 1;
+                            break;
 
-        CheckCaptured();
+                        default:
+                            break;
+                    }
+                }
+                if (Mathf.Abs(captureFraction) >= 1)
+                {
+                    captureDelta += (int)captureFraction;
+                    captureFraction = 0;
+                }
 
-        if (captureTotal > 0)
-        {
-            renderer.material.color = new Color(captureTotal / 1000.0f, 0, 0, (captureTotal / 1000.0f) * 0.5f);
+                if (tier == ZoneTier.C)
+                {
+                    captureTotal += captureDelta / 10;
+                }
+                else
+                {
+                    captureTotal += captureDelta;
+                }
 
+                captureTotal = captureTotal.LimitToRange(-1000, 1000);
+
+                CheckCaptured();
+
+                if (captureTotal > 0)
+                {
+                    renderer.material.color = new Color(captureTotal / 1000.0f, 0, 0, (captureTotal / 1000.0f) * 0.5f);
+                }
+                else if (captureTotal < 0)
+                {
+                    renderer.material.color = new Color(0, 0, captureTotal / 1000.0f, (captureTotal / 1000.0f) * 0.5f);
+                }
+                else
+                {
+                    renderer.material.color = new Color(0, 0, 0, 0.35f);
+                }
+
+                break;
+
+            case GameManager.GameState.RedWins:
+                break;
+
+            case GameManager.GameState.BlueWins:
+                break;
+
+            case GameManager.GameState.Tie:
+                break;
+
+            case GameManager.GameState.EndGame:
+                break;
+
+            default:
+                break;
         }
-        else if (captureTotal < 0)
-        {
-            renderer.material.color = new Color(0, 0, captureTotal / 1000.0f, (captureTotal / 1000.0f) * 0.5f);
-        }
-        else
-        {
-            renderer.material.color = new Color(0, 0, 0, 0.35f);
-        }
-
     }
 
     private void CheckCaptured()
@@ -269,7 +322,6 @@ public class CaptureZone : KBGameObject
             {
                 captureTotal += captureDecayOnUnoccupied;
             }
-
         }
     }
 
@@ -360,12 +412,15 @@ public class CaptureZone : KBGameObject
                             captureTotal += 100;
                             i.Respawn();
                             break;
+
                         case Team.Blue:
                             captureTotal -= 100;
                             i.Respawn();
                             break;
+
                         case Team.None:
                             break;
+
                         default:
                             break;
                     }
@@ -388,8 +443,6 @@ public class CaptureZone : KBGameObject
         //    audio.Play();
         //    audio.loop = true;
         //}
-
-        
     }
 
     private void OnTriggerExit(Collider other)
