@@ -155,40 +155,44 @@ public class GameManager : Photon.MonoBehaviour
             NextTick();
         }
 
-        switch (state)
+        if (localPlayer != null)
         {
-            case GameState.PreGame:
-                state = GameState.InGame;
-                break;
+            switch (state)
+            {
+                case GameState.PreGame:
+                    state = GameState.InGame;
+                    break;
 
-            case GameState.InGame:
-                CheckWinConditions();
-                CheckPlayerUpgradePoints();
-                RunGui();
-                break;
+                case GameState.InGame:
+                    CheckWinConditions();
+                    CheckPlayerUpgradePoints();
+                    RunGui();
+                    break;
 
-            case GameState.RedWins:
-                Debug.Log("Red won");
-                state = GameState.EndGame;
-                break;
+                case GameState.RedWins:
+                    Debug.Log("Red won");
+                    state = GameState.EndGame;
+                    break;
 
-            case GameState.BlueWins:
-                Debug.Log("Blue won");
-                state = GameState.EndGame;
-                break;
+                case GameState.BlueWins:
+                    Debug.Log("Blue won");
+                    state = GameState.EndGame;
+                    break;
 
-            case GameState.Tie:
-                Debug.Log("Tie");
-                state = GameState.EndGame;
-                break;
+                case GameState.Tie:
+                    Debug.Log("Tie");
+                    state = GameState.EndGame;
+                    break;
 
-            case GameState.EndGame:
+                case GameState.EndGame:
 
-                break;
+                    break;
 
-            default:
-                break;
+                default:
+                    break;
+            }
         }
+
     }
 
     private void StartGame()
@@ -317,11 +321,15 @@ public class GameManager : Photon.MonoBehaviour
     public void CheckPlayerUpgradePoints()
     {
         //TODO: Send level up notification to other clients.
-        if (localPlayer.upgradePoints >= Convert.ToInt32(upgradePointReqData[localPlayer.stats.level][0]))
+        if (localPlayer != null)
         {
-            photonView.RPC("SetPlayerLevel", PhotonTargets.AllBuffered, PhotonNetwork.player, localPlayer.stats.level + 1);
-            Debug.Log("Level up!");
+            if (localPlayer.upgradePoints >= Convert.ToInt32(upgradePointReqData[localPlayer.stats.level][0]))
+            {
+                photonView.RPC("SetPlayerLevel", PhotonTargets.AllBuffered, PhotonNetwork.player, localPlayer.stats.level + 1);
+                Debug.Log("Level up!");
+            }
         }
+
     }
 
     //[RPC]

@@ -1394,6 +1394,9 @@ MonoBehaviour:
   upgradePoints: 0
   maxHealth: 0
   pointToLevel: 64000000c80000002c01000090010000
+  redMat: {fileID: 2100000, guid: 372241dd454df024d870058faef4d843, type: 2}
+  blueMat: {fileID: 2100000, guid: 21af203b3a6ec874383d3ec97387749f, type: 2}
+  teamIndicator: {fileID: 2300030}
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1

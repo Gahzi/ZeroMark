@@ -254,11 +254,21 @@ public class CaptureZone : KBGameObject
 
                 if (captureTotal > 0)
                 {
-                    renderer.material.color = new Color(captureTotal / 1000.0f, 0, 0, (captureTotal / 1000.0f) * 0.5f);
+                    renderer.material.color = new Color(
+                        captureTotal / 1000.0f,
+                        0,
+                        0,
+                        (captureTotal / 1000.0f) * 0.5f + 0.5f
+                        );
                 }
                 else if (captureTotal < 0)
                 {
-                    renderer.material.color = new Color(0, 0, captureTotal / 1000.0f, (captureTotal / 1000.0f) * 0.5f);
+                    renderer.material.color = new Color(
+                        0,
+                        0,
+                        captureTotal / 1000.0f,
+                        (captureTotal / 1000.0f) * 0.5f + 0.5f
+                        );
                 }
                 else
                 {
@@ -404,17 +414,19 @@ public class CaptureZone : KBGameObject
             if (other.gameObject.CompareTag("Item"))
             {
                 Item i = other.gameObject.GetComponent<Item>();
-                if (i.state == Item.ItemState.isDown)
+                if (i.state == Item.ItemState.isDown && i != null)
                 {
                     switch (i.team)
                     {
                         case Team.Red:
                             captureTotal += 100;
+                            collisionObjects.Remove(i); // TODO : should have to remove this manually?
                             i.Respawn();
                             break;
 
                         case Team.Blue:
                             captureTotal -= 100;
+                            collisionObjects.Remove(i);
                             i.Respawn();
                             break;
 

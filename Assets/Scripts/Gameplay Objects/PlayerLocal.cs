@@ -49,6 +49,9 @@ public class PlayerLocal : KBControllableGameObject
     public int[] pointToLevel = new int[4];
     private Item item;
     RotatableGuiItem playerGuiSquare;
+    public Material redMat;
+    public Material blueMat;
+    public MeshRenderer teamIndicator;
 
     public override void Start()
     {
@@ -62,7 +65,7 @@ public class PlayerLocal : KBControllableGameObject
         latestCorrectPos = transform.position;
         onUpdatePos = transform.position;
         isShooting = false;
-        
+
 
         gun = gameObject.GetComponentInChildren<ProjectileAbilityBaseScript>();
         gun.SetMaxRange(100);
@@ -87,11 +90,25 @@ public class PlayerLocal : KBControllableGameObject
             {
                 Respawn();
             }
-            
+
         }
         else
         {
             enabled = false;
+        }
+
+        switch (team)
+        {
+            case Team.Red:
+                teamIndicator.material = redMat;
+                break;
+            case Team.Blue:
+                teamIndicator.material = blueMat;
+                break;
+            case Team.None:
+                break;
+            default:
+                break;
         }
     }
 
@@ -99,7 +116,7 @@ public class PlayerLocal : KBControllableGameObject
     {
         Debug.DrawRay(upperBody.transform.position, upperBody.transform.TransformDirection(new Vector3(0, 0, 5.0f)), new Color(255, 0, 0, 255), 0.0f);
     }
-    
+
     void OnGUI()
     {
         if (photonView.isMine)
@@ -121,7 +138,6 @@ public class PlayerLocal : KBControllableGameObject
             mousePlayerDiff = playerPositionOnScreen - mousePos;
 
             if (acceptingInputs)
-
             {
                 ControlKBAM();
             }
@@ -135,7 +151,7 @@ public class PlayerLocal : KBControllableGameObject
         {
             gun.ActivateAbility();
         }
-        else if(!isShooting && gun.GetActive())
+        else if (!isShooting && gun.GetActive())
         {
             gun.DeactivateAbility();
         }
@@ -168,7 +184,7 @@ public class PlayerLocal : KBControllableGameObject
             newPlayerCameraObject.transform.parent = transform;
             newPlayerCameraObject.GetComponent<KBCamera>().attachedPlayer = this;
             camera = newPlayerCameraObject.GetComponent<Camera>();
-            
+
         }
         // This is just some remote controlled player, don't execute direct
         // user input on this. DO enable multiplayer controll
@@ -261,16 +277,20 @@ public class PlayerLocal : KBControllableGameObject
         if (other.gameObject.CompareTag("Item"))
         {
             Item i = other.gameObject.GetComponent<Item>();
-            if (i.team == team && i.state == Item.ItemState.isDown)
+            if (i.state == Item.ItemState.isDown && i != null)
             {
-                PickupItem(other.gameObject.GetComponent<Item>());
+                if (i.team == team)
+                {
+                    PickupItem(other.gameObject.GetComponent<Item>());
+                }
+                else
+                {
+                    i.Respawn();
+                    //other.gameObject.particleSystem.enableEmission = true;
+                    ////Destroy(other.gameObject);
+                }
             }
-            else
-            {
-                other.gameObject.GetComponent<Item>().Respawn();
-                //other.gameObject.particleSystem.enableEmission = true;
-                ////Destroy(other.gameObject);
-            }
+
         }
     }
 
@@ -343,7 +363,7 @@ public class PlayerLocal : KBControllableGameObject
         {
             acceptingInputs = false;
             respawnTimerNumber = timer.StartTimer(respawnTime);
-            item = null;
+            DropItem();
             waitingForRespawn = true;
         }
         else if (waitingForRespawn)
@@ -358,7 +378,7 @@ public class PlayerLocal : KBControllableGameObject
 
     private void FindTeamSpawnpoints()
     {
-        if(team == Team.None)
+        if (team == Team.None)
         {
             Debug.LogWarning("Warning: Attempting to find spawnpoint on player with team none");
         }
@@ -370,7 +390,7 @@ public class PlayerLocal : KBControllableGameObject
 
     private void Respawn()
     {
-        if(teamSpawnpoints.Count > 0)
+        if (teamSpawnpoints.Count > 0)
         {
             transform.position = teamSpawnpoints[0].transform.position;
             waitingForRespawn = false;
@@ -382,7 +402,7 @@ public class PlayerLocal : KBControllableGameObject
             lowerbodyRotateSpeed = stats.lowerbodyRotationSpeed;
             upperbodyRotateSpeed = stats.upperbodyRotationSpeed;
         }
-        
+
     }
 
     private void PickupItem(Item _item)

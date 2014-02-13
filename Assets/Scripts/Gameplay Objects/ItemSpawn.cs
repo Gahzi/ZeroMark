@@ -9,7 +9,7 @@ public class ItemSpawn : MonoBehaviour
     public Item RedTeamItem;
     public Item BlueTeamItem;
     public Team controllingTeam;
-    public bool isActive;
+    public bool waitingForSpawn;
     public CaptureZone connectedCaptureZone;
     public float timeUntilItemSpawn;
     private float lastSpawn;
@@ -23,7 +23,7 @@ public class ItemSpawn : MonoBehaviour
         }
 
         controllingTeam = Team.None;
-        isActive = false;
+        waitingForSpawn = true;
     }
 
     private void OnDrawGizmos()
@@ -61,25 +61,24 @@ public class ItemSpawn : MonoBehaviour
                 transform.position.z),
             Quaternion.identity, 0);
         Item i = spawnedItem.GetComponent<Item>();
-        i.team = controllingTeam;
-        lastSpawn = Time.time;
-        isActive = false;
+        if (i != null)
+        {
+            i.team = controllingTeam;
+        }
+        waitingForSpawn = false;
     }
 
     private void Update()
     {
-        if (isActive)
-        {
-            if (Time.time > lastSpawn + timeUntilItemSpawn)
-            {
-                SpawnItem();
-            }
-        }
         if (controllingTeam != Team.None)
         {
-            if (spawnedItem == null)
+            if (spawnedItem == null && !waitingForSpawn)
             {
-                InitiateItemSpawn();
+                waitingForSpawn = TriggerItemSpawn();
+            }
+            else if (waitingForSpawn && Time.time > lastSpawn + timeUntilItemSpawn)
+            {
+                SpawnItem();
             }
         }
     }
@@ -90,17 +89,17 @@ public class ItemSpawn : MonoBehaviour
         {
             case Team.Red:
                 controllingTeam = t;
-                InitiateItemSpawn();
+                TriggerItemSpawn();
                 break;
 
             case Team.Blue:
                 controllingTeam = t;
-                InitiateItemSpawn();
+                TriggerItemSpawn();
                 break;
 
             case Team.None:
                 controllingTeam = t;
-                isActive = false;
+                waitingForSpawn = false;
                 break;
 
             default:
@@ -108,9 +107,10 @@ public class ItemSpawn : MonoBehaviour
         }
     }
 
-    private void InitiateItemSpawn()
+    private bool TriggerItemSpawn()
     {
-        isActive = true;
+        lastSpawn = Time.time;
+        return true;
     }
 
     /// <summary>
