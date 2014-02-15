@@ -150,30 +150,33 @@ public class CaptureZone : KBGameObject
 
         foreach (KBGameObject o in collisionObjects)
         {
-            PlayerLocal p = o.gameObject.GetComponentInChildren<PlayerLocal>();
-            if (p != null)
+            if (o != null)
             {
-                switch (p.team)
+                PlayerLocal p = o.gameObject.GetComponentInChildren<PlayerLocal>();
+                if (p != null)
                 {
-                    case Team.Red:
-                        if (redUnlocked && p.health > 0)
-                        {
-                            captureDelta += p.stats.captureSpeed;
-                        }
-                        break;
+                    switch (p.team)
+                    {
+                        case Team.Red:
+                            if (redUnlocked && p.health > 0)
+                            {
+                                captureDelta += p.stats.captureSpeed;
+                            }
+                            break;
 
-                    case Team.Blue:
-                        if (blueUnlocked && p.health > 0)
-                        {
-                            captureDelta -= p.stats.captureSpeed;
-                        }
-                        break;
+                        case Team.Blue:
+                            if (blueUnlocked && p.health > 0)
+                            {
+                                captureDelta -= p.stats.captureSpeed;
+                            }
+                            break;
 
-                    case Team.None:
-                        break;
+                        case Team.None:
+                            break;
 
-                    default:
-                        break;
+                        default:
+                            break;
+                    }
                 }
             }
         }

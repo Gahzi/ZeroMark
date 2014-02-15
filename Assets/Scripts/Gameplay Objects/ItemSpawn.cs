@@ -53,6 +53,7 @@ public class ItemSpawn : MonoBehaviour
 
     public void SpawnItem()
     {
+        //createObject(ObjectConstants.type.Player, new Vector3(0, 0, 0), Quaternion.identity, Team.Red).GetComponent<PlayerLocal>(); ;
         spawnedItem = PhotonNetwork.Instantiate(
             ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Item],
             new Vector3(
@@ -131,6 +132,7 @@ public class ItemSpawn : MonoBehaviour
         {
             Vector3 pos = transform.localPosition;
             Quaternion rot = transform.localRotation;
+
             stream.Serialize(ref pos);
             stream.Serialize(ref rot);
         }

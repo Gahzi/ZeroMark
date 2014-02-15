@@ -524,6 +524,7 @@ MonoBehaviour:
   sound: {fileID: 0}
   cooldown: 0
   abilityActive: 0
+  fired: 0
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -578,10 +579,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 100010}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10becd8312d2a334698cc4b5516068cf, type: 3}
+  m_Script: {fileID: 11500000, guid: 4a3eb0087c9406746a81e9d8feb1ff76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  team: 0
+  texture: {fileID: 2800000, guid: 169e9993c0951d141ae52f899f9d1ef1, type: 3}
+  angle: 0
+  size: {x: 128, y: 128}
+  ScreenpointToAlign: 0
+  relativePosition: {x: 0, y: 0}
 --- !u!114 &11400008
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -593,8 +598,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb3da991f088248ffb21089b3a7335b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  team: 0
   health: 0
-  teamScript: {fileID: 11400006}
   attachedPlayer: {fileID: 0}
   controlStyle: 1
   type: 1

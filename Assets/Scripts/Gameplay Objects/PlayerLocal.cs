@@ -48,7 +48,7 @@ public class PlayerLocal : KBControllableGameObject
     public int maxHealth;
     public int[] pointToLevel = new int[4];
     private Item item;
-    RotatableGuiItem playerGuiSquare;
+    private RotatableGuiItem playerGuiSquare;
 
     public override void Start()
     {
@@ -61,7 +61,6 @@ public class PlayerLocal : KBControllableGameObject
         latestCorrectPos = transform.position;
         onUpdatePos = transform.position;
         isShooting = false;
-        
 
         gun = gameObject.GetComponentInChildren<ProjectileAbilityBaseScript>();
         gun.SetMaxRange(100);
@@ -79,14 +78,13 @@ public class PlayerLocal : KBControllableGameObject
 
         teamSpawnpoints = new List<PlayerSpawnPoint>();
 
-        if (teamScript.team != Team.None)
+        if (team != Team.None)
         {
             FindTeamSpawnpoints();
             if (teamSpawnpoints.Count > 0)
             {
                 Respawn();
             }
-            
         }
         else
         {
@@ -105,7 +103,6 @@ public class PlayerLocal : KBControllableGameObject
 
     private void Update()
     {
-
         mousePos = Input.mousePosition;
         fraction = fraction + Time.deltaTime * 9;
 
@@ -128,7 +125,7 @@ public class PlayerLocal : KBControllableGameObject
         {
             gun.ActivateAbility();
         }
-        else if(!isShooting && gun.GetActive())
+        else if (!isShooting && gun.GetActive())
         {
             gun.DeactivateAbility();
         }
@@ -136,13 +133,13 @@ public class PlayerLocal : KBControllableGameObject
         if (item != null)
         {
             item.transform.position = new Vector3(transform.position.x, transform.position.y + 3, transform.position.z);
-            item.State = Item.ItemState.isPickedUp;
+            item.state = Item.ItemState.isPickedUp;
         }
 
         CheckHealth();
     }
 
-    void OnPhotonInstantiate(PhotonMessageInfo msg)
+    private void OnPhotonInstantiate(PhotonMessageInfo msg)
     {
         // This is our own player
         if (photonView.isMine)
@@ -151,7 +148,6 @@ public class PlayerLocal : KBControllableGameObject
             newPlayerCameraObject.transform.parent = transform;
             newPlayerCameraObject.GetComponent<KBCamera>().attachedPlayer = this;
             camera = newPlayerCameraObject.GetComponent<Camera>();
-            
         }
         // This is just some remote controlled player, don't execute direct
         // user input on this. DO enable multiplayer controll
@@ -223,8 +219,6 @@ public class PlayerLocal : KBControllableGameObject
         }
     }
 
-
-
     /// <summary>
     /// Collision method that is called when rigidbody hits another game object
     /// </summary>
@@ -259,7 +253,6 @@ public class PlayerLocal : KBControllableGameObject
         }
     }
 
-
     public override void takeDamage(int amount)
     {
         health -= amount;
@@ -284,7 +277,6 @@ public class PlayerLocal : KBControllableGameObject
                 charController.SimpleMove(transform.TransformDirection(Vector3.forward) * d);
                 transform.Rotate(0, Input.GetAxis("Horizontal") * lowerbodyRotateSpeed, 0);
 
-
                 break;
 
             case ControlStyle.TopDown:
@@ -301,11 +293,10 @@ public class PlayerLocal : KBControllableGameObject
 
         if (Input.GetMouseButtonDown(0))
         {
-			if (item != null)
+            if (item != null)
             {
-                 isShooting = true;
+                isShooting = true;
             }
-           
         }
         if (Input.GetMouseButtonUp(0))
         {
@@ -314,7 +305,7 @@ public class PlayerLocal : KBControllableGameObject
 
         if (Input.GetMouseButtonDown(1))
         {
-			//SHERVIN: This must be sent across network.
+            //SHERVIN: This must be sent across network.
             DropItem();
         }
     }
@@ -340,19 +331,19 @@ public class PlayerLocal : KBControllableGameObject
 
     private void FindTeamSpawnpoints()
     {
-        if(teamScript.team == Team.None)
+        if (team == Team.None)
         {
             Debug.LogWarning("Warning: Attempting to find spawnpoint on player with team none");
         }
         else
         {
-            teamSpawnpoints = GameManager.Instance.GetSpawnPointsWithTeam(teamScript.team);
+            teamSpawnpoints = GameManager.Instance.GetSpawnPointsWithTeam(team);
         }
     }
 
     private void Respawn()
     {
-        if(teamSpawnpoints.Count > 0)
+        if (teamSpawnpoints.Count > 0)
         {
             transform.position = teamSpawnpoints[0].transform.position;
             waitingForRespawn = false;
@@ -364,12 +355,12 @@ public class PlayerLocal : KBControllableGameObject
             lowerbodyRotateSpeed = stats.lowerbodyRotationSpeed;
             upperbodyRotateSpeed = stats.upperbodyRotationSpeed;
         }
-	}
-	
+    }
+
     private void PickupItem(Item _item)
     {
         item = _item;
-        item.State = Item.ItemState.isPickedUp;
+        item.state = Item.ItemState.isPickedUp;
     }
 
     private void DropItem()
@@ -377,7 +368,7 @@ public class PlayerLocal : KBControllableGameObject
         if (item != null)
         {
             //item.Respawn();
-            item.State = Item.ItemState.disabled;
+            item.state = Item.ItemState.disabled;
             item.disableTime = Time.time;
             item = null;
         }

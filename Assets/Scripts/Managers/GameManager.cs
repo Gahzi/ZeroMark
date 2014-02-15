@@ -25,7 +25,7 @@ public class GameManager : Photon.MonoBehaviour
     public int blueCaptures = 0;
     private List<List<String>> playerStatData;
     private List<List<String>> upgradePointReqData;
-    public Camera mainCamera;
+    //public Camera mainCamera;
     private float startTime;
 
     private static GameManager instance;
@@ -105,7 +105,6 @@ public class GameManager : Photon.MonoBehaviour
     {
         ReadPlayerStatData();
         ReadUpgradePointData();
-        mainCamera = FindObjectOfType<Camera>();
         startTime = Time.time;
         lastTick = Time.time;
         state = GameState.PreGame;
@@ -207,7 +206,7 @@ public class GameManager : Photon.MonoBehaviour
 
         foreach (PlayerSpawnPoint zone in playerSpawnZones)
         {
-            if (zone.teamScript.team == tm)
+            if (zone.team == tm)
             {
                 spawnpoints.Add(zone);
             }
@@ -327,6 +326,7 @@ public class GameManager : Photon.MonoBehaviour
     //}
 
     //Sent by newly connected clients, recieved by server
+    [RPC]
     public GameObject createObject(KBConstants.ObjectConstants.type objectType, Vector3 position, Quaternion rotation, Team newTeam)
     {
         switch (objectType)
@@ -336,7 +336,7 @@ public class GameManager : Photon.MonoBehaviour
                 GameObject newPlayerObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Player], position, rotation, 0);
                 PlayerLocal newPlayer = newPlayerObject.GetComponent<PlayerLocal>();
                 newPlayer.networkPlayer = PhotonNetwork.player;
-                newPlayer.teamScript.team = newTeam;
+                newPlayer.team = newTeam;
 
                 return newPlayerObject;
             }
@@ -345,7 +345,7 @@ public class GameManager : Photon.MonoBehaviour
             {
                 GameObject newItemObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Item], position, rotation, 0);
                 Item newItem = newItemObject.GetComponent<Item>();
-                newItem.teamScript.team = newTeam;
+                newItem.team = newTeam;
                 items.Add(newItem);
                 return newItemObject;
             }
