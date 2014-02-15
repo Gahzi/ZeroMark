@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using KBConstants;
 
 /// <summary>
 /// Basic projectile ability class. Fires attached ammo type @ firerate
@@ -24,14 +25,15 @@ public class ProjectileAbilityBaseScript : AbilitySlotBaseScript
         {
             if (!cooldownTimer.IsTimerActive(cooldownTimerNumber))
             {
-                Fire(maxRange);
+                Fire(maxRange, Team);
             }
         }
     }
 
-    public ProjectileBaseScript Fire(Vector3 direction)
+    public ProjectileBaseScript Fire(Vector3 direction, Team firedBy)
     {
         ProjectileBaseScript projectile = (ProjectileBaseScript)Instantiate(projectileType, transform.position, Quaternion.Euler(direction));
+        projectile.Team = firedBy;
         audio.Play();
         cooldownTimerNumber = cooldownTimer.StartTimer(cooldown);
 
@@ -47,14 +49,14 @@ public class ProjectileAbilityBaseScript : AbilitySlotBaseScript
         return projectile;
     }
 
-    public ProjectileBaseScript Fire()
+    public ProjectileBaseScript Fire(Team firedBy)
     {
-        return Fire(transform.rotation.eulerAngles);
+        return Fire(transform.rotation.eulerAngles, firedBy);
     }
 
-    public ProjectileBaseScript Fire(int maxRange)
+    public ProjectileBaseScript Fire(int maxRange, Team firedBy)
     {
-        ProjectileBaseScript p = Fire();
+        ProjectileBaseScript p = Fire(firedBy);
         p.setLifetimeForMaxRange(maxRange);
         return p;
     }

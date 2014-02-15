@@ -1,20 +1,33 @@
 ﻿using UnityEngine;
-using System.Collections;
+using KBConstants;
 
 [RequireComponent(typeof(Rigidbody))]
 
-public class HitboxBaseScript : MonoBehaviour {
+public class HitboxBaseScript : MonoBehaviour
+{
+    private Team team;
+    public Team Team
+    {
+        get
+        {
+            return team;
+        }
+        set
+        {
+            team = value;
+        }
+    }
 
-	// Use this for initialization
-	void Start () {
+    void Start()
+    {
         rigidbody.isKinematic = true;
         collider.isTrigger = true;
         gameObject.tag = "Hitbox";
-        gameObject.layer = LayerMask.NameToLayer("Hitboxes1");
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+        //gameObject.layer = LayerMask.NameToLayer("Hitboxes1");
+    }
+
+    void Update()
+    {
+
+    }
 }

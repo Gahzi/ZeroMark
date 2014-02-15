@@ -82,6 +82,10 @@ public class ItemSpawn : MonoBehaviour
                 SpawnItem();
             }
         }
+        if (!waitingForSpawn)
+        {
+            lastSpawn = Time.time;
+        }
     }
 
     public void ReceiveActivationEvent(Team t)

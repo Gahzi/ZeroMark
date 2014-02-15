@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using KBConstants;
 
 [RequireComponent(typeof(Rigidbody))]
 
@@ -9,7 +10,18 @@ using System.Collections;
 /// </summary>
 abstract public class AbilityInstanceBaseScript : MonoBehaviour
 {
-    
+    private Team team;
+    public Team Team
+    {
+        get
+        {
+            return team;
+        }
+        set
+        {
+            team = value;
+        }
+    }
     public float lifetime;
     protected float spawnTime;
     public int damage;

@@ -55,6 +55,8 @@ public class PlayerLocal : KBControllableGameObject
 
     public override void Start()
     {
+        // NOTE: All connected abilities & hitboxes need to be sent the player's team.
+        
         base.Start();
         acceptingInputs = true;
         waitingForRespawn = false;
@@ -67,6 +69,9 @@ public class PlayerLocal : KBControllableGameObject
 
         gun = gameObject.GetComponentInChildren<ProjectileAbilityBaseScript>();
         gun.SetMaxRange(100);
+        gun.Team = team;
+
+        GetComponentInChildren<HitboxBaseScript>().Team = team;
 
         movespeed = stats.speed;
         lowerbodyRotateSpeed = stats.lowerbodyRotationSpeed;
@@ -119,8 +124,6 @@ public class PlayerLocal : KBControllableGameObject
     {
         mousePos = Input.mousePosition;
         fraction = fraction + Time.deltaTime * 9;
-        playerPositionOnScreen = camera.WorldToScreenPoint(transform.position);
-        mousePlayerDiff = playerPositionOnScreen - mousePos;
 
         if (photonView.isMine)
         {
