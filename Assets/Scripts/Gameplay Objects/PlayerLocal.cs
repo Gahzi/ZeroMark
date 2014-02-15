@@ -48,7 +48,10 @@ public class PlayerLocal : KBControllableGameObject
     public int maxHealth;
     public int[] pointToLevel = new int[4];
     private Item item;
-    private RotatableGuiItem playerGuiSquare;
+    RotatableGuiItem playerGuiSquare;
+    public Material redMat;
+    public Material blueMat;
+    public MeshRenderer teamIndicator;
 
     public override void Start()
     {
@@ -85,10 +88,25 @@ public class PlayerLocal : KBControllableGameObject
             {
                 Respawn();
             }
+
         }
         else
         {
             enabled = false;
+        }
+
+        switch (team)
+        {
+            case Team.Red:
+                teamIndicator.material = redMat;
+                break;
+            case Team.Blue:
+                teamIndicator.material = blueMat;
+                break;
+            case Team.None:
+                break;
+            default:
+                break;
         }
     }
 
@@ -97,14 +115,12 @@ public class PlayerLocal : KBControllableGameObject
         Debug.DrawRay(upperBody.transform.position, upperBody.transform.TransformDirection(new Vector3(0, 0, 5.0f)), new Color(255, 0, 0, 255), 0.0f);
     }
 
-    private void OnGUI()
-    {
-    }
-
     private void Update()
     {
         mousePos = Input.mousePosition;
         fraction = fraction + Time.deltaTime * 9;
+        playerPositionOnScreen = camera.WorldToScreenPoint(transform.position);
+        mousePlayerDiff = playerPositionOnScreen - mousePos;
 
         if (photonView.isMine)
         {
@@ -148,6 +164,7 @@ public class PlayerLocal : KBControllableGameObject
             newPlayerCameraObject.transform.parent = transform;
             newPlayerCameraObject.GetComponent<KBCamera>().attachedPlayer = this;
             camera = newPlayerCameraObject.GetComponent<Camera>();
+
         }
         // This is just some remote controlled player, don't execute direct
         // user input on this. DO enable multiplayer controll
@@ -225,14 +242,12 @@ public class PlayerLocal : KBControllableGameObject
     /// <param name="collision"></param>
     private void OnCollisionEnter(Collision collision)
     {
-        //if (collision.gameObject.CompareTag("Item"))
-        //{
-        //    if (collision.gameObject.GetComponent<Item>().team == team)
-        //    {
-        //        item = collision.gameObject.GetComponent<Item>();
-        //        item.collider.isTrigger = true;
-        //    }
-        //}
+        PlasmaBullet bullet = collision.gameObject.GetComponent<PlasmaBullet>();
+        if (bullet != null)
+        {
+            Debug.Log("Got Hit!");
+            takeDamage(bullet.damage);
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -240,15 +255,18 @@ public class PlayerLocal : KBControllableGameObject
         if (other.gameObject.CompareTag("Item"))
         {
             Item i = other.gameObject.GetComponent<Item>();
-            if (i.team == team && i.state == Item.ItemState.isDown)
+            if (i.state == Item.ItemState.isDown && i != null)
             {
-                PickupItem(other.gameObject.GetComponent<Item>());
-            }
-            else
-            {
-                other.gameObject.GetComponent<Item>().Respawn();
-                //other.gameObject.particleSystem.enableEmission = true;
-                ////Destroy(other.gameObject);
+                if (i.team == team)
+                {
+                    PickupItem(other.gameObject.GetComponent<Item>());
+                }
+                else
+                {
+                    i.Respawn();
+                    //other.gameObject.particleSystem.enableEmission = true;
+                    ////Destroy(other.gameObject);
+                }
             }
         }
     }
@@ -316,7 +334,7 @@ public class PlayerLocal : KBControllableGameObject
         {
             acceptingInputs = false;
             respawnTimerNumber = timer.StartTimer(respawnTime);
-            item = null;
+            DropItem();
             waitingForRespawn = true;
         }
         else if (waitingForRespawn)

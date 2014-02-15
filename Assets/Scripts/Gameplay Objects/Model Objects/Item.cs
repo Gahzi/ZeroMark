@@ -39,7 +39,7 @@ public class Item : KBGameObject
 
         //targetPosition = transform.position;
         targetScale = Vector3.one;
-        GenerateType();
+        setItemType(ItemType.rare);
 
         transform.Rotate(Vector3.forward, 45);
         transform.Rotate(Vector3.right, 33.3f);
@@ -76,7 +76,7 @@ public class Item : KBGameObject
         }
     }
 
-    public void GenerateType()
+    public ItemType GenerateType()
     {
         int r = Random.Range(0, 100); // TODO : Need a way of creating items without random types
 
@@ -87,19 +87,19 @@ public class Item : KBGameObject
 
         if (r < legendaryChance)
         {
-            setItemType(ItemType.legendary);
+            return ItemType.legendary;
         }
         else if (r >= legendaryChance && r < legendaryChance + rareChance)
         {
-            setItemType(ItemType.rare);
+            return ItemType.rare;
         }
         else if (r >= legendaryChance + rareChance && r < legendaryChance + rareChance + uncommonChance)
         {
-            setItemType(ItemType.uncommon);
+            return ItemType.uncommon;
         }
         else
         {
-            setItemType(ItemType.common);
+            return ItemType.common;
         }
     }
 
@@ -237,6 +237,7 @@ public class Item : KBGameObject
     private void OnTriggerEnter(Collider other)
     {
     }
+
     public void StartGrowAnimation()
     {
         targetScale = new Vector3(3.0f, 3.0f, 3.0f);
