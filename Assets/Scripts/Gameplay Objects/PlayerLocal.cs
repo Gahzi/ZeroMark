@@ -119,9 +119,7 @@ public class PlayerLocal : KBControllableGameObject
     {
         mousePos = Input.mousePosition;
         fraction = fraction + Time.deltaTime * 9;
-        playerPositionOnScreen = camera.WorldToScreenPoint(transform.position);
-        mousePlayerDiff = playerPositionOnScreen - mousePos;
-
+        
         if (photonView.isMine)
         {
             playerPositionOnScreen = camera.WorldToScreenPoint(transform.position);

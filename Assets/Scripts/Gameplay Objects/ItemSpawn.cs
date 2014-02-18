@@ -4,16 +4,14 @@ using UnityEngine;
 /// <summary>
 /// Spawns items when activating capture zone has been captured.
 /// </summary>
-public class ItemSpawn : MonoBehaviour
+public class ItemSpawn : KBGameObject
 {
-    public Item RedTeamItem;
-    public Item BlueTeamItem;
     public Team controllingTeam;
     public bool waitingForSpawn;
     public CaptureZone connectedCaptureZone;
     public float timeUntilItemSpawn;
     private float lastSpawn;
-    private GameObject spawnedItem;
+    private bool spawnedItem;
 
     private void Start()
     {
@@ -24,6 +22,7 @@ public class ItemSpawn : MonoBehaviour
 
         controllingTeam = Team.None;
         waitingForSpawn = true;
+        spawnedItem = false;
     }
 
     private void OnDrawGizmos()
@@ -54,26 +53,20 @@ public class ItemSpawn : MonoBehaviour
     public void SpawnItem()
     {
         //createObject(ObjectConstants.type.Player, new Vector3(0, 0, 0), Quaternion.identity, Team.Red).GetComponent<PlayerLocal>(); ;
-        spawnedItem = PhotonNetwork.Instantiate(
-            ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Item],
-            new Vector3(
+        GameManager.Instance.createObject(ObjectConstants.type.Item, new Vector3(
                 transform.position.x,
                 2.0f,
-                transform.position.z),
-            Quaternion.identity, 0);
-        Item i = spawnedItem.GetComponent<Item>();
-        if (i != null)
-        {
-            i.team = controllingTeam;
-        }
+                transform.position.z),Quaternion.identity,controllingTeam);
+            
         waitingForSpawn = false;
+        spawnedItem = true;
     }
 
     private void Update()
     {
         if (controllingTeam != Team.None)
         {
-            if (spawnedItem == null && !waitingForSpawn)
+            if (!spawnedItem && !waitingForSpawn)
             {
                 waitingForSpawn = TriggerItemSpawn();
             }
@@ -128,22 +121,46 @@ public class ItemSpawn : MonoBehaviour
     /// <param name="info">Some info about the sender of this stream, who is the owner of this PhotonView (and GameObject).</param>
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
+
         if (stream.isWriting)
         {
             Vector3 pos = transform.localPosition;
             Quaternion rot = transform.localRotation;
+            int cntrlTm = (int)controllingTeam;
+            bool wtngFrSpwn = waitingForSpawn;
+            float tmUntlItmSpawn = timeUntilItemSpawn;
+            float lstSpwn = lastSpawn;
+            bool spwnedItm = spawnedItem;
 
             stream.Serialize(ref pos);
             stream.Serialize(ref rot);
+            stream.Serialize(ref cntrlTm);
+            stream.Serialize(ref wtngFrSpwn);
+            stream.Serialize(ref tmUntlItmSpawn);
+            stream.Serialize(ref lstSpwn);
+            stream.Serialize(ref spwnedItm);
         }
         else
         {
             // Receive latest state information
             Vector3 pos = Vector3.zero;
             Quaternion rot = Quaternion.identity;
+            int cntrlTm = (int)controllingTeam;
+            bool wtngFrSpwn = waitingForSpawn;
+            float tmUntlItmSpawn = timeUntilItemSpawn;
+            float lstSpwn = lastSpawn;
+            bool spwnedItm = spawnedItem;
+
 
             stream.Serialize(ref pos);
             stream.Serialize(ref rot);
+            stream.Serialize(ref cntrlTm);
+            stream.Serialize(ref wtngFrSpwn);
+            stream.Serialize(ref tmUntlItmSpawn);
+            stream.Serialize(ref lstSpwn);
+            stream.Serialize(ref spwnedItm);
+
+
 
             //latestCorrectPos = pos;                 // save this to move towards it in FixedUpdate()
             //onUpdatePos = transform.localPosition;  // we interpolate from here to latestCorrectPos
@@ -151,6 +168,11 @@ public class ItemSpawn : MonoBehaviour
 
             transform.position = pos;
             transform.localRotation = rot;          // this sample doesn't smooth rotation
+            controllingTeam = (Team)cntrlTm;
+            waitingForSpawn = wtngFrSpwn;
+            timeUntilItemSpawn = tmUntlItmSpawn;
+            lastSpawn = lstSpwn;
+            spawnedItem = spwnedItm;
         }
     }
 }

@@ -331,35 +331,6 @@ public class GameManager : Photon.MonoBehaviour
 
     }
 
-    //[RPC]
-    ////Sent by newly connected clients, recieved by server
-    //void AddPlayer(PhotonMessageInfo info)
-    //{
-    //    PhotonPlayer netPlayer = info.sender;
-
-    //    PlayerLocal newEntry = (PlayerLocal)Instantiate(Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Player], typeof(PlayerLocal)));
-    //    newEntry.playerName = netPlayer.name;
-    //    newEntry.networkPlayer = netPlayer;
-
-
-    //    if (netPlayer.isLocal)
-    //    {
-    //        localPlayer = newEntry;
-    //    }
-    //    else
-    //    {
-    //        Destroy(newEntry.GetComponentInChildren<Camera>().gameObject);
-    //        players.Add(newEntry);
-    //    }
-
-    //    //if (PhotonNetwork.isMasterClient)
-    //    //{
-    //    //    chatScript.addGameChatMessage(netPlayer.name + " joined the game");
-    //    //}
-    //}
-
-    //Sent by newly connected clients, recieved by server
-    [RPC]
     public GameObject createObject(KBConstants.ObjectConstants.type objectType, Vector3 position, Quaternion rotation, Team newTeam)
     {
         switch (objectType)

@@ -409,7 +409,8 @@ Prefab:
       propertyPath: m_Name
       value: PlayerSpawnZoneRed
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 11400000, guid: 9495d4436fea48e4082e6ba3fc79c914, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 9495d4436fea48e4082e6ba3fc79c914, type: 2}
   m_RootGameObject: {fileID: 111882936}
   m_IsPrefabParent: 0
@@ -487,7 +488,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 111882937}
   - 114: {fileID: 111882938}
-  - 114: {fileID: 111882939}
   m_Layer: 0
   m_Name: PlayerSpawnZoneRed
   m_TagString: Untagged
@@ -520,18 +520,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   team: 0
   health: 0
---- !u!114 &111882939
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400000, guid: 9495d4436fea48e4082e6ba3fc79c914,
-    type: 2}
-  m_PrefabInternal: {fileID: 77818671}
-  m_GameObject: {fileID: 111882936}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10becd8312d2a334698cc4b5516068cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &157083913
 GameObject:
   m_ObjectHideFlags: 0
@@ -541,6 +529,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 157083915}
   - 114: {fileID: 157083914}
+  - 114: {fileID: 157083917}
   - 114: {fileID: 157083916}
   m_Layer: 0
   m_Name: GameManager
@@ -601,6 +590,27 @@ MonoBehaviour:
   group: 0
   prefixBackup: -1
   observed: {fileID: 157083914}
+  synchronization: 0
+  onSerializeTransformOption: 3
+  onSerializeRigidBodyOption: 2
+  instantiationId: 0
+--- !u!114 &157083917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400002, guid: 327061c837dd19640a0a5bff662b90d5,
+    type: 2}
+  m_PrefabInternal: {fileID: 1926376371}
+  m_GameObject: {fileID: 157083913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  subId: 4
+  ownerId: 0
+  group: 0
+  prefixBackup: -1
+  observed: {fileID: 0}
   synchronization: 0
   onSerializeTransformOption: 3
   onSerializeRigidBodyOption: 2
@@ -2243,8 +2253,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6d42e38c7559b540a6c075d8377901f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RedTeamItem: {fileID: 11400004, guid: ae32bba3be6ad584c9d20726114f203c, type: 2}
-  BlueTeamItem: {fileID: 11400004, guid: ae32bba3be6ad584c9d20726114f203c, type: 2}
+  team: 0
+  health: 0
   controllingTeam: 2
   waitingForSpawn: 0
   connectedCaptureZone: {fileID: 0}
@@ -2459,8 +2469,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6d42e38c7559b540a6c075d8377901f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RedTeamItem: {fileID: 11400004, guid: ae32bba3be6ad584c9d20726114f203c, type: 2}
-  BlueTeamItem: {fileID: 11400004, guid: ae32bba3be6ad584c9d20726114f203c, type: 2}
+  team: 0
+  health: 0
   controllingTeam: 2
   waitingForSpawn: 0
   connectedCaptureZone: {fileID: 0}
@@ -4589,6 +4599,10 @@ Prefab:
       propertyPath: localPlayers.Array.data[0]
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 327061c837dd19640a0a5bff662b90d5, type: 2}
+      propertyPath: subId
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 327061c837dd19640a0a5bff662b90d5, type: 2}
   m_RootGameObject: {fileID: 157083913}
@@ -5121,7 +5135,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 2077375062}
   - 114: {fileID: 2077375061}
-  - 114: {fileID: 2077375060}
   m_Layer: 0
   m_Name: PlayerSpawnZoneBlue
   m_TagString: Untagged
@@ -5129,18 +5142,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2077375060
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400000, guid: 9495d4436fea48e4082e6ba3fc79c914,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2077375059}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10becd8312d2a334698cc4b5516068cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &2077375061
 MonoBehaviour:
   m_ObjectHideFlags: 0
