@@ -192,6 +192,11 @@ public class GameManager : Photon.MonoBehaviour
             }
         }
 
+        if (Input.GetButtonDown("Screenshot"))
+        {
+            TakeScreenshot();
+        }
+
     }
 
     private void StartGame()
@@ -508,5 +513,14 @@ public class GameManager : Photon.MonoBehaviour
         stats.speed = (int)stats.statArray[(int)PlayerStats.PlayerStatNames.MovementSpeed];
         stats.visionRange = (int)stats.statArray[(int)PlayerStats.PlayerStatNames.VisionRange];
         player.stats = stats;
+    }
+
+    private void TakeScreenshot()
+    {
+        string path = Application.persistentDataPath + "/" + System.DateTime.Now.Year.ToString() + System.DateTime.Now.Month.ToString() + System.DateTime.Now.Day.ToString() + "_" + System.DateTime.Now.Hour.ToString() + System.DateTime.Now.Minute.ToString() + System.DateTime.Now.Second.ToString() + "_kaiju_scr.png";
+        //string path = System.DateTime.Now.Hour.ToString() + System.DateTime.Now.Minute.ToString() + System.DateTime.Now.Second.ToString() + "_kaiju_scr";
+        Application.CaptureScreenshot(path, 2);
+        path = Application.persistentDataPath + "/" + path;
+        Debug.Log(path);
     }
 }

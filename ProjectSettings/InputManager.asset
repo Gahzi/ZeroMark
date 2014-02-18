@@ -1188,3 +1188,19 @@ InputManager:
     type: 0
     axis: 8
     joyNum: 4
+  - serializedVersion: 3
+    m_Name: Screenshot
+    descriptiveName: Takes a screenshot
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: 0
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 100
+    dead: .300000012
+    sensitivity: 5
+    snap: 1
+    invert: 0
+    type: 0
+    axis: 9
+    joyNum: 0
