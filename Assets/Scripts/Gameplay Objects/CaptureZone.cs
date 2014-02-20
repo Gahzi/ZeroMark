@@ -4,14 +4,22 @@ using UnityEngine;
 
 public class CaptureZone : KBGameObject
 {
+    #region CONSTANTS
+
     public static int CAPTURE_REQUIRED = 1000;
     private static int RED_TEAM_CAPTURE_COUNT = CAPTURE_REQUIRED;
     private static int BLUE_TEAM_CAPTURE_COUNT = -CAPTURE_REQUIRED;
-    private int captureDelta;
+    private static int TierACaptureBonusPercent = 25;
+    private static int TierACaptureRate = 1;
+    private static int TierBCaptureRate = 5;
+    private static int TierCCaptureRate = 50;
+
+    #endregion CONSTANTS
+
+    //private int captureDelta;
     public int captureTotal;
-    public int captureDecayOnUnoccupied;
+    //public int captureDecayOnUnoccupied;
     public float captureAutoPoints;
-    public float capturePercent;
     public int upgradePointsOnCapture;
     public ScoreboardScript scoreboard;
     public string descriptiveName;
@@ -22,26 +30,19 @@ public class CaptureZone : KBGameObject
 
     public ZoneTier tier;
     public ZoneState state = ZoneState.Unoccupied;
-
     public CaptureZone[] requiredZones = new CaptureZone[0];
     public ItemSpawn[] connectedItemSpawns = new ItemSpawn[0];
-
     private bool canSwitchState = true;
     public List<PlayerLocal> players;
-
     private AudioClip captureProgress;
     private AudioClip captureComplete;
-
     public RotatableGuiItem rGui;
-
     public bool redUnlocked, blueUnlocked;
-
-    private float captureFraction = 0;
+    private float captureFraction = 0.0f;
 
     private void Start()
     {
         base.Start();
-        capturePercent = 50.0f;
         captureTotal = 0;
         state = ZoneState.Unoccupied;
         players = new List<PlayerLocal>(10);
@@ -157,24 +158,7 @@ public class CaptureZone : KBGameObject
 
         #endregion Unlock Handling
 
-        #region GUI STUFF
-
-        //// TODO : Players need to handle this locally
-        //if ((state != ZoneState.Blue && blueUnlocked) || (state != ZoneState.Red && redUnlocked))
-        //{
-        //    rGui.enabled = true;
-        //    Vector3 sPos = Camera.main.WorldToScreenPoint(transform.position);
-        //    rGui.relativePosition = new Vector2(sPos.x, -sPos.y);
-        //    rGui.size = new Vector2((Mathf.Sin(Time.time * 4) + 1) * 32 + 64, (Mathf.Sin(Time.time * 4) + 1) * 32 + 64);
-        //}
-        //else
-        //{
-        //    rGui.enabled = false;
-        //}
-
-        #endregion GUI STUFF
-
-        captureDelta = 0;
+        //captureDelta = 0;
 
         switch (GameManager.Instance.State)
         {
@@ -182,99 +166,9 @@ public class CaptureZone : KBGameObject
                 break;
 
             case GameManager.GameState.InGame:
-                foreach (KBGameObject o in collisionObjects)
-                {
-                    PlayerLocal p = o.gameObject.GetComponentInChildren<PlayerLocal>();
-                    if (p != null)
-                    {
-                        switch (p.team)
-                        {
-                            case Team.Red:
-                                if (redUnlocked && p.health > 0)
-                                {
-                                    captureDelta += p.stats.captureSpeed;
-                                }
-                                break;
-
-                            case Team.Blue:
-                                if (blueUnlocked && p.health > 0)
-                                {
-                                    captureDelta -= p.stats.captureSpeed;
-                                }
-                                break;
-
-                            case Team.None:
-                                break;
-
-                            default:
-                                break;
-                        }
-                    }
-                }
-
-                foreach (var o in requiredZones)
-                {
-                    switch (o.state)
-                    {
-                        case ZoneState.Unoccupied:
-                            break;
-
-                        case ZoneState.Red:
-                            captureFraction += captureAutoPoints;
-                            //captureDelta += 1;
-                            break;
-
-                        case ZoneState.Blue:
-                            captureFraction -= captureAutoPoints;
-                            //captureDelta -= 1;
-                            break;
-
-                        default:
-                            break;
-                    }
-                }
-                if (Mathf.Abs(captureFraction) >= 1)
-                {
-                    captureDelta += (int)captureFraction;
-                    captureFraction = 0;
-                }
-
-                if (tier == ZoneTier.C)
-                {
-                    captureTotal += captureDelta / 10;
-                }
-                else
-                {
-                    captureTotal += captureDelta;
-                }
-
-                captureTotal = captureTotal.LimitToRange(-1000, 1000);
-
+                CalculateCaptureTotal();
+                RunVisualFeedback(captureTotal);
                 CheckCaptured();
-
-                if (captureTotal > 0)
-                {
-                    renderer.material.color = new Color(
-                        captureTotal / 1000.0f,
-                        0,
-                        0,
-                        (captureTotal / 1000.0f) * 0.5f + 0.5f
-                        );
-                }
-                else if (captureTotal < 0)
-                {
-                    renderer.material.color = new Color(
-                        0,
-                        0,
-                        captureTotal / 1000.0f,
-                        (captureTotal / 1000.0f) * 0.5f + 0.5f
-                        );
-                }
-                else
-                {
-                    renderer.material.color = new Color(0, 0, 0, 0.35f);
-                }
-
                 break;
 
             case GameManager.GameState.RedWins:
@@ -318,21 +212,21 @@ public class CaptureZone : KBGameObject
             CaptureEvent(Team.None);
         }
 
-        if (state == ZoneState.Unoccupied && captureDelta == 0)
-        {
-            if (Mathf.Abs(captureTotal) <= captureDecayOnUnoccupied)
-            {
-                captureTotal = 0;
-            }
-            if (captureTotal > 0)
-            {
-                captureTotal -= captureDecayOnUnoccupied;
-            }
-            else if (captureTotal < 0)
-            {
-                captureTotal += captureDecayOnUnoccupied;
-            }
-        }
+        //if (state == ZoneState.Unoccupied && captureDelta == 0)
+        //{
+        //    if (Mathf.Abs(captureTotal) <= captureDecayOnUnoccupied)
+        //    {
+        //        captureTotal = 0;
+        //    }
+        //    if (captureTotal > 0)
+        //    {
+        //        captureTotal -= captureDecayOnUnoccupied;
+        //    }
+        //    else if (captureTotal < 0)
+        //    {
+        //        captureTotal += captureDecayOnUnoccupied;
+        //    }
+        //}
     }
 
     /// <summary>
@@ -413,33 +307,7 @@ public class CaptureZone : KBGameObject
         {
             if (other.gameObject.CompareTag("Item"))
             {
-                Item i = other.gameObject.GetComponent<Item>();
-                if (i.state == Item.ItemState.isDown && i != null)
-                {
-                    switch (i.team)
-                    {
-                        case Team.Red:
-                            captureTotal += 100;
-                            collisionObjects.Remove(i); // TODO : should have to remove this manually?
-                            i.Respawn();
-                            break;
-
-                        case Team.Blue:
-                            captureTotal -= 100;
-                            collisionObjects.Remove(i);
-                            i.Respawn();
-                            break;
-
-                        case Team.None:
-                            break;
-
-                        default:
-                            break;
-                    }
-                }
-                else
-                {
-                }
+                ConvertItemToCapturePoints(other.gameObject.GetComponent<Item>());
             }
         }
     }
@@ -466,5 +334,177 @@ public class CaptureZone : KBGameObject
         //    players.Remove(p);
         //    audio.Stop();
         //}
+    }
+
+    /// <summary>
+    /// Calculates the capture delta & applies team-wide percentage bonus to final rate and applies final delta to capture total.
+    /// </summary>
+    private void CalculateCaptureTotal()
+    {
+        int delta = CalculateAdjustedCaptureDelta(CalculateRawCaptureDelta());
+        if (delta > 0)
+        {
+            delta *= ((GameManager.Instance.redBonus / 100 * TierACaptureBonusPercent) + 1);
+        }
+        else if (delta < 0)
+        {
+            delta *= ((GameManager.Instance.blueBonus / 100 * TierACaptureBonusPercent) + 1);
+        }
+        if (Mathf.Abs(captureFraction) >= 1) // accumulates decimal capture point values and adds it in if the abs > 1
+        {
+            captureTotal += (int)captureFraction;
+            captureFraction = 0;
+        }
+        captureTotal += delta;
+        captureTotal = captureTotal.LimitToRange(-1000, 1000);
+    }
+
+    /// <summary>
+    /// Checks for players inside collider and determines overall capture rate.
+    /// </summary>
+    /// <returns>Capture delta based on players</returns>
+    private int CalculateRawCaptureDelta()
+    {
+        int x = 0;
+        
+        foreach (KBGameObject o in collisionObjects)
+        {
+            PlayerLocal p = o.gameObject.GetComponentInChildren<PlayerLocal>();
+            if (p != null)
+            {
+                if (p.canCapture)
+                {
+                    switch (p.team)
+                    {
+                        case Team.Red:
+                            if (redUnlocked && p.health > 0)
+                            {
+                                x += p.stats.captureSpeed;
+                            }
+                            break;
+
+                        case Team.Blue:
+                            if (blueUnlocked && p.health > 0)
+                            {
+                                x -= p.stats.captureSpeed;
+                            }
+                            break;
+
+                        case Team.None:
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+        return x;
+    }
+    
+    /// <summary>
+    /// Applies capture delta to the zone's capture total, adjusted for tier multipler.
+    /// </summary>
+    /// <param name="rawCaptureDelta"></param>
+    /// <returns>Final capture total</returns>
+    private int CalculateAdjustedCaptureDelta(int rawCaptureDelta)
+    {
+        float floatCapDelta = 0.0f;
+        int finalCaptureDelta = 0;
+        switch (tier)
+        {
+            case ZoneTier.A:
+                floatCapDelta += (float)rawCaptureDelta * (float)TierACaptureRate;
+                break;
+            case ZoneTier.B:
+                floatCapDelta += (float)rawCaptureDelta / (float)TierBCaptureRate;
+                break;
+            case ZoneTier.C:
+                floatCapDelta += (float)rawCaptureDelta / (float)TierCCaptureRate;
+                break;
+            default:
+                break;
+        }
+        finalCaptureDelta = Mathf.FloorToInt(floatCapDelta);
+        captureFraction += floatCapDelta - finalCaptureDelta;
+        return finalCaptureDelta;
+    }
+
+    private void CalculateAutoCapturePoints()
+    {
+        foreach (var o in requiredZones)
+        {
+            switch (o.state)
+            {
+                case ZoneState.Unoccupied:
+                    break;
+
+                case ZoneState.Red:
+                    captureFraction += captureAutoPoints;
+                    //captureDelta += 1;
+                    break;
+
+                case ZoneState.Blue:
+                    captureFraction -= captureAutoPoints;
+                    //captureDelta -= 1;
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    }
+
+    private void RunVisualFeedback(int capturePoints)
+    {
+        if (capturePoints > 0)
+        {
+            renderer.material.color = new Color(
+                capturePoints / 1000.0f,
+                0,
+                0,
+                (capturePoints / 1000.0f) * 0.5f + 0.5f
+                );
+        }
+        else if (capturePoints < 0)
+        {
+            renderer.material.color = new Color(
+                0,
+                0,
+                capturePoints / 1000.0f,
+                (capturePoints / 1000.0f) * 0.5f + 0.5f
+                );
+        }
+        else
+        {
+            renderer.material.color = new Color(0, 0, 0, 0.35f);
+        }
+    }
+
+    private void ConvertItemToCapturePoints(Item i)
+    {
+        if (i.state == Item.ItemState.isDown && i != null)
+        {
+            switch (i.team)
+            {
+                case Team.Red:
+                    captureTotal += 100;
+                    collisionObjects.Remove(i); // TODO : should have to remove this manually?
+                    i.Respawn();
+                    break;
+
+                case Team.Blue:
+                    captureTotal -= 100;
+                    collisionObjects.Remove(i);
+                    i.Respawn();
+                    break;
+
+                case Team.None:
+                    break;
+
+                default:
+                    break;
+            }
+        }
     }
 }

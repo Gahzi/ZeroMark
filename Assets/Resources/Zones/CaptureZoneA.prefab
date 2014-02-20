@@ -31,6 +31,7 @@ GameObject:
   - 23: {fileID: 2300002}
   - 82: {fileID: 8200000}
   - 114: {fileID: 11400002}
+  - 114: {fileID: 11400004}
   m_Layer: 0
   m_Name: CaptureZoneA
   m_TagString: GoalZone
@@ -56,8 +57,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100002}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.02513027, y: 1.5, z: 16.6425858}
-  m_LocalScale: {x: 10, y: 1, z: 10}
+  m_LocalPosition: {x: 2, y: 0, z: -0}
+  m_LocalScale: {x: .666666687, y: 1, z: .666666687}
   m_Children:
   - {fileID: 400000}
   m_Father: {fileID: 0}
@@ -200,6 +201,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfddc5a11b045ec43a49e4b0bcb8848e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  txt: 
+  color: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -211,14 +214,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33f7bca4ee05ece429ebe0e99ebf3696, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  team: 0
   health: 0
-  teamScript: {fileID: 0}
   captureTotal: 0
-  capturePercent: 0
+  captureAutoPoints: 0
+  upgradePointsOnCapture: 0
+  scoreboard: {fileID: 11400000}
+  descriptiveName: 
   tier: 0
   state: 0
   requiredZones: []
+  connectedItemSpawns: []
   players: []
+  rGui: {fileID: 0}
+  redUnlocked: 0
+  blueUnlocked: 0
+--- !u!114 &11400004
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100002}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a3eb0087c9406746a81e9d8feb1ff76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  texture: {fileID: 2800000, guid: c2233c64408b43842b9cc1951a167086, type: 3}
+  angle: 0
+  size: {x: 128, y: 128}
+  ScreenpointToAlign: 0
+  relativePosition: {x: 0, y: 0}
 --- !u!136 &13600000
 CapsuleCollider:
   m_ObjectHideFlags: 1

@@ -335,7 +335,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: -4.37113883e-08}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 10, y: 1, z: 10}
   m_Children:
   - {fileID: 400014}
@@ -360,7 +360,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100004}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6, y: 0, z: 6}
+  m_LocalPosition: {x: -10, y: 0, z: 5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400032}
@@ -419,7 +419,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100014}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6, y: 0, z: -6}
+  m_LocalPosition: {x: 10, y: 0, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400012}
@@ -445,7 +445,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100018}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -8.28999996, z: 0}
   m_LocalScale: {x: 1.5, y: 1, z: 1.5}
   m_Children:
   - {fileID: 400000}
@@ -457,7 +457,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100020}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6, y: 0, z: 0}
+  m_LocalPosition: {x: -6, y: 0, z: -.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400026}
@@ -480,7 +480,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100024}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 6}
+  m_LocalPosition: {x: 2, y: 0, z: 5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400022}
@@ -503,7 +503,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -6}
+  m_LocalPosition: {x: -2, y: 0, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400006}
@@ -526,7 +526,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100032}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6, y: 0, z: 0}
+  m_LocalPosition: {x: 6, y: 0, z: .5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400016}
@@ -1479,17 +1479,13 @@ MonoBehaviour:
   team: 0
   health: 0
   captureTotal: 0
-  captureDecayOnUnoccupied: 0
   captureAutoPoints: 0
-  capturePercent: 0
   upgradePointsOnCapture: 0
   scoreboard: {fileID: 11400012}
   descriptiveName: Middle
   tier: 2
   state: 0
-  requiredZones:
-  - {fileID: 11400026}
-  - {fileID: 11400006}
+  requiredZones: []
   connectedItemSpawns: []
   players: []
   rGui: {fileID: 0}
@@ -1538,17 +1534,13 @@ MonoBehaviour:
   team: 0
   health: 0
   captureTotal: 0
-  captureDecayOnUnoccupied: 5
   captureAutoPoints: 0
-  capturePercent: 0
   upgradePointsOnCapture: 0
   scoreboard: {fileID: 11400048}
   descriptiveName: B (Bot.)
   tier: 1
   state: 0
-  requiredZones:
-  - {fileID: 11400044}
-  - {fileID: 11400050}
+  requiredZones: []
   connectedItemSpawns:
   - {fileID: 11400014}
   players: []
@@ -1731,17 +1723,13 @@ MonoBehaviour:
   team: 0
   health: 0
   captureTotal: 0
-  captureDecayOnUnoccupied: 5
   captureAutoPoints: 0
-  capturePercent: 0
   upgradePointsOnCapture: 0
   scoreboard: {fileID: 11400004}
   descriptiveName: B (Top)
   tier: 1
   state: 0
-  requiredZones:
-  - {fileID: 11400032}
-  - {fileID: 11400038}
+  requiredZones: []
   connectedItemSpawns:
   - {fileID: 11400022}
   players: []
@@ -1791,9 +1779,7 @@ MonoBehaviour:
   team: 0
   health: 0
   captureTotal: 0
-  captureDecayOnUnoccupied: 5
   captureAutoPoints: 0
-  capturePercent: 0
   upgradePointsOnCapture: 0
   scoreboard: {fileID: 11400042}
   descriptiveName: A (Top)
@@ -1848,9 +1834,7 @@ MonoBehaviour:
   team: 0
   health: 0
   captureTotal: 0
-  captureDecayOnUnoccupied: 5
   captureAutoPoints: 0
-  capturePercent: 0
   upgradePointsOnCapture: 0
   scoreboard: {fileID: 11400036}
   descriptiveName: A (Bot.)
@@ -1905,9 +1889,7 @@ MonoBehaviour:
   team: 0
   health: 0
   captureTotal: 0
-  captureDecayOnUnoccupied: 5
   captureAutoPoints: 0
-  capturePercent: 0
   upgradePointsOnCapture: 0
   scoreboard: {fileID: 11400010}
   descriptiveName: A (Top)
@@ -1962,9 +1944,7 @@ MonoBehaviour:
   team: 0
   health: 0
   captureTotal: 0
-  captureDecayOnUnoccupied: 5
   captureAutoPoints: 0
-  capturePercent: 0
   upgradePointsOnCapture: 0
   scoreboard: {fileID: 11400030}
   descriptiveName: A (Bot.)

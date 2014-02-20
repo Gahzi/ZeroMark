@@ -30,6 +30,8 @@ public class GameManager : Photon.MonoBehaviour
     public int tick = 0;
     public int redCaptures = 0;
     public int blueCaptures = 0;
+    public int redBonus = 0;
+    public int blueBonus = 0;
     private List<List<String>> playerStatData;
     private List<List<String>> upgradePointReqData;
     private float startTime;
@@ -258,9 +260,28 @@ public class GameManager : Photon.MonoBehaviour
 
         redCaptures = 0;
         blueCaptures = 0;
+        redBonus = 0;
+        blueBonus = 0;
 
         foreach (var c in captureZones)
         {
+            if (c.tier == CaptureZone.ZoneTier.A)
+            {
+                switch (c.state)
+                {
+                    case CaptureZone.ZoneState.Unoccupied:
+                        break;
+                    case CaptureZone.ZoneState.Red:
+                        redBonus++;
+                        break;
+                    case CaptureZone.ZoneState.Blue:
+                        blueBonus++;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            
             switch (c.state)
             {
                 case CaptureZone.ZoneState.Unoccupied:
@@ -500,6 +521,7 @@ public class GameManager : Photon.MonoBehaviour
 
         for (int i = 0; i < stats.statArray.Length; i++) // This loads the raw stats into a float[]
         {
+            // finalStatValue = init + (level - 1)*(perLevelMultiplier)
             stats.statArray[i] = Convert.ToInt32(gm.playerStatData[i + ((int)player.type * numberOfStats)][initStatColumn]) + ((playerLevel - 1) * Convert.ToInt32(gm.playerStatData[i + ((int)player.type * numberOfStats)][perLevelStatColumn]));
         }
 

@@ -1127,7 +1127,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1, y: 6, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!65 &6500002
 BoxCollider:
@@ -1414,6 +1414,7 @@ MonoBehaviour:
   redMat: {fileID: 2100000, guid: 372241dd454df024d870058faef4d843, type: 2}
   blueMat: {fileID: 2100000, guid: 21af203b3a6ec874383d3ec97387749f, type: 2}
   teamIndicator: {fileID: 2300030}
+  canCapture: 0
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -52,6 +52,7 @@ public class PlayerLocal : KBControllableGameObject
     public Material redMat;
     public Material blueMat;
     public MeshRenderer teamIndicator;
+    public bool canCapture;
 
     public override void Start()
     {
@@ -68,7 +69,7 @@ public class PlayerLocal : KBControllableGameObject
         isShooting = false;
 
         gun = gameObject.GetComponentInChildren<ProjectileAbilityBaseScript>();
-        gun.SetMaxRange(100);
+        gun.SetMaxRange(stats.attackRange);
         gun.Team = team;
 
         GetComponentInChildren<HitboxBaseScript>().Team = team;
@@ -153,10 +154,15 @@ public class PlayerLocal : KBControllableGameObject
         {
             item.transform.position = new Vector3(transform.position.x, transform.position.y + 3, transform.position.z);
             item.state = Item.ItemState.isPickedUp;
+            canCapture = false;
+        }
+        else
+        {
+            canCapture = true;
         }
 
         CheckHealth();
-    }
+    }  
 
     private void OnPhotonInstantiate(PhotonMessageInfo msg)
     {
