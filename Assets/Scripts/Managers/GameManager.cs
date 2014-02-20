@@ -75,7 +75,7 @@ public class GameManager : Photon.MonoBehaviour
     {
         Debug.Log("Joined Room Succesfully");
         //photonView.RPC("AddPlayer", PhotonTargets.AllBuffered);
-        localPlayer = createObject(ObjectConstants.type.Player, new Vector3(0, 0, 0), Quaternion.identity, Team.Red).GetComponent<PlayerLocal>(); ;
+        localPlayer = createObject(ObjectConstants.type.Player, new Vector3(0, 0, 0), Quaternion.identity, Team.Blue).GetComponent<PlayerLocal>(); ;
         photonView.RPC("SetPlayerLevel", PhotonTargets.AllBuffered, PhotonNetwork.player, 1);
     }
 

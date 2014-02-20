@@ -122,7 +122,7 @@ public class CaptureZone : KBGameObject
         }
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         #region Unlock Handling
 
