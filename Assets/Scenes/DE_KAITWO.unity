@@ -461,12 +461,12 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 10, y: 1, z: 10}
   m_Children:
+  - {fileID: 1204269242}
+  - {fileID: 1918812774}
   - {fileID: 1566838823}
   - {fileID: 104382197}
   - {fileID: 1478212967}
   - {fileID: 1262382904}
-  - {fileID: 1918812774}
-  - {fileID: 1204269242}
   - {fileID: 743214803}
   m_Father: {fileID: 688164002}
 --- !u!114 &218079791
@@ -3228,7 +3228,7 @@ Light:
   serializedVersion: 3
   m_Type: 1
   m_Color: {r: .0147953117, g: .0069204215, b: .235294104, a: 1}
-  m_Intensity: .239999995
+  m_Intensity: .469999999
   m_Range: 10
   m_SpotAngle: 30
   m_CookieSize: 10
