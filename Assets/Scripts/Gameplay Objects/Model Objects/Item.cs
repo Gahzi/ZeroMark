@@ -184,6 +184,7 @@ public class Item : KBGameObject
             float rspwnStrt = respawnStart;
             int st = (int)state;
             float dsbleTime = disableTime;
+            int tm = (int)team;
 
             stream.Serialize(ref pos);
             stream.Serialize(ref rot);
@@ -193,6 +194,7 @@ public class Item : KBGameObject
             stream.Serialize(ref rspwnStrt);
             stream.Serialize(ref st);
             stream.Serialize(ref dsbleTime);
+            stream.Serialize(ref tm);
         }
         else
         {
@@ -205,6 +207,7 @@ public class Item : KBGameObject
             float rspwnStrt = 0;
             int st = 0;
             float dsbleTime = 0;
+            int tm = 0;
 
             stream.Serialize(ref pos);
             stream.Serialize(ref rot);
@@ -214,6 +217,7 @@ public class Item : KBGameObject
             stream.Serialize(ref rspwnStrt);
             stream.Serialize(ref st);
             stream.Serialize(ref dsbleTime);
+            stream.Serialize(ref tm);
 
             transform.position = pos;
             transform.rotation = rot;          // this sample doesn't smooth rotation
@@ -223,6 +227,7 @@ public class Item : KBGameObject
             respawnStart = rspwnStrt;
             state = (ItemState)st;
             disableTime = dsbleTime;
+            team = (Team)tm;
         }
     }
         
