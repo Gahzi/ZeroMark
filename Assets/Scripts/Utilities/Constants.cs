@@ -64,7 +64,7 @@ namespace KBConstants
 
     public class AudioConstants
     {
-        public enum clip { ItemGrab, FactoryItemAccept, FactoryItemFinish, TowerAmbient, CaptureProgress, CaptureComplete, TowerSpawn, TowerDie, PlasmaGunFire };
+        public enum clip { ItemGrab, FactoryItemAccept, FactoryItemFinish, TowerAmbient, CaptureProgress, CaptureComplete, TowerSpawn, TowerDie, PlasmaGunFire, HitConfirm };
 
         private static readonly IDictionary<clip, string> clipNames = new Dictionary<clip, string>
         {
@@ -76,7 +76,8 @@ namespace KBConstants
             {clip.CaptureComplete, "sounds/cyberstorm select/capture success/system on-off-02"},
             {clip.TowerSpawn, ""},
             {clip.TowerDie, "sounds/cyberstorm select/tower damage/impact-metal-12"},
-            {clip.PlasmaGunFire, "sounds/cyberstorm select/tower fire/artillery-21"}
+            {clip.PlasmaGunFire, "sounds/cyberstorm select/tower fire/artillery-21"},
+            {clip.HitConfirm, "sounds/hitmarker"}
         };
 
         public static IDictionary<clip, string> CLIP_NAMES { get { return clipNames; } }
