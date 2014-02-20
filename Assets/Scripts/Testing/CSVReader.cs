@@ -18,7 +18,16 @@ public static class CSVReader
     public static List<List<String>> ReadFile(string filename)
     {
         List<List<String>> filedata;
-        var sr = File.OpenText("Assets/Resources/" + filename);
+        StreamReader sr;
+        if (Application.isEditor)
+        {
+            sr = File.OpenText("Assets/Resources/" + filename);
+        }
+        else
+        {
+            sr = File.OpenText(Application.dataPath + "/" + filename);
+        }
+
         filedata = sr.ReadToEnd().Split('\n').Select(s => s.Split(',').ToList()).ToList();
         sr.Close();
         return filedata;

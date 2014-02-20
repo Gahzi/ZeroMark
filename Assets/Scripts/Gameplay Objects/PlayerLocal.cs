@@ -52,9 +52,12 @@ public class PlayerLocal : KBControllableGameObject
     public Material redMat;
     public Material blueMat;
     public MeshRenderer teamIndicator;
+    public bool canCapture;
 
     public override void Start()
     {
+        // NOTE: All connected abilities & hitboxes need to be sent the player's team.
+        
         base.Start();
         acceptingInputs = true;
         waitingForRespawn = false;
@@ -66,7 +69,10 @@ public class PlayerLocal : KBControllableGameObject
         isShooting = false;
 
         gun = gameObject.GetComponentInChildren<ProjectileAbilityBaseScript>();
-        gun.SetMaxRange(100);
+        gun.SetMaxRange(stats.attackRange);
+        gun.Team = team;
+
+        GetComponentInChildren<HitboxBaseScript>().Team = team;
 
         movespeed = stats.speed;
         lowerbodyRotateSpeed = stats.lowerbodyRotationSpeed;
@@ -148,10 +154,21 @@ public class PlayerLocal : KBControllableGameObject
         {
             item.transform.position = new Vector3(transform.position.x, transform.position.y + 3, transform.position.z);
             item.state = Item.ItemState.isPickedUp;
+            if (canCapture != false)
+            {
+                canCapture = false;
+            } 
+        }
+        else
+        {
+            if (canCapture != true)
+            {
+                canCapture = true;
+            } 
         }
 
         CheckHealth();
-    }
+    }  
 
     private void OnPhotonInstantiate(PhotonMessageInfo msg)
     {
@@ -197,6 +214,7 @@ public class PlayerLocal : KBControllableGameObject
             int lvl = level;
             int mxhlth = maxHealth;
             bool isShting = isShooting;
+            bool cnCpture = canCapture;
 
             stream.Serialize(ref pos);
             stream.Serialize(ref rot);
@@ -204,6 +222,7 @@ public class PlayerLocal : KBControllableGameObject
             stream.Serialize(ref lvl);
             stream.Serialize(ref mxhlth);
             stream.Serialize(ref isShting);
+            stream.Serialize(ref cnCpture);
         }
         else
         {
@@ -214,6 +233,7 @@ public class PlayerLocal : KBControllableGameObject
             int lvl = 0;
             int mxhlth = 0;
             bool isShting = false;
+            bool cnCpture = false;
 
             stream.Serialize(ref pos);
             stream.Serialize(ref rot);
@@ -221,6 +241,7 @@ public class PlayerLocal : KBControllableGameObject
             stream.Serialize(ref lvl);
             stream.Serialize(ref mxhlth);
             stream.Serialize(ref isShting);
+            stream.Serialize(ref cnCpture);
 
             latestCorrectPos = pos;                 // save this to move towards it in FixedUpdate()
             onUpdatePos = transform.localPosition;  // we interpolate from here to latestCorrectPos
@@ -231,6 +252,7 @@ public class PlayerLocal : KBControllableGameObject
             level = lvl;
             maxHealth = mxhlth;
             isShooting = isShting;
+            canCapture = cnCpture;
         }
     }
 

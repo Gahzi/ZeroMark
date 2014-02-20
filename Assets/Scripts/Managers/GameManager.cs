@@ -30,6 +30,8 @@ public class GameManager : Photon.MonoBehaviour
     public int tick = 0;
     public int redCaptures = 0;
     public int blueCaptures = 0;
+    public int redBonus = 0;
+    public int blueBonus = 0;
     private List<List<String>> playerStatData;
     private List<List<String>> upgradePointReqData;
     private float startTime;
@@ -192,6 +194,11 @@ public class GameManager : Photon.MonoBehaviour
             }
         }
 
+        if (Input.GetButtonDown("Screenshot"))
+        {
+            TakeScreenshot();
+        }
+
     }
 
     /// <summary>
@@ -325,9 +332,28 @@ public class GameManager : Photon.MonoBehaviour
 
         redCaptures = 0;
         blueCaptures = 0;
+        redBonus = 0;
+        blueBonus = 0;
 
         foreach (var c in captureZones)
         {
+            if (c.tier == CaptureZone.ZoneTier.A)
+            {
+                switch (c.state)
+                {
+                    case CaptureZone.ZoneState.Unoccupied:
+                        break;
+                    case CaptureZone.ZoneState.Red:
+                        redBonus++;
+                        break;
+                    case CaptureZone.ZoneState.Blue:
+                        blueBonus++;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            
             switch (c.state)
             {
                 case CaptureZone.ZoneState.Unoccupied:
@@ -538,6 +564,7 @@ public class GameManager : Photon.MonoBehaviour
 
         for (int i = 0; i < stats.statArray.Length; i++) // This loads the raw stats into a float[]
         {
+            // finalStatValue = init + (level - 1)*(perLevelMultiplier)
             stats.statArray[i] = Convert.ToInt32(gm.playerStatData[i + ((int)player.type * numberOfStats)][initStatColumn]) + ((playerLevel - 1) * Convert.ToInt32(gm.playerStatData[i + ((int)player.type * numberOfStats)][perLevelStatColumn]));
         }
 
@@ -551,5 +578,14 @@ public class GameManager : Photon.MonoBehaviour
         stats.speed = (int)stats.statArray[(int)PlayerStats.PlayerStatNames.MovementSpeed];
         stats.visionRange = (int)stats.statArray[(int)PlayerStats.PlayerStatNames.VisionRange];
         player.stats = stats;
+    }
+
+    private void TakeScreenshot()
+    {
+        string path = Application.persistentDataPath + "/" + System.DateTime.Now.Year.ToString() + System.DateTime.Now.Month.ToString() + System.DateTime.Now.Day.ToString() + "_" + System.DateTime.Now.Hour.ToString() + System.DateTime.Now.Minute.ToString() + System.DateTime.Now.Second.ToString() + "_kaiju_scr.png";
+        //string path = System.DateTime.Now.Hour.ToString() + System.DateTime.Now.Minute.ToString() + System.DateTime.Now.Second.ToString() + "_kaiju_scr";
+        Application.CaptureScreenshot(path, 2);
+        path = Application.persistentDataPath + "/" + path;
+        Debug.Log(path);
     }
 }

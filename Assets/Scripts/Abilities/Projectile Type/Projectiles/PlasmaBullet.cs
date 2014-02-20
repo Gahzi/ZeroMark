@@ -24,7 +24,10 @@ public class PlasmaBullet : ProjectileBaseScript
         if (other.gameObject.CompareTag("Hitbox"))
         {
             KBGameObject o = other.gameObject.transform.parent.GetComponent<KBGameObject>();
-            o.takeDamage(PLASMABULLET_DAMAGE);
+            if (o.Team != Team)
+            {
+                o.takeDamage(PLASMABULLET_DAMAGE);
+            }
         }
         if (other.gameObject.CompareTag("Environment"))
         {

@@ -75,6 +75,10 @@ public class ItemSpawn : KBGameObject
                 SpawnItem();
             }
         }
+        if (!waitingForSpawn)
+        {
+            lastSpawn = Time.time;
+        }
     }
 
     public void ReceiveActivationEvent(Team t)

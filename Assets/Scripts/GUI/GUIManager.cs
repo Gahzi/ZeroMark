@@ -9,7 +9,6 @@ public class GUIManager : MonoBehaviour
 
     private void Start()
     {
-        camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         players = new List<GameObject>();
         GameObject[] p = GameObject.FindGameObjectsWithTag("Player");
         players.AddRange(p);
@@ -19,8 +18,8 @@ public class GUIManager : MonoBehaviour
     {
         //Vector3 mousePos = camera.WorldToScreenPoint(Input.mousePosition);
         //GUI.Label(new Rect(Input.mousePosition.x, Screen.height - Input.mousePosition.y, 100, 100), "Mouse");
-        
-        //GUI.Box(new Rect(0, 0, 100, 50), "Top-left");
+
+        GUI.Box(new Rect(0, 0, 100, 50), GameManager.Instance.redBonus.ToString());
         //GUI.Box(new Rect(Screen.width - 200, 0, 200, 200), GameManager.GetCaptureZoneStateString());
         //GUI.Box(new Rect(0, Screen.height - 50, 100, 50), GameManager.GetTeamScoreString());
         //GUI.Box(new Rect(Screen.width - 100, Screen.height - 50, 100, 50), "Bottom-right");

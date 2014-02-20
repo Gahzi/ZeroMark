@@ -5,6 +5,17 @@ using UnityEngine;
 public class KBGameObject : Photon.MonoBehaviour
 {
     public Team team;
+    public Team Team
+    {
+        get
+        {
+            return team;
+        }
+        set
+        {
+            team = value;
+        }
+    }
     public int health;
     protected GameManager gm;
     protected List<KBGameObject> collisionObjects;

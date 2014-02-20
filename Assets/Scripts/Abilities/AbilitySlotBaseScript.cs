@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using KBConstants;
 
 [RequireComponent(typeof(AudioSource))]
 [RequireComponent(typeof(TimerScript))]
@@ -18,6 +19,18 @@ abstract public class AbilitySlotBaseScript : MonoBehaviour
     //public List<AbilityConstants.properties> abilityProps;
     protected int cooldownTimerNumber;
     public bool abilityActive;
+    private Team team;
+    public Team Team
+    {
+        get
+        {
+            return team;
+        }
+        set
+        {
+            team = value;
+        }
+    }
 
     public virtual void Start()
     {
