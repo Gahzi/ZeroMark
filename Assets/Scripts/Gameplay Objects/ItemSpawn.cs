@@ -128,16 +128,12 @@ public class ItemSpawn : KBGameObject
 
         if (stream.isWriting)
         {
-            Vector3 pos = transform.localPosition;
-            Quaternion rot = transform.localRotation;
             int cntrlTm = (int)controllingTeam;
             bool wtngFrSpwn = waitingForSpawn;
             float tmUntlItmSpawn = timeUntilItemSpawn;
             float lstSpwn = lastSpawn;
             bool spwnedItm = spawnedItem;
 
-            stream.Serialize(ref pos);
-            stream.Serialize(ref rot);
             stream.Serialize(ref cntrlTm);
             stream.Serialize(ref wtngFrSpwn);
             stream.Serialize(ref tmUntlItmSpawn);
@@ -147,17 +143,12 @@ public class ItemSpawn : KBGameObject
         else
         {
             // Receive latest state information
-            Vector3 pos = Vector3.zero;
-            Quaternion rot = Quaternion.identity;
             int cntrlTm = (int)controllingTeam;
             bool wtngFrSpwn = waitingForSpawn;
             float tmUntlItmSpawn = timeUntilItemSpawn;
             float lstSpwn = lastSpawn;
             bool spwnedItm = spawnedItem;
 
-
-            stream.Serialize(ref pos);
-            stream.Serialize(ref rot);
             stream.Serialize(ref cntrlTm);
             stream.Serialize(ref wtngFrSpwn);
             stream.Serialize(ref tmUntlItmSpawn);
@@ -170,8 +161,6 @@ public class ItemSpawn : KBGameObject
             //onUpdatePos = transform.localPosition;  // we interpolate from here to latestCorrectPos
             //fraction = 0;                           // reset the fraction we alreay moved. see Update()
 
-            transform.position = pos;
-            transform.localRotation = rot;          // this sample doesn't smooth rotation
             controllingTeam = (Team)cntrlTm;
             waitingForSpawn = wtngFrSpwn;
             timeUntilItemSpawn = tmUntlItmSpawn;
