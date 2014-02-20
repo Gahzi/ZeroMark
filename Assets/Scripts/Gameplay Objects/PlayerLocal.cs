@@ -215,6 +215,7 @@ public class PlayerLocal : KBControllableGameObject
             int mxhlth = maxHealth;
             bool isShting = isShooting;
             bool cnCpture = canCapture;
+            int tm = (int)team;
 
             stream.Serialize(ref pos);
             stream.Serialize(ref rot);
@@ -223,6 +224,7 @@ public class PlayerLocal : KBControllableGameObject
             stream.Serialize(ref mxhlth);
             stream.Serialize(ref isShting);
             stream.Serialize(ref cnCpture);
+            stream.Serialize(ref tm);
         }
         else
         {
@@ -234,6 +236,7 @@ public class PlayerLocal : KBControllableGameObject
             int mxhlth = 0;
             bool isShting = false;
             bool cnCpture = false;
+            int tm = 0;
 
             stream.Serialize(ref pos);
             stream.Serialize(ref rot);
@@ -242,6 +245,7 @@ public class PlayerLocal : KBControllableGameObject
             stream.Serialize(ref mxhlth);
             stream.Serialize(ref isShting);
             stream.Serialize(ref cnCpture);
+            stream.Serialize(ref tm);
 
             latestCorrectPos = pos;                 // save this to move towards it in FixedUpdate()
             onUpdatePos = transform.localPosition;  // we interpolate from here to latestCorrectPos
@@ -253,6 +257,7 @@ public class PlayerLocal : KBControllableGameObject
             maxHealth = mxhlth;
             isShooting = isShting;
             canCapture = cnCpture;
+            team = (Team)tm;
         }
     }
 
