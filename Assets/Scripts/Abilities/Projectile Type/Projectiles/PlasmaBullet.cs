@@ -27,6 +27,7 @@ public class PlasmaBullet : ProjectileBaseScript
             if (o.Team != Team)
             {
                 o.takeDamage(PLASMABULLET_DAMAGE);
+                Destroy(gameObject);
             }
         }
         if (other.gameObject.CompareTag("Environment"))

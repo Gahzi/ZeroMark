@@ -53,6 +53,7 @@ public class PlayerLocal : KBControllableGameObject
     public Material blueMat;
     public MeshRenderer teamIndicator;
     public bool canCapture;
+    private AudioClip hitConfirm;
 
     public override void Start()
     {
@@ -67,6 +68,7 @@ public class PlayerLocal : KBControllableGameObject
         latestCorrectPos = transform.position;
         onUpdatePos = transform.position;
         isShooting = false;
+        hitConfirm = Resources.Load<AudioClip>(KBConstants.AudioConstants.CLIP_NAMES[KBConstants.AudioConstants.clip.HitConfirm]);
 
         gun = gameObject.GetComponentInChildren<ProjectileAbilityBaseScript>();
         gun.SetMaxRange(stats.attackRange);
@@ -283,6 +285,7 @@ public class PlayerLocal : KBControllableGameObject
     public override void takeDamage(int amount)
     {
         health -= amount;
+        gun.audio.PlayOneShot(hitConfirm);
     }
 
     private void ControlKBAM()
