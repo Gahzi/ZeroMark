@@ -194,6 +194,78 @@ public class GameManager : Photon.MonoBehaviour
 
     }
 
+    /// <summary>
+    /// While script is observed (in a PhotonView), this is called by PUN with a stream to write or read.
+    /// </summary>
+    /// <remarks>
+    /// The property stream.isWriting is true for the owner of a PhotonView. This is the only client that
+    /// should write into the stream. Others will receive the content written by the owner and can read it.
+    ///
+    /// Note: Send only what you actually want to consume/use, too!
+    /// Note: If the owner doesn't write something into the stream, PUN won't send anything.
+    /// </remarks>
+    /// <param name="stream">Read or write stream to pass state of this GameObject (or whatever else).</param>
+    /// <param name="info">Some info about the sender of this stream, who is the owner of this PhotonView (and GameObject).</param>
+    //public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    //{
+    //    if (stream.isWriting)
+    //    {
+    //        int gmState = (int)state;
+    //        int rdTmScre = redTeamScore;
+    //        int blTmScre = blueTeamScore;
+    //        float lstTick = lastTick;
+    //        int tk = tick;
+    //        int rdCptrs = redCaptures;
+    //        int blCptrs = blueCaptures;
+    //        float strtTime = startTime;
+    //        int lstTeam = (int)lastJoinedTeam;
+
+    //        stream.Serialize(ref gmState);
+    //        stream.Serialize(ref rdTmScre);
+    //        stream.Serialize(ref blTmScre);
+    //        stream.Serialize(ref lstTick);
+    //        stream.Serialize(ref tk);
+    //        stream.Serialize(ref rdCptrs);
+    //        stream.Serialize(ref blCptrs);
+    //        stream.Serialize(ref strtTime);
+    //        stream.Serialize(ref lstTeam);
+    //    }
+    //    else
+    //    {
+    //        // Receive latest state information
+    //        int gmState = (int)state;
+    //        int rdTmScre = redTeamScore;
+    //        int blTmScre = blueTeamScore;
+    //        float lstTick = lastTick;
+    //        int tk = tick;
+    //        int rdCptrs = redCaptures;
+    //        int blCptrs = blueCaptures;
+    //        float strtTime = startTime;
+    //        int lstTeam = (int)lastJoinedTeam;
+
+    //        stream.Serialize(ref gmState);
+    //        stream.Serialize(ref rdTmScre);
+    //        stream.Serialize(ref blTmScre);
+    //        stream.Serialize(ref lstTick);
+    //        stream.Serialize(ref tk);
+    //        stream.Serialize(ref rdCptrs);
+    //        stream.Serialize(ref blCptrs);
+    //        stream.Serialize(ref strtTime);
+    //        stream.Serialize(ref lstTeam);
+
+    //        state = (GameState)gmState;
+    //        redTeamScore = rdTmScre;
+    //        blueTeamScore = blTmScre;
+    //        lastTick = lstTick;
+    //        tick = tk;
+    //        redCaptures = rdCptrs;
+    //        blueCaptures = blCptrs;
+    //        startTime = strtTime;
+    //        lastJoinedTeam = (Team)lstTeam;
+
+    //    }
+    //}
+
     private void StartGame()
     {
         state = GameState.InGame;
