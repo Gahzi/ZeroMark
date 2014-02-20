@@ -47,7 +47,7 @@ public class GUIManager : MonoBehaviour
             #region CAPTURE ZONE GUI ELEMENTS
             //Vector3 t = i.gameObject.transform.position;
             //Vector3 a = camera.WorldToScreenPoint(t);
-            GUI.Label(new Rect(a.x, Screen.height - a.y - 10, 100, 100), i.tier.ToString());
+            //GUI.Label(new Rect(a.x, Screen.height - a.y - 10, 100, 100), i.tier.ToString());
             #endregion
             #region PLAYERS
             //Vector3 objPos = Vector3.zero;
