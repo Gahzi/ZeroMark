@@ -19,6 +19,7 @@ GameObject:
   - 114: {fileID: 11400008}
   - 114: {fileID: 11400010}
   - 114: {fileID: 11400012}
+  - 114: {fileID: 11400014}
   m_Layer: 0
   m_Name: Player Camera
   m_TagString: MainCamera
@@ -123,13 +124,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  intensity: 2.21000004
-  chromaticAberration: -2
+  intensity: -8.27999973
+  chromaticAberration: -50
   axialAberration: .5
-  blur: .430000007
-  blurSpread: 2.03999996
-  luminanceDependency: .25
-  blurDistance: 2.5
+  blur: -3.03999996
+  blurSpread: 3.04999995
+  luminanceDependency: .463999987
+  blurDistance: 1.04999995
   vignetteShader: {fileID: 4800000, guid: 627943dc7a9a74286b70a4f694a0acd5, type: 3}
   separableBlurShader: {fileID: 4800000, guid: e97c14fbb5ea04c3a902cc533d7fc5d1, type: 3}
   chromAberrationShader: {fileID: 4800000, guid: 2b4f29398d9484ccfa9fd220449f5eee,
@@ -223,6 +224,18 @@ MonoBehaviour:
   jitter: .0500000007
   showVelocity: 0
   showVelocityScale: 1
+--- !u!114 &11400014
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62bbbb83c8e55d54c87d37d74d9845a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shake: 0
 --- !u!124 &12400000
 Behaviour:
   m_ObjectHideFlags: 1
