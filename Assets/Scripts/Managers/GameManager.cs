@@ -115,7 +115,9 @@ public class GameManager : Photon.MonoBehaviour
 
         if (PhotonNetwork.connected)
         {
-            localPlayer = createObject(ObjectConstants.type.Player, new Vector3(0, 0, 0), Quaternion.identity, Team.Blue).GetComponent<PlayerLocal>(); ;
+            Team nextTeam = (Team)(PhotonNetwork.otherPlayers.Length % 2);
+
+            localPlayer = createObject(ObjectConstants.type.Player, new Vector3(0, 0, 0), Quaternion.identity, nextTeam).GetComponent<PlayerLocal>(); ;
             photonView.RPC("SetPlayerLevel", PhotonTargets.AllBuffered, PhotonNetwork.player, 1);
         }
         
