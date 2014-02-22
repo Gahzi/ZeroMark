@@ -338,7 +338,8 @@ Prefab:
       propertyPath: subId
       value: 4
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 11400002, guid: 327061c837dd19640a0a5bff662b90d5, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 327061c837dd19640a0a5bff662b90d5, type: 2}
   m_RootGameObject: {fileID: 271412046}
   m_IsPrefabParent: 0
@@ -705,47 +706,6 @@ MeshCollider:
   m_SmoothSphereCollisions: 0
   m_Convex: 0
   m_Mesh: {fileID: 4300000, guid: 451f4764386297a4283183d738fbe0c2, type: 3}
---- !u!1 &254689084
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 254689086}
-  - 114: {fileID: 254689085}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &254689085
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 254689084}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cbc7d7c0bdf3239469efe0e267f89990, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  camera: {fileID: 0}
-  players: []
-  objectOverlayTexture: {fileID: 0}
---- !u!4 &254689086
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 254689084}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 158.313339, y: -5.17001629, z: 53.1399803}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
 --- !u!1 &271412046
 GameObject:
   m_ObjectHideFlags: 0
@@ -755,7 +715,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 271412050}
   - 114: {fileID: 271412049}
-  - 114: {fileID: 271412048}
   - 114: {fileID: 271412047}
   m_Layer: 0
   m_Name: GameManager
@@ -781,27 +740,6 @@ MonoBehaviour:
   group: 0
   prefixBackup: -1
   observed: {fileID: 271412049}
-  synchronization: 0
-  onSerializeTransformOption: 3
-  onSerializeRigidBodyOption: 2
-  instantiationId: 0
---- !u!114 &271412048
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400002, guid: 327061c837dd19640a0a5bff662b90d5,
-    type: 2}
-  m_PrefabInternal: {fileID: 131399137}
-  m_GameObject: {fileID: 271412046}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  subId: 3
-  ownerId: 0
-  group: 0
-  prefixBackup: -1
-  observed: {fileID: 0}
   synchronization: 0
   onSerializeTransformOption: 3
   onSerializeRigidBodyOption: 2
@@ -1409,8 +1347,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6d42e38c7559b540a6c075d8377901f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RedTeamItem: {fileID: 11400004, guid: ae32bba3be6ad584c9d20726114f203c, type: 2}
-  BlueTeamItem: {fileID: 11400004, guid: ae32bba3be6ad584c9d20726114f203c, type: 2}
+  team: 0
+  health: 0
   controllingTeam: 2
   waitingForSpawn: 0
   connectedCaptureZone: {fileID: 0}
@@ -2827,8 +2765,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6d42e38c7559b540a6c075d8377901f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RedTeamItem: {fileID: 11400004, guid: ae32bba3be6ad584c9d20726114f203c, type: 2}
-  BlueTeamItem: {fileID: 11400004, guid: ae32bba3be6ad584c9d20726114f203c, type: 2}
+  team: 0
+  health: 0
   controllingTeam: 2
   waitingForSpawn: 0
   connectedCaptureZone: {fileID: 0}
