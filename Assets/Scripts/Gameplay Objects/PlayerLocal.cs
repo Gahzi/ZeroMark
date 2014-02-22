@@ -6,6 +6,11 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerLocal : KBControllableGameObject
 {
+
+    #region CONSTANTS
+    private static readonly float hitFXLength = 0.250f;
+    #endregion
+
     public enum ControlStyle { ThirdPerson, TopDown };
 
     public ControlStyle controlStyle;
@@ -54,6 +59,12 @@ public class PlayerLocal : KBControllableGameObject
     public MeshRenderer teamIndicator;
     public bool canCapture;
     private AudioClip hitConfirm;
+    private float hitFXTimer;
+    public GameObject hitExplosion;
+    public AudioClip gotHitSFX;
+    public AudioClip deadSound;
+    public AudioClip respawnSound;
+    public AudioClip dropSound;
 
     public override void Start()
     {
@@ -69,7 +80,6 @@ public class PlayerLocal : KBControllableGameObject
         onUpdatePos = transform.position;
         isShooting = false;
         hitConfirm = Resources.Load<AudioClip>(KBConstants.AudioConstants.CLIP_NAMES[KBConstants.AudioConstants.clip.HitConfirm]);
-
         gun = gameObject.GetComponentInChildren<ProjectileAbilityBaseScript>();
         gun.SetMaxRange(stats.attackRange);
         gun.Team = team;
@@ -302,6 +312,9 @@ public class PlayerLocal : KBControllableGameObject
     {
         health -= amount;
         gun.audio.PlayOneShot(hitConfirm);
+        Instantiate(hitExplosion, transform.position, Quaternion.identity);
+        camera.GetComponent<ScreenShake>().StartShake(0.25f, 5.0f);
+        audio.PlayOneShot(gotHitSFX);
     }
 
     private void ControlKBAM()
@@ -354,6 +367,12 @@ public class PlayerLocal : KBControllableGameObject
             //SHERVIN: This must be sent across network.
             DropItem();
         }
+
+        // DEBUG FUNCTIONS
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            takeDamage(1);
+        }
     }
 
     private void CheckHealth()
@@ -364,6 +383,7 @@ public class PlayerLocal : KBControllableGameObject
             respawnTimerNumber = timer.StartTimer(respawnTime);
             DropItem();
             waitingForRespawn = true;
+            audio.PlayOneShot(deadSound);
         }
         else if (waitingForRespawn)
         {
@@ -400,6 +420,8 @@ public class PlayerLocal : KBControllableGameObject
             level = stats.level;
             lowerbodyRotateSpeed = stats.lowerbodyRotationSpeed;
             upperbodyRotateSpeed = stats.upperbodyRotationSpeed;
+            camera.GetComponent<ScreenShake>().StopShake();
+            audio.PlayOneShot(respawnSound);
         }
     }
 
@@ -407,6 +429,7 @@ public class PlayerLocal : KBControllableGameObject
     {
         item = _item;
         item.state = Item.ItemState.isPickedUp;
+        audio.PlayOneShot(grabSound);
     }
 
     private void DropItem()
@@ -417,6 +440,15 @@ public class PlayerLocal : KBControllableGameObject
             item.state = Item.ItemState.disabled;
             item.disableTime = Time.time;
             item = null;
+            audio.PlayOneShot(dropSound);
+        }
+    }
+
+    private void RunHitFX()
+    {
+        if (hitFXTimer > 0)
+        {
+            hitFXTimer -= Time.deltaTime;
         }
     }
 }

@@ -1415,6 +1415,7 @@ MonoBehaviour:
   blueMat: {fileID: 2100000, guid: 21af203b3a6ec874383d3ec97387749f, type: 2}
   teamIndicator: {fileID: 2300030}
   canCapture: 0
+  hitExplosion: {fileID: 100000, guid: b5462acd6b4c87b42b000f13705b8f09, type: 2}
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1431,7 +1432,7 @@ MonoBehaviour:
   group: 0
   prefixBackup: -1
   observed: {fileID: 11400000}
-  synchronization: 1
+  synchronization: 2
   onSerializeTransformOption: 3
   onSerializeRigidBodyOption: 2
   instantiationId: -1
