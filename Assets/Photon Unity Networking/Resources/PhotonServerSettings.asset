@@ -28,4 +28,5 @@ MonoBehaviour:
   - SetPlayerLevel
   - createObject
   - SetOwner
+  - NotifyKill
   DisableAutoOpenWizard: 0

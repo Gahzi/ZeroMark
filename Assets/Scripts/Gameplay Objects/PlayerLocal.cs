@@ -352,8 +352,14 @@ public class PlayerLocal : KBControllableGameObject
         {
             health -= amount;
             Instantiate(hitExplosion, transform.position, Quaternion.identity);
-            camera.GetComponent<ScreenShake>().StartShake(0.25f, 5.0f);
-            audio.PlayOneShot(gotHitSFX);
+            
+            if (photonView.isMine)
+            {
+                camera.GetComponent<ScreenShake>().StartShake(0.25f, 5.0f);
+                audio.PlayOneShot(gotHitSFX);
+            }
+
+           
         }
         return health;
     }
@@ -469,7 +475,12 @@ public class PlayerLocal : KBControllableGameObject
             invulnerabilityTime = spawnProtectionTime;
             lowerbodyRotateSpeed = stats.lowerbodyRotationSpeed;
             upperbodyRotateSpeed = stats.upperbodyRotationSpeed;
-            camera.GetComponent<ScreenShake>().StopShake();
+
+            if (photonView.isMine)
+            {
+                camera.GetComponent<ScreenShake>().StopShake();
+            }
+            
             audio.PlayOneShot(respawnSound);
         }
     }
@@ -514,6 +525,13 @@ public class PlayerLocal : KBControllableGameObject
         gun.audio.PlayOneShot(hitConfirm);
     }
 
+    public void Die(GameObject killerObject)
+    {
+        PlayerLocal killerPlayer = killerObject.GetComponent<PlayerLocal>();
+        photonView.RPC("NotifyKill", killerPlayer.networkPlayer, null);
+    }
+
+    [RPC]
     public void NotifyKill()
     {
         if (killTokens < 3)

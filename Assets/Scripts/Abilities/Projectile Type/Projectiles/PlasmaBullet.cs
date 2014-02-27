@@ -31,7 +31,7 @@ public class PlasmaBullet : ProjectileBaseScript
                 int victimHealth = o.takeDamage(PLASMABULLET_DAMAGE);
                 if (victimHealth <= 0)
                 {
-                    owner.NotifyKill();
+                    owner.Die(o.gameObject);
                 }
                 owner.ConfirmHit();
                 Destroy(gameObject);
