@@ -1,5 +1,6 @@
 ﻿using KBConstants;
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(PhotonView))]
@@ -18,6 +19,12 @@ public class PlayerLocal : KBControllableGameObject
     public PlayerStats stats;
     public bool acceptingInputs = true;
     public bool waitingForRespawn = false;
+    public float invulnerabilityTime;
+    public float spawnProtectionTime;
+    public float bankLockoutTime;
+    public float boostTime;
+    public float boostRechargeRate;
+    public float boostMax;
 
     public int level;
 
@@ -66,6 +73,9 @@ public class PlayerLocal : KBControllableGameObject
     public AudioClip respawnSound;
     public AudioClip dropSound;
 
+    public int killTokens;
+    private bool triggerLockout;
+
     public override void Start()
     {
         // NOTE: All connected abilities & hitboxes need to be sent the player's team.
@@ -73,6 +83,7 @@ public class PlayerLocal : KBControllableGameObject
         base.Start();
         acceptingInputs = true;
         waitingForRespawn = false;
+        triggerLockout = false;
         charController = GetComponent<CharacterController>();
         grabSound = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.ItemGrab]);
         playerGuiSquare = GetComponent<RotatableGuiItem>();
@@ -80,10 +91,7 @@ public class PlayerLocal : KBControllableGameObject
         onUpdatePos = transform.position;
         isShooting = false;
         hitConfirm = Resources.Load<AudioClip>(KBConstants.AudioConstants.CLIP_NAMES[KBConstants.AudioConstants.clip.HitConfirm]);
-        gun = gameObject.GetComponentInChildren<ProjectileAbilityBaseScript>();
-        gun.SetMaxRange(stats.attackRange);
-        gun.Team = team;
-
+        SetupAbilities();
         GetComponentInChildren<HitboxBaseScript>().Team = team;
 
         movespeed = stats.speed;
@@ -133,8 +141,30 @@ public class PlayerLocal : KBControllableGameObject
         Debug.DrawRay(upperBody.transform.position, upperBody.transform.TransformDirection(new Vector3(0, 0, 5.0f)), new Color(255, 0, 0, 255), 0.0f);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
+        
+        /* TODO:
+         * Fix aiming
+         * Add indication of invulnerability
+         */
+
+        if (invulnerabilityTime > 0)
+        {
+            invulnerabilityTime -= Time.deltaTime;
+            // activate visual indication of invulnerability
+        }
+        if (triggerLockout)
+        {
+            StartCoroutine(Lockout(bankLockoutTime));
+        }
+
+        if (!Input.GetButton("Boost"))
+        {
+            boostTime += boostRechargeRate * Time.deltaTime ;
+            boostTime = Mathf.Clamp(boostTime, 0.0f, boostMax);
+        }
+
         mousePos = Input.mousePosition;
         fraction = fraction + Time.deltaTime * 9;
         
@@ -181,6 +211,14 @@ public class PlayerLocal : KBControllableGameObject
 
         CheckHealth();
     }  
+    
+    void OnGUI()
+    {
+        GUI.Box(new Rect(0, 0, 100, 40), "Kill Tokens" + System.Environment.NewLine + killTokens.ToString());
+        GUI.Box(new Rect(0, 40, 100, 40), "Boost" + System.Environment.NewLine + boostTime.ToString("0.00"));
+
+    }
+    
 
     private void OnPhotonInstantiate(PhotonMessageInfo msg)
     {
@@ -308,21 +346,25 @@ public class PlayerLocal : KBControllableGameObject
         }
     }
 
-    public override void takeDamage(int amount)
+    public override int takeDamage(int amount)
     {
-        health -= amount;
-        gun.audio.PlayOneShot(hitConfirm);
-        Instantiate(hitExplosion, transform.position, Quaternion.identity);
-        camera.GetComponent<ScreenShake>().StartShake(0.25f, 5.0f);
-        audio.PlayOneShot(gotHitSFX);
+        if (invulnerabilityTime <= 0)
+        {
+            health -= amount;
+            Instantiate(hitExplosion, transform.position, Quaternion.identity);
+            camera.GetComponent<ScreenShake>().StartShake(0.25f, 5.0f);
+            audio.PlayOneShot(gotHitSFX);
+        }
+        return health;
     }
 
     private void ControlKBAM()
     {
         float modifiedMoveSpeed = 0;
-        if (item != null)
+        if (item != null || (Input.GetButton("Boost") && boostTime == boostMax))
         {
-            modifiedMoveSpeed = movespeed * 2;
+            modifiedMoveSpeed = movespeed * 10;
+            boostTime = 0;
         }
         else
         {
@@ -352,10 +394,10 @@ public class PlayerLocal : KBControllableGameObject
 
         if (Input.GetMouseButtonDown(0))
         {
-            if (item != null)
-            {
+            //if (item != null)
+            //{
                 isShooting = true;
-            }
+            //}
         }
         if (Input.GetMouseButtonUp(0))
         {
@@ -373,13 +415,17 @@ public class PlayerLocal : KBControllableGameObject
         {
             takeDamage(1);
         }
+
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            BankKills();
+        }
     }
 
     private void CheckHealth()
     {
-        if (health <= 0 && !waitingForRespawn)
+        if (health <= 0 && !waitingForRespawn) // should respawn
         {
-            acceptingInputs = false;
             respawnTimerNumber = timer.StartTimer(respawnTime);
             DropItem();
             waitingForRespawn = true;
@@ -387,6 +433,7 @@ public class PlayerLocal : KBControllableGameObject
         }
         else if (waitingForRespawn)
         {
+            acceptingInputs = false;
             if (!timer.IsTimerActive(respawnTimerNumber))
             {
                 Debug.Log("Respawning!");
@@ -418,6 +465,8 @@ public class PlayerLocal : KBControllableGameObject
             maxHealth = health;
             movespeed = stats.speed;
             level = stats.level;
+            killTokens = 0;
+            invulnerabilityTime = spawnProtectionTime;
             lowerbodyRotateSpeed = stats.lowerbodyRotationSpeed;
             upperbodyRotateSpeed = stats.upperbodyRotationSpeed;
             camera.GetComponent<ScreenShake>().StopShake();
@@ -450,5 +499,46 @@ public class PlayerLocal : KBControllableGameObject
         {
             hitFXTimer -= Time.deltaTime;
         }
+    }
+
+    private void SetupAbilities()
+    {
+        gun = gameObject.GetComponentInChildren<ProjectileAbilityBaseScript>();
+        gun.SetMaxRange(stats.attackRange);
+        gun.owner = this;
+        gun.Team = team;
+    }
+
+    public void ConfirmHit()
+    {
+        gun.audio.PlayOneShot(hitConfirm);
+    }
+
+    public void NotifyKill()
+    {
+        if (killTokens < 3)
+        {
+            killTokens++;
+        }
+        else
+        {
+            killTokens *= 2;
+        }
+    }
+
+    public void BankKills()
+    {
+        invulnerabilityTime = bankLockoutTime;
+        triggerLockout = true;
+        // make them look different
+    }
+
+    private IEnumerator Lockout(float time)
+    {
+        acceptingInputs = false;
+        yield return new WaitForSeconds(time);
+        acceptingInputs = true;
+        killTokens = GameManager.Instance.AddPointsToScore(team, killTokens);
+        triggerLockout = false;
     }
 }

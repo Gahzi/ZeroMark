@@ -25,6 +25,7 @@ abstract public class AbilityInstanceBaseScript : MonoBehaviour
     public float lifetime;
     protected float spawnTime;
     public int damage;
+    public PlayerLocal owner;
 
     // Use this for initialization
     public virtual void Start()

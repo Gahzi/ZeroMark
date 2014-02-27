@@ -20,6 +20,8 @@ abstract public class AbilitySlotBaseScript : MonoBehaviour
     protected int cooldownTimerNumber;
     public bool abilityActive;
     private Team team;
+    public PlayerLocal owner;
+
     public Team Team
     {
         get
