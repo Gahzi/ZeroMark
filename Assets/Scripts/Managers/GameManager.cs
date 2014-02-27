@@ -141,6 +141,7 @@ public class GameManager : Photon.MonoBehaviour
             switch (state)
             {
                 case GameState.PreGame:
+                    gameTimeMax = 250.0f;
                     state = GameState.InGame;
                     break;
 

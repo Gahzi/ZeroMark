@@ -51,7 +51,7 @@ public class PlayerLocal : KBControllableGameObject
     public Vector3 mousePos;
     public Vector3 playerPositionOnScreen;
     public Vector3 mousePlayerDiff;
-    public ProjectileAbilityBaseScript gun;
+    public ProjectileAbilityBaseScript[] gun;
     public List<PlayerSpawnPoint> teamSpawnpoints;
     public float respawnTime;
     private Vector3 lookRotation;
@@ -75,6 +75,7 @@ public class PlayerLocal : KBControllableGameObject
 
     public int killTokens;
     private bool triggerLockout;
+    private int activeAbility;
 
     public override void Start()
     {
@@ -183,13 +184,13 @@ public class PlayerLocal : KBControllableGameObject
             transform.localPosition = Vector3.Lerp(onUpdatePos, latestCorrectPos, fraction);    // set our pos between A and B
         }
 
-        if (isShooting && !gun.GetActive())
+        if (isShooting && !gun[activeAbility].GetActive())
         {
-            gun.ActivateAbility();
+            gun[activeAbility].ActivateAbility();
         }
-        else if (!isShooting && gun.GetActive())
+        else if (!isShooting && gun[activeAbility].GetActive())
         {
-            gun.DeactivateAbility();
+            gun[activeAbility].DeactivateAbility();
         }
 
         if (item != null)
@@ -420,6 +421,27 @@ public class PlayerLocal : KBControllableGameObject
         {
             BankKills();
         }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            activeAbility = 0;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            if (gun.Length > 0)
+            {
+                activeAbility = 1;
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            if (gun.Length > 1)
+            {
+                activeAbility = 2;
+            }
+        }
     }
 
     private void CheckHealth()
@@ -503,15 +525,18 @@ public class PlayerLocal : KBControllableGameObject
 
     private void SetupAbilities()
     {
-        gun = gameObject.GetComponentInChildren<ProjectileAbilityBaseScript>();
-        gun.SetMaxRange(stats.attackRange);
-        gun.owner = this;
-        gun.Team = team;
+        gun = gameObject.GetComponentsInChildren<ProjectileAbilityBaseScript>();
+        for (int i = 0; i < gun.Length; i++)
+        {
+            gun[i].owner = this;
+            gun[i].Team = team;
+        }
+        activeAbility = 0;
     }
 
     public void ConfirmHit()
     {
-        gun.audio.PlayOneShot(hitConfirm);
+        gun[activeAbility].audio.PlayOneShot(hitConfirm);
     }
 
     public void NotifyKill()

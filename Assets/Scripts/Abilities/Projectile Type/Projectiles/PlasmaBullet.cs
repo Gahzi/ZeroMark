@@ -4,7 +4,7 @@ public class PlasmaBullet : ProjectileBaseScript
 {
     #region CONSTANTS
 
-    public static int PLASMABULLET_DAMAGE = 1;
+    public static int DAMAGE = 1;
 
     #endregion CONSTANTS
 
@@ -19,28 +19,28 @@ public class PlasmaBullet : ProjectileBaseScript
         base.Update();
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        // Bullet will collide with anything that is a projectile, environment, or hitbox tagged.
-        // If it hits a hitbox, it needs to inform the owner of the bullet that it has hit a player.
-        if (other.gameObject.CompareTag("Hitbox"))
-        {
-            KBGameObject o = other.gameObject.transform.parent.GetComponent<KBGameObject>();
-            if (o.Team != Team)
-            {
-                int victimHealth = o.takeDamage(PLASMABULLET_DAMAGE);
-                if (victimHealth <= 0)
-                {
-                    owner.NotifyKill();
-                }
-                owner.ConfirmHit();
-                Destroy(gameObject);
-            }
-        }
-        if (other.gameObject.CompareTag("Environment"))
-        {
-            Destroy(gameObject);
-        }
-    }
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    // Bullet will collide with anything that is a projectile, environment, or hitbox tagged.
+    //    // If it hits a hitbox, it needs to inform the owner of the bullet that it has hit a player.
+    //    if (other.gameObject.CompareTag("Hitbox"))
+    //    {
+    //        KBGameObject o = other.gameObject.transform.parent.GetComponent<KBGameObject>();
+    //        if (o.Team != Team)
+    //        {
+    //            int victimHealth = o.takeDamage(PLASMABULLET_DAMAGE);
+    //            if (victimHealth <= 0)
+    //            {
+    //                owner.NotifyKill();
+    //            }
+    //            owner.ConfirmHit();
+    //            Destroy(gameObject);
+    //        }
+    //    }
+    //    if (other.gameObject.CompareTag("Environment"))
+    //    {
+    //        Destroy(gameObject);
+    //    }
+    //}
 
 }

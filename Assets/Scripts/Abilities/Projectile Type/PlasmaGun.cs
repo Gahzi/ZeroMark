@@ -10,6 +10,7 @@ public class PlasmaGun : ProjectileAbilityBaseScript
 
     #region CONSTANTS
     public static float PLASMAGUN_COOLDOWN = 0.5f;
+    public static int PLASMAGUN_RANGE = 50;
     #endregion
 
     public override void Start()
@@ -19,6 +20,7 @@ public class PlasmaGun : ProjectileAbilityBaseScript
         cooldown = PLASMAGUN_COOLDOWN;
         sound = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.PlasmaGunFire]);
         audio.clip = sound;
+        SetMaxRange(PLASMAGUN_RANGE);
     }
 
 }
