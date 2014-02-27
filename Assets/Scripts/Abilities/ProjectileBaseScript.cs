@@ -24,13 +24,14 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
 
     protected Vector3 direction;
     public bool physicsProjectile;
-    protected bool collideWithProjectiles;
+    public bool collideWithProjectiles;
+    public bool collideWithEnvironment;
 
     public override void Start()
     {
         base.Start();
         gameObject.tag = "Projectile";
-        collideWithProjectiles = true;
+        //collideWithProjectiles = true;
 
         if (physicsProjectile)
         {
@@ -73,9 +74,12 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
                 Destroy(gameObject);
             }
         }
-        if (other.gameObject.CompareTag("Environment"))
+        if (collideWithEnvironment)
         {
-            Destroy(gameObject);
+            if (other.gameObject.CompareTag("Environment"))
+            {
+                Destroy(gameObject);
+            }
         }
         
         if (collideWithProjectiles)

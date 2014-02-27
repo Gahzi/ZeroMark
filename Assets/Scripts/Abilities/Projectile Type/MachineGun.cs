@@ -6,7 +6,7 @@ public class MachineGun : ProjectileAbilityBaseScript
 {
     #region CONSTANTS
     public static float MACHINEGUN_COOLDOWN = 0.05f;
-    public static int MACHINEGUN_RANGE = 35;
+    public static int MACHINEGUN_RANGE = 25;
     public static float RELOAD_TIME = 5.0f;
     public static int CLIP_SIZE = 60;
     #endregion
