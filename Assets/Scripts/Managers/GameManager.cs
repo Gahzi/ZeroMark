@@ -56,34 +56,9 @@ public class GameManager : Photon.MonoBehaviour
 
     #region PHOTON CONNECTION HANDLING
 
-    // This is one of the callback/event methods called by PUN (read more in PhotonNetworkingMessage enumeration)
-    public void OnConnectedToMaster()
+    void OnPhotonPlayerConnected(PhotonPlayer player)
     {
-        Debug.Log("Connected to Master Server");
-        PhotonNetwork.JoinRandomRoom();
-    }
-
-    // This is one of the callback/event methods called by PUN (read more in PhotonNetworkingMessage enumeration)
-    public void OnPhotonRandomJoinFailed()
-    {
-        Debug.Log("Room Creation Failed");
-        PhotonNetwork.CreateRoom(null, true, true, 4);
-    }
-
-    // This is one of the callback/event methods called by PUN (read more in PhotonNetworkingMessage enumeration)
-    public void OnJoinedRoom()
-    {
-        Debug.Log("Joined Room Succesfully");
-        //photonView.RPC("AddPlayer", PhotonTargets.AllBuffered);
-        localPlayer = createObject(ObjectConstants.type.Player, new Vector3(0, 0, 0), Quaternion.identity, Team.Red).GetComponent<PlayerLocal>(); ;
-        photonView.RPC("SetPlayerLevel", PhotonTargets.AllBuffered, PhotonNetwork.player, 1);
-    }
-
-    // This is one of the callback/event methods called by PUN (read more in PhotonNetworkingMessage enumeration)
-    public void OnCreatedRoom()
-    {
-        Debug.Log("Created Room Succesfully");
-
+        //SHERVIN: SEND A MESSAGE SAYING A NEW PLAYER HAS JOINED
     }
 
     void OnPhotonPlayerDisconneced(PhotonPlayer player)
@@ -97,11 +72,6 @@ public class GameManager : Photon.MonoBehaviour
         }
     }
 
-    void OnPhotonPlayerConnected(PhotonPlayer player)
-    {
-        //SHERVIN: SEND A MESSAGE SAYING A NEW PLAYER HAS JOINED
-    }
-
     #endregion PHOTON CONNECTION HANDLING
 
     private void Awake()
@@ -111,17 +81,12 @@ public class GameManager : Photon.MonoBehaviour
 
     private void Start()
     {
+        PhotonNetwork.isMessageQueueRunning = true;
         ReadPlayerStatData();
         ReadUpgradePointData();
         startTime = Time.time;
         lastTick = Time.time;
         state = GameState.PreGame;
-
-        if (!PhotonNetwork.connected)
-        {
-            PhotonNetwork.autoJoinLobby = false;
-            PhotonNetwork.ConnectUsingSettings("1");
-        }
 
         CaptureZone[] loadedCaptureZones = FindObjectsOfType<CaptureZone>();
         GameObject[] loadedItems = GameObject.FindGameObjectsWithTag("Item");
@@ -147,6 +112,15 @@ public class GameManager : Photon.MonoBehaviour
         {
             playerSpawnZones.Add(p);
         }
+
+        if (PhotonNetwork.connected)
+        {
+            Team nextTeam = (Team)(PhotonNetwork.otherPlayers.Length % 2);
+
+            localPlayer = createObject(ObjectConstants.type.Player, new Vector3(0, 0, 0), Quaternion.identity, nextTeam).GetComponent<PlayerLocal>(); ;
+            photonView.RPC("SetPlayerLevel", PhotonTargets.AllBuffered, PhotonNetwork.player, 1);
+        }
+        
     }
 
     private void Update()
