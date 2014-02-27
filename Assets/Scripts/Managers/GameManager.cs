@@ -1,12 +1,15 @@
 ﻿using KBConstants;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
 public class GameManager : Photon.MonoBehaviour
 {
     public enum GameState { PreGame, InGame, RedWins, BlueWins, Tie, EndGame };
 
+    public enum GameMode { Capture, Bank };
+
+    public GameMode gameMode;
     public PlayerLocal localPlayer;
     public List<PlayerLocal> players;
 
@@ -15,6 +18,7 @@ public class GameManager : Photon.MonoBehaviour
     private List<PlayerSpawnPoint> playerSpawnZones;
     public CaptureZone victoryZone;
     private GameState state = GameState.PreGame;
+
     public GameState State
     {
         get
@@ -22,6 +26,7 @@ public class GameManager : Photon.MonoBehaviour
             return state;
         }
     }
+
     public int redTeamScore;
     public int blueTeamScore;
     public float lastTick;
@@ -35,6 +40,8 @@ public class GameManager : Photon.MonoBehaviour
     private List<List<String>> playerStatData;
     private List<List<String>> upgradePointReqData;
     private float startTime;
+    public float gameTime;
+    public float gameTimeMax;
 
     private static GameManager instance;
 
@@ -56,37 +63,12 @@ public class GameManager : Photon.MonoBehaviour
 
     #region PHOTON CONNECTION HANDLING
 
-    // This is one of the callback/event methods called by PUN (read more in PhotonNetworkingMessage enumeration)
-    public void OnConnectedToMaster()
+    private void OnPhotonPlayerConnected(PhotonPlayer player)
     {
-        Debug.Log("Connected to Master Server");
-        PhotonNetwork.JoinRandomRoom();
+        //SHERVIN: SEND A MESSAGE SAYING A NEW PLAYER HAS JOINED
     }
 
-    // This is one of the callback/event methods called by PUN (read more in PhotonNetworkingMessage enumeration)
-    public void OnPhotonRandomJoinFailed()
-    {
-        Debug.Log("Room Creation Failed");
-        PhotonNetwork.CreateRoom(null, true, true, 4);
-    }
-
-    // This is one of the callback/event methods called by PUN (read more in PhotonNetworkingMessage enumeration)
-    public void OnJoinedRoom()
-    {
-        Debug.Log("Joined Room Succesfully");
-        //photonView.RPC("AddPlayer", PhotonTargets.AllBuffered);
-        localPlayer = createObject(ObjectConstants.type.Player, new Vector3(0, 0, 0), Quaternion.identity, Team.Red).GetComponent<PlayerLocal>(); ;
-        photonView.RPC("SetPlayerLevel", PhotonTargets.AllBuffered, PhotonNetwork.player, 1);
-    }
-
-    // This is one of the callback/event methods called by PUN (read more in PhotonNetworkingMessage enumeration)
-    public void OnCreatedRoom()
-    {
-        Debug.Log("Created Room Succesfully");
-
-    }
-
-    void OnPhotonPlayerDisconneced(PhotonPlayer player)
+    private void OnPhotonPlayerDisconneced(PhotonPlayer player)
     {
         foreach (PlayerLocal currentPlayer in players)
         {
@@ -95,11 +77,6 @@ public class GameManager : Photon.MonoBehaviour
                 players.Remove(currentPlayer);
             }
         }
-    }
-
-    void OnPhotonPlayerConnected(PhotonPlayer player)
-    {
-        //SHERVIN: SEND A MESSAGE SAYING A NEW PLAYER HAS JOINED
     }
 
     #endregion PHOTON CONNECTION HANDLING
@@ -111,17 +88,12 @@ public class GameManager : Photon.MonoBehaviour
 
     private void Start()
     {
+        PhotonNetwork.isMessageQueueRunning = true;
         ReadPlayerStatData();
         ReadUpgradePointData();
         startTime = Time.time;
         lastTick = Time.time;
         state = GameState.PreGame;
-
-        if (!PhotonNetwork.connected)
-        {
-            PhotonNetwork.autoJoinLobby = false;
-            PhotonNetwork.ConnectUsingSettings("1");
-        }
 
         CaptureZone[] loadedCaptureZones = FindObjectsOfType<CaptureZone>();
         GameObject[] loadedItems = GameObject.FindGameObjectsWithTag("Item");
@@ -164,7 +136,7 @@ public class GameManager : Photon.MonoBehaviour
         
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (Time.time > lastTick + secondsPerTick)
         {
@@ -180,8 +152,24 @@ public class GameManager : Photon.MonoBehaviour
                     break;
 
                 case GameState.InGame:
-                    CheckWinConditions();
-                    CheckPlayerUpgradePoints();
+                    gameTime += Time.deltaTime;
+                    switch (gameMode)
+                    {
+                        case GameMode.Capture:
+                            CheckCaptureWinConditions();
+                            break;
+
+                        case GameMode.Bank:
+                            if (IsGameTimeOver())
+                            {
+                                state = GameState.EndGame;
+                            }
+                            break;
+
+                        default:
+                            break;
+                    }
+                    //CheckPlayerUpgradePoints();
                     RunGui();
                     break;
 
@@ -201,7 +189,19 @@ public class GameManager : Photon.MonoBehaviour
                     break;
 
                 case GameState.EndGame:
-
+                    // check winners here;
+                    if (redTeamScore > blueTeamScore)
+                    {
+                        state = GameState.RedWins;
+                    }
+                    else if (blueTeamScore > redTeamScore)
+                    {
+                        state = GameState.BlueWins;
+                    }
+                    else
+                    {
+                        state = GameState.Tie;
+                    }
                     break;
 
                 default:
@@ -213,8 +213,14 @@ public class GameManager : Photon.MonoBehaviour
         {
             TakeScreenshot();
         }
-
     }
+    
+    void OnGUI()
+    {
+        GUI.Box(new Rect(Screen.width / 2 - 50, 0, 100, 40), "Blue" + System.Environment.NewLine +  blueTeamScore.ToString());
+        GUI.Box(new Rect(Screen.width / 2 + 50, 0, 100, 40), "Red" + System.Environment.NewLine + redTeamScore.ToString());
+    }
+    
 
      //<summary>
      //While script is observed (in a PhotonView), this is called by PUN with a stream to write or read.
@@ -318,7 +324,7 @@ public class GameManager : Photon.MonoBehaviour
     /// <summary>
     /// Checks to see if the game has reached one of it's win conditions and changes state appropriately.
     /// </summary>
-    private void CheckWinConditions()
+    private void CheckCaptureWinConditions()
     {
         if (victoryZone.state != CaptureZone.ZoneState.Unoccupied)
         {
@@ -353,17 +359,20 @@ public class GameManager : Photon.MonoBehaviour
                 {
                     case CaptureZone.ZoneState.Unoccupied:
                         break;
+
                     case CaptureZone.ZoneState.Red:
                         redBonus++;
                         break;
+
                     case CaptureZone.ZoneState.Blue:
                         blueBonus++;
                         break;
+
                     default:
                         break;
                 }
             }
-            
+
             switch (c.state)
             {
                 case CaptureZone.ZoneState.Unoccupied:
@@ -436,7 +445,6 @@ public class GameManager : Photon.MonoBehaviour
                 Debug.Log("Level up!");
             }
         }
-
     }
 
     public GameObject createObject(KBConstants.ObjectConstants.type objectType, Vector3 position, Quaternion rotation, Team newTeam)
@@ -524,7 +532,6 @@ public class GameManager : Photon.MonoBehaviour
     //[RPC]
     //void SpawnOnNetwork(Vector3 pos, Quaternion rot, PhotonViewID id1, PhotonPlayer np)
     //{
-
     //    Transform newPlayer = Instantiate(playerPrefab, pos, rot) as Transform;
     //    //Set transform
     //    PlayerInfo4 pNode = GetPlayer(np);
@@ -571,13 +578,11 @@ public class GameManager : Photon.MonoBehaviour
             }
         }
 
-
         if (player == null)
         {
             Debug.Log("Warning! Couldn't find player to set level");
             return;
         }
-
 
         for (int i = 0; i < stats.statArray.Length; i++) // This loads the raw stats into a float[]
         {
@@ -604,5 +609,39 @@ public class GameManager : Photon.MonoBehaviour
         Application.CaptureScreenshot(path, 2);
         path = Application.persistentDataPath + "/" + path;
         Debug.Log(path);
+    }
+
+    public int AddPointsToScore(Team team, int points)
+    {
+        switch (team)
+        {
+            case Team.Red:
+                redTeamScore += points;
+                break;
+            case Team.Blue:
+                blueTeamScore += points;
+                break;
+            case Team.None:
+                break;
+            default:
+                break;
+        }
+        return 0;
+    }
+
+    /// <summary>
+    /// Checks if time spent in InGame state is greater than max alloted game time. True if time is up.
+    /// </summary>
+    /// <returns>True is game time is up</returns>
+    private bool IsGameTimeOver()
+    {
+        if (gameTime > gameTimeMax) // game over
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }

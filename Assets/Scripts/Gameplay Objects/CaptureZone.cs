@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class CaptureZone : KBGameObject
 {
+    
+    // Capture zone class should probably inherit from a more generic type of zone.
+    
     #region CONSTANTS
 
     public static int CAPTURE_REQUIRED = 1000;
@@ -40,15 +43,12 @@ public class CaptureZone : KBGameObject
     public bool redUnlocked, blueUnlocked;
     private float captureFraction = 0.0f;
 
-    private void Start()
+    protected virtual void Start()
     {
         base.Start();
         captureTotal = 0;
         state = ZoneState.Unoccupied;
         players = new List<PlayerLocal>(10);
-
-        captureComplete = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.CaptureComplete]);
-        captureProgress = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.CaptureProgress]);
 
         if (upgradePointsOnCapture == 0)
         {
@@ -60,18 +60,9 @@ public class CaptureZone : KBGameObject
         {
             i.connectedCaptureZone = this;
         }
-
-        rGui = GetComponent<RotatableGuiItem>();
-        if (rGui == null)
-        {
-            gameObject.AddComponent<RotatableGuiItem>();
-        }
-        rGui.ScreenpointToAlign = RotatableGuiItem.AlignmentScreenpoint.BottomLeft;
-        rGui.angle = 45;
-        rGui.enabled = false;
     }
 
-    private void OnDrawGizmos()
+    protected void OnDrawGizmos()
     {
         Vector3 p = new Vector3(transform.position.x, 5, transform.position.z);
         if (requiredZones.Length > 0)
@@ -122,7 +113,7 @@ public class CaptureZone : KBGameObject
         }
     }
 
-    private void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         #region Unlock Handling
 
@@ -312,28 +303,14 @@ public class CaptureZone : KBGameObject
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    protected void OnTriggerEnter(Collider other)
     {
         base.OnTriggerEnter(other);
-        //if (other.gameObject.CompareTag("Player"))
-        //{
-        //    Player p = other.gameObject.GetComponent<Player>();
-        //    players.Add(p);
-        //    audio.clip = captureProgress;
-        //    audio.Play();
-        //    audio.loop = true;
-        //}
     }
 
-    private void OnTriggerExit(Collider other)
+    protected void OnTriggerExit(Collider other)
     {
         base.OnTriggerExit(other);
-        //if (other.gameObject.CompareTag("Player"))
-        //{
-        //    Player p = other.gameObject.GetComponent<Player>();
-        //    players.Remove(p);
-        //    audio.Stop();
-        //}
     }
 
     /// <summary>
@@ -455,7 +432,7 @@ public class CaptureZone : KBGameObject
         }
     }
 
-    private void RunVisualFeedback(int capturePoints)
+    protected void RunVisualFeedback(int capturePoints)
     {
         if (capturePoints > 0)
         {
@@ -506,5 +483,23 @@ public class CaptureZone : KBGameObject
                     break;
             }
         }
+    }
+
+    protected void SetRGUI()
+    {
+        rGui = GetComponent<RotatableGuiItem>();
+        if (rGui == null)
+        {
+            gameObject.AddComponent<RotatableGuiItem>();
+        }
+        rGui.ScreenpointToAlign = RotatableGuiItem.AlignmentScreenpoint.BottomLeft;
+        rGui.angle = 45;
+        rGui.enabled = false;
+    }
+
+    protected void LoadSounds()
+    {
+        captureComplete = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.CaptureComplete]);
+        captureProgress = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.CaptureProgress]);
     }
 }

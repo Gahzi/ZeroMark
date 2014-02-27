@@ -25,15 +25,16 @@ public class ProjectileAbilityBaseScript : AbilitySlotBaseScript
         {
             if (!cooldownTimer.IsTimerActive(cooldownTimerNumber))
             {
-                Fire(maxRange, Team);
+                Fire(maxRange, owner);
             }
         }
     }
 
-    public ProjectileBaseScript Fire(Vector3 direction, Team firedBy)
+    public ProjectileBaseScript Fire(Vector3 direction, PlayerLocal firedBy)
     {
         ProjectileBaseScript projectile = (ProjectileBaseScript)Instantiate(projectileType, transform.position, Quaternion.Euler(direction));
-        projectile.Team = firedBy;
+        projectile.Team = firedBy.Team;
+        projectile.owner = firedBy;
         audio.Play();
         cooldownTimerNumber = cooldownTimer.StartTimer(cooldown);
 
@@ -49,12 +50,12 @@ public class ProjectileAbilityBaseScript : AbilitySlotBaseScript
         return projectile;
     }
 
-    public ProjectileBaseScript Fire(Team firedBy)
+    public ProjectileBaseScript Fire(PlayerLocal firedBy)
     {
         return Fire(transform.rotation.eulerAngles, firedBy);
     }
 
-    public ProjectileBaseScript Fire(int maxRange, Team firedBy)
+    public ProjectileBaseScript Fire(int maxRange, PlayerLocal firedBy)
     {
         ProjectileBaseScript p = Fire(firedBy);
         p.setLifetimeForMaxRange(maxRange);

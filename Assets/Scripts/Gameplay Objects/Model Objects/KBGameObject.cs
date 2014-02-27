@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class KBGameObject : Photon.MonoBehaviour
+public abstract class KBGameObject : Photon.MonoBehaviour
 {
     public Team team;
     public Team Team
@@ -40,9 +40,7 @@ public class KBGameObject : Photon.MonoBehaviour
     {
     }
 
-    public virtual void takeDamage(int amount)
-    {
-    }
+    public virtual int takeDamage(int amount) { return 0; }
 
     protected void OnTriggerEnter(Collider other)
     {
