@@ -553,7 +553,7 @@ MonoBehaviour:
   redBonus: 0
   blueBonus: 0
   gameTime: 0
-  gameTimeMax: 0
+  gameTimeMax: 250
 --- !u!4 &302389329
 Transform:
   m_ObjectHideFlags: 0
@@ -680,6 +680,10 @@ Prefab:
     - target: {fileID: 11400000, guid: 327061c837dd19640a0a5bff662b90d5, type: 2}
       propertyPath: gameMode
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 327061c837dd19640a0a5bff662b90d5, type: 2}
+      propertyPath: gameTimeMax
+      value: 250
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 327061c837dd19640a0a5bff662b90d5, type: 2}

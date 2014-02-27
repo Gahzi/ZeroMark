@@ -246,6 +246,8 @@ public class GameManager : Photon.MonoBehaviour
             int rdCptrs = redCaptures;
             int blCptrs = blueCaptures;
             float strtTime = startTime;
+            float gmTime = gameTime;
+            float gmTimeMax = gameTimeMax;
 
             stream.Serialize(ref gmState);
             stream.Serialize(ref rdTmScre);
@@ -255,6 +257,8 @@ public class GameManager : Photon.MonoBehaviour
             stream.Serialize(ref rdCptrs);
             stream.Serialize(ref blCptrs);
             stream.Serialize(ref strtTime);
+            stream.Serialize(ref gmTime);
+            stream.Serialize(ref gmTimeMax);
         }
         else
         {
@@ -267,6 +271,8 @@ public class GameManager : Photon.MonoBehaviour
             int rdCptrs = redCaptures;
             int blCptrs = blueCaptures;
             float strtTime = startTime;
+            float gmTime = gameTime;
+            float gmTimeMax = gameTimeMax;
 
             stream.Serialize(ref gmState);
             stream.Serialize(ref rdTmScre);
@@ -276,6 +282,8 @@ public class GameManager : Photon.MonoBehaviour
             stream.Serialize(ref rdCptrs);
             stream.Serialize(ref blCptrs);
             stream.Serialize(ref strtTime);
+            stream.Serialize(ref gmTime);
+            stream.Serialize(ref gmTimeMax);
 
             state = (GameState)gmState;
             redTeamScore = rdTmScre;
@@ -285,6 +293,8 @@ public class GameManager : Photon.MonoBehaviour
             redCaptures = rdCptrs;
             blueCaptures = blCptrs;
             startTime = strtTime;
+            gameTime = gmTime;
+            gameTimeMax = gmTimeMax;
 
         }
     }

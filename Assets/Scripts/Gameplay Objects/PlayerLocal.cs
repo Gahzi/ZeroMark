@@ -209,12 +209,7 @@ public class PlayerLocal : KBControllableGameObject
             } 
         }
 
-        CheckHealth();
-        if (photonView.isMine)
-        {
-            Debug.Log("photonView.ownerId: " + photonView.ownerId);
-        }
-        
+        CheckHealth(); 
     }  
     
     void OnGUI()
