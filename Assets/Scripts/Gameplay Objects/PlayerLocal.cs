@@ -214,9 +214,11 @@ public class PlayerLocal : KBControllableGameObject
     
     void OnGUI()
     {
-        GUI.Box(new Rect(0, 0, 100, 40), "Kill Tokens" + System.Environment.NewLine + killTokens.ToString());
-        GUI.Box(new Rect(0, 40, 100, 40), "Boost" + System.Environment.NewLine + boostTime.ToString("0.00"));
-
+        if (networkPlayer.isLocal)
+        {
+            GUI.Box(new Rect(0, 0, 100, 40), "Kill Tokens" + System.Environment.NewLine + killTokens.ToString());
+            GUI.Box(new Rect(0, 40, 100, 40), "Boost" + System.Environment.NewLine + boostTime.ToString("0.00"));
+        }
     }
     
 
@@ -266,6 +268,7 @@ public class PlayerLocal : KBControllableGameObject
             bool isShting = isShooting;
             bool cnCpture = canCapture;
             int tm = (int)team;
+            int kt = killTokens;
 
             stream.Serialize(ref pos);
             stream.Serialize(ref rot);
@@ -275,6 +278,7 @@ public class PlayerLocal : KBControllableGameObject
             stream.Serialize(ref isShting);
             stream.Serialize(ref cnCpture);
             stream.Serialize(ref tm);
+            stream.Serialize(ref kt);
         }
         else
         {
@@ -287,6 +291,7 @@ public class PlayerLocal : KBControllableGameObject
             bool isShting = false;
             bool cnCpture = false;
             int tm = 0;
+            int kt = 0;
 
             stream.Serialize(ref pos);
             stream.Serialize(ref rot);
@@ -296,6 +301,7 @@ public class PlayerLocal : KBControllableGameObject
             stream.Serialize(ref isShting);
             stream.Serialize(ref cnCpture);
             stream.Serialize(ref tm);
+            stream.Serialize(ref kt);
 
             latestCorrectPos = pos;                 // save this to move towards it in FixedUpdate()
             onUpdatePos = transform.localPosition;  // we interpolate from here to latestCorrectPos
@@ -308,6 +314,7 @@ public class PlayerLocal : KBControllableGameObject
             isShooting = isShting;
             canCapture = cnCpture;
             team = (Team)tm;
+            killTokens = kt;
         }
     }
 
@@ -528,19 +535,22 @@ public class PlayerLocal : KBControllableGameObject
     public void Die(GameObject killerObject)
     {
         PlayerLocal killerPlayer = killerObject.GetComponent<PlayerLocal>();
-        photonView.RPC("NotifyKill", killerPlayer.networkPlayer, null);
+        killerPlayer.photonView.RPC("NotifyKill", PhotonTargets.Others, killerPlayer.networkPlayer);
     }
 
     [RPC]
-    public void NotifyKill()
+    public void NotifyKill(PhotonPlayer killerPlayer)
     {
-        if (killTokens < 3)
+        if (killerPlayer.isLocal)
         {
-            killTokens++;
-        }
-        else
-        {
-            killTokens *= 2;
+            if (killTokens < 3)
+            {
+                killTokens++;
+            }
+            else
+            {
+                killTokens *= 2;
+            }
         }
     }
 

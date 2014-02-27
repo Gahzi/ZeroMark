@@ -26,15 +26,18 @@ public class PlasmaBullet : ProjectileBaseScript
         if (other.gameObject.CompareTag("Hitbox"))
         {
             KBGameObject o = other.gameObject.transform.parent.GetComponent<KBGameObject>();
-            if (o.Team != Team)
+            if(o.gameObject.GetComponent<PlayerLocal>().networkPlayer.isLocal)
             {
-                int victimHealth = o.takeDamage(PLASMABULLET_DAMAGE);
-                if (victimHealth <= 0)
+                if (o.Team != Team)
                 {
-                    owner.Die(o.gameObject);
+                    int victimHealth = o.takeDamage(PLASMABULLET_DAMAGE);
+                    if (victimHealth <= 0)
+                    {
+                        o.gameObject.GetComponent<PlayerLocal>().Die(owner.gameObject);
+                    }
+                    owner.ConfirmHit();
+                    Destroy(gameObject);
                 }
-                owner.ConfirmHit();
-                Destroy(gameObject);
             }
         }
         if (other.gameObject.CompareTag("Environment"))
