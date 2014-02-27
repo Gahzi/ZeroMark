@@ -235,6 +235,11 @@ public class PlayerLocal : KBControllableGameObject
             killTokens.ToString() + System.Environment.NewLine
             );
         GUI.Box(new Rect(0, 60, 100, 40), "Boost" + System.Environment.NewLine + boostTime.ToString("0.00"));
+
+        if (triggerLockout)
+        {
+            GUI.Box(new Rect(Screen.width / 2 - 80, Screen.height / 2, 160, 20), "BANKING TOKENS");
+        }
     }
 
 
