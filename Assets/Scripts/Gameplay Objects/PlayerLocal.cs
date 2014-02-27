@@ -43,7 +43,7 @@ public class PlayerLocal : KBControllableGameObject
     private Vector3 latestCorrectPos;
     private Vector3 onUpdatePos;
     private float fraction;
-    private bool isShooting;
+    //private bool isShooting;
 
     public AudioClip grabSound;
     public GameObject upperBody;
@@ -76,11 +76,12 @@ public class PlayerLocal : KBControllableGameObject
     public int killTokens;
     private bool triggerLockout;
     private int activeAbility;
+    private bool autoFire;
 
     public override void Start()
     {
         // NOTE: All connected abilities & hitboxes need to be sent the player's team.
-        
+
         base.Start();
         acceptingInputs = true;
         waitingForRespawn = false;
@@ -90,11 +91,11 @@ public class PlayerLocal : KBControllableGameObject
         playerGuiSquare = GetComponent<RotatableGuiItem>();
         latestCorrectPos = transform.position;
         onUpdatePos = transform.position;
-        isShooting = false;
+        //isShooting = false;
         hitConfirm = Resources.Load<AudioClip>(KBConstants.AudioConstants.CLIP_NAMES[KBConstants.AudioConstants.clip.HitConfirm]);
         SetupAbilities();
         GetComponentInChildren<HitboxBaseScript>().Team = team;
-
+        autoFire = false;
         movespeed = stats.speed;
         lowerbodyRotateSpeed = stats.lowerbodyRotationSpeed;
 
@@ -144,7 +145,7 @@ public class PlayerLocal : KBControllableGameObject
 
     private void FixedUpdate()
     {
-        
+
         /* TODO:
          * Fix aiming
          * Add indication of invulnerability
@@ -162,13 +163,13 @@ public class PlayerLocal : KBControllableGameObject
 
         if (!Input.GetButton("Boost"))
         {
-            boostTime += boostRechargeRate * Time.deltaTime ;
+            boostTime += boostRechargeRate * Time.deltaTime;
             boostTime = Mathf.Clamp(boostTime, 0.0f, boostMax);
         }
 
         mousePos = Input.mousePosition;
         fraction = fraction + Time.deltaTime * 9;
-        
+
         if (photonView.isMine)
         {
             playerPositionOnScreen = camera.WorldToScreenPoint(transform.position);
@@ -184,14 +185,14 @@ public class PlayerLocal : KBControllableGameObject
             transform.localPosition = Vector3.Lerp(onUpdatePos, latestCorrectPos, fraction);    // set our pos between A and B
         }
 
-        if (isShooting && !gun[activeAbility].GetActive())
-        {
-            gun[activeAbility].ActivateAbility();
-        }
-        else if (!isShooting && gun[activeAbility].GetActive())
-        {
-            gun[activeAbility].DeactivateAbility();
-        }
+        //if (isShooting && !gun[activeAbility].GetActive())
+        //{
+        //    gun[activeAbility].ActivateAbility();
+        //}
+        //else if (!isShooting && gun[activeAbility].GetActive())
+        //{
+        //    gun[activeAbility].DeactivateAbility();
+        //}
 
         if (item != null)
         {
@@ -200,26 +201,42 @@ public class PlayerLocal : KBControllableGameObject
             if (canCapture != false)
             {
                 canCapture = false;
-            } 
+            }
         }
         else
         {
             if (canCapture != true)
             {
                 canCapture = true;
-            } 
+            }
         }
 
         CheckHealth();
-    }  
-    
+    }
+
     void OnGUI()
     {
-        GUI.Box(new Rect(0, 0, 100, 40), "Kill Tokens" + System.Environment.NewLine + killTokens.ToString());
-        GUI.Box(new Rect(0, 40, 100, 40), "Boost" + System.Environment.NewLine + boostTime.ToString("0.00"));
+        if (gun[activeAbility].reloading)
+        {
+            GUI.Box(new Rect(Screen.width / 2, Screen.height / 2 + 100, 100, 20), "RELOADING");
+        }
+        else
+        {
+            GUI.Box(new Rect(Input.mousePosition.x - 80, Screen.height - Input.mousePosition.y - 20, 30, 20), gun[activeAbility].ammo.ToString());
+            if (autoFire)
+            {
+                GUI.Box(new Rect(Input.mousePosition.x - 80, Screen.height - Input.mousePosition.y, 50, 20), "AUTO");
 
+            }
+        }
+
+        GUI.Box(new Rect(0, 0, 100, 80),
+            "Kill Tokens" + System.Environment.NewLine +
+            killTokens.ToString() + System.Environment.NewLine
+            );
+        GUI.Box(new Rect(0, 60, 100, 40), "Boost" + System.Environment.NewLine + boostTime.ToString("0.00"));
     }
-    
+
 
     private void OnPhotonInstantiate(PhotonMessageInfo msg)
     {
@@ -264,7 +281,7 @@ public class PlayerLocal : KBControllableGameObject
             int hlth = health;
             int lvl = level;
             int mxhlth = maxHealth;
-            bool isShting = isShooting;
+            //bool isShting = isShooting;
             bool cnCpture = canCapture;
             int tm = (int)team;
 
@@ -273,7 +290,7 @@ public class PlayerLocal : KBControllableGameObject
             stream.Serialize(ref hlth);
             stream.Serialize(ref lvl);
             stream.Serialize(ref mxhlth);
-            stream.Serialize(ref isShting);
+            //stream.Serialize(ref isShting);
             stream.Serialize(ref cnCpture);
             stream.Serialize(ref tm);
         }
@@ -306,7 +323,7 @@ public class PlayerLocal : KBControllableGameObject
             health = hlth;
             level = lvl;
             maxHealth = mxhlth;
-            isShooting = isShting;
+            //isShooting = isShting;
             canCapture = cnCpture;
             team = (Team)tm;
         }
@@ -393,22 +410,42 @@ public class PlayerLocal : KBControllableGameObject
                 break;
         }
 
-        if (Input.GetMouseButtonDown(0))
+        if (autoFire)
         {
-            //if (item != null)
-            //{
-                isShooting = true;
-            //}
+            if (Input.GetMouseButton(0))
+            {
+                gun[activeAbility].PlayerFire();
+                if (gun[activeAbility].ammo == 0)
+                {
+                    gun[activeAbility].PlayerTriggerReload();
+                }
+            }
+            else
+            {
+            }
         }
-        if (Input.GetMouseButtonUp(0))
+        else
         {
-            isShooting = false;
+            if (Input.GetMouseButtonDown(0))
+            {
+                gun[activeAbility].PlayerFire();
+                if (gun[activeAbility].ammo == 0)
+                {
+                    gun[activeAbility].PlayerTriggerReload();
+                }
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            gun[activeAbility].PlayerTriggerReload();
         }
 
         if (Input.GetMouseButtonDown(1))
         {
             //SHERVIN: This must be sent across network.
-            DropItem();
+            //DropItem();
+            autoFire = !autoFire;
         }
 
         // DEBUG FUNCTIONS
@@ -530,6 +567,7 @@ public class PlayerLocal : KBControllableGameObject
         {
             gun[i].owner = this;
             gun[i].Team = team;
+            //gun[i].abilityActive = true;
         }
         activeAbility = 0;
     }

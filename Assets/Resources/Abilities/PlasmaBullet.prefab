@@ -47,7 +47,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 87.0682602, y: -42.0591278, z: 165.749023}
+  m_LocalPosition: {x: 87.3836975, y: -42.0591278, z: 165.749023}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400002}
@@ -154,7 +154,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lifetime: .5
   damage: 1
-  projectileSpeed: 100
+  owner: {fileID: 0}
+  projectileSpeed: 175
   physicsProjectile: 0
 --- !u!135 &13500000
 SphereCollider:
@@ -174,18 +175,18 @@ ParticleSystem:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  lengthInSec: 10
+  lengthInSec: 50
   startDelay: 0
   speed: 1
   randomSeed: 0
-  looping: 1
+  looping: 0
   prewarm: 1
   playOnAwake: 1
   moveWithTransform: 0
   InitialModule:
     enabled: 1
     startLifetime:
-      scalar: .200000003
+      scalar: .100000001
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -345,7 +346,7 @@ ParticleSystem:
         rgba: 4292835064
       minMaxState: 0
     startSize:
-      scalar: 5
+      scalar: 2
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -411,7 +412,7 @@ ParticleSystem:
         m_PostInfinity: 2
       minMaxState: 0
     gravityModifier: 0
-    inheritVelocity: -.379999995
+    inheritVelocity: -.5
     maxNumParticles: 500
   ShapeModule:
     serializedVersion: 2
@@ -430,7 +431,7 @@ ParticleSystem:
     enabled: 1
     m_Type: 1
     rate:
-      scalar: 20
+      scalar: 200
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -462,15 +463,15 @@ ParticleSystem:
         m_PreInfinity: 2
         m_PostInfinity: 2
       minMaxState: 0
-    cnt0: 30
+    cnt0: 300
     cnt1: 30
     cnt2: 30
     cnt3: 30
-    time0: 0
+    time0: .0500000007
     time1: 0
     time2: 0
     time3: 0
-    m_BurstCount: 0
+    m_BurstCount: 1
   SizeModule:
     enabled: 1
     curve:

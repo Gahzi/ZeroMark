@@ -7,59 +7,74 @@ using KBConstants;
 /// in the direction the source obj is "aiming" (Vec3)
 /// Plays sound on fire.
 /// </summary>
-public class ProjectileAbilityBaseScript : AbilitySlotBaseScript
+public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
 {
+
+    #region CONSTANTS
+    protected float reloadTime;
+    protected int clipSize;
+    #endregion
 
     protected ProjectileBaseScript projectileType;
     private int maxRange;
-    public bool fired;
+    public int ammo;
+    //protected bool triggerReload;
+    public bool reloading;
 
     public override void Start()
     {
         base.Start();
     }
-    
-    void Update()
+
+    public override void FixedUpdate()
     {
-        if (abilityActive)
-        {
-            if (!cooldownTimer.IsTimerActive(cooldownTimerNumber))
-            {
-                Fire(maxRange, owner);
-            }
-        }
+        base.FixedUpdate();
+
     }
 
-    public ProjectileBaseScript Fire(Vector3 direction, PlayerLocal firedBy)
+    protected ProjectileBaseScript Fire(Vector3 direction, PlayerLocal firedBy)
     {
-        ProjectileBaseScript projectile = (ProjectileBaseScript)Instantiate(projectileType, transform.position, Quaternion.Euler(direction));
-        projectile.Team = firedBy.Team;
-        projectile.owner = firedBy;
-        audio.Play();
-        cooldownTimerNumber = cooldownTimer.StartTimer(cooldown);
-
-        Collider[] collider = transform.parent.GetComponentsInChildren<Collider>();
-        foreach (Collider c in collider)
+        ProjectileBaseScript projectile = null;
+        if (cooldown <= 0 && ammo > 0 && !reloading)
         {
-            if (c.enabled)
-            {
-                Physics.IgnoreCollision(c, projectile.collider, true); 
-            }
+            projectile = (ProjectileBaseScript)Instantiate(projectileType, transform.position, Quaternion.Euler(direction));
+            projectile.Team = firedBy.Team;
+            projectile.owner = firedBy;
+            audio.Play();
+            cooldown = cooldownStart;
+            ammo--;
 
+            Collider[] collider = transform.parent.GetComponentsInChildren<Collider>();
+            foreach (Collider c in collider)
+            {
+                if (c.enabled)
+                {
+                    Physics.IgnoreCollision(c, projectile.collider, true);
+                }
+
+            }
         }
         return projectile;
     }
 
-    public ProjectileBaseScript Fire(PlayerLocal firedBy)
+    protected ProjectileBaseScript Fire(PlayerLocal firedBy)
     {
         return Fire(transform.rotation.eulerAngles, firedBy);
     }
 
-    public ProjectileBaseScript Fire(int maxRange, PlayerLocal firedBy)
+    protected ProjectileBaseScript Fire(int maxRange, PlayerLocal firedBy)
     {
         ProjectileBaseScript p = Fire(firedBy);
-        p.setLifetimeForMaxRange(maxRange);
+        if (p != null)
+        {
+            p.setLifetimeForMaxRange(maxRange);
+        }
         return p;
+    }
+
+    public void PlayerFire()
+    {
+        Fire(maxRange, owner);
     }
 
     public void SetMaxRange(int maxRange)
@@ -67,4 +82,16 @@ public class ProjectileAbilityBaseScript : AbilitySlotBaseScript
         this.maxRange = maxRange;
     }
 
+    protected IEnumerator Reload()
+    {
+        reloading = true;
+        yield return new WaitForSeconds(reloadTime);
+        ammo = clipSize;
+        reloading = false;
+    }
+
+    public void PlayerTriggerReload()
+    {
+        StartCoroutine(Reload());
+    }
 }
