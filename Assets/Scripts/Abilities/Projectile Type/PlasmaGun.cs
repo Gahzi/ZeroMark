@@ -10,15 +10,30 @@ public class PlasmaGun : ProjectileAbilityBaseScript
 
     #region CONSTANTS
     public static float PLASMAGUN_COOLDOWN = 0.5f;
+    public static int PLASMAGUN_RANGE = 65;
+    public static float RELOAD_TIME = 1.5f;
+    public static int CLIP_SIZE = 12;
     #endregion
 
     public override void Start()
     {
         base.Start();
         projectileType = (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.PlasmaBullet], typeof(ProjectileBaseScript));
-        cooldown = PLASMAGUN_COOLDOWN;
         sound = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.PlasmaGunFire]);
         audio.clip = sound;
+        SetMaxRange(PLASMAGUN_RANGE);
+        cooldownStart = PLASMAGUN_COOLDOWN;
+        ammo = CLIP_SIZE;
+        reloadTime = RELOAD_TIME;
+        clipSize = CLIP_SIZE;
     }
 
+
+    //protected override IEnumerator Reload()
+    //{
+    //    reloading = true;
+    //    yield return new WaitForSeconds(RELOAD_TIME);
+    //    ammo = CLIP_SIZE;
+    //    reloading = false;
+    //}
 }
