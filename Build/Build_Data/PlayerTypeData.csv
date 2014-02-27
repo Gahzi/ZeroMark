@@ -1,0 +1,24 @@
+Attack,Health,3,1
+,Attack,3,1
+,Attack Range,7,1
+,Capture Speed,1,1
+,LB Rotation Speed,1,1
+,UB Rotation Speed,1,1
+,Movement Speed,5,1
+,Vision Range,40,1
+Recon,Health,3,1
+,Attack,1,1
+,Attack Range,100,1
+,Capture Speed,20,1
+,LB Rotation Speed,5,1
+,UB Rotation Speed,50,1
+,Movement Speed,30,1
+,Vision Range,60,1
+Defense,Health,6,1
+,Attack,2,1
+,Attack Range,10,1
+,Capture Speed,1,1
+,LB Rotation Speed,1,1
+,UB Rotation Speed,1,1
+,Movement Speed,1,1
+,Vision Range,60,1

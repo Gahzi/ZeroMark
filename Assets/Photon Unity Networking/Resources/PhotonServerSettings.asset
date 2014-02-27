@@ -27,4 +27,5 @@ MonoBehaviour:
   - AddPlayer
   - SetPlayerLevel
   - createObject
+  - SetOwner
   DisableAutoOpenWizard: 0
