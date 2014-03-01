@@ -63,7 +63,7 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
         if (other.gameObject.CompareTag("Hitbox"))
         {
             KBGameObject o = other.gameObject.transform.parent.GetComponent<KBGameObject>();
-            if (o.gameObject.GetComponent<KBPlayer>().networkPlayer.isLocal)
+            if (o.gameObject.GetComponent<KBPlayer>().networkPlayer.isLocal || o.transform.parent.gameObject.CompareTag("TargetDummy"))
             {
                 if (o.Team != Team)
                 {

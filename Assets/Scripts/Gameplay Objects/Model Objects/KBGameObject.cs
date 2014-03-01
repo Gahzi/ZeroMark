@@ -36,7 +36,7 @@ public abstract class KBGameObject : Photon.MonoBehaviour
         gm = GameManager.Instance;
     }
 
-    private void Update()
+    protected virtual void FixedUpdate()
     {
     }
 

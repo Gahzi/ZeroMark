@@ -94,6 +94,8 @@ public class KBPlayer : KBControllableGameObject
         movespeed = stats.speed;
         lowerbodyRotateSpeed = stats.lowerbodyRotationSpeed;
 
+
+
         int itemLayer = 8;
         int towerLayer = 13;
         int modelLayer = 15;
@@ -140,7 +142,7 @@ public class KBPlayer : KBControllableGameObject
 
     private void FixedUpdate()
     {
-
+        Screen.showCursor = false;
         /* TODO:
          * Fix aiming
          * Add indication of invulnerability
@@ -167,7 +169,7 @@ public class KBPlayer : KBControllableGameObject
 
         if (photonView.isMine)
         {
-            playerPositionOnScreen = camera.WorldToScreenPoint(transform.position);
+            playerPositionOnScreen = Camera.main.WorldToScreenPoint(transform.position);
             mousePlayerDiff = playerPositionOnScreen - mousePos;
 
             if (acceptingInputs)
@@ -203,12 +205,12 @@ public class KBPlayer : KBControllableGameObject
             }
             else
             {
-                GUI.Box(new Rect(Input.mousePosition.x - 80, Screen.height - Input.mousePosition.y - 20, 30, 20), gun[activeAbility].ammo.ToString());
-                if (autoFire)
-                {
-                    GUI.Box(new Rect(Input.mousePosition.x - 80, Screen.height - Input.mousePosition.y, 50, 20), "AUTO");
+                //GUI.Box(new Rect(Input.mousePosition.x - 80, Screen.height - Input.mousePosition.y - 20, 30, 20), gun[activeAbility].ammo.ToString());
+                //if (autoFire)
+                //{
+                //    GUI.Box(new Rect(Input.mousePosition.x - 80, Screen.height - Input.mousePosition.y, 50, 20), "AUTO");
 
-                }
+                //}
             }
 
             GUI.Box(new Rect(0, 0, 100, 80),
@@ -337,6 +339,15 @@ public class KBPlayer : KBControllableGameObject
     protected override void OnTriggerEnter(Collider other)
     {
         base.OnTriggerEnter(other);
+        if (other.gameObject.CompareTag("BankZone"))
+        {
+            if (killTokens > 0)
+            {
+                BankZone b = other.gameObject.GetComponent<BankZone>();
+                b.AddPoints(killTokens, team);
+                killTokens = 0;
+            }
+        }
     }
 
     public override int takeDamage(int amount)
@@ -348,7 +359,7 @@ public class KBPlayer : KBControllableGameObject
             
             if (networkPlayer.isLocal)
             {
-                camera.GetComponent<ScreenShake>().StartShake(0.25f, 5.0f);
+                Camera.main.GetComponent<ScreenShake>().StartShake(0.25f, 5.0f);
             }
             
             audio.PlayOneShot(gotHitSFX);
@@ -513,7 +524,7 @@ public class KBPlayer : KBControllableGameObject
             
             if (networkPlayer.isLocal)
             {
-                camera.GetComponent<ScreenShake>().StopShake();
+                Camera.main.GetComponent<ScreenShake>().StopShake();
             }
 
             audio.PlayOneShot(respawnSound);

@@ -8,14 +8,14 @@ TagManager:
   - Environment
   - Hitbox
   - Item
-  - Factory
-  - CaptureZone
-  - RangeTrigger
-  - ItemZone
-  - Core
-  - Model
-  - GUI
   - 
+  - CaptureZone
+  - 
+  - ItemZone
+  - 
+  - 
+  - GUI
+  - BankZone
   - 
   - 
   - 
