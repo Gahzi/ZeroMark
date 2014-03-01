@@ -36,7 +36,7 @@ public class CaptureZone : KBGameObject
     public CaptureZone[] requiredZones = new CaptureZone[0];
     public ItemSpawn[] connectedItemSpawns = new ItemSpawn[0];
     private bool canSwitchState = true;
-    public List<PlayerLocal> players;
+    public List<KBPlayer> players;
     private AudioClip captureProgress;
     private AudioClip captureComplete;
     public RotatableGuiItem rGui;
@@ -48,9 +48,7 @@ public class CaptureZone : KBGameObject
         base.Start();
         captureTotal = 0;
         state = ZoneState.Unoccupied;
-        players = new List<PlayerLocal>(10);
-        LoadSounds();
-
+        players = new List<KBPlayer>(10);
 
         if (upgradePointsOnCapture == 0)
         {
@@ -270,7 +268,7 @@ public class CaptureZone : KBGameObject
         {
             foreach (KBGameObject o in collisionObjects)
             {
-                PlayerLocal p = o.gameObject.GetComponentInChildren<PlayerLocal>();
+                KBPlayer p = o.gameObject.GetComponentInChildren<KBPlayer>();
                 if (p != null)
                 {
                     switch (p.team)
@@ -348,33 +346,30 @@ public class CaptureZone : KBGameObject
         
         foreach (KBGameObject o in collisionObjects)
         {
-            PlayerLocal p = o.gameObject.GetComponentInChildren<PlayerLocal>();
+            KBPlayer p = o.gameObject.GetComponentInChildren<KBPlayer>();
             if (p != null)
             {
-                if (p.canCapture)
+                switch (p.team)
                 {
-                    switch (p.team)
-                    {
-                        case Team.Red:
-                            if (redUnlocked && p.health > 0)
-                            {
-                                x += p.stats.captureSpeed;
-                            }
-                            break;
+                    case Team.Red:
+                        if (redUnlocked && p.health > 0)
+                        {
+                            x += p.stats.captureSpeed;
+                        }
+                        break;
 
-                        case Team.Blue:
-                            if (blueUnlocked && p.health > 0)
-                            {
-                                x -= p.stats.captureSpeed;
-                            }
-                            break;
+                    case Team.Blue:
+                        if (blueUnlocked && p.health > 0)
+                        {
+                            x -= p.stats.captureSpeed;
+                        }
+                        break;
 
-                        case Team.None:
-                            break;
+                    case Team.None:
+                        break;
 
-                        default:
-                            break;
-                    }
+                    default:
+                        break;
                 }
             }
         }

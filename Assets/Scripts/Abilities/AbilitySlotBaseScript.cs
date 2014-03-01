@@ -18,7 +18,7 @@ abstract public class AbilitySlotBaseScript : MonoBehaviour
     protected float cooldownStart;
     //public bool abilityActive;
     private Team team;
-    public PlayerLocal owner;
+    public KBPlayer owner;
 
     public Team Team
     {
