@@ -10,7 +10,7 @@
         health = startingHealth;
     }
 
-    public override int takeDamage(int amount)
+    public override int TakeDamage(int amount)
     {
         health -= amount;
         return health;

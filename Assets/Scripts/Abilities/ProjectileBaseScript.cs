@@ -67,7 +67,7 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
             {
                 if (o.Team != Team)
                 {
-                    int victimHealth = o.takeDamage(DAMAGE);
+                    int victimHealth = o.TakeDamage(DAMAGE);
                     if (victimHealth <= 0)
                     {
                         o.gameObject.GetComponent<KBPlayer>().Die(owner.gameObject);

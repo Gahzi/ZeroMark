@@ -18,7 +18,6 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
     protected ProjectileBaseScript projectileType;
     private int maxRange;
     public int ammo;
-    //protected bool triggerReload;
     public bool reloading;
 
     public override void Start()
@@ -29,7 +28,6 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
     public override void FixedUpdate()
     {
         base.FixedUpdate();
-
     }
 
     protected ProjectileBaseScript Fire(Vector3 direction, KBPlayer firedBy)
@@ -51,7 +49,6 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
                 {
                     Physics.IgnoreCollision(c, projectile.collider, true);
                 }
-
             }
         }
         return projectile;

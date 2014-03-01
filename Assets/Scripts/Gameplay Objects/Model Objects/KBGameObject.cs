@@ -40,7 +40,7 @@ public abstract class KBGameObject : Photon.MonoBehaviour
     {
     }
 
-    public virtual int takeDamage(int amount) { return 0; }
+    public virtual int TakeDamage(int amount) { return 0; }
 
     protected void OnTriggerEnter(Collider other)
     {

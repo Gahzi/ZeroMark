@@ -23,11 +23,4 @@ public class Rocketlauncher : ProjectileAbilityBaseScript
         reloadTime = RELOAD_TIME;
         clipSize = CLIP_SIZE;
     }
-
-    //protected override IEnumerator Reload()
-    //{
-    //    yield return new WaitForSeconds(RELOAD_TIME);
-    //    ammo = CLIP_SIZE;
-    //    triggerReload = false;
-    //}
 }

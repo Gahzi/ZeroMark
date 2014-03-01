@@ -57,15 +57,4 @@ abstract public class AbilitySlotBaseScript : MonoBehaviour
         }
         cooldown = Mathf.Clamp(cooldown, 0.0f, 100.0f);
     }
-
-    //public void ActivateAbility() { abilityActive = true; }
-    //public void DeactivateAbility() { abilityActive = false; }
-    //public void ToggleAbility() { abilityActive = !abilityActive; }
-    //public bool GetActive() { return abilityActive; }
-
-    //public virtual T ActivateAbility<T>() { return default(T); }
-    //public virtual T ActivateAbility<T>(int maxRange) { return default(T); }
-    //public virtual T ActivateAbility<T>(Vector3 direction) { return default(T); }
-
-
 }
