@@ -10,8 +10,8 @@ public class GameManager : Photon.MonoBehaviour
     public enum GameMode { Capture, Bank };
 
     public GameMode gameMode;
-    public PlayerLocal localPlayer;
-    public List<PlayerLocal> players;
+    public KBPlayer localPlayer;
+    public List<KBPlayer> players;
 
     public List<CaptureZone> captureZones;
     private List<Item> items;
@@ -70,7 +70,7 @@ public class GameManager : Photon.MonoBehaviour
 
     private void OnPhotonPlayerDisconneced(PhotonPlayer player)
     {
-        foreach (PlayerLocal currentPlayer in players)
+        foreach (KBPlayer currentPlayer in players)
         {
             if (currentPlayer.networkPlayer == player)
             {
@@ -101,7 +101,7 @@ public class GameManager : Photon.MonoBehaviour
         PlayerSpawnPoint[] loadedPSpawns = FindObjectsOfType<PlayerSpawnPoint>();
 
         //TODO:Remove 6 value and replace with constant representing max player size;
-        players = new List<PlayerLocal>(6);
+        players = new List<KBPlayer>(6);
         captureZones = new List<CaptureZone>(loadedCaptureZones.Length);
         items = new List<Item>(loadedItems.Length);
         playerSpawnZones = new List<PlayerSpawnPoint>(loadedPSpawns.Length);
@@ -130,7 +130,7 @@ public class GameManager : Photon.MonoBehaviour
 
             Team nextTeam = (Team)(PhotonNetwork.otherPlayers.Length % 2);
 
-            localPlayer = createObject(ObjectConstants.type.Player, new Vector3(0, 0, 0), Quaternion.identity, nextTeam).GetComponent<PlayerLocal>(); ;
+            localPlayer = createObject(ObjectConstants.type.Player, new Vector3(0, 0, 0), Quaternion.identity, nextTeam).GetComponent<KBPlayer>(); ;
             photonView.RPC("SetPlayerLevel", PhotonTargets.AllBuffered, PhotonNetwork.player, 1);
         }
         
@@ -465,7 +465,7 @@ public class GameManager : Photon.MonoBehaviour
             case ObjectConstants.type.Player:
                 {
                     GameObject newPlayerObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Player], position, rotation, 0);
-                    PlayerLocal newPlayer = newPlayerObject.GetComponent<PlayerLocal>();
+                    KBPlayer newPlayer = newPlayerObject.GetComponent<KBPlayer>();
                     newPlayer.networkPlayer = PhotonNetwork.player;
                     newPlayer.team = newTeam;
 
@@ -570,7 +570,7 @@ public class GameManager : Photon.MonoBehaviour
         PlayerStats stats = new PlayerStats();
         stats.statArray = new float[numberOfStats];
 
-        PlayerLocal player = null;
+        KBPlayer player = null;
 
         if (phPlayer.isLocal)
         {
@@ -578,7 +578,7 @@ public class GameManager : Photon.MonoBehaviour
         }
         else
         {
-            PlayerLocal currentPlayer;
+            KBPlayer currentPlayer;
             for (int i = 0; i < players.Count; i++)
             {
                 currentPlayer = players[i];

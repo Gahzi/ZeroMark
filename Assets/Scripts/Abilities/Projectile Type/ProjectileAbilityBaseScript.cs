@@ -32,7 +32,7 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
 
     }
 
-    protected ProjectileBaseScript Fire(Vector3 direction, PlayerLocal firedBy)
+    protected ProjectileBaseScript Fire(Vector3 direction, KBPlayer firedBy)
     {
         ProjectileBaseScript projectile = null;
         if (cooldown <= 0 && ammo > 0 && !reloading)
@@ -57,12 +57,12 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
         return projectile;
     }
 
-    protected ProjectileBaseScript Fire(PlayerLocal firedBy)
+    protected ProjectileBaseScript Fire(KBPlayer firedBy)
     {
         return Fire(transform.rotation.eulerAngles, firedBy);
     }
 
-    protected ProjectileBaseScript Fire(int maxRange, PlayerLocal firedBy)
+    protected ProjectileBaseScript Fire(int maxRange, KBPlayer firedBy)
     {
         ProjectileBaseScript p = Fire(firedBy);
         if (p != null)

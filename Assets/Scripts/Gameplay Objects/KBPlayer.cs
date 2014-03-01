@@ -5,7 +5,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(PhotonView))]
 [RequireComponent(typeof(CharacterController))]
-public class PlayerLocal : KBControllableGameObject
+public class KBPlayer : KBControllableGameObject
 {
 
     #region CONSTANTS
@@ -43,19 +43,17 @@ public class PlayerLocal : KBControllableGameObject
     private Vector3 latestCorrectPos;
     private Vector3 onUpdatePos;
     private float fraction;
-    //private bool isShooting;
+    private bool isShooting;
 
     public AudioClip grabSound;
     public GameObject upperBody;
-    public Camera camera;
     public Vector3 mousePos;
     public Vector3 playerPositionOnScreen;
     public Vector3 mousePlayerDiff;
     public ProjectileAbilityBaseScript[] gun;
     public List<PlayerSpawnPoint> teamSpawnpoints;
     public float respawnTime;
-    private Vector3 lookRotation;
-    private int respawnTimerNumber;
+    private int respawnTimer;
     public int upgradePoints;
     public int maxHealth;
     public int[] pointToLevel = new int[4];
@@ -64,7 +62,6 @@ public class PlayerLocal : KBControllableGameObject
     public Material redMat;
     public Material blueMat;
     public MeshRenderer teamIndicator;
-    public bool canCapture;
     private AudioClip hitConfirm;
     private float hitFXTimer;
     public GameObject hitExplosion;
@@ -80,8 +77,6 @@ public class PlayerLocal : KBControllableGameObject
 
     public override void Start()
     {
-        // NOTE: All connected abilities & hitboxes need to be sent the player's team.
-
         base.Start();
         acceptingInputs = true;
         waitingForRespawn = false;
@@ -91,7 +86,7 @@ public class PlayerLocal : KBControllableGameObject
         playerGuiSquare = GetComponent<RotatableGuiItem>();
         latestCorrectPos = transform.position;
         onUpdatePos = transform.position;
-        //isShooting = false;
+        isShooting = false;
         hitConfirm = Resources.Load<AudioClip>(KBConstants.AudioConstants.CLIP_NAMES[KBConstants.AudioConstants.clip.HitConfirm]);
         SetupAbilities();
         GetComponentInChildren<HitboxBaseScript>().Team = team;
@@ -185,64 +180,48 @@ public class PlayerLocal : KBControllableGameObject
             transform.localPosition = Vector3.Lerp(onUpdatePos, latestCorrectPos, fraction);    // set our pos between A and B
         }
 
-        //if (isShooting && !gun[activeAbility].GetActive())
-        //{
-        //    gun[activeAbility].ActivateAbility();
-        //}
-        //else if (!isShooting && gun[activeAbility].GetActive())
-        //{
-        //    gun[activeAbility].DeactivateAbility();
-        //}
-
-        if (item != null)
+        if (isShooting)
         {
-            item.transform.position = new Vector3(transform.position.x, transform.position.y + 3, transform.position.z);
-            item.state = Item.ItemState.isPickedUp;
-            if (canCapture != false)
+            gun[activeAbility].PlayerFire();
+            if (gun[activeAbility].ammo == 0)
             {
-                canCapture = false;
-            }
-        }
-        else
-        {
-            if (canCapture != true)
-            {
-                canCapture = true;
-            }
+                gun[activeAbility].PlayerTriggerReload();
+                isShooting = false;
+            }   
         }
 
-        CheckHealth(); 
+        CheckHealth();
     }
 
     void OnGUI()
     {
-		if (networkPlayer.isLocal)
+        if (networkPlayer.isLocal)
         {
-	        if (gun[activeAbility].reloading)
-	        {
-	            GUI.Box(new Rect(Screen.width / 2, Screen.height / 2 + 100, 100, 20), "RELOADING");
-	        }
-	        else
-	        {
-	            GUI.Box(new Rect(Input.mousePosition.x - 80, Screen.height - Input.mousePosition.y - 20, 30, 20), gun[activeAbility].ammo.ToString());
-	            if (autoFire)
-	            {
-	                GUI.Box(new Rect(Input.mousePosition.x - 80, Screen.height - Input.mousePosition.y, 50, 20), "AUTO");
+            if (gun[activeAbility].reloading)
+            {
+                GUI.Box(new Rect(Screen.width / 2, Screen.height / 2 + 100, 100, 20), "RELOADING");
+            }
+            else
+            {
+                GUI.Box(new Rect(Input.mousePosition.x - 80, Screen.height - Input.mousePosition.y - 20, 30, 20), gun[activeAbility].ammo.ToString());
+                if (autoFire)
+                {
+                    GUI.Box(new Rect(Input.mousePosition.x - 80, Screen.height - Input.mousePosition.y, 50, 20), "AUTO");
 
-	            }
-	        }
+                }
+            }
 
-	        GUI.Box(new Rect(0, 0, 100, 80),
-	            "Kill Tokens" + System.Environment.NewLine +
-	            killTokens.ToString() + System.Environment.NewLine
-	            );
-	        GUI.Box(new Rect(0, 60, 100, 40), "Boost" + System.Environment.NewLine + boostTime.ToString("0.00"));
+            GUI.Box(new Rect(0, 0, 100, 80),
+                "Kill Tokens" + System.Environment.NewLine +
+                killTokens.ToString() + System.Environment.NewLine
+                );
+            GUI.Box(new Rect(0, 60, 100, 40), "Boost" + System.Environment.NewLine + boostTime.ToString("0.00"));
 
-	        if (triggerLockout)
-	        {
-	            GUI.Box(new Rect(Screen.width / 2 - 80, Screen.height / 2, 160, 20), "BANKING TOKENS");
-	        }
-		}
+            if (triggerLockout)
+            {
+                GUI.Box(new Rect(Screen.width / 2 - 80, Screen.height / 2, 160, 20), "BANKING TOKENS");
+            }
+        }
     }
 
 
@@ -254,8 +233,7 @@ public class PlayerLocal : KBControllableGameObject
             GameObject newPlayerCameraObject = (GameObject)Instantiate(Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.PlayerCamera]));
             newPlayerCameraObject.transform.parent = transform;
             newPlayerCameraObject.GetComponent<KBCamera>().attachedPlayer = this;
-            camera = newPlayerCameraObject.GetComponent<Camera>();
-
+            Camera.SetupCurrent(newPlayerCameraObject.GetComponent<Camera>());
         }
         // This is just some remote controlled player, don't execute direct
         // user input on this. DO enable multiplayer controll
@@ -289,20 +267,20 @@ public class PlayerLocal : KBControllableGameObject
             int hlth = health;
             int lvl = level;
             int mxhlth = maxHealth;
-            //bool isShting = isShooting;
-            bool cnCpture = canCapture;
+            bool isShting = isShooting;
             int tm = (int)team;
-            int kt = killTokens;
+            int ab = activeAbility;
+            float invltime = invulnerabilityTime;
 
             stream.Serialize(ref pos);
             stream.Serialize(ref rot);
             stream.Serialize(ref hlth);
             stream.Serialize(ref lvl);
             stream.Serialize(ref mxhlth);
-            //stream.Serialize(ref isShting);
-            stream.Serialize(ref cnCpture);
+            stream.Serialize(ref isShting);
             stream.Serialize(ref tm);
-            stream.Serialize(ref kt);
+            stream.Serialize(ref ab);
+            stream.Serialize(ref invltime);
         }
         else
         {
@@ -313,9 +291,9 @@ public class PlayerLocal : KBControllableGameObject
             int lvl = 0;
             int mxhlth = 0;
             bool isShting = false;
-            bool cnCpture = false;
             int tm = 0;
-            int kt = 0;
+            int ab = 0;
+            float invltime = 0.0f;
 
             stream.Serialize(ref pos);
             stream.Serialize(ref rot);
@@ -323,9 +301,9 @@ public class PlayerLocal : KBControllableGameObject
             stream.Serialize(ref lvl);
             stream.Serialize(ref mxhlth);
             stream.Serialize(ref isShting);
-            stream.Serialize(ref cnCpture);
             stream.Serialize(ref tm);
-            stream.Serialize(ref kt);
+            stream.Serialize(ref ab);
+            stream.Serialize(ref invltime);
 
             latestCorrectPos = pos;                 // save this to move towards it in FixedUpdate()
             onUpdatePos = transform.localPosition;  // we interpolate from here to latestCorrectPos
@@ -335,46 +313,32 @@ public class PlayerLocal : KBControllableGameObject
             health = hlth;
             level = lvl;
             maxHealth = mxhlth;
-            //isShooting = isShting;
-            canCapture = cnCpture;
+            isShooting = isShting;
             team = (Team)tm;
-            killTokens = kt;
+            activeAbility = ab;
+            invulnerabilityTime = invltime;
         }
     }
 
-    /// <summary>
-    /// Collision method that is called when rigidbody hits another game object
-    /// </summary>
-    /// <param name="collision"></param>
-    private void OnCollisionEnter(Collision collision)
-    {
-        PlasmaBullet bullet = collision.gameObject.GetComponent<PlasmaBullet>();
-        if (bullet != null)
-        {
-            Debug.Log("Got Hit!");
-            takeDamage(bullet.damage);
-        }
-    }
+    ///// <summary>
+    ///// Collision method that is called when rigidbody hits another game object
+    ///// </summary>
+    ///// <param name="collision"></param>
+    //private void OnCollisionEnter(Collision collision)
+    //{
+    //    PlasmaBullet bullet = collision.gameObject.GetComponent<PlasmaBullet>();
+    //    if (bullet != null)
+    //    {
+    //        Debug.Log("Got Hit!");
+    //        takeDamage(bullet.damage);
+    //    }
+    //}
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Item"))
-        {
-            Item i = other.gameObject.GetComponent<Item>();
-            if (i.state == Item.ItemState.isDown && i != null)
-            {
-                if (i.team == team)
-                {
-                    PickupItem(other.gameObject.GetComponent<Item>());
-                }
-                else
-                {
-                    i.Respawn();
-                    //other.gameObject.particleSystem.enableEmission = true;
-                    ////Destroy(other.gameObject);
-                }
-            }
-        }
+        base.OnTriggerEnter(other);
+        
+
     }
 
     public override int takeDamage(int amount)
@@ -384,13 +348,12 @@ public class PlayerLocal : KBControllableGameObject
             health -= amount;
             Instantiate(hitExplosion, transform.position, Quaternion.identity);
             
-            if (photonView.isMine)
+            if (networkPlayer.isLocal)
             {
                 camera.GetComponent<ScreenShake>().StartShake(0.25f, 5.0f);
-                audio.PlayOneShot(gotHitSFX);
             }
-
-           
+            
+            audio.PlayOneShot(gotHitSFX);
         }
         return health;
     }
@@ -398,7 +361,7 @@ public class PlayerLocal : KBControllableGameObject
     private void ControlKBAM()
     {
         float modifiedMoveSpeed = 0;
-        if (item != null || (Input.GetButton("Boost") && boostTime == boostMax))
+        if (Input.GetButton("Boost") && boostTime == boostMax)
         {
             modifiedMoveSpeed = movespeed * 10;
             boostTime = 0;
@@ -414,7 +377,6 @@ public class PlayerLocal : KBControllableGameObject
                 float d = modifiedMoveSpeed * Input.GetAxis("Vertical");
                 charController.SimpleMove(transform.TransformDirection(Vector3.forward) * d);
                 transform.Rotate(0, Input.GetAxis("Horizontal") * lowerbodyRotateSpeed, 0);
-
                 break;
 
             case ControlStyle.TopDown:
@@ -431,33 +393,36 @@ public class PlayerLocal : KBControllableGameObject
 
         if (autoFire)
         {
-            if (Input.GetMouseButton(0))
+            if (Input.GetMouseButton(0) && !gun[activeAbility].reloading)
             {
-                gun[activeAbility].PlayerFire();
-                if (gun[activeAbility].ammo == 0)
-                {
-                    gun[activeAbility].PlayerTriggerReload();
-                }
+                isShooting = true;
             }
             else
             {
+                isShooting = false;
             }
         }
         else
         {
-            if (Input.GetMouseButtonDown(0))
+            if (!isShooting && Input.GetMouseButtonDown(0) && !gun[activeAbility].reloading)
             {
-                gun[activeAbility].PlayerFire();
-                if (gun[activeAbility].ammo == 0)
-                {
-                    gun[activeAbility].PlayerTriggerReload();
-                }
+                isShooting = true;
             }
+            else if (!isShooting && Input.GetMouseButtonDown(0))
+            {
+                isShooting = false;
+            }
+        }
+
+        if(Input.GetMouseButtonUp(0))
+        {
+            isShooting = false;
         }
 
         if (Input.GetKeyDown(KeyCode.R))
         {
             gun[activeAbility].PlayerTriggerReload();
+            isShooting = false;
         }
 
         if (Input.GetMouseButtonDown(1))
@@ -504,7 +469,7 @@ public class PlayerLocal : KBControllableGameObject
     {
         if (health <= 0 && !waitingForRespawn) // should respawn
         {
-            respawnTimerNumber = timer.StartTimer(respawnTime);
+            respawnTimer = timer.StartTimer(respawnTime);
             DropItem();
             waitingForRespawn = true;
             audio.PlayOneShot(deadSound);
@@ -512,7 +477,7 @@ public class PlayerLocal : KBControllableGameObject
         else if (waitingForRespawn)
         {
             acceptingInputs = false;
-            if (!timer.IsTimerActive(respawnTimerNumber))
+            if (!timer.IsTimerActive(respawnTimer))
             {
                 Debug.Log("Respawning!");
                 Respawn();
@@ -547,12 +512,12 @@ public class PlayerLocal : KBControllableGameObject
             invulnerabilityTime = spawnProtectionTime;
             lowerbodyRotateSpeed = stats.lowerbodyRotationSpeed;
             upperbodyRotateSpeed = stats.upperbodyRotationSpeed;
-
-            if (photonView.isMine)
+            
+            if (networkPlayer.isLocal)
             {
                 camera.GetComponent<ScreenShake>().StopShake();
             }
-            
+
             audio.PlayOneShot(respawnSound);
         }
     }
@@ -596,14 +561,15 @@ public class PlayerLocal : KBControllableGameObject
         activeAbility = 0;
     }
 
-    public void ConfirmHit()
+    public void ConfirmHit(GameObject victimObject)
     {
+        Instantiate(hitExplosion, victimObject.transform.position, Quaternion.identity);
         gun[activeAbility].audio.PlayOneShot(hitConfirm);
     }
 
     public void Die(GameObject killerObject)
     {
-        PlayerLocal killerPlayer = killerObject.GetComponent<PlayerLocal>();
+        KBPlayer killerPlayer = killerObject.GetComponent<KBPlayer>();
         killerPlayer.photonView.RPC("NotifyKill", PhotonTargets.Others, killerPlayer.networkPlayer);
     }
 
