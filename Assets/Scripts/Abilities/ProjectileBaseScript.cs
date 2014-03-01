@@ -15,7 +15,7 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
 
     #region CONSTANTS
 
-    public static int DAMAGE = 1;
+    private static int DAMAGE = 0;
 
     #endregion CONSTANTS
     
@@ -40,9 +40,10 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
             direction.z = 0;
             rigidbody.AddForce(projectileSpeed * direction, ForceMode.VelocityChange);
         }
+        damage = DAMAGE; ;
     }
 
-    public virtual void Update()
+    protected override void Update()
     {
         base.Update();
 

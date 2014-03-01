@@ -34,11 +34,11 @@ abstract public class AbilityInstanceBaseScript : MonoBehaviour
         rigidbody.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY;
         rigidbody.isKinematic = true;
         collider.isTrigger = true;
-        //gameObject.layer = LayerMask.NameToLayer("Hitboxes1");
+        damage = 0;
     }
 
     // Update is called once per frame
-    public virtual void Update()
+    protected virtual void Update()
     {
         if (Time.time - spawnTime > lifetime)
         {
