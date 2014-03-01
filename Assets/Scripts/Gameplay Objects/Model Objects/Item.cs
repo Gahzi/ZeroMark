@@ -30,7 +30,7 @@ public class Item : KBGameObject
     /// <summary>
     /// Use this for initialization
     /// </summary>
-    private void Start()
+    public override void Start()
     {
         base.Start();
         gameObject.tag = "Item";
@@ -76,32 +76,32 @@ public class Item : KBGameObject
         }
     }
 
-    public ItemType GenerateType()
-    {
-        int r = Random.Range(0, 100); // TODO : Need a way of creating items without random types
+    //public ItemType GenerateType()
+    //{
+    //    int r = Random.Range(0, 100); // TODO : Need a way of creating items without random types
 
-        int legendaryChance = 5;
-        int rareChance = 15;
-        int uncommonChance = 30;
-        int commonChance = 100 - legendaryChance - rareChance - uncommonChance;
+    //    int legendaryChance = 5;
+    //    int rareChance = 15;
+    //    int uncommonChance = 30;
+    //    int commonChance = 100 - legendaryChance - rareChance - uncommonChance;
 
-        if (r < legendaryChance)
-        {
-            return ItemType.legendary;
-        }
-        else if (r >= legendaryChance && r < legendaryChance + rareChance)
-        {
-            return ItemType.rare;
-        }
-        else if (r >= legendaryChance + rareChance && r < legendaryChance + rareChance + uncommonChance)
-        {
-            return ItemType.uncommon;
-        }
-        else
-        {
-            return ItemType.common;
-        }
-    }
+    //    if (r < legendaryChance)
+    //    {
+    //        return ItemType.legendary;
+    //    }
+    //    else if (r >= legendaryChance && r < legendaryChance + rareChance)
+    //    {
+    //        return ItemType.rare;
+    //    }
+    //    else if (r >= legendaryChance + rareChance && r < legendaryChance + rareChance + uncommonChance)
+    //    {
+    //        return ItemType.uncommon;
+    //    }
+    //    else
+    //    {
+    //        return ItemType.common;
+    //    }
+    //}
 
     /// <summary>
     /// Update is called once per frame
@@ -229,18 +229,6 @@ public class Item : KBGameObject
             disableTime = dsbleTime;
             team = (Team)tm;
         }
-    }
-        
-    /// <summary>
-    ///
-    /// </summary>
-    /// <param name="collision"></param>
-    private void OnCollisionEnter(Collision collision)
-    {
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
     }
 
     public void StartGrowAnimation()

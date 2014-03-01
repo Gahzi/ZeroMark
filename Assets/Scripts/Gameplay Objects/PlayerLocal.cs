@@ -9,7 +9,7 @@ public class PlayerLocal : KBControllableGameObject
 {
 
     #region CONSTANTS
-    private static readonly float hitFXLength = 0.250f;
+    //private static readonly float hitFXLength = 0.250f;
     #endregion
 
     public enum ControlStyle { ThirdPerson, TopDown };
@@ -35,8 +35,6 @@ public class PlayerLocal : KBControllableGameObject
 
     private CharacterController charController;
 
-    private int layerMask;
-
     public string playerName;
     public PhotonPlayer networkPlayer;
 
@@ -47,7 +45,6 @@ public class PlayerLocal : KBControllableGameObject
 
     public AudioClip grabSound;
     public GameObject upperBody;
-    public Camera camera;
     public Vector3 mousePos;
     public Vector3 playerPositionOnScreen;
     public Vector3 mousePlayerDiff;
@@ -60,7 +57,6 @@ public class PlayerLocal : KBControllableGameObject
     public int maxHealth;
     public int[] pointToLevel = new int[4];
     private Item item;
-    RotatableGuiItem playerGuiSquare;
     public Material redMat;
     public Material blueMat;
     public MeshRenderer teamIndicator;
@@ -88,7 +84,6 @@ public class PlayerLocal : KBControllableGameObject
         triggerLockout = false;
         charController = GetComponent<CharacterController>();
         grabSound = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.ItemGrab]);
-        playerGuiSquare = GetComponent<RotatableGuiItem>();
         latestCorrectPos = transform.position;
         onUpdatePos = transform.position;
         //isShooting = false;
@@ -98,14 +93,6 @@ public class PlayerLocal : KBControllableGameObject
         autoFire = false;
         movespeed = stats.speed;
         lowerbodyRotateSpeed = stats.lowerbodyRotationSpeed;
-
-        int itemLayer = 8;
-        int towerLayer = 13;
-        int modelLayer = 15;
-        int layerMask1 = 1 << itemLayer;
-        int layerMask2 = 1 << towerLayer;
-        int layerMask3 = 1 << modelLayer;
-        layerMask = layerMask1 | layerMask2 | layerMask3;
 
         teamSpawnpoints = new List<PlayerSpawnPoint>();
 
@@ -254,8 +241,7 @@ public class PlayerLocal : KBControllableGameObject
             GameObject newPlayerCameraObject = (GameObject)Instantiate(Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.PlayerCamera]));
             newPlayerCameraObject.transform.parent = transform;
             newPlayerCameraObject.GetComponent<KBCamera>().attachedPlayer = this;
-            camera = newPlayerCameraObject.GetComponent<Camera>();
-
+            //camera = newPlayerCameraObject.GetComponent<Camera>();
         }
         // This is just some remote controlled player, don't execute direct
         // user input on this. DO enable multiplayer controll
@@ -356,8 +342,9 @@ public class PlayerLocal : KBControllableGameObject
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    protected override void OnTriggerEnter(Collider other)
     {
+        base.OnTriggerEnter(other);
         if (other.gameObject.CompareTag("Item"))
         {
             Item i = other.gameObject.GetComponent<Item>();
@@ -573,14 +560,6 @@ public class PlayerLocal : KBControllableGameObject
             item.disableTime = Time.time;
             item = null;
             audio.PlayOneShot(dropSound);
-        }
-    }
-
-    private void RunHitFX()
-    {
-        if (hitFXTimer > 0)
-        {
-            hitFXTimer -= Time.deltaTime;
         }
     }
 

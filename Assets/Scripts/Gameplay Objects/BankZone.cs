@@ -2,7 +2,7 @@
 
 public class BankZone : CaptureZone
 {
-    protected override void Start()
+    public override void Start()
     {
     }
 

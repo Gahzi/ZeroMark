@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 public class GUIManager : MonoBehaviour
 {
-    public Camera camera;
     public List<GameObject> players;
     public Texture objectOverlayTexture;
 
@@ -28,37 +27,37 @@ public class GUIManager : MonoBehaviour
         //Vector3 p = camera.WorldToScreenPoint(ppos);
         //GUI.Label(new Rect(p.x, p.y, 100, 100), "Player");
 
-        foreach (var i in GameManager.Instance.captureZones)
-        {
-            #region FOR 3RDPERSON
-            //Vector3 t = i.gameObject.transform.position;
-            //Vector3 a = camera.WorldToViewportPoint(t);
-            //if (a.z > 0)
-            //{
-            //    if (a.y > 0.35f)
-            //    {
-            //        a.y = 0.35f;
-            //    }
-            //    GUI.Label(new Rect(Screen.width * a.x, Screen.height * 0.35f, 100, 50), i.tier.ToString());
-            //}
-            #endregion
-            #region FOR ISOMETRIC
+        //foreach (var i in GameManager.Instance.captureZones)
+        //{
+        //    #region FOR 3RDPERSON
+        //    //Vector3 t = i.gameObject.transform.position;
+        //    //Vector3 a = camera.WorldToViewportPoint(t);
+        //    //if (a.z > 0)
+        //    //{
+        //    //    if (a.y > 0.35f)
+        //    //    {
+        //    //        a.y = 0.35f;
+        //    //    }
+        //    //    GUI.Label(new Rect(Screen.width * a.x, Screen.height * 0.35f, 100, 50), i.tier.ToString());
+        //    //}
+        //    #endregion
+        //    #region FOR ISOMETRIC
 
-            #region CAPTURE ZONE GUI ELEMENTS
-            //Vector3 t = i.gameObject.transform.position;
-            //Vector3 a = camera.WorldToScreenPoint(t);
-            //GUI.Label(new Rect(a.x, Screen.height - a.y - 10, 100, 100), i.tier.ToString());
-            #endregion
-            #region PLAYERS
-            //Vector3 objPos = Vector3.zero;
-            //foreach (var p in players)
-            //{
-            //    objPos = camera.WorldToScreenPoint(p.transform.position);
-            //    GUI.DrawTexture(new Rect(objPos.x - 32.0f, objPos.y, 64.0f, 64.0f), objectOverlayTexture);
-            //}
-            #endregion
-            #endregion
-        }
+        //    #region CAPTURE ZONE GUI ELEMENTS
+        //    //Vector3 t = i.gameObject.transform.position;
+        //    //Vector3 a = camera.WorldToScreenPoint(t);
+        //    //GUI.Label(new Rect(a.x, Screen.height - a.y - 10, 100, 100), i.tier.ToString());
+        //    #endregion
+        //    #region PLAYERS
+        //    //Vector3 objPos = Vector3.zero;
+        //    //foreach (var p in players)
+        //    //{
+        //    //    objPos = camera.WorldToScreenPoint(p.transform.position);
+        //    //    GUI.DrawTexture(new Rect(objPos.x - 32.0f, objPos.y, 64.0f, 64.0f), objectOverlayTexture);
+        //    //}
+        //    #endregion
+        //    #endregion
+        //}
     }
     
 

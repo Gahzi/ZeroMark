@@ -20,7 +20,7 @@ public abstract class KBGameObject : Photon.MonoBehaviour
     protected GameManager gm;
     protected List<KBGameObject> collisionObjects;
 
-    private void Awake()
+    protected void Awake()
     {
         /*
         if (photonView.isMine)
@@ -42,7 +42,7 @@ public abstract class KBGameObject : Photon.MonoBehaviour
 
     public virtual int takeDamage(int amount) { return 0; }
 
-    protected void OnTriggerEnter(Collider other)
+    protected virtual void OnTriggerEnter(Collider other)
     {
         KBGameObject o = (KBGameObject)other.gameObject.GetComponentInChildren<KBGameObject>();
         if (o != null)
@@ -51,7 +51,7 @@ public abstract class KBGameObject : Photon.MonoBehaviour
         }
     }
 
-    protected void OnTriggerExit(Collider other)
+    protected virtual void OnTriggerExit(Collider other)
     {
         KBGameObject o = (KBGameObject)other.gameObject.GetComponentInChildren<KBGameObject>();
         if (o != null)

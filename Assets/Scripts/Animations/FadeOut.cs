@@ -3,50 +3,29 @@ using System.Collections;
 
 public class FadeOut : MonoBehaviour
 {
-
-    private GUITexture guiText;
-    public bool fading = false;
+    private GUITexture a;
     private float fadeTime = 0;
-    private Color c;
+    private bool triggerFade;
 
-    // Use this for initialization
     void Start()
     {
-        guiText = GetComponent<GUITexture>();
-        reset();
+        a = GetComponent<GUITexture>();
+        triggerFade = false;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        switch (fading)
+        if (triggerFade)
         {
-            case true:
-                //fadeColor(guiText.color, Color.clear, 10.0f);
-                guiText.color = Color.Lerp(guiText.color, Color.clear, 0.1f);
-                break;
-            case false:
-                break;
-
-            default:
-                break;
+            StartCoroutine(fadeColor(a.color, Color.clear, fadeTime));
+            triggerFade = false;
         }
     }
 
     public void startFading(float fadeTimeSec)
     {
-        fading = true;
-        this.fadeTime = fadeTimeSec;
-    }
-
-    public void pauseFading()
-    {
-        fading = false;
-    }
-
-    public void reset()
-    {
-        c = guiText.color;
+        triggerFade = true;
+        fadeTime = fadeTimeSec;
     }
 
     public IEnumerator fadeColor(Color startColor, Color endColor, float time)
@@ -56,7 +35,7 @@ public class FadeOut : MonoBehaviour
         while (i < 1.0)
         {
             i += Time.deltaTime * rate;
-            guiText.color = Color.Lerp(startColor, endColor, i);
+            a.color = Color.Lerp(startColor, endColor, i);
             yield break;
         }
     }

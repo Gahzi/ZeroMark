@@ -5,7 +5,7 @@ public class MachineGunBullet : ProjectileBaseScript {
 
     #region CONSTANTS
 
-    public static int DAMAGE = 1;
+    new public static int DAMAGE = 1;
 
     #endregion CONSTANTS
 
@@ -15,7 +15,7 @@ public class MachineGunBullet : ProjectileBaseScript {
         collideWithProjectiles = false;
     }
 
-    private void Update()
+    public override void Update()
     {
         base.Update();
     }

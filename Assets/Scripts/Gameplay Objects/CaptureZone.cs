@@ -43,12 +43,14 @@ public class CaptureZone : KBGameObject
     public bool redUnlocked, blueUnlocked;
     private float captureFraction = 0.0f;
 
-    protected virtual void Start()
+    public override void Start()
     {
         base.Start();
         captureTotal = 0;
         state = ZoneState.Unoccupied;
         players = new List<PlayerLocal>(10);
+        LoadSounds();
+
 
         if (upgradePointsOnCapture == 0)
         {
@@ -303,12 +305,12 @@ public class CaptureZone : KBGameObject
         }
     }
 
-    protected void OnTriggerEnter(Collider other)
+    protected override void OnTriggerEnter(Collider other)
     {
         base.OnTriggerEnter(other);
     }
 
-    protected void OnTriggerExit(Collider other)
+    protected override void OnTriggerExit(Collider other)
     {
         base.OnTriggerExit(other);
     }

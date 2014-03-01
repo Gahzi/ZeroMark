@@ -2,15 +2,6 @@
 
 public class PlayerSpawnPoint : KBGameObject
 {
-
-    private void Start()
-    {
-    }
-
-    private void Update()
-    {
-    }
-
     private void OnDrawGizmos()
     {
         Vector3 p = new Vector3(transform.position.x, 5, transform.position.z);
