@@ -462,27 +462,46 @@ public class KBPlayer : KBControllableGameObject
         }
     }
 
-    public void ConfirmHit(GameObject victimObject)
+    public void ConfirmHit(KBPlayer victimObject)
     {
-        Instantiate(hitExplosion, victimObject.transform.position, Quaternion.identity);
-        gun[activeAbility].audio.PlayOneShot(hitConfirm);
+        photonView.RPC("ConfirmHitToOthers", PhotonTargets.All, victimObject.networkPlayer);
+        //MIGHT BE ABLE TO REMOVE THIS IF WE DONT NOTICE A TIMING DIFFERENCE IN HITS LOCALLY VS RPC TO ALL
+        //Instantiate(hitExplosion, victimObject.transform.position, Quaternion.identity);
+        //gun[activeAbility].audio.PlayOneShot(hitConfirm);
+    }
+
+    [RPC]
+    public void ConfirmHitToOthers(PhotonPlayer hitPhotonPlayer)
+    {
+        List<KBPlayer> currentPlayers = GameManager.Instance.players;
+
+        for (int i = 0; i < currentPlayers.Count; i++)
+        {
+            if (currentPlayers[i].networkPlayer == hitPhotonPlayer)
+            {
+                Instantiate(hitExplosion, currentPlayers[i].transform.position, Quaternion.identity);
+                gun[activeAbility].audio.PlayOneShot(hitConfirm);
+            }
+        }
     }
 
     public override int TakeDamage(int amount)
     {
-        if (invulnerabilityTime <= 0)
+        if (photonView.isMine)
         {
-            health -= amount;
-            Instantiate(hitExplosion, transform.position, Quaternion.identity);
-
-            if (photonView.isMine)
+            if (invulnerabilityTime <= 0)
             {
+                health -= amount;
+                Instantiate(hitExplosion, transform.position, Quaternion.identity);
                 Camera.main.GetComponent<ScreenShake>().StartShake(0.25f, 5.0f);
+                audio.PlayOneShot(gotHitSFX);
             }
-
-            audio.PlayOneShot(gotHitSFX);
+            return health;
         }
-        return health;
+        else
+        {
+            return health;
+        }
     }
 
     public void Die(GameObject killerObject)

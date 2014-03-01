@@ -29,4 +29,5 @@ MonoBehaviour:
   - createObject
   - SetOwner
   - NotifyKill
+  - ConfirmHitToOthers
   DisableAutoOpenWizard: 0

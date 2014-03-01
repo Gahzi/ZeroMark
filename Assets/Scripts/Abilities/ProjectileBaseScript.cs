@@ -64,7 +64,7 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
         if (other.gameObject.CompareTag("Hitbox"))
         {
             KBGameObject o = other.gameObject.transform.parent.GetComponent<KBGameObject>();
-            if (o.gameObject.GetComponent<KBPlayer>().networkPlayer.isLocal)
+            if (o.gameObject.GetComponent<KBPlayer>().photonView.isMine)
             {
                 if (o.Team != Team)
                 {
@@ -73,7 +73,7 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
                     {
                         o.gameObject.GetComponent<KBPlayer>().Die(owner.gameObject);
                     }
-                    owner.ConfirmHit(o.gameObject);
+                    owner.ConfirmHit(o.gameObject.GetComponent<KBPlayer>());
                     Destroy(gameObject);
                 }
             }
