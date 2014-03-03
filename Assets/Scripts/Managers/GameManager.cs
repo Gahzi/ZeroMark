@@ -520,7 +520,7 @@ public class GameManager : Photon.MonoBehaviour
 
     public static string GetTeamScoreString()
     {
-        string tab = "     ";
+        //string tab = "     ";
         string spacer = " : ";
         GameManager gm = GameManager.instance;
         System.Text.StringBuilder sb = new System.Text.StringBuilder();

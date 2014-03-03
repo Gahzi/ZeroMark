@@ -13,8 +13,9 @@ public class ItemSpawn : KBGameObject
     private float lastSpawn;
     private bool spawnedItem;
 
-    private void Start()
+    public override void Start()
     {
+        base.Start();
         if (connectedCaptureZone == null)
         {
             Debug.LogWarning("ItemSpawn #" + gameObject.GetInstanceID() + " is missing a reference to its parent CaptureZone");

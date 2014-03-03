@@ -9,7 +9,7 @@ public class KBPlayer : KBControllableGameObject
 {
 
     #region CONSTANTS
-    private static readonly float hitFXLength = 0.250f;
+    //private static readonly float hitFXLength = 0.250f;
     #endregion
 
     public enum ControlStyle { ThirdPerson, TopDown };
@@ -36,8 +36,6 @@ public class KBPlayer : KBControllableGameObject
 
     private CharacterController charController;
 
-    private int layerMask;
-
     public string playerName;
     public PhotonPlayer networkPlayer;
 
@@ -58,7 +56,6 @@ public class KBPlayer : KBControllableGameObject
     public int maxHealth;
     public int[] pointToLevel = new int[4];
 
-    RotatableGuiItem playerGuiSquare;
     public Material redMat;
     public Material blueMat;
     public MeshRenderer teamIndicator;
@@ -85,7 +82,6 @@ public class KBPlayer : KBControllableGameObject
         triggerLockout = false;
         charController = GetComponent<CharacterController>();
         grabSound = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.ItemGrab]);
-        playerGuiSquare = GetComponent<RotatableGuiItem>();
         latestCorrectPos = transform.position;
         onUpdatePos = transform.position;
         isShooting = false;
@@ -95,15 +91,6 @@ public class KBPlayer : KBControllableGameObject
         autoFire = false;
         movespeed = stats.speed;
         lowerbodyRotateSpeed = stats.lowerbodyRotationSpeed;
-
-        int itemLayer = 8;
-        int towerLayer = 13;
-        int modelLayer = 15;
-        int layerMask1 = 1 << itemLayer;
-        int layerMask2 = 1 << towerLayer;
-        int layerMask3 = 1 << modelLayer;
-
-        layerMask = layerMask1 | layerMask2 | layerMask3;
 
         teamSpawnpoints = new List<PlayerSpawnPoint>();
 
@@ -544,14 +531,6 @@ public class KBPlayer : KBControllableGameObject
 
             Camera.main.GetComponent<ScreenShake>().StopShake();
             audio.PlayOneShot(respawnSound);
-        }
-    }
-
-    private void RunHitFX()
-    {
-        if (hitFXTimer > 0)
-        {
-            hitFXTimer -= Time.deltaTime;
         }
     }
 
