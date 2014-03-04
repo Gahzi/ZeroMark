@@ -9,7 +9,7 @@ public class KBPlayer : KBControllableGameObject
 {
 
     #region CONSTANTS
-    //private static readonly float hitFXLength = 0.250f;
+    private static readonly float hitFXLength = 0.250f;
     #endregion
 
     public enum ControlStyle { ThirdPerson, TopDown };
@@ -35,6 +35,8 @@ public class KBPlayer : KBControllableGameObject
     private float upperbodyRotateSpeed;
 
     private CharacterController charController;
+
+    private int layerMask;
 
     public string playerName;
     public PhotonPlayer networkPlayer;
@@ -82,6 +84,7 @@ public class KBPlayer : KBControllableGameObject
         triggerLockout = false;
         charController = GetComponent<CharacterController>();
         grabSound = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.ItemGrab]);
+        playerGuiSquare = GetComponent<RotatableGuiItem>();
         latestCorrectPos = transform.position;
         onUpdatePos = transform.position;
         isShooting = false;
@@ -91,6 +94,16 @@ public class KBPlayer : KBControllableGameObject
         autoFire = false;
         movespeed = stats.speed;
         lowerbodyRotateSpeed = stats.lowerbodyRotationSpeed;
+
+
+
+        int itemLayer = 8;
+        int towerLayer = 13;
+        int modelLayer = 15;
+        int layerMask1 = 1 << itemLayer;
+        int layerMask2 = 1 << towerLayer;
+        int layerMask3 = 1 << modelLayer;
+        layerMask = layerMask1 | layerMask2 | layerMask3;
 
         teamSpawnpoints = new List<PlayerSpawnPoint>();
 
@@ -136,6 +149,9 @@ public class KBPlayer : KBControllableGameObject
 
     private void FixedUpdate()
     {
+        Screen.showCursor = false;
+       
+
         if (invulnerabilityTime > 0)
         {
             invulnerabilityTime -= Time.deltaTime;
@@ -192,14 +208,7 @@ public class KBPlayer : KBControllableGameObject
             {
                 GUI.Box(new Rect(Screen.width / 2, Screen.height / 2 + 100, 100, 20), "RELOADING");
             }
-            else
-            {
-                GUI.Box(new Rect(Input.mousePosition.x - 80, Screen.height - Input.mousePosition.y - 20, 30, 20), gun[activeAbility].ammo.ToString());
-                if (autoFire)
-                {
-                    GUI.Box(new Rect(Input.mousePosition.x - 80, Screen.height - Input.mousePosition.y, 50, 20), "AUTO");
-                }
-            }
+            
 
             GUI.Box(new Rect(0, 0, 100, 80),
                 "Kill Tokens" + System.Environment.NewLine +
@@ -318,6 +327,15 @@ public class KBPlayer : KBControllableGameObject
     private new void OnTriggerEnter(Collider other)
     {
         base.OnTriggerEnter(other);
+        if (other.gameObject.CompareTag("BankZone"))
+        {
+            if (killTokens > 0)
+            {
+                BankZone b = other.gameObject.GetComponent<BankZone>();
+                b.AddPoints(killTokens, team);
+                killTokens = 0;
+            }
+        }
     }
 
     private void ControlKBAM()

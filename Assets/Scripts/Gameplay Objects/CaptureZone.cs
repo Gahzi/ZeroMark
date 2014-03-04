@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CaptureZone : KBGameObject
+public class CaptureZone : Zone
 {
     
     // Capture zone class should probably inherit from a more generic type of zone.
@@ -304,15 +304,15 @@ public class CaptureZone : KBGameObject
         }
     }
 
-    protected override void OnTriggerEnter(Collider other)
-    {
-        base.OnTriggerEnter(other);
-    }
+    //protected override void OnTriggerEnter(Collider other)
+    //{
+    //    base.OnTriggerEnter(other);
+    //}
 
-    protected override void OnTriggerExit(Collider other)
-    {
-        base.OnTriggerExit(other);
-    }
+    //protected override void OnTriggerExit(Collider other)
+    //{
+    //    base.OnTriggerExit(other);
+    //}
 
     /// <summary>
     /// Calculates the capture delta & applies team-wide percentage bonus to final rate and applies final delta to capture total.
