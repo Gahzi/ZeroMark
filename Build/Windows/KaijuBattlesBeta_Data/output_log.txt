@@ -17,7 +17,7 @@ Platform assembly: C:\Users\Shervbook\Documents\GitHub\KaijuBattles\Build\Window
 Loading C:\Users\Shervbook\Documents\GitHub\KaijuBattles\Build\Windows\KaijuBattlesBeta_Data\Managed\Assembly-UnityScript-firstpass.dll into Unity Child Domain
 Platform assembly: C:\Users\Shervbook\Documents\GitHub\KaijuBattles\Build\Windows\KaijuBattlesBeta_Data\Managed\Photon3Unity3D.dll (this message is harmless)
 Loading C:\Users\Shervbook\Documents\GitHub\KaijuBattles\Build\Windows\KaijuBattlesBeta_Data\Managed\Photon3Unity3D.dll into Unity Child Domain
-- Completed reload, in  0.038 seconds
+- Completed reload, in  0.037 seconds
 desktop: 1920x1080 60Hz; virtual: 4800x1800 at -2880,0
 <RI> Initializing input.
 <RI> Input initialized.
@@ -27,11 +27,11 @@ This client has connected to a server
  
 (Filename: C:/BuildAgent/work/d3d49558e4d408f4/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 53)
 
-UnloadTime: 0.279782 ms
+UnloadTime: 0.232033 ms
 Unloading 5 Unused Serialized files (Serialized files now loaded: 0 / Dirty serialized files: 0)
 
-Unloading 2 unused Assets to reduce memory usage. Loaded Objects now: 338.
-Total: 0.535915 ms (FindLiveObjects: 0.012940 ms CreateObjectMapping: 0.007585 ms MarkObjects: 0.221773 ms  DeleteObjects: 0.004462 ms)
+Unloading 2 unused Assets to reduce memory usage. Loaded Objects now: 349.
+Total: 0.628275 ms (FindLiveObjects: 0.016956 ms CreateObjectMapping: 0.007585 ms MarkObjects: 0.210168 ms  DeleteObjects: 0.016063 ms)
 
 Unsupported: Hidden/NoiseAndGrainDX11
 Unsupported: Hidden/CameraMotionBlurDX11
