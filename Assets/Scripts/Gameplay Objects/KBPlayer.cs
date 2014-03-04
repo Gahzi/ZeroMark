@@ -84,7 +84,6 @@ public class KBPlayer : KBControllableGameObject
         triggerLockout = false;
         charController = GetComponent<CharacterController>();
         grabSound = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.ItemGrab]);
-        playerGuiSquare = GetComponent<RotatableGuiItem>();
         latestCorrectPos = transform.position;
         onUpdatePos = transform.position;
         isShooting = false;
