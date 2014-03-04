@@ -139,6 +139,10 @@ public class KBPlayer : KBControllableGameObject
         if (invulnerabilityTime > 0)
         {
             invulnerabilityTime -= Time.deltaTime;
+            if (invulnerabilityTime <= 0)
+            {
+                invulnerabilityTime = 0;
+            }
             // activate visual indication of invulnerability
         }
 
@@ -254,6 +258,7 @@ public class KBPlayer : KBControllableGameObject
             int lvl = level;
             int mxhlth = maxHealth;
             bool isShting = isShooting;
+            bool wtngFrRspwn = waitingForRespawn;
             int tm = (int)team;
             int ab = activeAbility;
             float invltime = invulnerabilityTime;
@@ -264,6 +269,7 @@ public class KBPlayer : KBControllableGameObject
             stream.Serialize(ref lvl);
             stream.Serialize(ref mxhlth);
             stream.Serialize(ref isShting);
+            stream.Serialize(ref wtngFrRspwn);
             stream.Serialize(ref tm);
             stream.Serialize(ref ab);
             stream.Serialize(ref invltime);
@@ -277,6 +283,7 @@ public class KBPlayer : KBControllableGameObject
             int lvl = 0;
             int mxhlth = 0;
             bool isShting = false;
+            bool wtngFrRspwn = false;
             int tm = 0;
             int ab = 0;
             float invltime = 0.0f;
@@ -287,6 +294,7 @@ public class KBPlayer : KBControllableGameObject
             stream.Serialize(ref lvl);
             stream.Serialize(ref mxhlth);
             stream.Serialize(ref isShting);
+            stream.Serialize(ref wtngFrRspwn);
             stream.Serialize(ref tm);
             stream.Serialize(ref ab);
             stream.Serialize(ref invltime);
@@ -300,6 +308,7 @@ public class KBPlayer : KBControllableGameObject
             level = lvl;
             maxHealth = mxhlth;
             isShooting = isShting;
+            waitingForRespawn = wtngFrRspwn;
             team = (Team)tm;
             activeAbility = ab;
             invulnerabilityTime = invltime;
@@ -426,7 +435,7 @@ public class KBPlayer : KBControllableGameObject
             waitingForRespawn = true;
             audio.PlayOneShot(deadSound);
         }
-        else if (waitingForRespawn)
+        else if (waitingForRespawn && photonView.isMine)
         {
             acceptingInputs = false;
             if (!timer.IsTimerActive(respawnTimer))

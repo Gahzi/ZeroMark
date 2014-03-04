@@ -64,17 +64,22 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
         if (other.gameObject.CompareTag("Hitbox"))
         {
             KBGameObject o = other.gameObject.transform.parent.GetComponent<KBGameObject>();
-            if (o.gameObject.GetComponent<KBPlayer>().photonView.isMine)
+            KBPlayer victimPlayer = other.gameObject.transform.parent.GetComponent<KBPlayer>();
+
+            if(victimPlayer != null)
             {
-                if (o.Team != Team)
+                if (victimPlayer .photonView.isMine)
                 {
-                    int victimHealth = o.TakeDamage(damage);
-                    if (victimHealth <= 0)
+                    if (victimPlayer .Team != Team && victimPlayer .health > 0 && victimPlayer.invulnerabilityTime <= 0)
                     {
-                        o.gameObject.GetComponent<KBPlayer>().Die(owner.gameObject);
+                        int victimHealth = o.TakeDamage(damage);
+                        if (victimHealth <= 0)
+                        {
+                            o.gameObject.GetComponent<KBPlayer>().Die(owner.gameObject);
+                        }
+                        owner.ConfirmHit(o.gameObject.GetComponent<KBPlayer>());
+                        Destroy(gameObject);
                     }
-                    owner.ConfirmHit(o.gameObject.GetComponent<KBPlayer>());
-                    Destroy(gameObject);
                 }
             }
         }
