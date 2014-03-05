@@ -1,16 +1,17 @@
 ﻿using KBConstants;
-using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(PhotonView))]
 [RequireComponent(typeof(CharacterController))]
 public class KBPlayer : KBControllableGameObject
 {
-
     #region CONSTANTS
+
     private static readonly float hitFXLength = 0.250f;
-    #endregion
+
+    #endregion CONSTANTS
 
     public enum ControlStyle { ThirdPerson, TopDown };
 
@@ -44,13 +45,13 @@ public class KBPlayer : KBControllableGameObject
     private Vector3 latestCorrectPos;
     private Vector3 onUpdatePos;
     private float fraction;
-    
+
     public AudioClip grabSound;
     public GameObject upperBody;
     public Vector3 mousePos;
     public Vector3 playerPositionOnScreen;
     public Vector3 mousePlayerDiff;
-    
+
     public List<PlayerSpawnPoint> teamSpawnpoints;
     public float respawnTime;
     private int respawnTimer;
@@ -94,8 +95,6 @@ public class KBPlayer : KBControllableGameObject
         movespeed = stats.speed;
         lowerbodyRotateSpeed = stats.lowerbodyRotationSpeed;
 
-
-
         int itemLayer = 8;
         int towerLayer = 13;
         int modelLayer = 15;
@@ -118,7 +117,7 @@ public class KBPlayer : KBControllableGameObject
                     }
                     break;
                 }
-                
+
             case Team.Blue:
                 {
                     teamIndicator.material = blueMat;
@@ -129,13 +128,13 @@ public class KBPlayer : KBControllableGameObject
                     }
                     break;
                 }
-                
+
             case Team.None:
                 {
                     enabled = false;
                     break;
                 }
-                
+
             default:
                 break;
         }
@@ -149,7 +148,6 @@ public class KBPlayer : KBControllableGameObject
     private void FixedUpdate()
     {
         Screen.showCursor = false;
-       
 
         if (invulnerabilityTime > 0)
         {
@@ -166,40 +164,43 @@ public class KBPlayer : KBControllableGameObject
             StartCoroutine(Lockout(bankLockoutTime));
         }
 
-        if (!Input.GetButton("Boost"))
-        {
-            boostTime += boostRechargeRate * Time.deltaTime;
-            boostTime = Mathf.Clamp(boostTime, 0.0f, boostMax);
-        }
-
         mousePos = Input.mousePosition;
         fraction = fraction + Time.deltaTime * 9;
 
-        if (photonView.isMine)
+        if (acceptingInputs)
         {
-            playerPositionOnScreen = Camera.main.WorldToScreenPoint(transform.position);
-            mousePlayerDiff = playerPositionOnScreen - mousePos;
-            ControlKBAM();
-        }
-        else
-        {
-            transform.localPosition = Vector3.Lerp(onUpdatePos, latestCorrectPos, fraction);    // set our pos between A and B
-        }
-
-        if (isShooting)
-        {
-            gun[activeAbility].PlayerFire();
-            if (gun[activeAbility].ammo == 0)
+            if (photonView.isMine)
             {
-                gun[activeAbility].PlayerTriggerReload();
-                isShooting = false;
-            }   
+                playerPositionOnScreen = Camera.main.WorldToScreenPoint(transform.position);
+                mousePlayerDiff = playerPositionOnScreen - mousePos;
+                ControlKBAM();
+
+                if (isShooting)
+                {
+                    gun[activeAbility].PlayerFire();
+                    if (gun[activeAbility].ammo == 0)
+                    {
+                        gun[activeAbility].PlayerTriggerReload();
+                        isShooting = false;
+                    }
+                }
+
+                if (!Input.GetButton("Boost"))
+                {
+                    boostTime += boostRechargeRate * Time.deltaTime;
+                    boostTime = Mathf.Clamp(boostTime, 0.0f, boostMax);
+                }
+            }
+            else
+            {
+                transform.localPosition = Vector3.Lerp(onUpdatePos, latestCorrectPos, fraction);    // set our pos between A and B
+            }
         }
 
         CheckHealth();
     }
 
-    void OnGUI()
+    private void OnGUI()
     {
         if (networkPlayer.isLocal)
         {
@@ -207,7 +208,6 @@ public class KBPlayer : KBControllableGameObject
             {
                 GUI.Box(new Rect(Screen.width / 2, Screen.height / 2 + 100, 100, 20), "RELOADING");
             }
-            
 
             GUI.Box(new Rect(0, 0, 100, 80),
                 "Kill Tokens" + System.Environment.NewLine +
@@ -221,7 +221,6 @@ public class KBPlayer : KBControllableGameObject
             }
         }
     }
-
 
     private void OnPhotonInstantiate(PhotonMessageInfo msg)
     {
@@ -335,6 +334,21 @@ public class KBPlayer : KBControllableGameObject
                 killTokens = 0;
             }
         }
+        if (other.gameObject.CompareTag("KillTag"))
+        {
+            KillTag t = other.gameObject.GetComponent<KillTag>();
+            if (t.source != gameObject)
+            {
+                if (t.team != team)
+                {
+                    killTokens *= 2;
+                    // play pickup sound;
+                }
+                PhotonNetwork.Destroy(other.gameObject);
+                audio.PlayOneShot(grabSound);
+                // todo play return sound
+            }
+        }
     }
 
     private void ControlKBAM()
@@ -393,7 +407,7 @@ public class KBPlayer : KBControllableGameObject
             }
         }
 
-        if(Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0))
         {
             isShooting = false;
         }
@@ -528,14 +542,14 @@ public class KBPlayer : KBControllableGameObject
     {
         if (killerPlayer.isLocal && photonView.isMine)
         {
-            if (killTokens < 3)
-            {
-                killTokens++;
-            }
-            else
-            {
-                killTokens *= 2;
-            }
+            //if (killTokens < 3)
+            //{
+            killTokens++;
+            //}
+            //else
+            //{
+            //    killTokens *= 2;
+            //}
         }
     }
 
@@ -543,6 +557,7 @@ public class KBPlayer : KBControllableGameObject
     {
         if (teamSpawnpoints.Count > 0 && photonView.isMine)
         {
+            SpawnKillTag(transform.position);   // TODO spawning one of thse on game start not good
             transform.position = teamSpawnpoints[0].transform.position;
             waitingForRespawn = false;
             acceptingInputs = true;
@@ -571,10 +586,6 @@ public class KBPlayer : KBControllableGameObject
         activeAbility = 0;
     }
 
-    
-
-    
-
     public void BankKills()
     {
         invulnerabilityTime = bankLockoutTime;
@@ -589,5 +600,19 @@ public class KBPlayer : KBControllableGameObject
         acceptingInputs = true;
         killTokens = GameManager.Instance.AddPointsToScore(team, killTokens);
         triggerLockout = false;
+    }
+
+    private void SpawnKillTag(Vector3 pos)
+    {
+        GameObject o = null;
+        if (team == Team.Blue)
+        {
+            o = PhotonNetwork.InstantiateSceneObject(KBConstants.ObjectConstants.PREFAB_NAMES[ObjectConstants.type.KillTagBlue], transform.position, Quaternion.identity, 0, null);
+        }
+        else if (team == Team.Red)
+        {
+            o = PhotonNetwork.InstantiateSceneObject(KBConstants.ObjectConstants.PREFAB_NAMES[ObjectConstants.type.KillTagRed], transform.position, Quaternion.identity, 0, null);
+        }
+        o.GetComponent<KillTag>().source = gameObject;
     }
 }

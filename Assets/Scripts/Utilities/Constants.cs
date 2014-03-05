@@ -3,12 +3,14 @@
 namespace KBConstants
 {
     public enum Team { Red, Blue, None };
+
     public enum PlayerType { attack, recon, defense };
+
     public enum ItemType { common, uncommon, rare, legendary, undefined };
 
     public class ObjectConstants
     {
-        public enum type { Player, Gamepad, Item, PlayerCamera, PlasmaBullet, BasicRigidbodyCube, MachinegunBullet, Rocket };
+        public enum type { Player, Gamepad, Item, PlayerCamera, PlasmaBullet, BasicRigidbodyCube, MachinegunBullet, Rocket, KillTagBlue, KillTagRed };
 
         private static readonly IDictionary<type, string> prefabNames = new Dictionary<type, string>
         {
@@ -19,8 +21,11 @@ namespace KBConstants
             {type.PlasmaBullet, "Abilities/PlasmaBullet"},
             {type.BasicRigidbodyCube, "Environment/BasicRigidbodyCube"},
             {type.MachinegunBullet, "Abilities/machinegunbullet"},
-            {type.Rocket, "abilities/rocket"}
+            {type.Rocket, "abilities/rocket"},
+            {type.KillTagBlue, "items/killtagblue"},
+                        {type.KillTagRed, "items/killtagred"}
         };
+
         public static IDictionary<type, string> PREFAB_NAMES { get { return prefabNames; } }
     }
 
@@ -35,6 +40,7 @@ namespace KBConstants
             {type.PlayerStats, "PlayerTypeData.csv"},
             {type.UpgradePointReqs, "UpgradePointReqs.csv"}
         };
+
         public static IDictionary<type, string> PREFAB_NAMES { get { return prefabNames; } }
 
         private static readonly IDictionary<type, string> prefabTags = new Dictionary<type, string>
@@ -44,6 +50,7 @@ namespace KBConstants
             {type.PlayerStats, "PlayerStats"},
             {type.UpgradePointReqs, "UpgradePointReqs"}
         };
+
         public static IDictionary<type, string> PREFAB_TAGS { get { return prefabTags; } }
     }
 
@@ -85,4 +92,3 @@ namespace KBConstants
         public static IDictionary<clip, string> CLIP_NAMES { get { return clipNames; } }
     }
 }
-

@@ -422,6 +422,10 @@ Prefab:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 25e2afbb4f390b7438d2f9e23bfa74af, type: 2}
+      propertyPath: health
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 25e2afbb4f390b7438d2f9e23bfa74af, type: 2}
   m_RootGameObject: {fileID: 1231797481}
@@ -851,7 +855,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   team: 2
-  health: 0
+  health: 1
   startingHealth: 2
 --- !u!1 &1276463318
 GameObject:
