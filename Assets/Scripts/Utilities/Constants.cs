@@ -23,7 +23,7 @@ namespace KBConstants
             {type.MachinegunBullet, "Abilities/machinegunbullet"},
             {type.Rocket, "abilities/rocket"},
             {type.KillTagBlue, "items/killtagblue"},
-                        {type.KillTagRed, "items/killtagred"}
+            {type.KillTagRed, "items/killtagred"}
         };
 
         public static IDictionary<type, string> PREFAB_NAMES { get { return prefabNames; } }

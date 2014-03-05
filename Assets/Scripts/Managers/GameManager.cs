@@ -87,7 +87,7 @@ public class GameManager : Photon.MonoBehaviour
     }
 
     private void Start()
-    {
+    {        
         PhotonNetwork.isMessageQueueRunning = true;
         ReadPlayerStatData();
         ReadUpgradePointData();

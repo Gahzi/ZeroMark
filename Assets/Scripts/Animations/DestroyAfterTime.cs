@@ -15,7 +15,7 @@ public class DestroyAfterTime : MonoBehaviour
     {
         if (Time.time > initTime + lifetime)
         {
-            Destroy(gameObject);
+            PhotonNetwork.Destroy(gameObject);
         }
     }
 }

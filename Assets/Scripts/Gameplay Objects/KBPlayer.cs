@@ -16,6 +16,7 @@ public class KBPlayer : KBControllableGameObject
     public enum ControlStyle { ThirdPerson, TopDown };
 
     public ControlStyle controlStyle;
+    public bool tankStyleMove;
     public PlayerType type;
     public PlayerStats stats;
     public bool acceptingInputs = true;
@@ -74,8 +75,14 @@ public class KBPlayer : KBControllableGameObject
     public int killTokens;
     private bool triggerLockout;
     private int activeAbility;
-    private bool autoFire;
+
+    //private bool autoFire;
     private bool isShooting;
+
+    private bool secondaryWeaponLinkedFire;
+    private int lastPrimaryFire;
+    private bool primaryWeaponLinkedFire;
+    private int lastSecondaryFire;
 
     public override void Start()
     {
@@ -91,9 +98,12 @@ public class KBPlayer : KBControllableGameObject
         hitConfirm = Resources.Load<AudioClip>(KBConstants.AudioConstants.CLIP_NAMES[KBConstants.AudioConstants.clip.HitConfirm]);
         SetupAbilities();
         GetComponentInChildren<HitboxBaseScript>().Team = team;
-        autoFire = false;
+        //autoFire = false;
         movespeed = stats.speed;
         lowerbodyRotateSpeed = stats.lowerbodyRotationSpeed;
+
+        lastPrimaryFire = 0;
+        lastSecondaryFire = 2;
 
         int itemLayer = 8;
         int towerLayer = 13;
@@ -109,7 +119,7 @@ public class KBPlayer : KBControllableGameObject
         {
             case Team.Red:
                 {
-                    teamIndicator.material = redMat;
+                    //teamIndicator.material = redMat;
                     FindTeamSpawnpoints();
                     if (teamSpawnpoints.Count > 0)
                     {
@@ -120,7 +130,7 @@ public class KBPlayer : KBControllableGameObject
 
             case Team.Blue:
                 {
-                    teamIndicator.material = blueMat;
+                    //teamIndicator.material = blueMat;
                     FindTeamSpawnpoints();
                     if (teamSpawnpoints.Count > 0)
                     {
@@ -177,11 +187,14 @@ public class KBPlayer : KBControllableGameObject
 
                 if (isShooting)
                 {
-                    gun[activeAbility].PlayerFire();
-                    if (gun[activeAbility].ammo == 0)
+                    //gun[activeAbility].PlayerFire();
+                }
+
+                for (int i = 0; i < gun.Length; i++)
+                {
+                    if (gun[i].ammo == 0)
                     {
-                        gun[activeAbility].PlayerTriggerReload();
-                        isShooting = false;
+                        gun[i].PlayerTriggerReload();
                     }
                 }
 
@@ -373,57 +386,136 @@ public class KBPlayer : KBControllableGameObject
                 break;
 
             case ControlStyle.TopDown:
-                Vector3 m = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-                charController.SimpleMove(m.normalized * modifiedMoveSpeed);
 
-                Quaternion newRot = Quaternion.LookRotation(upperBody.transform.position + new Vector3(-mousePlayerDiff.x, 0, -mousePlayerDiff.y));
-                upperBody.transform.rotation = Quaternion.Lerp(upperBody.transform.rotation, newRot, upperbodyRotateSpeed * Time.deltaTime);
+                Vector3 m = Vector3.zero;
+                if (tankStyleMove)
+                {
+                    m = Input.GetAxis("Vertical") * upperBody.transform.forward;
+                    charController.SimpleMove(m.normalized * modifiedMoveSpeed);
+                    upperBody.transform.Rotate(Vector3.up, Input.GetAxis("Horizontal") * upperbodyRotateSpeed * Time.deltaTime);
+                    //charController.SimpleMove(Input.GetAxis("Horizontal") * upperBody.transform.right * modifiedMoveSpeed / 4);
+                }
+                else
+                {
+                    Quaternion newRot = Quaternion.LookRotation(upperBody.transform.position + new Vector3(-mousePlayerDiff.x, 0, -mousePlayerDiff.y));
+                    upperBody.transform.rotation = Quaternion.Lerp(upperBody.transform.rotation, newRot, upperbodyRotateSpeed * Time.deltaTime);
+                    m = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+                    charController.SimpleMove(m.normalized * modifiedMoveSpeed);
+                }
                 break;
 
             default:
                 break;
         }
 
-        if (autoFire)
+        //if (autoFire)
+        //{
+        if ((Input.GetMouseButton(0) || Input.GetMouseButton(1)))// && !gun[activeAbility].reloading)
         {
-            if (Input.GetMouseButton(0) && !gun[activeAbility].reloading)
+            isShooting = true;
+            if (Input.GetMouseButton(0))
             {
-                isShooting = true;
+                if (primaryWeaponLinkedFire)
+                {
+                    gun[0].PlayerFire();
+                    gun[1].PlayerFire();
+                }
+                else
+                {
+                    int otherGun;
+                    if (lastPrimaryFire == 0)
+                    {
+                        otherGun = 1;
+                    }
+                    else
+                    {
+                        otherGun = 0;
+                    }
+                    
+                    if (gun[lastPrimaryFire].available)
+                    {
+                        gun[lastPrimaryFire].PlayerFire();
+                    }
+                    else if (!gun[lastPrimaryFire].available && gun[lastPrimaryFire].halfwayCooled)
+                    {
+                        gun[otherGun].PlayerFire();
+                        lastPrimaryFire = otherGun;
+                    }
+                }
             }
-            else
+            if (Input.GetMouseButton(1))
             {
-                isShooting = false;
+                if (secondaryWeaponLinkedFire)
+                {
+                    gun[2].PlayerFire();
+                    gun[3].PlayerFire();
+                }
+                else
+                {
+                    int otherGun;
+                    if (lastSecondaryFire == 2)
+                    {
+                        otherGun = 3;
+                    }
+                    else
+                    {
+                        otherGun = 2;
+                    }
+                    if (gun[lastSecondaryFire].available) // TODO This doesn't synchronize as intended. Can shoot same side twice if you let go and wait until it cools.
+                    {
+                        gun[lastSecondaryFire].PlayerFire();
+                    }
+                    else if (!gun[lastSecondaryFire].available && gun[lastSecondaryFire].halfwayCooled)
+                    {
+                        gun[otherGun].PlayerFire();
+                        lastSecondaryFire = otherGun;
+                    }
+                }
             }
         }
         else
         {
-            if (!isShooting && Input.GetMouseButtonDown(0) && !gun[activeAbility].reloading)
-            {
-                isShooting = true;
-            }
-            else if (!isShooting && Input.GetMouseButtonDown(0))
-            {
-                isShooting = false;
-            }
-        }
-
-        if (Input.GetMouseButtonUp(0))
-        {
             isShooting = false;
         }
 
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.Z))
         {
-            gun[activeAbility].PlayerTriggerReload();
-            isShooting = false;
+            secondaryWeaponLinkedFire = !secondaryWeaponLinkedFire;
         }
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            primaryWeaponLinkedFire = !primaryWeaponLinkedFire;
+        }
+        //}
+        //else
+        //{
+        //    if (!isShooting && Input.GetMouseButtonDown(0) && !gun[activeAbility].reloading)
+        //    {
+        //        isShooting = true;
+        //    }
+        //    else if (!isShooting && Input.GetMouseButtonDown(0))
+        //    {
+        //        isShooting = false;
+        //    }
+        //}
 
-        if (Input.GetMouseButtonDown(1))
-        {
-            //SHERVIN: This must be sent across network.
-            //DropItem();
-            autoFire = !autoFire;
-        }
+        //if (Input.GetMouseButtonUp(0))
+        //{
+        //    isShooting = false;
+        //}
+
+        //if (Input.GetKeyDown(KeyCode.R))
+        //{
+        //    gun[activeAbility].PlayerTriggerReload();
+        //    isShooting = false;
+        //}
+
+        //if (Input.GetMouseButtonDown(1))
+        //{
+        //    //SHERVIN: This must be sent across network.
+        //    //DropItem();
+        //    autoFire = !autoFire;
+        //}
 
         // DEBUG FUNCTIONS
         if (Input.GetKeyDown(KeyCode.T))
@@ -436,26 +528,26 @@ public class KBPlayer : KBControllableGameObject
             BankKills();
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            activeAbility = 0;
-        }
+        //if (Input.GetKeyDown(KeyCode.Alpha1))
+        //{
+        //    activeAbility = 0;
+        //}
 
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            if (gun.Length > 0)
-            {
-                activeAbility = 1;
-            }
-        }
+        //if (Input.GetKeyDown(KeyCode.Alpha2))
+        //{
+        //    if (gun.Length > 0)
+        //    {
+        //        activeAbility = 1;
+        //    }
+        //}
 
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            if (gun.Length > 1)
-            {
-                activeAbility = 2;
-            }
-        }
+        //if (Input.GetKeyDown(KeyCode.Alpha3))
+        //{
+        //    if (gun.Length > 1)
+        //    {
+        //        activeAbility = 2;
+        //    }
+        //}
     }
 
     private void CheckHealth()

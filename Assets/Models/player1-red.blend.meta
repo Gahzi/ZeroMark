@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: d5422df2fdfbc9042bfab27b26318236
+guid: 04d87593cde070f43b91fcc395a9ad7d
 ModelImporter:
   serializedVersion: 15
   fileIDToRecycleName:
@@ -7,7 +7,7 @@ ModelImporter:
     400000: //RootNode
     2300000: //RootNode
     3300000: //RootNode
-    4300000: stick_sml_004
+    4300000: stick_sml_000
     7400000: Default Take
     9500000: //RootNode
   materials:

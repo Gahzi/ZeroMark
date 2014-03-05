@@ -19,6 +19,8 @@ abstract public class AbilitySlotBaseScript : MonoBehaviour
     //public bool abilityActive;
     private Team team;
     public KBPlayer owner;
+    public bool available;
+    public bool halfwayCooled;
 
     public Team Team
     {
@@ -54,6 +56,16 @@ abstract public class AbilitySlotBaseScript : MonoBehaviour
         if (cooldown > 0)
         {
             cooldown -= Time.deltaTime;
+            available = false;
+            if (cooldown <= cooldownStart/2)
+            {
+                halfwayCooled = true;
+            }
+        }
+        else
+        {
+            available = true;
+            halfwayCooled = false;
         }
         cooldown = Mathf.Clamp(cooldown, 0.0f, 100.0f);
     }
