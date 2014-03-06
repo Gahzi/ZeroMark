@@ -1052,8 +1052,7 @@ MonoBehaviour:
   team: 0
   health: 0
   controlStyle: 1
-  tankStyleMove: 1
-  type: 1
+  type: 2
   acceptingInputs: 0
   waitingForRespawn: 0
   invulnerabilityTime: 0
@@ -1067,6 +1066,7 @@ MonoBehaviour:
   playerName: 
   grabSound: {fileID: 8300000, guid: 82d29d7db5e1f0d44b5118adc29421a2, type: 3}
   upperBody: {fileID: 100016}
+  lowerBody: {fileID: 100014}
   mousePos: {x: 0, y: 0, z: 0}
   playerPositionOnScreen: {x: 0, y: 0, z: 0}
   mousePlayerDiff: {x: 0, y: 0, z: 0}

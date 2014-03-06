@@ -30,4 +30,5 @@ MonoBehaviour:
   - SetOwner
   - NotifyKill
   - ConfirmHitToOthers
+  - SetPlayerStats
   DisableAutoOpenWizard: 0
