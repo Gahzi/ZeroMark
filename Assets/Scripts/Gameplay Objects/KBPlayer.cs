@@ -16,7 +16,7 @@ public class KBPlayer : KBControllableGameObject
     public enum ControlStyle { ThirdPerson, TopDown };
 
     public ControlStyle controlStyle;
-    public bool tankStyleMove;
+    private bool tankStyleMove;
     public PlayerType type;
     public PlayerStats stats;
     public bool acceptingInputs = true;
@@ -49,6 +49,7 @@ public class KBPlayer : KBControllableGameObject
 
     public AudioClip grabSound;
     public GameObject upperBody;
+    public GameObject lowerBody;
     public Vector3 mousePos;
     public Vector3 playerPositionOnScreen;
     public Vector3 mousePlayerDiff;
@@ -145,6 +146,21 @@ public class KBPlayer : KBControllableGameObject
                     break;
                 }
 
+            default:
+                break;
+        }
+
+        switch (type)
+        {
+            case PlayerType.mech:
+                tankStyleMove = false;
+                break;
+            case PlayerType.drone:
+                tankStyleMove = true;
+                break;
+            case PlayerType.tank:
+                tankStyleMove = true;
+                break;
             default:
                 break;
         }
@@ -390,15 +406,25 @@ public class KBPlayer : KBControllableGameObject
                 Vector3 m = Vector3.zero;
                 if (tankStyleMove)
                 {
-                    m = Input.GetAxis("Vertical") * upperBody.transform.forward;
+                    m = Input.GetAxis("Vertical") * lowerBody.transform.forward;
                     charController.SimpleMove(m.normalized * modifiedMoveSpeed);
-                    upperBody.transform.Rotate(Vector3.up, Input.GetAxis("Horizontal") * upperbodyRotateSpeed * Time.deltaTime);
-                    //charController.SimpleMove(Input.GetAxis("Horizontal") * upperBody.transform.right * modifiedMoveSpeed / 4);
+                    lowerBody.transform.Rotate(Vector3.up, Input.GetAxis("Horizontal") * lowerbodyRotateSpeed * Time.deltaTime);
+
+                    if (type == PlayerType.tank)
+                    {
+                        Quaternion newRot = Quaternion.LookRotation(upperBody.transform.position + new Vector3(-mousePlayerDiff.x, 0, -mousePlayerDiff.y));
+                        upperBody.transform.rotation = Quaternion.Lerp(upperBody.transform.rotation, newRot, upperbodyRotateSpeed * Time.deltaTime);
+                    }
+                    else
+                    {
+                        upperBody.transform.rotation = lowerBody.transform.rotation;
+                    }
                 }
                 else
                 {
                     Quaternion newRot = Quaternion.LookRotation(upperBody.transform.position + new Vector3(-mousePlayerDiff.x, 0, -mousePlayerDiff.y));
                     upperBody.transform.rotation = Quaternion.Lerp(upperBody.transform.rotation, newRot, upperbodyRotateSpeed * Time.deltaTime);
+                    lowerBody.transform.rotation = upperBody.transform.rotation;
                     m = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
                     charController.SimpleMove(m.normalized * modifiedMoveSpeed);
                 }
@@ -486,36 +512,6 @@ public class KBPlayer : KBControllableGameObject
         {
             primaryWeaponLinkedFire = !primaryWeaponLinkedFire;
         }
-        //}
-        //else
-        //{
-        //    if (!isShooting && Input.GetMouseButtonDown(0) && !gun[activeAbility].reloading)
-        //    {
-        //        isShooting = true;
-        //    }
-        //    else if (!isShooting && Input.GetMouseButtonDown(0))
-        //    {
-        //        isShooting = false;
-        //    }
-        //}
-
-        //if (Input.GetMouseButtonUp(0))
-        //{
-        //    isShooting = false;
-        //}
-
-        //if (Input.GetKeyDown(KeyCode.R))
-        //{
-        //    gun[activeAbility].PlayerTriggerReload();
-        //    isShooting = false;
-        //}
-
-        //if (Input.GetMouseButtonDown(1))
-        //{
-        //    //SHERVIN: This must be sent across network.
-        //    //DropItem();
-        //    autoFire = !autoFire;
-        //}
 
         // DEBUG FUNCTIONS
         if (Input.GetKeyDown(KeyCode.T))
@@ -527,27 +523,6 @@ public class KBPlayer : KBControllableGameObject
         {
             BankKills();
         }
-
-        //if (Input.GetKeyDown(KeyCode.Alpha1))
-        //{
-        //    activeAbility = 0;
-        //}
-
-        //if (Input.GetKeyDown(KeyCode.Alpha2))
-        //{
-        //    if (gun.Length > 0)
-        //    {
-        //        activeAbility = 1;
-        //    }
-        //}
-
-        //if (Input.GetKeyDown(KeyCode.Alpha3))
-        //{
-        //    if (gun.Length > 1)
-        //    {
-        //        activeAbility = 2;
-        //    }
-        //}
     }
 
     private void CheckHealth()
@@ -634,14 +609,7 @@ public class KBPlayer : KBControllableGameObject
     {
         if (killerPlayer.isLocal && photonView.isMine)
         {
-            //if (killTokens < 3)
-            //{
             killTokens++;
-            //}
-            //else
-            //{
-            //    killTokens *= 2;
-            //}
         }
     }
 
@@ -706,5 +674,10 @@ public class KBPlayer : KBControllableGameObject
             o = PhotonNetwork.InstantiateSceneObject(KBConstants.ObjectConstants.PREFAB_NAMES[ObjectConstants.type.KillTagRed], transform.position, Quaternion.identity, 0, null);
         }
         o.GetComponent<KillTag>().source = gameObject;
+    }
+
+    private void FireWeapons(int weaponOne, int weaponTwo, bool linked)
+    {
+
     }
 }

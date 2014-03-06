@@ -4,7 +4,7 @@ namespace KBConstants
 {
     public enum Team { Red, Blue, None };
 
-    public enum PlayerType { attack, recon, defense };
+    public enum PlayerType { mech, drone, tank };
 
     public enum ItemType { common, uncommon, rare, legendary, undefined };
 

@@ -90,7 +90,6 @@ public class GameManager : Photon.MonoBehaviour
     {        
         PhotonNetwork.isMessageQueueRunning = true;
         ReadPlayerStatData();
-        ReadUpgradePointData();
         startTime = Time.time;
         lastTick = Time.time;
         state = GameState.PreGame;
@@ -131,7 +130,7 @@ public class GameManager : Photon.MonoBehaviour
             Team nextTeam = (Team)(PhotonNetwork.otherPlayers.Length % 2);
 
             localPlayer = createObject(ObjectConstants.type.Player, new Vector3(0, 0, 0), Quaternion.identity, nextTeam).GetComponent<KBPlayer>(); ;
-            photonView.RPC("SetPlayerLevel", PhotonTargets.AllBuffered, PhotonNetwork.player, 1);
+            photonView.RPC("SetPlayerStats", PhotonTargets.AllBuffered, PhotonNetwork.player);
         }
         
     }
@@ -445,19 +444,6 @@ public class GameManager : Photon.MonoBehaviour
         }
     }
 
-    public void CheckPlayerUpgradePoints()
-    {
-        //TODO: Send level up notification to other clients.
-        if (localPlayer != null)
-        {
-            if (localPlayer.upgradePoints >= Convert.ToInt32(upgradePointReqData[localPlayer.stats.level][0]))
-            {
-                photonView.RPC("SetPlayerLevel", PhotonTargets.AllBuffered, PhotonNetwork.player, localPlayer.stats.level + 1);
-                Debug.Log("Level up!");
-            }
-        }
-    }
-
     public GameObject createObject(KBConstants.ObjectConstants.type objectType, Vector3 position, Quaternion rotation, Team newTeam)
     {
         switch (objectType)
@@ -535,11 +521,6 @@ public class GameManager : Photon.MonoBehaviour
         playerStatData = CSVReader.ReadFile(KBConstants.ManagerConstants.PREFAB_NAMES[ManagerConstants.type.PlayerStats]);
     }
 
-    private void ReadUpgradePointData()
-    {
-        upgradePointReqData = CSVReader.ReadFile(KBConstants.ManagerConstants.PREFAB_NAMES[ManagerConstants.type.UpgradePointReqs]);
-    }
-
     //[RPC]
     //void SpawnOnNetwork(Vector3 pos, Quaternion rot, PhotonViewID id1, PhotonPlayer np)
     //{
@@ -561,12 +542,11 @@ public class GameManager : Photon.MonoBehaviour
     //}
 
     [RPC]
-    public void SetPlayerLevel(PhotonPlayer phPlayer, int playerLevel)
+    public void SetPlayerStats(PhotonPlayer phPlayer)
     {
         GameManager gm = GameManager.instance;
-        int numberOfStats = 8;
+        int numberOfStats = 4;
         int initStatColumn = 2;
-        int perLevelStatColumn = 3;
         PlayerStats stats = new PlayerStats();
         stats.statArray = new float[numberOfStats];
 
@@ -598,18 +578,13 @@ public class GameManager : Photon.MonoBehaviour
         for (int i = 0; i < stats.statArray.Length; i++) // This loads the raw stats into a float[]
         {
             // finalStatValue = init + (level - 1)*(perLevelMultiplier)
-            stats.statArray[i] = Convert.ToInt32(gm.playerStatData[i + ((int)player.type * numberOfStats)][initStatColumn]) + ((playerLevel - 1) * Convert.ToInt32(gm.playerStatData[i + ((int)player.type * numberOfStats)][perLevelStatColumn]));
+            stats.statArray[i] = Convert.ToInt32(gm.playerStatData[i + ((int)player.type * numberOfStats)][initStatColumn]);
         }
 
-        stats.level = playerLevel;
         stats.health = (int)stats.statArray[(int)PlayerStats.PlayerStatNames.Health];
-        stats.attack = (int)stats.statArray[(int)PlayerStats.PlayerStatNames.Attack];
-        stats.attackRange = (int)stats.statArray[(int)PlayerStats.PlayerStatNames.AttackRange];
-        stats.captureSpeed = (int)stats.statArray[(int)PlayerStats.PlayerStatNames.CaptureSpeed];
         stats.lowerbodyRotationSpeed = (int)stats.statArray[(int)PlayerStats.PlayerStatNames.LBRotationSpeed];
         stats.upperbodyRotationSpeed = (int)stats.statArray[(int)PlayerStats.PlayerStatNames.UBRotationSpeed];
         stats.speed = (int)stats.statArray[(int)PlayerStats.PlayerStatNames.MovementSpeed];
-        stats.visionRange = (int)stats.statArray[(int)PlayerStats.PlayerStatNames.VisionRange];
         player.stats = stats;
     }
 
