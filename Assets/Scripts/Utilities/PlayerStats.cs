@@ -11,5 +11,4 @@ public struct PlayerStats
     public float lowerbodyRotationSpeed;
     public float upperbodyRotationSpeed;
     public int captureSpeed;
-    public int level;
 }

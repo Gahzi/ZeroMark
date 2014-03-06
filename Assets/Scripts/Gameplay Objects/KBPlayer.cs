@@ -29,16 +29,12 @@ public class KBPlayer : KBControllableGameObject
     public float boostRechargeRate;
     public float boostMax;
 
-    public int level;
-
     public TimerScript timer;
     private float movespeed;
     private float lowerbodyRotateSpeed;
     private float upperbodyRotateSpeed;
 
     private CharacterController charController;
-
-    private int layerMask;
 
     public string playerName;
     public PhotonPlayer networkPlayer;
@@ -50,6 +46,19 @@ public class KBPlayer : KBControllableGameObject
     public AudioClip grabSound;
     public GameObject upperBody;
     public GameObject lowerBody;
+
+    #region Player Type Components
+
+    public GameObject upperBodyDrone;
+    public GameObject lowerBodyDrone;
+    public GameObject upperBodyMech;
+    public GameObject lowerBodyMech;
+    public GameObject upperBodyTank;
+    public GameObject lowerBodyTank;
+    private List<GameObject> allBodies;
+
+    #endregion Player Type Components
+
     public Vector3 mousePos;
     public Vector3 playerPositionOnScreen;
     public Vector3 mousePlayerDiff;
@@ -59,7 +68,6 @@ public class KBPlayer : KBControllableGameObject
     private int respawnTimer;
     public int upgradePoints;
     public int maxHealth;
-    public int[] pointToLevel = new int[4];
 
     public Material redMat;
     public Material blueMat;
@@ -75,7 +83,6 @@ public class KBPlayer : KBControllableGameObject
     public ProjectileAbilityBaseScript[] gun;
     public int killTokens;
     private bool triggerLockout;
-    private int activeAbility;
 
     //private bool autoFire;
     private bool isShooting;
@@ -88,82 +95,97 @@ public class KBPlayer : KBControllableGameObject
     public override void Start()
     {
         base.Start();
-        acceptingInputs = true;
-        waitingForRespawn = false;
-        triggerLockout = false;
+
+        #region Resource & reference loading
+        allBodies = new List<GameObject>(6);
+        allBodies.Add(upperBodyDrone);
+        allBodies.Add(upperBodyMech);
+        allBodies.Add(upperBodyTank);
+        allBodies.Add(lowerBodyDrone);
+        allBodies.Add(lowerBodyMech);
+        allBodies.Add(lowerBodyTank);
         charController = GetComponent<CharacterController>();
         grabSound = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.ItemGrab]);
+        hitConfirm = Resources.Load<AudioClip>(KBConstants.AudioConstants.CLIP_NAMES[KBConstants.AudioConstants.clip.HitConfirm]);
+        GetComponentInChildren<HitboxBaseScript>().Team = team;
+
+        #endregion Resource & reference loading
+
         latestCorrectPos = transform.position;
         onUpdatePos = transform.position;
-        isShooting = false;
-        hitConfirm = Resources.Load<AudioClip>(KBConstants.AudioConstants.CLIP_NAMES[KBConstants.AudioConstants.clip.HitConfirm]);
-        SetupAbilities();
-        GetComponentInChildren<HitboxBaseScript>().Team = team;
-        //autoFire = false;
-        movespeed = stats.speed;
-        lowerbodyRotateSpeed = stats.lowerbodyRotationSpeed;
 
-        lastPrimaryFire = 0;
-        lastSecondaryFire = 2;
+        SwitchType("SpawnDrone");
 
-        int itemLayer = 8;
-        int towerLayer = 13;
-        int modelLayer = 15;
-        int layerMask1 = 1 << itemLayer;
-        int layerMask2 = 1 << towerLayer;
-        int layerMask3 = 1 << modelLayer;
-        layerMask = layerMask1 | layerMask2 | layerMask3;
+        InitializeForRespawn();
+
+        #region Spawning
 
         teamSpawnpoints = new List<PlayerSpawnPoint>();
+        FindTeamSpawnpoints();
+        RespawnToPrespawn();
+        //switch (team)
+        //{
+        //    case Team.Red:
+        //        {
+        //            //teamIndicator.material = redMat;
+        //            FindTeamSpawnpoints();
+        //            if (teamSpawnpoints.Count > 0)
+        //            {
+        //                Spawn();
+        //            }
+        //            break;
+        //        }
 
-        switch (team)
-        {
-            case Team.Red:
-                {
-                    //teamIndicator.material = redMat;
-                    FindTeamSpawnpoints();
-                    if (teamSpawnpoints.Count > 0)
-                    {
-                        Respawn();
-                    }
-                    break;
-                }
+        //    case Team.Blue:
+        //        {
+        //            //teamIndicator.material = blueMat;
+        //            FindTeamSpawnpoints();
+        //            if (teamSpawnpoints.Count > 0)
+        //            {
+        //                Spawn();
+        //            }
+        //            break;
+        //        }
 
-            case Team.Blue:
-                {
-                    //teamIndicator.material = blueMat;
-                    FindTeamSpawnpoints();
-                    if (teamSpawnpoints.Count > 0)
-                    {
-                        Respawn();
-                    }
-                    break;
-                }
+        //    case Team.None:
+        //        {
+        //            enabled = false;
+        //            break;
+        //        }
 
-            case Team.None:
-                {
-                    enabled = false;
-                    break;
-                }
+        //    default:
+        //        break;
+        //}
 
-            default:
-                break;
-        }
+        #endregion Spawning
+    }
 
+    private void InitializeForRespawn()
+    {
         switch (type)
         {
             case PlayerType.mech:
                 tankStyleMove = false;
                 break;
+
             case PlayerType.drone:
                 tankStyleMove = true;
                 break;
+
             case PlayerType.tank:
                 tankStyleMove = true;
                 break;
+
             default:
                 break;
         }
+
+        acceptingInputs = true;
+        waitingForRespawn = false;
+        triggerLockout = false;
+        isShooting = false;
+        movespeed = stats.speed;
+        lowerbodyRotateSpeed = stats.lowerbodyRotationSpeed;
     }
 
     private void OnDrawGizmos()
@@ -233,10 +255,10 @@ public class KBPlayer : KBControllableGameObject
     {
         if (networkPlayer.isLocal)
         {
-            if (gun[activeAbility].reloading)
-            {
-                GUI.Box(new Rect(Screen.width / 2, Screen.height / 2 + 100, 100, 20), "RELOADING");
-            }
+            //if (gun[activeAbility].reloading)
+            //{
+            //    GUI.Box(new Rect(Screen.width / 2, Screen.height / 2 + 100, 100, 20), "RELOADING");
+            //}
 
             GUI.Box(new Rect(0, 0, 100, 80),
                 "Kill Tokens" + System.Environment.NewLine +
@@ -291,23 +313,21 @@ public class KBPlayer : KBControllableGameObject
             Vector3 pos = transform.localPosition;
             Quaternion rot = upperBody.transform.rotation;
             int hlth = health;
-            int lvl = level;
             int mxhlth = maxHealth;
             bool isShting = isShooting;
             bool wtngFrRspwn = waitingForRespawn;
             int tm = (int)team;
-            int ab = activeAbility;
+            //int ab = activeAbility;
             float invltime = invulnerabilityTime;
 
             stream.Serialize(ref pos);
             stream.Serialize(ref rot);
             stream.Serialize(ref hlth);
-            stream.Serialize(ref lvl);
             stream.Serialize(ref mxhlth);
             stream.Serialize(ref isShting);
             stream.Serialize(ref wtngFrRspwn);
             stream.Serialize(ref tm);
-            stream.Serialize(ref ab);
+            //stream.Serialize(ref ab);
             stream.Serialize(ref invltime);
         }
         else
@@ -341,12 +361,11 @@ public class KBPlayer : KBControllableGameObject
 
             upperBody.transform.rotation = rot;          // this sample doesn't smooth rotation
             health = hlth;
-            level = lvl;
             maxHealth = mxhlth;
             isShooting = isShting;
             waitingForRespawn = wtngFrRspwn;
             team = (Team)tm;
-            activeAbility = ab;
+            //activeAbility = ab;
             invulnerabilityTime = invltime;
         }
     }
@@ -377,6 +396,11 @@ public class KBPlayer : KBControllableGameObject
                 audio.PlayOneShot(grabSound);
                 // todo play return sound
             }
+        }
+
+        if (other.gameObject.CompareTag("SpawnDrone") || other.gameObject.CompareTag("SpawnMech") || other.gameObject.CompareTag("SpawnTank"))
+        {
+            SwitchType(other.gameObject.tag);
         }
     }
 
@@ -457,7 +481,7 @@ public class KBPlayer : KBControllableGameObject
                     {
                         otherGun = 0;
                     }
-                    
+
                     if (gun[lastPrimaryFire].available)
                     {
                         gun[lastPrimaryFire].PlayerFire();
@@ -539,7 +563,7 @@ public class KBPlayer : KBControllableGameObject
             if (!timer.IsTimerActive(respawnTimer))
             {
                 Debug.Log("Respawning!");
-                Respawn();
+                RespawnToPrespawn();
             }
         }
     }
@@ -574,7 +598,7 @@ public class KBPlayer : KBControllableGameObject
             if (currentPlayers[i].networkPlayer == hitPhotonPlayer)
             {
                 Instantiate(hitExplosion, currentPlayers[i].transform.position, Quaternion.identity);
-                gun[activeAbility].audio.PlayOneShot(hitConfirm);
+                gun[0].audio.PlayOneShot(hitConfirm);
             }
         }
     }
@@ -613,19 +637,26 @@ public class KBPlayer : KBControllableGameObject
         }
     }
 
-    private void Respawn()
+    private void RespawnToPrespawn()
+    {
+        killTokens = 0;
+        waitingForRespawn = false;
+        acceptingInputs = true;
+        SpawnKillTag(transform.position);   // TODO spawning one of thse on game start not good
+        Camera.main.GetComponent<ScreenShake>().StopShake();
+        transform.position = GameObject.FindGameObjectWithTag("Prespawn").transform.position;
+        health = 1000;
+    }
+    
+    private void Spawn()
     {
         if (teamSpawnpoints.Count > 0 && photonView.isMine)
         {
-            SpawnKillTag(transform.position);   // TODO spawning one of thse on game start not good
             transform.position = teamSpawnpoints[0].transform.position;
-            waitingForRespawn = false;
-            acceptingInputs = true;
+            killTokens = 0;
             health = stats.health;
             maxHealth = health;
             movespeed = stats.speed;
-            level = stats.level;
-            killTokens = 0;
             invulnerabilityTime = spawnProtectionTime;
             lowerbodyRotateSpeed = stats.lowerbodyRotationSpeed;
             upperbodyRotateSpeed = stats.upperbodyRotationSpeed;
@@ -637,13 +668,14 @@ public class KBPlayer : KBControllableGameObject
 
     private void SetupAbilities()
     {
-        gun = gameObject.GetComponentsInChildren<ProjectileAbilityBaseScript>();
+        gun = upperBody.GetComponentsInChildren<ProjectileAbilityBaseScript>();
         for (int i = 0; i < gun.Length; i++)
         {
             gun[i].owner = this;
             gun[i].Team = team;
         }
-        activeAbility = 0;
+        lastPrimaryFire = 0;
+        lastSecondaryFire = 2;
     }
 
     public void BankKills()
@@ -678,6 +710,47 @@ public class KBPlayer : KBControllableGameObject
 
     private void FireWeapons(int weaponOne, int weaponTwo, bool linked)
     {
+    }
 
+    private void SwitchType(string typeTrigger)
+    {
+        for (int i = 0; i < allBodies.Count; i++)
+        {
+            allBodies[i].SetActive(false);
+        }
+
+        switch (typeTrigger)
+        {
+            case "SpawnDrone":
+
+                upperBody = upperBodyDrone;
+                lowerBody = lowerBodyDrone;
+                type = PlayerType.drone;
+
+                break;
+            case "SpawnMech":
+
+                upperBody = upperBodyMech;
+                lowerBody = lowerBodyMech;
+                type = PlayerType.mech;
+
+                break;
+            case "SpawnTank":
+
+                upperBody = upperBodyTank;
+                lowerBody = lowerBodyTank;
+                type = PlayerType.tank;
+
+                break;
+            default:
+                break;
+        }
+        upperBody.SetActive(true);
+        lowerBody.SetActive(true);
+
+        InitializeForRespawn();
+        SetupAbilities();
+        GameManager.Instance.photonView.RPC("SetPlayerStats", PhotonTargets.AllBuffered, PhotonNetwork.player);
+        Spawn();
     }
 }
