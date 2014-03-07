@@ -1,6 +1,6 @@
 Mech,Health,3
 ,LB Rotation Speed,0
-,UB Rotation Speed,1
+,UB Rotation Speed,50
 ,Movement Speed,15
 Drone,Health,1
 ,LB Rotation Speed,250

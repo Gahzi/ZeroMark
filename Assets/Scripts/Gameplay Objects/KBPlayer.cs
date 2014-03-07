@@ -123,40 +123,6 @@ public class KBPlayer : KBControllableGameObject
         teamSpawnpoints = new List<PlayerSpawnPoint>();
         FindTeamSpawnpoints();
         RespawnToPrespawn();
-        //switch (team)
-        //{
-        //    case Team.Red:
-        //        {
-        //            //teamIndicator.material = redMat;
-        //            FindTeamSpawnpoints();
-        //            if (teamSpawnpoints.Count > 0)
-        //            {
-        //                Spawn();
-        //            }
-        //            break;
-        //        }
-
-        //    case Team.Blue:
-        //        {
-        //            //teamIndicator.material = blueMat;
-        //            FindTeamSpawnpoints();
-        //            if (teamSpawnpoints.Count > 0)
-        //            {
-        //                Spawn();
-        //            }
-        //            break;
-        //        }
-
-        //    case Team.None:
-        //        {
-        //            enabled = false;
-        //            break;
-        //        }
-
-        //    default:
-        //        break;
-        //}
-
         #endregion Spawning
     }
 
