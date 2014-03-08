@@ -4,13 +4,13 @@ namespace KBConstants
 {
     public enum Team { Red, Blue, None };
 
-    public enum PlayerType { mech, drone, tank };
+    public enum PlayerType { mech, drone, tank, core };
 
     public enum ItemType { common, uncommon, rare, legendary, undefined };
 
     public class ObjectConstants
     {
-        public enum type { Player, Gamepad, Item, PlayerCamera, PlasmaBullet, BasicRigidbodyCube, MachinegunBullet, Rocket, KillTagBlue, KillTagRed };
+        public enum type { Player, Gamepad, Item, PlayerCamera, PlasmaBullet, BasicRigidbodyCube, MachinegunBullet, Rocket, KillTagBlue, KillTagRed, LightAutoLaserBullet };
 
         private static readonly IDictionary<type, string> prefabNames = new Dictionary<type, string>
         {
@@ -23,7 +23,8 @@ namespace KBConstants
             {type.MachinegunBullet, "Abilities/machinegunbullet"},
             {type.Rocket, "abilities/rocket"},
             {type.KillTagBlue, "items/killtagblue"},
-            {type.KillTagRed, "items/killtagred"}
+            {type.KillTagRed, "items/killtagred"},
+            {type.LightAutoLaserBullet, "abilities/lightautolaserbullet"}
         };
 
         public static IDictionary<type, string> PREFAB_NAMES { get { return prefabNames; } }

@@ -21,7 +21,7 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
     
     [Range(1.0f, 500.0f)]
     public float projectileSpeed;
-
+    public float inheritSpeed;
     protected Vector3 direction;
     public bool physicsProjectile;
     public bool collideWithProjectiles;
@@ -53,7 +53,7 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
         }
         else
         {
-            transform.Translate(Vector3.forward * projectileSpeed * Time.deltaTime);
+            transform.Translate(Vector3.forward * (projectileSpeed + inheritSpeed) * Time.deltaTime);
         }
     }
 
@@ -78,7 +78,8 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
                             o.gameObject.GetComponent<KBPlayer>().Die(owner.gameObject);
                         }
                         owner.ConfirmHit(o.gameObject.GetComponent<KBPlayer>());
-                        Destroy(gameObject);
+                        //Destroy(gameObject);
+                        ObjectPool.Recycle(this);
                     }
                 }
             }
@@ -87,7 +88,8 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
         {
             if (other.gameObject.CompareTag("Environment"))
             {
-                Destroy(gameObject);
+                //Destroy(gameObject);
+                ObjectPool.Recycle(this);
             }
         }
         
@@ -95,7 +97,8 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
         {
             if (other.gameObject.CompareTag("Projectile"))
             {
-                Destroy(gameObject);
+                //Destroy(gameObject);
+                ObjectPool.Recycle(this);
             }
         }
     }

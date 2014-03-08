@@ -1,8 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public class MachineGunBullet : ProjectileBaseScript {
-
+﻿public class AreaOfEffectDamageScript : ProjectileBaseScript
+{
     #region CONSTANTS
 
     public static int _damage = 1;

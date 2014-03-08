@@ -55,6 +55,8 @@ public class KBPlayer : KBControllableGameObject
     public GameObject lowerBodyMech;
     public GameObject upperBodyTank;
     public GameObject lowerBodyTank;
+    public GameObject upperBodyCore;
+    public GameObject lowerBodyCore;
     private List<GameObject> allBodies;
 
     #endregion Player Type Components
@@ -101,9 +103,11 @@ public class KBPlayer : KBControllableGameObject
         allBodies.Add(upperBodyDrone);
         allBodies.Add(upperBodyMech);
         allBodies.Add(upperBodyTank);
+        allBodies.Add(upperBodyCore);
         allBodies.Add(lowerBodyDrone);
         allBodies.Add(lowerBodyMech);
         allBodies.Add(lowerBodyTank);
+        allBodies.Add(lowerBodyCore);
         charController = GetComponent<CharacterController>();
         grabSound = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.ItemGrab]);
         hitConfirm = Resources.Load<AudioClip>(KBConstants.AudioConstants.CLIP_NAMES[KBConstants.AudioConstants.clip.HitConfirm]);
@@ -114,7 +118,7 @@ public class KBPlayer : KBControllableGameObject
         latestCorrectPos = transform.position;
         onUpdatePos = transform.position;
 
-        SwitchType("SpawnDrone");
+        SwitchType("SpawnCore");
 
         InitializeForRespawn();
 
@@ -139,6 +143,10 @@ public class KBPlayer : KBControllableGameObject
                 break;
 
             case PlayerType.tank:
+                tankStyleMove = true;
+                break;
+
+            case PlayerType.core:
                 tankStyleMove = true;
                 break;
 
@@ -372,6 +380,8 @@ public class KBPlayer : KBControllableGameObject
 
     private void ControlKBAM()
     {
+        float speed = 0;
+        
         float modifiedMoveSpeed = 0;
         if (Input.GetButton("Boost") && boostTime == boostMax)
         {
@@ -397,6 +407,7 @@ public class KBPlayer : KBControllableGameObject
                 if (tankStyleMove)
                 {
                     m = Input.GetAxis("Vertical") * lowerBody.transform.forward;
+                    speed = m.normalized.magnitude * modifiedMoveSpeed;
                     charController.SimpleMove(m.normalized * modifiedMoveSpeed);
                     lowerBody.transform.Rotate(Vector3.up, Input.GetAxis("Horizontal") * lowerbodyRotateSpeed * Time.deltaTime);
 
@@ -424,75 +435,77 @@ public class KBPlayer : KBControllableGameObject
                 break;
         }
 
-        //if (autoFire)
-        //{
-        if ((Input.GetMouseButton(0) || Input.GetMouseButton(1)))// && !gun[activeAbility].reloading)
+        if (gun.GetLength(0) > 0)
         {
-            isShooting = true;
-            if (Input.GetMouseButton(0))
+            if ((Input.GetMouseButton(0) || Input.GetMouseButton(1)))// && !gun[activeAbility].reloading)
             {
-                if (primaryWeaponLinkedFire)
+                isShooting = true;
+                if (Input.GetMouseButton(0))
                 {
-                    gun[0].PlayerFire();
-                    gun[1].PlayerFire();
-                }
-                else
-                {
-                    int otherGun;
-                    if (lastPrimaryFire == 0)
+                    if (primaryWeaponLinkedFire)
                     {
-                        otherGun = 1;
+                        gun[0].PlayerFire(speed);
+                        gun[1].PlayerFire(speed);
                     }
                     else
                     {
-                        otherGun = 0;
-                    }
+                        int otherGun;
+                        if (lastPrimaryFire == 0)
+                        {
+                            otherGun = 1;
+                        }
+                        else
+                        {
+                            otherGun = 0;
+                        }
 
-                    if (gun[lastPrimaryFire].available)
-                    {
-                        gun[lastPrimaryFire].PlayerFire();
-                    }
-                    else if (!gun[lastPrimaryFire].available && gun[lastPrimaryFire].halfwayCooled)
-                    {
-                        gun[otherGun].PlayerFire();
-                        lastPrimaryFire = otherGun;
+                        if (gun[lastPrimaryFire].available)
+                        {
+                            gun[lastPrimaryFire].PlayerFire(speed);
+                        }
+                        else if (!gun[lastPrimaryFire].available && gun[lastPrimaryFire].halfwayCooled)
+                        {
+                            gun[otherGun].PlayerFire(speed);
+                            lastPrimaryFire = otherGun;
+                        }
                     }
                 }
-            }
-            if (Input.GetMouseButton(1))
-            {
-                if (secondaryWeaponLinkedFire)
+                if (Input.GetMouseButton(1))
                 {
-                    gun[2].PlayerFire();
-                    gun[3].PlayerFire();
-                }
-                else
-                {
-                    int otherGun;
-                    if (lastSecondaryFire == 2)
+                    if (secondaryWeaponLinkedFire)
                     {
-                        otherGun = 3;
+                        gun[2].PlayerFire(speed);
+                        gun[3].PlayerFire(speed);
                     }
                     else
                     {
-                        otherGun = 2;
-                    }
-                    if (gun[lastSecondaryFire].available) // TODO This doesn't synchronize as intended. Can shoot same side twice if you let go and wait until it cools.
-                    {
-                        gun[lastSecondaryFire].PlayerFire();
-                    }
-                    else if (!gun[lastSecondaryFire].available && gun[lastSecondaryFire].halfwayCooled)
-                    {
-                        gun[otherGun].PlayerFire();
-                        lastSecondaryFire = otherGun;
+                        int otherGun;
+                        if (lastSecondaryFire == 2)
+                        {
+                            otherGun = 3;
+                        }
+                        else
+                        {
+                            otherGun = 2;
+                        }
+                        if (gun[lastSecondaryFire].available) // TODO This doesn't synchronize as intended. Can shoot same side twice if you let go and wait until it cools.
+                        {
+                            gun[lastSecondaryFire].PlayerFire(speed);
+                        }
+                        else if (!gun[lastSecondaryFire].available && gun[lastSecondaryFire].halfwayCooled)
+                        {
+                            gun[otherGun].PlayerFire(speed);
+                            lastSecondaryFire = otherGun;
+                        }
                     }
                 }
             }
+            else
+            {
+                isShooting = false;
+            } 
         }
-        else
-        {
-            isShooting = false;
-        }
+        
 
         if (Input.GetKeyDown(KeyCode.Z))
         {
@@ -603,6 +616,9 @@ public class KBPlayer : KBControllableGameObject
         }
     }
 
+    /// <summary>
+    /// Spawns the player in the dropship (type select area)
+    /// </summary>
     private void RespawnToPrespawn()
     {
         killTokens = 0;
@@ -614,6 +630,9 @@ public class KBPlayer : KBControllableGameObject
         health = 1000;
     }
     
+    /// <summary>
+    /// Spawns the player in the combat area.
+    /// </summary>
     private void Spawn()
     {
         if (teamSpawnpoints.Count > 0 && photonView.isMine)
@@ -708,15 +727,47 @@ public class KBPlayer : KBControllableGameObject
                 type = PlayerType.tank;
 
                 break;
+
+            case "SpawnCore":
+
+                upperBody = upperBodyCore;
+                lowerBody = lowerBodyCore;
+                type = PlayerType.core;
+                break;
+
             default:
                 break;
         }
         upperBody.SetActive(true);
         lowerBody.SetActive(true);
 
+        if (team == KBConstants.Team.Blue)
+        {
+            SetActiveIfFound("BlueBody", true);
+            SetActiveIfFound("RedBody", false);
+        }
+        else
+        {
+            SetActiveIfFound("BlueBody", false);
+            SetActiveIfFound("RedBody", true);
+        }
+
         InitializeForRespawn();
         SetupAbilities();
         GameManager.Instance.photonView.RPC("SetPlayerStats", PhotonTargets.AllBuffered, PhotonNetwork.player);
         Spawn();
+    }
+
+    private void SetActiveIfFound(string ObjectName, bool val)
+    {
+        GameObject o = GameObject.Find(ObjectName);
+        if (o != null)
+        {
+            o.SetActive(val);
+        }
+        else
+        {
+            Debug.LogWarning("[Player] Couldn't find player model");
+        }
     }
 }
