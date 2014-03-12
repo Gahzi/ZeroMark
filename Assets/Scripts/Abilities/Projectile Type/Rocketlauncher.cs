@@ -5,10 +5,10 @@ using KBConstants;
 public class Rocketlauncher : ProjectileAbilityBaseScript
 {
     #region CONSTANTS
-    public static float ROCKET_COOLDOWN = 2.0f;
+    public static float ROCKET_COOLDOWN = 0.25f;
     public static int ROCKET_RANGE = 200;
     public static float RELOAD_TIME = 10.0f;
-    public static int CLIP_SIZE = 120;
+    public static int CLIP_SIZE = 3;
     #endregion
 
     public override void Start()

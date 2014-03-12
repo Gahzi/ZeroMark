@@ -265,32 +265,32 @@ public class CaptureZone : Zone
                 break;
         }
 
-        if (t == Team.Red || t == Team.Blue)
-        {
-            foreach (KBGameObject o in collisionObjects)
-            {
-                KBPlayer p = o.gameObject.GetComponentInChildren<KBPlayer>();
-                if (p != null)
-                {
-                    switch (p.team)
-                    {
-                        case Team.Red:
-                            p.upgradePoints += upgradePointsOnCapture;
-                            break;
+        //if (t == Team.Red || t == Team.Blue)
+        //{
+        //    foreach (KBGameObject o in collisionObjects)
+        //    {
+        //        KBPlayer p = o.gameObject.GetComponentInChildren<KBPlayer>();
+        //        if (p != null)
+        //        {
+        //            switch (p.team)
+        //            {
+        //                case Team.Red:
+        //                    p.upgradePoints += upgradePointsOnCapture;
+        //                    break;
 
-                        case Team.Blue:
-                            p.upgradePoints += upgradePointsOnCapture;
-                            break;
+        //                case Team.Blue:
+        //                    p.upgradePoints += upgradePointsOnCapture;
+        //                    break;
 
-                        case Team.None:
-                            break;
+        //                case Team.None:
+        //                    break;
 
-                        default:
-                            break;
-                    }
-                }
-            }
-        }
+        //                default:
+        //                    break;
+        //            }
+        //        }
+        //    }
+        //}
     }
 
     private void OnTriggerStay(Collider other)

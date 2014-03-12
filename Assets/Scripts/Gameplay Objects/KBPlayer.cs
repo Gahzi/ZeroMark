@@ -68,12 +68,12 @@ public class KBPlayer : KBControllableGameObject
     public List<PlayerSpawnPoint> teamSpawnpoints;
     public float respawnTime;
     private int respawnTimer;
-    public int upgradePoints;
+    //public int upgradePoints;
     public int maxHealth;
 
     public Material redMat;
     public Material blueMat;
-    public MeshRenderer teamIndicator;
+    //public MeshRenderer teamIndicator;
     private AudioClip hitConfirm;
     private float hitFXTimer;
     public GameObject hitExplosion;
@@ -234,11 +234,11 @@ public class KBPlayer : KBControllableGameObject
             //    GUI.Box(new Rect(Screen.width / 2, Screen.height / 2 + 100, 100, 20), "RELOADING");
             //}
 
-            GUI.Box(new Rect(0, 0, 100, 80),
-                "Kill Tokens" + System.Environment.NewLine +
-                killTokens.ToString() + System.Environment.NewLine
-                );
-            GUI.Box(new Rect(0, 60, 100, 40), "Boost" + System.Environment.NewLine + boostTime.ToString("0.00"));
+            //GUI.Box(new Rect(0, 0, 100, 80),
+            //    "Kill Tokens" + System.Environment.NewLine +
+            //    killTokens.ToString() + System.Environment.NewLine
+            //    );
+            //GUI.Box(new Rect(0, 60, 100, 40), "Boost" + System.Environment.NewLine + boostTime.ToString("0.00"));
 
             if (triggerLockout)
             {
@@ -522,10 +522,10 @@ public class KBPlayer : KBControllableGameObject
             TakeDamage(1);
         }
 
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-            BankKills();
-        }
+        //if (Input.GetKeyDown(KeyCode.Return))
+        //{
+        //    BankKills();
+        //}
     }
 
     private void CheckHealth()
@@ -637,7 +637,7 @@ public class KBPlayer : KBControllableGameObject
     {
         if (teamSpawnpoints.Count > 0 && photonView.isMine)
         {
-            transform.position = teamSpawnpoints[0].transform.position;
+            transform.position = teamSpawnpoints[Random.Range(0, teamSpawnpoints.Count)].transform.position;
             killTokens = 0;
             health = stats.health;
             maxHealth = health;

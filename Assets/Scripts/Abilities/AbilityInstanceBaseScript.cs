@@ -54,6 +54,7 @@ abstract public class AbilityInstanceBaseScript : MonoBehaviour
     {
         if (Time.time - spawnTime > lifetime)
         {
+            DoOnHit();
             ObjectPool.Recycle(this);
         }
     }

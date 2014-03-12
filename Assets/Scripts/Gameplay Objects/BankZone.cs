@@ -27,7 +27,7 @@ public class BankZone : Zone
         rigidbody.isKinematic = true;
         collider.isTrigger = true;
         //textPrefab = Resources.Load("gui/floatingtext") as FloatingText;
-        //ObjectPool.CreatePool(textPrefab);
+        ObjectPool.CreatePool(textPrefab);
     }
 
     public void AddPoints(int points, KBConstants.Team team)
@@ -73,29 +73,31 @@ public class BankZone : Zone
 
     private void RunPointAddFeedback(int points, KBConstants.Team team)
     {
-        //FloatingText t = ObjectPool.Spawn(textPrefab, transform.position);
-        //t.GetComponent<TextMesh>().text = "+" + points.ToString();
+        FloatingText t = ObjectPool.Spawn(textPrefab, transform.position);
+        t.Init();
+        t.GetComponent<TextMesh>().text = "+" + points.ToString();
     }
 
     private void RunCapturedFeedback(KBConstants.Team team)
     {
-        //FloatingText obj = ObjectPool.Spawn(textPrefab, transform.position);
-        //obj.GetComponent<FloatUp>().upSpeed = 0;
-        //TextMesh t = obj.GetComponent<TextMesh>();
-        //t.text = "CAPTURED";
-        //switch (team)
-        //{
-        //    case KBConstants.Team.Red:
-        //        t.color = Color.red;
-        //        break;
-        //    case KBConstants.Team.Blue:
-        //        t.color = Color.blue;
-        //        break;
-        //    case KBConstants.Team.None:
-        //        break;
-        //    default:
-        //        break;
-        //}
+        FloatingText obj = ObjectPool.Spawn(textPrefab, transform.position);
+        obj.Init(10000f);
+        obj.GetComponent<FloatUp>().upSpeed = 0;
+        TextMesh t = obj.GetComponent<TextMesh>();
+        t.text = "CAPTURED";
+        switch (team)
+        {
+            case KBConstants.Team.Red:
+                t.color = Color.red;
+                break;
+            case KBConstants.Team.Blue:
+                t.color = Color.blue;
+                break;
+            case KBConstants.Team.None:
+                break;
+            default:
+                break;
+        }
     }
 
 }

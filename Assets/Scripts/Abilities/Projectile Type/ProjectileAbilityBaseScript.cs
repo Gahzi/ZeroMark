@@ -94,6 +94,9 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
 
     public void PlayerTriggerReload()
     {
-        StartCoroutine(Reload());
+        if (!reloading)
+        {
+            StartCoroutine(Reload());
+        }
     }
 }
