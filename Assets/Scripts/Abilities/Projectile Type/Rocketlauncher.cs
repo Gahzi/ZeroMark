@@ -11,11 +11,8 @@ public class Rocketlauncher : ProjectileAbilityBaseScript
     public static int CLIP_SIZE = 120;
     #endregion
 
-    public ProjectileBaseScript explosionPrefab;
-
     public override void Start()
     {
-
         projectileType = (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Rocket], typeof(ProjectileBaseScript));
         //sound = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.PlasmaGunFire]);
         //audio.clip = sound;
@@ -25,6 +22,5 @@ public class Rocketlauncher : ProjectileAbilityBaseScript
         reloadTime = RELOAD_TIME;
         clipSize = CLIP_SIZE;
         base.Start();
-        ObjectPool.CreatePool(explosionPrefab);
     }
 }

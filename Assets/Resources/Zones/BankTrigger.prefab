@@ -90,6 +90,7 @@ MonoBehaviour:
   pointsToControl: 1000
   redPoints: 0
   bluePoints: 0
+  textPrefab: {fileID: 11400002, guid: 4c748e832ea40ac48b7504bd76976af0, type: 2}
 --- !u!135 &13500000
 SphereCollider:
   m_ObjectHideFlags: 1

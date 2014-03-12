@@ -16,6 +16,8 @@ public class BankZone : Zone
         }
     }
 
+    public FloatingText textPrefab;
+
     public override void Start()
     {
         base.Start();
@@ -24,6 +26,8 @@ public class BankZone : Zone
         bluePoints = 0;
         rigidbody.isKinematic = true;
         collider.isTrigger = true;
+        //textPrefab = Resources.Load("gui/floatingtext") as FloatingText;
+        //ObjectPool.CreatePool(textPrefab);
     }
 
     public void AddPoints(int points, KBConstants.Team team)
@@ -69,30 +73,29 @@ public class BankZone : Zone
 
     private void RunPointAddFeedback(int points, KBConstants.Team team)
     {
-        GameObject obj = PhotonNetwork.Instantiate("gui/floatingtext", transform.position, Quaternion.identity, 0);
-        obj.GetComponent<TextMesh>().text = "+" + points.ToString();
+        //FloatingText t = ObjectPool.Spawn(textPrefab, transform.position);
+        //t.GetComponent<TextMesh>().text = "+" + points.ToString();
     }
 
     private void RunCapturedFeedback(KBConstants.Team team)
     {
-        GameObject obj = PhotonNetwork.Instantiate("gui/floatingtext", transform.position, Quaternion.identity, 0);
-        obj.GetComponent<DestroyAfterTime>().lifetime = 10000000;
-        obj.GetComponent<FloatUp>().upSpeed = 0;
-        TextMesh t = obj.GetComponent<TextMesh>();
-        t.text = "CAPTURED";
-        switch (team)
-        {
-            case KBConstants.Team.Red:
-                t.color = Color.red;
-                break;
-            case KBConstants.Team.Blue:
-                t.color = Color.blue;
-                break;
-            case KBConstants.Team.None:
-                break;
-            default:
-                break;
-        }
+        //FloatingText obj = ObjectPool.Spawn(textPrefab, transform.position);
+        //obj.GetComponent<FloatUp>().upSpeed = 0;
+        //TextMesh t = obj.GetComponent<TextMesh>();
+        //t.text = "CAPTURED";
+        //switch (team)
+        //{
+        //    case KBConstants.Team.Red:
+        //        t.color = Color.red;
+        //        break;
+        //    case KBConstants.Team.Blue:
+        //        t.color = Color.blue;
+        //        break;
+        //    case KBConstants.Team.None:
+        //        break;
+        //    default:
+        //        break;
+        //}
     }
 
 }

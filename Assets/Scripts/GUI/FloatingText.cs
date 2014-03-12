@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Orbit : MonoBehaviour {
+public class FloatingText : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
@@ -10,6 +10,6 @@ public class Orbit : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        transform.RotateAround(transform.parent.transform.position, Vector3.up, 10.0f * Time.deltaTime);
+	
 	}
 }

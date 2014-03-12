@@ -36,11 +36,10 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
         ProjectileBaseScript projectile = null;
         if (cooldown <= 0 && ammo > 0 && !reloading)
         {
-            //projectile = (ProjectileBaseScript)Instantiate(projectileType, transform.position, Quaternion.Euler(direction));
             projectile = ObjectPool.Spawn(projectileType, transform.position, Quaternion.Euler(direction));
             projectile.inheritSpeed = _inheritSpeed;
             projectile.Team = firedBy.Team;
-            projectile.owner = firedBy;
+            projectile.Init(firedBy);
             if (audio.clip != null)
             {
                 audio.PlayOneShot(audio.clip);

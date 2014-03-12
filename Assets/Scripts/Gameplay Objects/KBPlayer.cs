@@ -98,6 +98,8 @@ public class KBPlayer : KBControllableGameObject
     {
         base.Start();
 
+        Screen.showCursor = false;
+
         #region Resource & reference loading
         allBodies = new List<GameObject>(6);
         allBodies.Add(upperBodyDrone);
@@ -169,8 +171,6 @@ public class KBPlayer : KBControllableGameObject
 
     private void FixedUpdate()
     {
-        Screen.showCursor = false;
-
         if (invulnerabilityTime > 0)
         {
             invulnerabilityTime -= Time.deltaTime;

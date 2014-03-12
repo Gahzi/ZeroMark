@@ -156,9 +156,10 @@ MonoBehaviour:
   damage: 1
   owner: {fileID: 0}
   projectileSpeed: 89
-  physicsProjectile: 0
+  inheritSpeed: 0
   collideWithProjectiles: 0
   collideWithEnvironment: 1
+  explosionPrefab: {fileID: 11400000, guid: 12a2fc82ddd99084f8c8cec0b0def40c, type: 2}
 --- !u!135 &13500000
 SphereCollider:
   m_ObjectHideFlags: 1

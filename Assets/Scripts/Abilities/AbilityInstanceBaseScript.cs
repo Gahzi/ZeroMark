@@ -27,7 +27,6 @@ abstract public class AbilityInstanceBaseScript : MonoBehaviour
     public int damage;
     public KBPlayer owner;
 
-    // Use this for initialization
     public virtual void Start()
     {
         spawnTime = Time.time;
@@ -37,13 +36,37 @@ abstract public class AbilityInstanceBaseScript : MonoBehaviour
         damage = 0;
     }
 
+    /// <summary>
+    /// Call this after spawning an instance of an ability out of ObjectPool to reinitialize the instance.
+    /// </summary>
+    public virtual void Init(KBPlayer _owner)
+    {
+        spawnTime = Time.time;
+        owner = _owner;
+    }
+
+    public virtual void Init()
+    {
+        Init(null);
+    }
+
     // Update is called once per frame
     protected virtual void Update()
     {
-        if (Time.time - spawnTime > lifetime)
+        if (Time.time > lifetime + spawnTime)
         {
-            Destroy(gameObject);
+            ObjectPool.Recycle(this);
         }
+    }
+
+    public virtual void DoOnHit()
+    {
+        Reset();
+    }
+
+    public virtual void Reset()
+    {
+        ObjectPool.Recycle(this);
     }
 
     public abstract void OnTriggerEnter(Collider other);
