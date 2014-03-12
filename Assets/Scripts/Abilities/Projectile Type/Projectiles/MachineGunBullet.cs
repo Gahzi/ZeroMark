@@ -12,10 +12,8 @@ public class MachineGunBullet : ProjectileBaseScript {
     public override void Start()
     {
         base.Start();
-        //explosionPrefab = Resources.Load<SmallExplosion>(KBConstants.ObjectConstants.PREFAB_NAMES[KBConstants.ObjectConstants.type.SmallExplosion]);
         collideWithProjectiles = false;
         damage = _damage;
-        //ObjectPool.CreatePool(explosionPrefab);
     }
 
     protected override void Update()

@@ -10,14 +10,10 @@ public class RocketBullet : ProjectileBaseScript
 
     #endregion CONSTANTS
 
-    //private RocketExplosion explosionPrefab;
-
     public override void Start()
     {
         base.Start();
         damage = ROCKET_DAMAGE;
-        //explosionPrefab = Resources.Load<RocketExplosion>(KBConstants.ObjectConstants.PREFAB_NAMES[KBConstants.ObjectConstants.type.RocketExplosion]);
-        //ObjectPool.CreatePool(explosionPrefab);
     }
 
     protected override void Update()
@@ -27,7 +23,8 @@ public class RocketBullet : ProjectileBaseScript
 
     public override void DoOnHit()
     {
-        ObjectPool.Spawn(explosionPrefab, transform.position);
+        AreaOfEffectDamageScript a = ObjectPool.Spawn(explosionPrefab, transform.position);
+        a.Init(); 
         base.DoOnHit();
     }
 }

@@ -50,10 +50,9 @@ abstract public class AbilityInstanceBaseScript : MonoBehaviour
         Init(null);
     }
 
-    // Update is called once per frame
     protected virtual void Update()
     {
-        if (Time.time > lifetime + spawnTime)
+        if (Time.time - spawnTime > lifetime)
         {
             ObjectPool.Recycle(this);
         }

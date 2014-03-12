@@ -7,16 +7,12 @@ public class PlasmaBullet : ProjectileBaseScript
     public static int PLASMABULLET_DAMAGE = 1;
 
     #endregion CONSTANTS
-
-    //private NoDamageExplosionMedium explosionPrefab;
     
     public override void Start()
     {
         base.Start();
-        //explosionPrefab = Resources.Load<NoDamageExplosionMedium>(KBConstants.ObjectConstants.PREFAB_NAMES[KBConstants.ObjectConstants.type.NoDamageExplosionMedium]);
         collideWithProjectiles = false;
         damage = PLASMABULLET_DAMAGE;
-        //ObjectPool.CreatePool(explosionPrefab);
     }
 
     protected override void Update()
@@ -26,7 +22,8 @@ public class PlasmaBullet : ProjectileBaseScript
 
     public override void DoOnHit()
     {
-        ObjectPool.Spawn(explosionPrefab, transform.position);
+        AreaOfEffectDamageScript a = ObjectPool.Spawn(explosionPrefab, transform.position);
+        a.Init(); 
         base.DoOnHit();
     }
 }

@@ -17,6 +17,9 @@ public class PlasmaGun : ProjectileAbilityBaseScript
 
     public override void Start()
     {
+        //explosionPrefab = Resources.Load<NoDamageExplosionMedium>(KBConstants.ObjectConstants.PREFAB_NAMES[KBConstants.ObjectConstants.type.NoDamageExplosionMedium]);
+        //ObjectPool.CreatePool(Resources.Load<NoDamageExplosionMedium>(KBConstants.ObjectConstants.PREFAB_NAMES[KBConstants.ObjectConstants.type.NoDamageExplosionMedium]));
+        
         projectileType = (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.PlasmaBullet], typeof(ProjectileBaseScript));
         sound = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.PlasmaGunFire]);
         audio.clip = sound;
