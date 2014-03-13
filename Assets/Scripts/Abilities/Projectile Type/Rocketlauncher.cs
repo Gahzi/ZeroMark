@@ -14,8 +14,8 @@ public class Rocketlauncher : ProjectileAbilityBaseScript
     public override void Start()
     {
         projectileType = (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Rocket], typeof(ProjectileBaseScript));
-        //sound = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.PlasmaGunFire]);
-        //audio.clip = sound;
+        sound = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.RocketFire01]);
+        audio.clip = sound;
         SetMaxRange(ROCKET_RANGE);
         cooldownStart = ROCKET_COOLDOWN;
         ammo = CLIP_SIZE;

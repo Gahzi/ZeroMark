@@ -43,7 +43,7 @@ public class KBPlayer : KBControllableGameObject
     private Vector3 onUpdatePos;
     private float fraction;
 
-    public AudioClip grabSound;
+    public AudioClip itemPickupClip;
     public GameObject upperBody;
     public GameObject lowerBody;
 
@@ -77,7 +77,7 @@ public class KBPlayer : KBControllableGameObject
     private AudioClip hitConfirm;
     private float hitFXTimer;
     public GameObject hitExplosion;
-    public AudioClip gotHitSFX;
+    public AudioClip[] gotHitSFX;
     public AudioClip deadSound;
     public AudioClip respawnSound;
     public AudioClip dropSound;
@@ -111,7 +111,7 @@ public class KBPlayer : KBControllableGameObject
         allBodies.Add(lowerBodyTank);
         allBodies.Add(lowerBodyCore);
         charController = GetComponent<CharacterController>();
-        grabSound = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.ItemGrab]);
+        itemPickupClip = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.ItemPickup01]);
         hitConfirm = Resources.Load<AudioClip>(KBConstants.AudioConstants.CLIP_NAMES[KBConstants.AudioConstants.clip.HitConfirm]);
         GetComponentInChildren<HitboxBaseScript>().Team = team;
 
@@ -200,14 +200,6 @@ public class KBPlayer : KBControllableGameObject
                 if (isShooting)
                 {
                     //gun[activeAbility].PlayerFire();
-                }
-
-                for (int i = 0; i < gun.Length; i++)
-                {
-                    if (gun[i].ammo == 0)
-                    {
-                        gun[i].PlayerTriggerReload();
-                    }
                 }
 
                 if (!Input.GetButton("Boost"))
@@ -367,7 +359,7 @@ public class KBPlayer : KBControllableGameObject
                     // play pickup sound;
                 }
                 PhotonNetwork.Destroy(other.gameObject);
-                audio.PlayOneShot(grabSound);
+                audio.PlayOneShot(itemPickupClip);
                 // todo play return sound
             }
         }
@@ -381,7 +373,7 @@ public class KBPlayer : KBControllableGameObject
     private void ControlKBAM()
     {
         float speed = 0;
-        
+
         float modifiedMoveSpeed = 0;
         if (Input.GetButton("Boost") && boostTime == boostMax)
         {
@@ -442,60 +434,81 @@ public class KBPlayer : KBControllableGameObject
                 isShooting = true;
                 if (Input.GetMouseButton(0))
                 {
-                    if (primaryWeaponLinkedFire)
+                    if (gun[0].ammo <= 0 || gun[1].ammo <= 0)
                     {
-                        gun[0].PlayerFire(speed);
-                        gun[1].PlayerFire(speed);
+                        gun[0].ammo = 0;
+                        gun[1].ammo = 0;
+                        gun[0].PlayerTriggerReload();
+                        gun[1].PlayerTriggerReload();
                     }
                     else
                     {
-                        int otherGun;
-                        if (lastPrimaryFire == 0)
+                        if (primaryWeaponLinkedFire)
                         {
-                            otherGun = 1;
+                            gun[0].PlayerFire(speed);
+                            gun[1].PlayerFire(speed);
                         }
                         else
                         {
-                            otherGun = 0;
-                        }
+                            int otherGun;
+                            if (lastPrimaryFire == 0)
+                            {
+                                otherGun = 1;
+                            }
+                            else
+                            {
+                                otherGun = 0;
+                            }
 
-                        if (gun[lastPrimaryFire].available)
-                        {
-                            gun[lastPrimaryFire].PlayerFire(speed);
-                        }
-                        else if (!gun[lastPrimaryFire].available && gun[lastPrimaryFire].halfwayCooled)
-                        {
-                            gun[otherGun].PlayerFire(speed);
-                            lastPrimaryFire = otherGun;
+                            if (gun[lastPrimaryFire].available)
+                            {
+                                gun[lastPrimaryFire].PlayerFire(speed);
+                            }
+                            else if (!gun[lastPrimaryFire].available && gun[lastPrimaryFire].halfwayCooled)
+                            {
+                                gun[otherGun].PlayerFire(speed);
+                                lastPrimaryFire = otherGun;
+                            }
                         }
                     }
                 }
                 if (Input.GetMouseButton(1))
                 {
-                    if (secondaryWeaponLinkedFire)
+                    if (gun[2].ammo <= 0 || gun[3].ammo <= 0)
                     {
-                        gun[2].PlayerFire(speed);
-                        gun[3].PlayerFire(speed);
+                        gun[2].ammo = 0;
+                        gun[3].ammo = 0;
+                        gun[2].PlayerTriggerReload();
+                        gun[3].PlayerTriggerReload();
                     }
                     else
                     {
-                        int otherGun;
-                        if (lastSecondaryFire == 2)
+
+                        if (secondaryWeaponLinkedFire)
                         {
-                            otherGun = 3;
+                            gun[2].PlayerFire(speed);
+                            gun[3].PlayerFire(speed);
                         }
                         else
                         {
-                            otherGun = 2;
-                        }
-                        if (gun[lastSecondaryFire].available) // TODO This doesn't synchronize as intended. Can shoot same side twice if you let go and wait until it cools.
-                        {
-                            gun[lastSecondaryFire].PlayerFire(speed);
-                        }
-                        else if (!gun[lastSecondaryFire].available && gun[lastSecondaryFire].halfwayCooled)
-                        {
-                            gun[otherGun].PlayerFire(speed);
-                            lastSecondaryFire = otherGun;
+                            int otherGun;
+                            if (lastSecondaryFire == 2)
+                            {
+                                otherGun = 3;
+                            }
+                            else
+                            {
+                                otherGun = 2;
+                            }
+                            if (gun[lastSecondaryFire].available) // TODO This doesn't synchronize as intended. Can shoot same side twice if you let go and wait until it cools.
+                            {
+                                gun[lastSecondaryFire].PlayerFire(speed);
+                            }
+                            else if (!gun[lastSecondaryFire].available && gun[lastSecondaryFire].halfwayCooled)
+                            {
+                                gun[otherGun].PlayerFire(speed);
+                                lastSecondaryFire = otherGun;
+                            }
                         }
                     }
                 }
@@ -503,9 +516,9 @@ public class KBPlayer : KBControllableGameObject
             else
             {
                 isShooting = false;
-            } 
+            }
         }
-        
+
 
         if (Input.GetKeyDown(KeyCode.Z))
         {
@@ -591,7 +604,7 @@ public class KBPlayer : KBControllableGameObject
                 health -= amount;
                 Instantiate(hitExplosion, transform.position, Quaternion.identity);
                 Camera.main.GetComponent<ScreenShake>().StartShake(0.25f, 5.0f);
-                audio.PlayOneShot(gotHitSFX);
+                audio.PlayOneShot(gotHitSFX[Random.Range(0, gotHitSFX.Length)]);
             }
             return health;
         }
@@ -629,7 +642,7 @@ public class KBPlayer : KBControllableGameObject
         transform.position = GameObject.FindGameObjectWithTag("Prespawn").transform.position;
         health = 1000;
     }
-    
+
     /// <summary>
     /// Spawns the player in the combat area.
     /// </summary>

@@ -19,6 +19,7 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
     private int maxRange;
     public int ammo;
     public bool reloading;
+    protected AudioClip reloadClip;
 
     public override void Start()
     {
@@ -43,6 +44,10 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
             if (audio.clip != null)
             {
                 audio.PlayOneShot(audio.clip);
+            }
+            if (particleSystem != null)
+            {
+                StartCoroutine(ParticleBurstStaged());
             }
             cooldown = cooldownStart;
             ammo--;
@@ -87,6 +92,10 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
     protected IEnumerator Reload()
     {
         reloading = true;
+        if (reloadClip != null)
+        {
+            audio.PlayOneShot(reloadClip);
+        }
         yield return new WaitForSeconds(reloadTime);
         ammo = clipSize;
         reloading = false;
@@ -99,4 +108,16 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
             StartCoroutine(Reload());
         }
     }
+
+    private IEnumerator ParticleBurstStaged()
+    {
+        particleSystem.Emit(30);
+        yield return new WaitForSeconds(0.05f);
+        particleSystem.Emit(30);
+        yield return new WaitForSeconds(0.05f);
+        particleSystem.Emit(30);
+        yield return new WaitForSeconds(0.05f);
+        particleSystem.Emit(30);
+    }
+
 }
