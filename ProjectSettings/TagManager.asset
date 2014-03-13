@@ -16,10 +16,10 @@ TagManager:
   - 
   - GUI
   - BankZone
-  - 
-  - 
-  - 
-  - 
+  - SpawnDrone
+  - SpawnMech
+  - SpawnTank
+  - Prespawn
   - 
   - 
   - 

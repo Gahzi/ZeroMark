@@ -17,7 +17,7 @@ public class Grow : MonoBehaviour
 
         if (gameObject.transform.localScale.x > targetScale.x * 0.95)
         {
-            Destroy(gameObject);
+            ObjectPool.Recycle(this);
         }
     }
 }

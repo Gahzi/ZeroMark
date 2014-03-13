@@ -10,9 +10,9 @@ GameObject:
   - 4: {fileID: 400000}
   - 23: {fileID: 2300000}
   - 102: {fileID: 10200000}
-  - 114: {fileID: 11400002}
   - 114: {fileID: 11400000}
   - 114: {fileID: 11400004}
+  - 114: {fileID: 11400002}
   m_Layer: 0
   m_Name: FloatingText
   m_TagString: GUI
@@ -93,10 +93,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 08e62d343cf53db4c972a7b69b5b430a, type: 3}
+  m_Script: {fileID: 11500000, guid: dabcbaa0122a7b943a9aa14eed959cfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifetime: 5
+  lifetime: 3
 --- !u!114 &11400004
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -139,6 +139,7 @@ public class Item : KBGameObject
                     //SHERVIN: Can't destroy a photon game object that you don't own.
                     if (photonView.isMine)
                     {
+                        // TODO : This should call ObjectPool.Recycle
                         PhotonNetwork.Destroy(gameObject);
                     }
                 }

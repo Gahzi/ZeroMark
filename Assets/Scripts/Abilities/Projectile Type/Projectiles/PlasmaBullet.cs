@@ -7,7 +7,7 @@ public class PlasmaBullet : ProjectileBaseScript
     public static int PLASMABULLET_DAMAGE = 1;
 
     #endregion CONSTANTS
-
+    
     public override void Start()
     {
         base.Start();
@@ -18,5 +18,12 @@ public class PlasmaBullet : ProjectileBaseScript
     protected override void Update()
     {
         base.Update();
+    }
+
+    public override void DoOnHit()
+    {
+        AreaOfEffectDamageScript a = ObjectPool.Spawn(explosionPrefab, transform.position);
+        a.Init(); 
+        base.DoOnHit();
     }
 }
