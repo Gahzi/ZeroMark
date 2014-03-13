@@ -164,6 +164,8 @@ public class KBPlayer : KBControllableGameObject
             default:
                 break;
         }
+
+       
     }
 
     private void OnDrawGizmos()
@@ -193,10 +195,11 @@ public class KBPlayer : KBControllableGameObject
         mousePos = Input.mousePosition;
         fraction = fraction + Time.deltaTime * 9;
 
-        if (acceptingInputs)
+        if (photonView.isMine)
         {
-            if (photonView.isMine)
+            if (acceptingInputs)
             {
+        
                 playerPositionOnScreen = Camera.main.WorldToScreenPoint(transform.position);
                 mousePlayerDiff = playerPositionOnScreen - mousePos;
                 ControlKBAM();
@@ -220,10 +223,10 @@ public class KBPlayer : KBControllableGameObject
                     boostTime = Mathf.Clamp(boostTime, 0.0f, boostMax);
                 }
             }
-            else
-            {
-                transform.localPosition = Vector3.Lerp(onUpdatePos, latestCorrectPos, fraction);    // set our pos between A and B
-            }
+        }
+        else
+        {
+            transform.localPosition = Vector3.Lerp(onUpdatePos, latestCorrectPos, fraction);    // set our pos between A and B
         }
 
         CheckHealth();
@@ -231,7 +234,7 @@ public class KBPlayer : KBControllableGameObject
 
     private void OnGUI()
     {
-        if (networkPlayer.isLocal)
+        if (photonView.isMine)
         {
             if (gun[activeAbility].reloading)
             {
@@ -253,23 +256,26 @@ public class KBPlayer : KBControllableGameObject
 
     private void OnPhotonInstantiate(PhotonMessageInfo msg)
     {
-        // This is our own player
-        if (photonView.isMine)
+        networkPlayer = msg.sender;
+        name += msg.sender.name;
+        GameManager.Instance.players.Add(this);
+    }
+
+    [RPC]
+    public void Setup(PhotonPlayer netPlayer, int tm)
+    {
+        Team playerTeam = (Team)tm;
+        networkPlayer = netPlayer;
+        team = playerTeam;
+
+        if (networkPlayer == PhotonNetwork.player)
         {
+            GameManager.Instance.localPlayer = this;
             GameObject newPlayerCameraObject = (GameObject)Instantiate(Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.PlayerCamera]));
             newPlayerCameraObject.transform.parent = transform;
             newPlayerCameraObject.GetComponent<KBCamera>().attachedPlayer = this;
             Camera.SetupCurrent(newPlayerCameraObject.GetComponent<Camera>());
         }
-        // This is just some remote controlled player, don't execute direct
-        // user input on this. DO enable multiplayer controll
-        else
-        {
-            name += msg.sender.name;
-        }
-
-        networkPlayer = msg.sender;
-        GameManager.Instance.players.Add(this);
     }
 
     /// <summary>
@@ -363,21 +369,7 @@ public class KBPlayer : KBControllableGameObject
                 killTokens = 0;
             }
         }
-        if (other.gameObject.CompareTag("KillTag"))
-        {
-            KillTag t = other.gameObject.GetComponent<KillTag>();
-            if (t.source != gameObject)
-            {
-                if (t.team != team)
-                {
-                    killTokens *= 2;
-                    // play pickup sound;
-                }
-                PhotonNetwork.Destroy(other.gameObject);
-                audio.PlayOneShot(grabSound);
-                // todo play return sound
-            }
-        }
+        
     }
 
     private void ControlKBAM()
@@ -607,7 +599,7 @@ public class KBPlayer : KBControllableGameObject
     [RPC]
     public void NotifyKill(PhotonPlayer killerPlayer)
     {
-        if (killerPlayer.isLocal && photonView.isMine)
+        if (killerPlayer.isLocal && networkPlayer == PhotonNetwork.player)
         {
             killTokens++;
         }
@@ -617,7 +609,15 @@ public class KBPlayer : KBControllableGameObject
     {
         if (teamSpawnpoints.Count > 0 && photonView.isMine)
         {
-            SpawnKillTag(transform.position);   // TODO spawning one of thse on game start not good
+            if (team == Team.Blue)
+            {
+                GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagBlue, transform.position, Quaternion.identity, (int)team);
+            }
+            else if (team == Team.Red)
+            {
+                GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagRed, transform.position, Quaternion.identity, (int)team);
+            }
+            
             transform.position = teamSpawnpoints[0].transform.position;
             waitingForRespawn = false;
             acceptingInputs = true;
@@ -660,20 +660,6 @@ public class KBPlayer : KBControllableGameObject
         acceptingInputs = true;
         killTokens = GameManager.Instance.AddPointsToScore(team, killTokens);
         triggerLockout = false;
-    }
-
-    private void SpawnKillTag(Vector3 pos)
-    {
-        GameObject o = null;
-        if (team == Team.Blue)
-        {
-            o = PhotonNetwork.InstantiateSceneObject(KBConstants.ObjectConstants.PREFAB_NAMES[ObjectConstants.type.KillTagBlue], transform.position, Quaternion.identity, 0, null);
-        }
-        else if (team == Team.Red)
-        {
-            o = PhotonNetwork.InstantiateSceneObject(KBConstants.ObjectConstants.PREFAB_NAMES[ObjectConstants.type.KillTagRed], transform.position, Quaternion.identity, 0, null);
-        }
-        o.GetComponent<KillTag>().source = gameObject;
     }
 
     private void FireWeapons(int weaponOne, int weaponTwo, bool linked)

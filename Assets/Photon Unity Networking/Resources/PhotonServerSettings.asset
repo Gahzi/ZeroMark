@@ -31,4 +31,7 @@ MonoBehaviour:
   - NotifyKill
   - ConfirmHitToOthers
   - SetPlayerStats
+  - CreateObject
+  - DestroyObject
+  - Setup
   DisableAutoOpenWizard: 0

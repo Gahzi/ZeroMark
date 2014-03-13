@@ -7,16 +7,13 @@ public class GameManager : Photon.MonoBehaviour
 {
     public enum GameState { PreGame, InGame, RedWins, BlueWins, Tie, EndGame };
 
-    public enum GameMode { Capture, Bank };
-
-    public GameMode gameMode;
     public KBPlayer localPlayer;
     public List<KBPlayer> players;
+    public List<KillTag> killTags;
 
     public List<CaptureZone> captureZones;
     private List<Item> items;
     private List<PlayerSpawnPoint> playerSpawnZones;
-    public CaptureZone victoryZone;
     private GameState state = GameState.PreGame;
 
     public GameState State
@@ -84,34 +81,39 @@ public class GameManager : Photon.MonoBehaviour
     private void Awake()
     {
         instance = this;
+        players = new List<KBPlayer>();
+        killTags = new List<KillTag>();
+        captureZones = new List<CaptureZone>();
+        playerSpawnZones = new List<PlayerSpawnPoint>();
+        ReadPlayerStatData();
     }
 
     private void Start()
     {        
         PhotonNetwork.isMessageQueueRunning = true;
-        ReadPlayerStatData();
         startTime = Time.time;
         lastTick = Time.time;
         state = GameState.PreGame;
 
+        KillTag[] loadedKillTags = FindObjectsOfType<KillTag>();
         CaptureZone[] loadedCaptureZones = FindObjectsOfType<CaptureZone>();
-        GameObject[] loadedItems = GameObject.FindGameObjectsWithTag("Item");
         ItemSpawn[] loadedItemZones = FindObjectsOfType<ItemSpawn>();
         PlayerSpawnPoint[] loadedPSpawns = FindObjectsOfType<PlayerSpawnPoint>();
 
         //TODO:Remove 6 value and replace with constant representing max player size;
-        players = new List<KBPlayer>(6);
-        captureZones = new List<CaptureZone>(loadedCaptureZones.Length);
-        items = new List<Item>(loadedItems.Length);
-        playerSpawnZones = new List<PlayerSpawnPoint>(loadedPSpawns.Length);
+        //players = new List<KBPlayer>();
+        //killTags = new List<KillTag>(loadedKillTags.Length);
+        //captureZones = new List<CaptureZone>(loadedCaptureZones.Length);
+        //playerSpawnZones = new List<PlayerSpawnPoint>(loadedPSpawns.Length);
 
         foreach (CaptureZone c in loadedCaptureZones)
         {
             captureZones.Add(c);
-            if (c.tier == CaptureZone.ZoneTier.C)
-            {
-                victoryZone = c;
-            }
+        }
+
+        for (int i = 0; i < loadedKillTags.Length; i++)
+        {
+            killTags.Add(loadedKillTags[i]);
         }
 
         foreach (PlayerSpawnPoint p in loadedPSpawns)
@@ -121,16 +123,10 @@ public class GameManager : Photon.MonoBehaviour
 
         if (PhotonNetwork.connected)
         {
-            if (PhotonNetwork.isMasterClient)
-            {
-               int newViewId = PhotonNetwork.AllocateViewID();
-               PhotonNetwork.RPC(photonView, "SetOwner", PhotonTargets.AllBuffered, newViewId,photonView.ownerId);
-            }
-
             Team nextTeam = (Team)(PhotonNetwork.otherPlayers.Length % 2);
-
-            localPlayer = createObject(ObjectConstants.type.Player, new Vector3(0, 0, 0), Quaternion.identity, nextTeam).GetComponent<KBPlayer>(); ;
-            photonView.RPC("SetPlayerStats", PhotonTargets.AllBuffered, PhotonNetwork.player);
+            GameManager.Instance.CreateObject((int)ObjectConstants.type.Player, Vector3.zero, Quaternion.identity, (int)nextTeam);
+            //photonView.RPC("CreateObject", PhotonTargets.MasterClient, , , , );
+            
         }
         
     }
@@ -153,22 +149,12 @@ public class GameManager : Photon.MonoBehaviour
 
                 case GameState.InGame:
                     gameTime += Time.deltaTime;
-                    switch (gameMode)
+                    
+                    if (IsGameTimeOver())
                     {
-                        case GameMode.Capture:
-                            CheckCaptureWinConditions();
-                            break;
-
-                        case GameMode.Bank:
-                            if (IsGameTimeOver())
-                            {
-                                state = GameState.EndGame;
-                            }
-                            break;
-
-                        default:
-                            break;
+                        state = GameState.EndGame;
                     }
+                      
                     //CheckPlayerUpgradePoints();
                     RunGui();
                     break;
@@ -331,101 +317,6 @@ public class GameManager : Photon.MonoBehaviour
         return spawnpoints;
     }
 
-    /// <summary>
-    /// Checks to see if the game has reached one of it's win conditions and changes state appropriately.
-    /// </summary>
-    private void CheckCaptureWinConditions()
-    {
-        if (victoryZone.state != CaptureZone.ZoneState.Unoccupied)
-        {
-            switch (victoryZone.state)
-            {
-                case CaptureZone.ZoneState.Unoccupied:
-                    break;
-
-                case CaptureZone.ZoneState.Red:
-                    state = GameState.RedWins;
-                    break;
-
-                case CaptureZone.ZoneState.Blue:
-                    state = GameState.BlueWins;
-                    break;
-
-                default:
-                    break;
-            }
-        }
-
-        redCaptures = 0;
-        blueCaptures = 0;
-        redBonus = 0;
-        blueBonus = 0;
-
-        foreach (var c in captureZones)
-        {
-            if (c.tier == CaptureZone.ZoneTier.A)
-            {
-                switch (c.state)
-                {
-                    case CaptureZone.ZoneState.Unoccupied:
-                        break;
-
-                    case CaptureZone.ZoneState.Red:
-                        redBonus++;
-                        break;
-
-                    case CaptureZone.ZoneState.Blue:
-                        blueBonus++;
-                        break;
-
-                    default:
-                        break;
-                }
-            }
-
-            switch (c.state)
-            {
-                case CaptureZone.ZoneState.Unoccupied:
-                    break;
-
-                case CaptureZone.ZoneState.Red:
-                    redCaptures++;
-                    break;
-
-                case CaptureZone.ZoneState.Blue:
-                    blueCaptures++;
-                    break;
-
-                default:
-                    break;
-            }
-        }
-        if (redCaptures >= captureZones.Count - 1)
-        {
-            state = GameState.RedWins;
-        }
-        else if (blueCaptures >= captureZones.Count - 1)
-        {
-            state = GameState.BlueWins;
-        }
-
-        if (tick >= ticksPerGame)
-        {
-            if (redTeamScore > blueTeamScore)
-            {
-                state = GameState.RedWins;
-            }
-            else if (blueTeamScore > redTeamScore)
-            {
-                state = GameState.BlueWins;
-            }
-            else if (blueTeamScore == redTeamScore)
-            {
-                state = GameState.Tie;
-            }
-        }
-    }
-
     private void RunGui()
     {
         foreach (var c in captureZones)
@@ -444,76 +335,53 @@ public class GameManager : Photon.MonoBehaviour
         }
     }
 
-    public GameObject createObject(KBConstants.ObjectConstants.type objectType, Vector3 position, Quaternion rotation, Team newTeam)
+    public void CreateObject(int type, Vector3 position, Quaternion rotation, int newTeam)
     {
-        switch (objectType)
+        KBConstants.ObjectConstants.type newType = (KBConstants.ObjectConstants.type)type;
+
+        switch (newType)
         {
             case ObjectConstants.type.Player:
                 {
                     GameObject newPlayerObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Player], position, rotation, 0);
                     KBPlayer newPlayer = newPlayerObject.GetComponent<KBPlayer>();
-                    newPlayer.networkPlayer = PhotonNetwork.player;
-                    newPlayer.team = newTeam;
-
-                    return newPlayerObject;
+                    newPlayer.photonView.RPC("Setup", PhotonTargets.AllBuffered, PhotonNetwork.player, (int)newTeam);
+                    photonView.RPC("SetPlayerStats", PhotonTargets.AllBuffered, PhotonNetwork.player);
+                    break;
                 }
 
-            case ObjectConstants.type.Item:
+            case ObjectConstants.type.KillTagBlue:
                 {
-                    GameObject newItemObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Item], position, rotation, 0);
-                    Item newItem = newItemObject.GetComponent<Item>();
-                    newItem.team = newTeam;
-                    items.Add(newItem);
-                    return newItemObject;
+                    GameObject newKillTakeBlueObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.KillTagBlue], position, rotation, 0);
+                    KillTag newKillTagBlue = newKillTakeBlueObject.GetComponent<KillTag>();
+                    newKillTagBlue.team = (Team)newTeam;
+                    killTags.Add(newKillTagBlue);
+                    break;
                 }
 
-            default:
-                return null;
+            case ObjectConstants.type.KillTagRed:
+                {
+                    GameObject newKillTakeRedObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.KillTagRed], position, rotation, 0);
+                    KillTag newKillTagRed = newKillTakeRedObject.GetComponent<KillTag>();
+                    newKillTagRed.team = (Team)newTeam;
+                    killTags.Add(newKillTagRed);
+                    break;
+                }
+        }
+    }
+
+    [RPC]
+    public void DestroyObject(PhotonView phView)
+    {
+        if (PhotonNetwork.isMasterClient)
+        {
+            PhotonNetwork.Destroy(phView);
         }
     }
 
     private void SendGlobalMessageToPlayers(string msg)
     {
         // TODO
-    }
-
-    [RPC]
-    private void SetOwner(int viewId,int ownerId)
-    {
-        photonView.viewID = viewId;
-        photonView.ownerId = ownerId;
-    }
-
-    public static string GetCaptureZoneStateString()
-    {
-        string tab = "     ";
-        string spacer = " : ";
-        GameManager gm = GameManager.instance;
-        System.Text.StringBuilder sb = new System.Text.StringBuilder();
-        //sb.Append(gm.victoryZone.tier.ToString() + spacer + gm.victoryZone.state.ToString() + System.Environment.NewLine);
-        sb.Append(gm.victoryZone.descriptiveName + spacer + gm.victoryZone.scoreboard.txt + System.Environment.NewLine);
-        foreach (CaptureZone c in gm.victoryZone.requiredZones)
-        {
-            sb.Append(tab + c.descriptiveName + spacer + c.scoreboard.txt + System.Environment.NewLine);
-
-            foreach (CaptureZone d in c.requiredZones)
-            {
-                sb.Append(tab + tab + d.descriptiveName + spacer + d.scoreboard.txt + System.Environment.NewLine);
-            }
-        }
-        return sb.ToString();
-    }
-
-    public static string GetTeamScoreString()
-    {
-        //string tab = "     ";
-        string spacer = " : ";
-        GameManager gm = GameManager.instance;
-        System.Text.StringBuilder sb = new System.Text.StringBuilder();
-        sb.Append("Tick " + gm.tick + "/" + gm.ticksPerGame + System.Environment.NewLine);
-        sb.Append("Red" + spacer + gm.redTeamScore + System.Environment.NewLine);
-        sb.Append("Blue" + spacer + gm.blueTeamScore + System.Environment.NewLine);
-        return sb.ToString();
     }
 
     private void ReadPlayerStatData()
