@@ -408,7 +408,7 @@ public class KBPlayer : KBControllableGameObject
                         Quaternion newRot = Quaternion.LookRotation(upperBody.transform.position + new Vector3(-mousePlayerDiff.x, 0, -mousePlayerDiff.y));
                         upperBody.transform.rotation = Quaternion.Lerp(upperBody.transform.rotation, newRot, upperbodyRotateSpeed * Time.deltaTime);
                     }
-                    else
+                    else // Currently Drone case only
                     {
                         upperBody.transform.rotation = lowerBody.transform.rotation;
                     }
@@ -417,8 +417,10 @@ public class KBPlayer : KBControllableGameObject
                 {
                     Quaternion newRot = Quaternion.LookRotation(upperBody.transform.position + new Vector3(-mousePlayerDiff.x, 0, -mousePlayerDiff.y));
                     upperBody.transform.rotation = Quaternion.Lerp(upperBody.transform.rotation, newRot, upperbodyRotateSpeed * Time.deltaTime);
-                    lowerBody.transform.rotation = upperBody.transform.rotation;
                     m = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+                    speed = m.normalized.magnitude * modifiedMoveSpeed;
+                    Quaternion bottomRotation = Quaternion.LookRotation(m.normalized);
+                    lowerBody.transform.rotation = Quaternion.Lerp(lowerBody.transform.rotation, bottomRotation, 5f * Time.deltaTime);
                     charController.SimpleMove(m.normalized * modifiedMoveSpeed);
                 }
                 break;
