@@ -55,7 +55,8 @@ abstract public class AbilitySlotBaseScript : MonoBehaviour
     {
         if (cooldown > 0)
         {
-            cooldown -= Time.deltaTime;
+            
+            cooldown -= Time.fixedDeltaTime;
             available = false;
             if (cooldown <= cooldownStart/2)
             {

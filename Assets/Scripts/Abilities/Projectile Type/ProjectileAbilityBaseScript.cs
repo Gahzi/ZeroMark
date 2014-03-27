@@ -45,6 +45,8 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
                 audio.PlayOneShot(audio.clip);
             }
             cooldown = cooldownStart;
+            available = false;
+
             ammo--;
 
             Collider[] collider = transform.parent.GetComponentsInChildren<Collider>();
@@ -99,4 +101,6 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
             StartCoroutine(Reload());
         }
     }
+
+
 }

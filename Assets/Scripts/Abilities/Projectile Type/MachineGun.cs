@@ -14,14 +14,15 @@ public class MachineGun : ProjectileAbilityBaseScript
     public override void Start()
     {
         projectileType = (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.MachinegunBullet], typeof(ProjectileBaseScript));
-        cooldown = MACHINEGUN_COOLDOWN;
         sound = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.PlasmaGunFire]);
+        base.Start();
+        cooldown = 0;
         audio.clip = sound;
         SetMaxRange(MACHINEGUN_RANGE);
         cooldownStart = MACHINEGUN_COOLDOWN;
         ammo = CLIP_SIZE;
         reloadTime = RELOAD_TIME;
         clipSize = CLIP_SIZE;
-        base.Start();
+        
     }
 }

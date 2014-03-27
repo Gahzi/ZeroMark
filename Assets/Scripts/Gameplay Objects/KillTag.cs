@@ -12,12 +12,16 @@ public class KillTag : KBGameObject
         KBPlayer player = other.gameObject.GetComponent<KBPlayer>();
         if(player != null)
         {
-            if (player.team != team && PhotonNetwork.player.Equals(player))
+            if (player.team != team && PhotonNetwork.player.Equals(player.networkPlayer))
             {
                 player.killTokens *= 2;
                 // play pickup sound;
-                GameManager.Instance.photonView.RPC("DestroyObject", PhotonTargets.MasterClient, this.photonView);
+
+
+                GameManager.Instance.photonView.RPC("DestroyObject", PhotonTargets.All, photonView.viewID);
                 player.audio.PlayOneShot(player.grabSound);
+                collider.enabled = false;
+                renderer.enabled = false;
                 // todo play return sound
             }
         }
@@ -28,5 +32,9 @@ public class KillTag : KBGameObject
         GameManager.Instance.killTags.Add(this);
     }
 
+    //private void OnDestroy()
+    //{
+    //    GameManager.Instance.killTags.Remove(this);
+    //}
 
 }

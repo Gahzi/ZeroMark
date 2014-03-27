@@ -86,21 +86,15 @@ public class KBPlayer : KBControllableGameObject
     public int killTokens;
     private bool triggerLockout;
 
-    //private bool autoFire;
-    private bool isShooting;
-
     private bool secondaryWeaponLinkedFire;
     private int lastPrimaryFire;
     private bool primaryWeaponLinkedFire;
     private int lastSecondaryFire;
 
-    public override void Start()
+    public new void Awake()
     {
-        base.Start();
+        base.Awake();
 
-        Screen.showCursor = false;
-
-        #region Resource & reference loading
         allBodies = new List<GameObject>(6);
         allBodies.Add(upperBodyDrone);
         allBodies.Add(upperBodyMech);
@@ -110,6 +104,15 @@ public class KBPlayer : KBControllableGameObject
         allBodies.Add(lowerBodyMech);
         allBodies.Add(lowerBodyTank);
         allBodies.Add(lowerBodyCore);
+    }
+
+    public override void Start()
+    {
+        base.Start();
+
+        Screen.showCursor = false;
+
+        #region Resource & reference loading
         charController = GetComponent<CharacterController>();
         grabSound = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.ItemGrab]);
         hitConfirm = Resources.Load<AudioClip>(KBConstants.AudioConstants.CLIP_NAMES[KBConstants.AudioConstants.clip.HitConfirm]);
@@ -120,7 +123,7 @@ public class KBPlayer : KBControllableGameObject
         latestCorrectPos = transform.position;
         onUpdatePos = transform.position;
 
-        SwitchType("SpawnCore");
+        
 
         InitializeForRespawn();
 
@@ -159,7 +162,6 @@ public class KBPlayer : KBControllableGameObject
         acceptingInputs = true;
         waitingForRespawn = false;
         triggerLockout = false;
-        isShooting = false;
         movespeed = stats.speed;
         lowerbodyRotateSpeed = stats.lowerbodyRotationSpeed;
     }
@@ -193,15 +195,10 @@ public class KBPlayer : KBControllableGameObject
         {
             if (acceptingInputs)
             {
-        
+
                 playerPositionOnScreen = Camera.main.WorldToScreenPoint(transform.position);
                 mousePlayerDiff = playerPositionOnScreen - mousePos;
                 ControlKBAM();
-
-                if (isShooting)
-                {
-                    //gun[activeAbility].PlayerFire();
-                }
 
                 for (int i = 0; i < gun.Length; i++)
                 {
@@ -292,20 +289,16 @@ public class KBPlayer : KBControllableGameObject
             Quaternion rot = upperBody.transform.rotation;
             int hlth = health;
             int mxhlth = maxHealth;
-            bool isShting = isShooting;
             bool wtngFrRspwn = waitingForRespawn;
             int tm = (int)team;
-            //int ab = activeAbility;
             float invltime = invulnerabilityTime;
 
             stream.Serialize(ref pos);
             stream.Serialize(ref rot);
             stream.Serialize(ref hlth);
             stream.Serialize(ref mxhlth);
-            stream.Serialize(ref isShting);
             stream.Serialize(ref wtngFrRspwn);
             stream.Serialize(ref tm);
-            //stream.Serialize(ref ab);
             stream.Serialize(ref invltime);
         }
         else
@@ -314,23 +307,17 @@ public class KBPlayer : KBControllableGameObject
             Vector3 pos = Vector3.zero;
             Quaternion rot = Quaternion.identity;
             int hlth = 0;
-            int lvl = 0;
             int mxhlth = 0;
-            bool isShting = false;
             bool wtngFrRspwn = false;
             int tm = 0;
-            int ab = 0;
             float invltime = 0.0f;
 
             stream.Serialize(ref pos);
             stream.Serialize(ref rot);
             stream.Serialize(ref hlth);
-            stream.Serialize(ref lvl);
             stream.Serialize(ref mxhlth);
-            stream.Serialize(ref isShting);
             stream.Serialize(ref wtngFrRspwn);
             stream.Serialize(ref tm);
-            stream.Serialize(ref ab);
             stream.Serialize(ref invltime);
 
             latestCorrectPos = pos;                 // save this to move towards it in FixedUpdate()
@@ -340,10 +327,8 @@ public class KBPlayer : KBControllableGameObject
             upperBody.transform.rotation = rot;          // this sample doesn't smooth rotation
             health = hlth;
             maxHealth = mxhlth;
-            isShooting = isShting;
             waitingForRespawn = wtngFrRspwn;
             team = (Team)tm;
-            //activeAbility = ab;
             invulnerabilityTime = invltime;
         }
     }
@@ -360,18 +345,18 @@ public class KBPlayer : KBControllableGameObject
                 killTokens = 0;
             }
         }
-        
+
 
         if (other.gameObject.CompareTag("SpawnDrone") || other.gameObject.CompareTag("SpawnMech") || other.gameObject.CompareTag("SpawnTank"))
         {
-            SwitchType(other.gameObject.tag);
+            photonView.RPC("SwitchType", PhotonTargets.AllBuffered, other.gameObject.tag.ToString());
         }
     }
 
     private void ControlKBAM()
     {
         float speed = 0;
-        
+
         float modifiedMoveSpeed = 0;
         if (Input.GetButton("Boost") && boostTime == boostMax)
         {
@@ -417,6 +402,7 @@ public class KBPlayer : KBControllableGameObject
                     upperBody.transform.rotation = Quaternion.Lerp(upperBody.transform.rotation, newRot, upperbodyRotateSpeed * Time.deltaTime);
                     lowerBody.transform.rotation = upperBody.transform.rotation;
                     m = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+                    speed = m.normalized.magnitude * modifiedMoveSpeed;
                     charController.SimpleMove(m.normalized * modifiedMoveSpeed);
                 }
                 break;
@@ -429,13 +415,15 @@ public class KBPlayer : KBControllableGameObject
         {
             if ((Input.GetMouseButton(0) || Input.GetMouseButton(1)))// && !gun[activeAbility].reloading)
             {
-                isShooting = true;
                 if (Input.GetMouseButton(0))
                 {
                     if (primaryWeaponLinkedFire)
                     {
-                        gun[0].PlayerFire(speed);
-                        gun[1].PlayerFire(speed);
+                        int[] guns = { 0,1};
+                        float[] speeds = { speed,speed};
+                        photonView.RPC("Fire", PhotonTargets.All, guns, speeds);
+                        //gun[0].PlayerFire(speed);
+                        //gun[1].PlayerFire(speed);
                     }
                     else
                     {
@@ -451,12 +439,21 @@ public class KBPlayer : KBControllableGameObject
 
                         if (gun[lastPrimaryFire].available)
                         {
-                            gun[lastPrimaryFire].PlayerFire(speed);
+                            //Debug.Log(gun[lastPrimaryFire].cooldown.ToString());
+                            int[] guns = { lastPrimaryFire };
+                            float[] speeds = { speed };
+                            photonView.RPC("Fire", PhotonTargets.All, guns, speeds);
+                            //gun[lastPrimaryFire].PlayerFire(speed);
                         }
                         else if (!gun[lastPrimaryFire].available && gun[lastPrimaryFire].halfwayCooled)
                         {
-                            gun[otherGun].PlayerFire(speed);
+                            
                             lastPrimaryFire = otherGun;
+                            int[] guns = { otherGun };
+                            float[] speeds = { speed };
+                            photonView.RPC("Fire", PhotonTargets.All, guns, speeds);
+                            //gun[otherGun].PlayerFire(speed);
+                            
                         }
                     }
                 }
@@ -464,8 +461,11 @@ public class KBPlayer : KBControllableGameObject
                 {
                     if (secondaryWeaponLinkedFire)
                     {
-                        gun[2].PlayerFire(speed);
-                        gun[3].PlayerFire(speed);
+                        int[] guns = { 2, 3 };
+                        float[] speeds = { speed, speed };
+                        photonView.RPC("Fire", PhotonTargets.All, guns, speeds);
+                        //gun[2].PlayerFire(speed);
+                        //gun[3].PlayerFire(speed);
                     }
                     else
                     {
@@ -480,22 +480,25 @@ public class KBPlayer : KBControllableGameObject
                         }
                         if (gun[lastSecondaryFire].available) // TODO This doesn't synchronize as intended. Can shoot same side twice if you let go and wait until it cools.
                         {
-                            gun[lastSecondaryFire].PlayerFire(speed);
+                            int[] guns = { lastSecondaryFire };
+                            float[] speeds = { speed };
+                            photonView.RPC("Fire", PhotonTargets.All, guns, speeds);
+                            //gun[lastSecondaryFire].PlayerFire(speed);
                         }
                         else if (!gun[lastSecondaryFire].available && gun[lastSecondaryFire].halfwayCooled)
                         {
-                            gun[otherGun].PlayerFire(speed);
                             lastSecondaryFire = otherGun;
+                            int[] guns = { otherGun };
+                            float[] speeds = { speed };
+                            photonView.RPC("Fire", PhotonTargets.All, guns, speeds);
+                            //gun[otherGun].PlayerFire(speed);
+                            
                         }
                     }
                 }
             }
-            else
-            {
-                isShooting = false;
-            } 
         }
-        
+
 
         if (Input.GetKeyDown(KeyCode.Z))
         {
@@ -516,6 +519,18 @@ public class KBPlayer : KBControllableGameObject
         //{
         //    BankKills();
         //}
+    }
+
+    [RPC]
+    private void Fire(int[] gunIndex, float[] speed)
+    {
+        for (int i = 0; i < gunIndex.Length; i++)
+        {
+            int rightGun = gunIndex[i];
+            float rightSpeed = speed[i];
+            gun[rightGun].PlayerFire(rightSpeed);
+        }
+        
     }
 
     private void CheckHealth()
@@ -614,12 +629,21 @@ public class KBPlayer : KBControllableGameObject
         killTokens = 0;
         waitingForRespawn = false;
         acceptingInputs = true;
-        SpawnKillTag(transform.position);   // TODO spawning one of thse on game start not good
+
+        if (team == Team.Blue)
+        {
+            GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagBlue, transform.position, Quaternion.identity, (int)team);
+        }
+        else if (team == Team.Red)
+        {
+            GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagRed, transform.position, Quaternion.identity, (int)team);
+        }
+
         Camera.main.GetComponent<ScreenShake>().StopShake();
         transform.position = GameObject.FindGameObjectWithTag("Prespawn").transform.position;
         health = 1000;
     }
-    
+
     /// <summary>
     /// Spawns the player in the combat area.
     /// </summary>
@@ -627,15 +651,6 @@ public class KBPlayer : KBControllableGameObject
     {
         if (teamSpawnpoints.Count > 0 && photonView.isMine)
         {
-            if (team == Team.Blue)
-            {
-                GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagBlue, transform.position, Quaternion.identity, (int)team);
-            }
-            else if (team == Team.Red)
-            {
-                GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagRed, transform.position, Quaternion.identity, (int)team);
-            }
-            
             transform.position = teamSpawnpoints[0].transform.position;
             waitingForRespawn = false;
             acceptingInputs = true;
@@ -683,77 +698,111 @@ public class KBPlayer : KBControllableGameObject
     {
     }
 
-    private void SwitchType(string typeTrigger)
+    [RPC]
+    private void SwitchType(string typeTrigger, PhotonMessageInfo info)
     {
-        for (int i = 0; i < allBodies.Count; i++)
+        if (networkPlayer == info.sender)
         {
-            allBodies[i].SetActive(false);
+            for (int i = 0; i < allBodies.Count; i++)
+            {
+                allBodies[i].SetActive(false);
+            }
+
+            switch (typeTrigger)
+            {
+                case "SpawnDrone":
+
+                    upperBody = upperBodyDrone;
+                    lowerBody = lowerBodyDrone;
+                    type = PlayerType.drone;
+
+                    break;
+                case "SpawnMech":
+
+                    upperBody = upperBodyMech;
+                    lowerBody = lowerBodyMech;
+                    type = PlayerType.mech;
+
+                    break;
+                case "SpawnTank":
+
+                    upperBody = upperBodyTank;
+                    lowerBody = lowerBodyTank;
+                    type = PlayerType.tank;
+
+                    break;
+
+                case "SpawnCore":
+
+                    upperBody = upperBodyCore;
+                    lowerBody = lowerBodyCore;
+                    type = PlayerType.core;
+                    break;
+
+                default:
+                    break;
+            }
+            upperBody.SetActive(true);
+            lowerBody.SetActive(true);
+
+            if (team == KBConstants.Team.Blue)
+            {
+                SetActiveIfFound(this.transform,"BlueBody", true);
+                SetActiveIfFound(this.transform, "RedBody", false);
+            }
+            else
+            {
+                SetActiveIfFound(this.transform,"BlueBody", false);
+                SetActiveIfFound(this.transform,"RedBody", true);
+            }
+
+
+            //Switch Stats
+            GameManager.Instance.SetPlayerStats(networkPlayer);
+            InitializeForRespawn();
+            SetupAbilities();
+
+            
+            Spawn();
         }
-
-        switch (typeTrigger)
-        {
-            case "SpawnDrone":
-
-                upperBody = upperBodyDrone;
-                lowerBody = lowerBodyDrone;
-                type = PlayerType.drone;
-
-                break;
-            case "SpawnMech":
-
-                upperBody = upperBodyMech;
-                lowerBody = lowerBodyMech;
-                type = PlayerType.mech;
-
-                break;
-            case "SpawnTank":
-
-                upperBody = upperBodyTank;
-                lowerBody = lowerBodyTank;
-                type = PlayerType.tank;
-
-                break;
-
-            case "SpawnCore":
-
-                upperBody = upperBodyCore;
-                lowerBody = lowerBodyCore;
-                type = PlayerType.core;
-                break;
-
-            default:
-                break;
-        }
-        upperBody.SetActive(true);
-        lowerBody.SetActive(true);
-
-        if (team == KBConstants.Team.Blue)
-        {
-            SetActiveIfFound("BlueBody", true);
-            SetActiveIfFound("RedBody", false);
-        }
-        else
-        {
-            SetActiveIfFound("BlueBody", false);
-            SetActiveIfFound("RedBody", true);
-        }
-
-        InitializeForRespawn();
-        SetupAbilities();
-        GameManager.Instance.photonView.RPC("SetPlayerStats", PhotonTargets.AllBuffered, PhotonNetwork.player);
-        Spawn();
     }
 
-    private void SetActiveIfFound(string ObjectName, bool val)
+    private void SetActiveIfFound(Transform trans, string objectName, bool val)
     {
-        GameObject o = GameObject.Find(ObjectName);
-        if (o != null)
+        GameObject foundObject = SetActiveChildIfFound(trans, objectName, val);
+
+        if (foundObject != null)
         {
-            o.SetActive(val);
+            foundObject.SetActive(val);
         }
         else
         {
             Debug.LogWarning("[Player] Couldn't find player model");
         }
+    }
+
+
+    private GameObject SetActiveChildIfFound(Transform cTranform,string objectName, bool val)
+    {
+        GameObject foundGameObject = null;
+        
+        if(cTranform.gameObject.name.Equals(objectName))
+        {
+            return cTranform.gameObject;
+        }
+        else
+        {
+            for (int i = 0; i < cTranform.childCount; i++)
+            {
+                Transform t = cTranform.GetChild(i);
+                foundGameObject = SetActiveChildIfFound(t, objectName, val);
+                if (foundGameObject != null)
+                {
+                    break;
+                }
+            }
+        }
+
+        return foundGameObject;
     }
 }

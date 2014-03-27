@@ -125,7 +125,6 @@ public class GameManager : Photon.MonoBehaviour
         {
             Team nextTeam = (Team)(PhotonNetwork.otherPlayers.Length % 2);
             GameManager.Instance.CreateObject((int)ObjectConstants.type.Player, Vector3.zero, Quaternion.identity, (int)nextTeam);
-            //photonView.RPC("CreateObject", PhotonTargets.MasterClient, , , , );
             
         }
         
@@ -346,6 +345,7 @@ public class GameManager : Photon.MonoBehaviour
                     GameObject newPlayerObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Player], position, rotation, 0);
                     KBPlayer newPlayer = newPlayerObject.GetComponent<KBPlayer>();
                     newPlayer.photonView.RPC("Setup", PhotonTargets.AllBuffered, PhotonNetwork.player, (int)newTeam);
+                    newPlayer.photonView.RPC("SwitchType", PhotonTargets.AllBuffered, "SpawnCore");
                     photonView.RPC("SetPlayerStats", PhotonTargets.AllBuffered, PhotonNetwork.player);
                     break;
                 }
@@ -371,11 +371,14 @@ public class GameManager : Photon.MonoBehaviour
     }
 
     [RPC]
-    public void DestroyObject(PhotonView phView)
+    public void DestroyObject(int viewId)
     {
-        if (PhotonNetwork.isMasterClient)
+        PhotonView viewToDestroy = PhotonView.Find(viewId);
+        GameObject objectToDestroy = viewToDestroy.gameObject;
+
+        if (viewToDestroy.isMine)
         {
-            PhotonNetwork.Destroy(phView);
+            PhotonNetwork.Destroy(objectToDestroy);
         }
     }
 

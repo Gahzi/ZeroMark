@@ -34,4 +34,6 @@ MonoBehaviour:
   - CreateObject
   - DestroyObject
   - Setup
+  - SwitchType
+  - Fire
   DisableAutoOpenWizard: 0
