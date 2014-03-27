@@ -422,10 +422,9 @@ public class KBPlayer : KBControllableGameObject
                 {
                     if (gun[0].ammo <= 0 || gun[1].ammo <= 0)
                     {
-                        gun[0].ammo = 0;
-                        gun[1].ammo = 0;
-                        gun[0].PlayerTriggerReload();
-                        gun[1].PlayerTriggerReload();
+                        int[] guns = { 0, 1 };
+                        photonView.RPC("Reload", PhotonTargets.All, guns);
+                        
                     }
                     else
                     {
@@ -476,8 +475,9 @@ public class KBPlayer : KBControllableGameObject
                     {
                         gun[2].ammo = 0;
                         gun[3].ammo = 0;
-                        gun[2].PlayerTriggerReload();
-                        gun[3].PlayerTriggerReload();
+
+                        int[] guns = { 2, 3 };
+                        photonView.RPC("Reload", PhotonTargets.All, guns);
                     }
                     else
                     {
@@ -556,6 +556,18 @@ public class KBPlayer : KBControllableGameObject
             gun[rightGun].PlayerFire(rightSpeed);
         }
         
+    }
+
+    [RPC]
+    private void Reload(int[] gunIndex)
+    {
+        for (int i = 0; i < gunIndex.Length; i++)
+        {
+            int rightGun = gunIndex[i];
+            gun[rightGun].ammo = 0;
+            gun[rightGun].PlayerTriggerReload();
+        }
+
     }
 
     private void CheckHealth()
