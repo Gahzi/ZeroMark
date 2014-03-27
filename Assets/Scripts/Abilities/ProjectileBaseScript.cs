@@ -51,8 +51,8 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
         // If it hits a hitbox, it needs to inform the owner of the bullet that it has hit a player.
         if (other.gameObject.CompareTag("Hitbox"))
         {
-            KBGameObject o = other.gameObject.transform.parent.GetComponent<KBGameObject>();
-            KBPlayer victimPlayer = other.gameObject.transform.parent.GetComponent<KBPlayer>();
+            KBGameObject o = other.gameObject.transform.parent.transform.parent.GetComponent<KBGameObject>();
+            KBPlayer victimPlayer = other.gameObject.transform.parent.transform.parent.GetComponent<KBPlayer>();
 
             if (victimPlayer != null)
             {
