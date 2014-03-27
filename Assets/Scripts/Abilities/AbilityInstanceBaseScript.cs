@@ -54,8 +54,8 @@ abstract public class AbilityInstanceBaseScript : MonoBehaviour
     {
         if (Time.time - spawnTime > lifetime)
         {
-            DoOnHit();
-            ObjectPool.Recycle(this); //AARON why are we doing this here and in Reset();
+            //DoOnHit(); // Uncomment this line to have projecticles "hit" on timeout
+            ObjectPool.Recycle(this);
         }
     }
 

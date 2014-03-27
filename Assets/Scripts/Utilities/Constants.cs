@@ -10,7 +10,11 @@ namespace KBConstants
 
     public class ObjectConstants
     {
-        public enum type { Player, Gamepad, Item, PlayerCamera, PlasmaBullet, BasicRigidbodyCube, MachinegunBullet, Rocket, KillTagBlue, KillTagRed, LightAutoLaserBullet,
+        public enum type
+        {
+            Player, Gamepad, Item, PlayerCamera,  BasicRigidbodyCube,
+            MachinegunBullet, Rocket, PlasmaBullet, LightAutoLaserBullet, HeavyCannonBullet, LightCannonBullet,
+            KillTagBlue, KillTagRed, 
             SmallExplosion, RocketExplosion, NoDamageExplosionMedium,
             FloatingText
         };
@@ -21,17 +25,19 @@ namespace KBConstants
 			{type.Gamepad, "Gamepads/Gamepad"},
             {type.Item, "Items/Item"},
             {type.PlayerCamera, "Cameras/Player Camera"},
-            {type.PlasmaBullet, "Abilities/PlasmaBullet"},
+            {type.PlasmaBullet, "Abilities/bullet/PlasmaBullet"},
             {type.BasicRigidbodyCube, "Environment/BasicRigidbodyCube"},
-            {type.MachinegunBullet, "Abilities/machinegunbullet"},
-            {type.Rocket, "abilities/rocket"},
+            {type.MachinegunBullet, "Abilities/bullet/machinegunbullet"},
+            {type.Rocket, "abilities/bullet/rocket"},
             {type.KillTagBlue, "items/killtagblue"},
             {type.KillTagRed, "items/killtagred"},
-            {type.LightAutoLaserBullet, "abilities/lightautolaserbullet"},
-            {type.SmallExplosion, "abilities/smallexplosion"},
-            {type.RocketExplosion, "abilities/rocketexplosion"},
-            {type.NoDamageExplosionMedium, "abilities/mediumexplosion"},
-            {type.FloatingText, "gui/floatingtext"}
+            {type.LightAutoLaserBullet, "abilities/bullet/lightautolaserbullet"},
+            {type.SmallExplosion, "abilities/explosion/smallexplosion"},
+            {type.RocketExplosion, "abilities/explosion/rocketexplosion"},
+            {type.NoDamageExplosionMedium, "abilities/explosion/mediumexplosion"},
+            {type.FloatingText, "gui/floatingtext"},
+            {type.HeavyCannonBullet, "abilities/bullet/heavycannonbullet"},
+            {type.LightCannonBullet, "abilities/bullet/lightcannonbullet"}
         };
 
         public static IDictionary<type, string> PREFAB_NAMES { get { return prefabNames; } }
@@ -81,20 +87,27 @@ namespace KBConstants
 
     public class AudioConstants
     {
-        public enum clip { ItemGrab, FactoryItemAccept, FactoryItemFinish, TowerAmbient, CaptureProgress, CaptureComplete, TowerSpawn, TowerDie, PlasmaGunFire, HitConfirm };
+        public enum clip { ItemPickup01,
+            PlasmaGunFire01,
+            MachineGunFire01,
+            CannonFire01,
+            CannonReload01,
+            HitConfirm,
+            MachineGunReload01, MachineGunReload02,
+            RocketFire01,
+            PlasmaReload01 };
 
         private static readonly IDictionary<clip, string> clipNames = new Dictionary<clip, string>
         {
-            {clip.ItemGrab, "Sounds/CyberStorm Select/sling/TR-BodyServos-Move-02"},
-            {clip.FactoryItemAccept, "Sounds/CyberStorm Select/item attach/INTERFACE-SERVOS-06"},
-            {clip.TowerAmbient, "Sounds/CyberStorm Select/capture progress/MACHINE-ELECTRICARC"},
-            {clip.FactoryItemFinish, "Sounds/CyberStorm Select/factory output/T-SERVO-05"},
-            {clip.CaptureProgress, "sounds/cyberstorm select/capture progress/t-rumble-idleloop-04"},
-            {clip.CaptureComplete, "sounds/cyberstorm select/capture success/system on-off-02"},
-            {clip.TowerSpawn, ""},
-            {clip.TowerDie, "sounds/cyberstorm select/tower damage/impact-metal-12"},
-            {clip.PlasmaGunFire, "sounds/cyberstorm select/tower fire/artillery-21"},
-            {clip.HitConfirm, "sounds/hitmarker"}
+            {clip.PlasmaGunFire01, "sounds/cyberstorm select/gun single shots/artillery-08"},
+            {clip.HitConfirm, "sounds/hitmarker"},
+            {clip.MachineGunFire01, "sounds/cyberstorm select/gun single shots/gun-01"},
+            {clip.RocketFire01, "sounds/cyberstorm select/gun single shots/rocket-07"},
+            {clip.MachineGunReload01, "sounds/cyberstorm select/reload/machine-sequence-03"},
+            {clip.MachineGunReload02, "sounds/cyberstorm select/reload/machine-sequence-04"},
+            {clip.PlasmaReload01, "sounds/cyberstorm select/reload/tr_2-reployservo-01"},
+            {clip.ItemPickup01, "sounds/cyberstorm select/item attach/interface-servos-06"},
+            {clip.CannonFire01, "sounds/cyberstorm select/gun single shots/gun-02"}
         };
 
         public static IDictionary<clip, string> CLIP_NAMES { get { return clipNames; } }
