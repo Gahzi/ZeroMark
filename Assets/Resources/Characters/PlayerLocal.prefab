@@ -19,7 +19,6 @@ GameObject:
   - 199: {fileID: 19900000}
   - 143: {fileID: 14300000}
   - 114: {fileID: 11400012}
-  - 114: {fileID: 11400004}
   m_Layer: 0
   m_Name: PlayerLocal
   m_TagString: Player
@@ -2733,7 +2732,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10100, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 2100000, guid: 88f37035dbdd48b44857a78b75bdccf6, type: 3}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -2754,7 +2753,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10100, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 2100000, guid: 88f37035dbdd48b44857a78b75bdccf6, type: 3}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -2796,7 +2795,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10100, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 2100000, guid: 88f37035dbdd48b44857a78b75bdccf6, type: 3}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -2817,7 +2816,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10100, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 2100000, guid: 88f37035dbdd48b44857a78b75bdccf6, type: 3}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -2838,7 +2837,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10100, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 2100000, guid: 88f37035dbdd48b44857a78b75bdccf6, type: 3}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -2859,7 +2858,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10100, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 2100000, guid: 88f37035dbdd48b44857a78b75bdccf6, type: 3}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -2880,7 +2879,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10100, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 2100000, guid: 88f37035dbdd48b44857a78b75bdccf6, type: 3}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -2901,7 +2900,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10100, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 2100000, guid: 88f37035dbdd48b44857a78b75bdccf6, type: 3}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -2922,7 +2921,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10100, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 2100000, guid: 88f37035dbdd48b44857a78b75bdccf6, type: 3}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -2943,7 +2942,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10100, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 2100000, guid: 88f37035dbdd48b44857a78b75bdccf6, type: 3}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -2964,7 +2963,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10100, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 2100000, guid: 88f37035dbdd48b44857a78b75bdccf6, type: 3}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -2985,7 +2984,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10100, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 2100000, guid: 88f37035dbdd48b44857a78b75bdccf6, type: 3}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -4453,7 +4452,7 @@ TextMesh:
   m_FontSize: 40
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Font: {fileID: 12800000, guid: 88f37035dbdd48b44857a78b75bdccf6, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4290199534
@@ -4474,7 +4473,7 @@ TextMesh:
   m_FontSize: 40
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Font: {fileID: 12800000, guid: 88f37035dbdd48b44857a78b75bdccf6, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4282056545
@@ -4516,7 +4515,7 @@ TextMesh:
   m_FontSize: 40
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Font: {fileID: 12800000, guid: 88f37035dbdd48b44857a78b75bdccf6, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4290199534
@@ -4537,7 +4536,7 @@ TextMesh:
   m_FontSize: 40
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Font: {fileID: 12800000, guid: 88f37035dbdd48b44857a78b75bdccf6, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4282056545
@@ -4558,7 +4557,7 @@ TextMesh:
   m_FontSize: 40
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Font: {fileID: 12800000, guid: 88f37035dbdd48b44857a78b75bdccf6, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4290199534
@@ -4579,7 +4578,7 @@ TextMesh:
   m_FontSize: 40
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Font: {fileID: 12800000, guid: 88f37035dbdd48b44857a78b75bdccf6, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4290199534
@@ -4600,7 +4599,7 @@ TextMesh:
   m_FontSize: 40
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Font: {fileID: 12800000, guid: 88f37035dbdd48b44857a78b75bdccf6, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4282056545
@@ -4621,7 +4620,7 @@ TextMesh:
   m_FontSize: 40
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Font: {fileID: 12800000, guid: 88f37035dbdd48b44857a78b75bdccf6, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4282056545
@@ -4642,7 +4641,7 @@ TextMesh:
   m_FontSize: 40
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Font: {fileID: 12800000, guid: 88f37035dbdd48b44857a78b75bdccf6, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4290199534
@@ -4663,7 +4662,7 @@ TextMesh:
   m_FontSize: 40
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Font: {fileID: 12800000, guid: 88f37035dbdd48b44857a78b75bdccf6, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4290199534
@@ -4684,7 +4683,7 @@ TextMesh:
   m_FontSize: 40
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Font: {fileID: 12800000, guid: 88f37035dbdd48b44857a78b75bdccf6, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4282056545
@@ -4705,7 +4704,7 @@ TextMesh:
   m_FontSize: 40
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Font: {fileID: 12800000, guid: 88f37035dbdd48b44857a78b75bdccf6, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4282056545
@@ -4806,22 +4805,6 @@ MonoBehaviour:
   onSerializeTransformOption: 3
   onSerializeRigidBodyOption: 2
   instantiationId: -1
---- !u!114 &11400004
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a3eb0087c9406746a81e9d8feb1ff76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  texture: {fileID: 2800000, guid: c2233c64408b43842b9cc1951a167086, type: 3}
-  angle: 0
-  size: {x: 32, y: 32}
-  ScreenpointToAlign: 3
-  relativePosition: {x: 500, y: 0}
 --- !u!114 &11400006
 MonoBehaviour:
   m_ObjectHideFlags: 1
