@@ -47,9 +47,9 @@ public class KBPlayer : KBControllableGameObject
     public GameObject upperBody;
     public GameObject lowerBody;
     //public GameObject hitbox;
-    //public GameObject hitboxDrone;
-    //public GameObject hitboxMech;
-    //public GameObject hitboxTank;
+    public GameObject hitboxDrone;
+    public GameObject hitboxMech;
+    public GameObject hitboxTank;
 
     #region Player Type Components
 
@@ -123,7 +123,10 @@ public class KBPlayer : KBControllableGameObject
         charController = GetComponent<CharacterController>();
         itemPickupClip = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.ItemPickup01]);
         hitConfirm = Resources.Load<AudioClip>(KBConstants.AudioConstants.CLIP_NAMES[KBConstants.AudioConstants.clip.HitConfirm]);
-        GetComponentInChildren<HitboxBaseScript>().Team = team;
+        hitboxDrone.GetComponent<HitboxBaseScript>().Team = team;
+        hitboxMech.GetComponent<HitboxBaseScript>().Team = team;
+        hitboxTank.GetComponent<HitboxBaseScript>().Team = team;
+        //GetComponentInChildren<HitboxBaseScript>().Team = team;
 
         #endregion Resource & reference loading
 

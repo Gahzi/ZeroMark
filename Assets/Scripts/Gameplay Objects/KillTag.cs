@@ -17,7 +17,6 @@ public class KillTag : KBGameObject
                 player.killTokens *= 2;
                 // play pickup sound;
 
-
                 GameManager.Instance.photonView.RPC("DestroyObject", PhotonTargets.All, photonView.viewID);
                 player.audio.PlayOneShot(player.itemPickupClip);
                 collider.enabled = false;
