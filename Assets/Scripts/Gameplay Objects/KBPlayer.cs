@@ -46,6 +46,10 @@ public class KBPlayer : KBControllableGameObject
     public AudioClip itemPickupClip;
     public GameObject upperBody;
     public GameObject lowerBody;
+    //public GameObject hitbox;
+    //public GameObject hitboxDrone;
+    //public GameObject hitboxMech;
+    //public GameObject hitboxTank;
 
     #region Player Type Components
 
@@ -104,6 +108,9 @@ public class KBPlayer : KBControllableGameObject
         allBodies.Add(lowerBodyMech);
         allBodies.Add(lowerBodyTank);
         allBodies.Add(lowerBodyCore);
+        //allBodies.Add(hitboxDrone);
+        //allBodies.Add(hitboxMech);
+        //allBodies.Add(hitboxTank);
     }
 
     public override void Start()
@@ -729,6 +736,7 @@ public class KBPlayer : KBControllableGameObject
 
                     upperBody = upperBodyDrone;
                     lowerBody = lowerBodyDrone;
+                    //hitbox = hitboxDrone;
                     type = PlayerType.drone;
 
                     break;
@@ -736,6 +744,7 @@ public class KBPlayer : KBControllableGameObject
 
                     upperBody = upperBodyMech;
                     lowerBody = lowerBodyMech;
+                    //hitbox = hitboxMech;
                     type = PlayerType.mech;
 
                     break;
@@ -743,6 +752,7 @@ public class KBPlayer : KBControllableGameObject
 
                     upperBody = upperBodyTank;
                     lowerBody = lowerBodyTank;
+                    //hitbox = hitboxTank;
                     type = PlayerType.tank;
 
                     break;
@@ -759,6 +769,7 @@ public class KBPlayer : KBControllableGameObject
             }
             upperBody.SetActive(true);
             lowerBody.SetActive(true);
+            //hitbox.SetActive(true);
 
             if (team == KBConstants.Team.Blue)
             {
