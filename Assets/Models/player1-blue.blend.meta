@@ -1,25 +1,13 @@
 fileFormatVersion: 2
-guid: 53999b33cf0334740a864f4fb3f77087
+guid: c0a7edadafeb6a446b69d8b917ab1ac1
 ModelImporter:
   serializedVersion: 15
   fileIDToRecycleName:
     100000: //RootNode
-    100002: stick_sml_000
-    100004: stick_sml_001
-    100006: stick_sml_004
     400000: //RootNode
-    400002: stick_sml_000
-    400004: stick_sml_001
-    400006: stick_sml_004
-    2300000: stick_sml_000
-    2300002: stick_sml_001
-    2300004: stick_sml_004
-    3300000: stick_sml_000
-    3300002: stick_sml_001
-    3300004: stick_sml_004
-    4300000: stick_sml_001
-    4300002: stick_sml_000
-    4300004: stick_sml_004
+    2300000: //RootNode
+    3300000: //RootNode
+    4300000: stick_sml_000
     7400000: Default Take
     9500000: //RootNode
   materials:

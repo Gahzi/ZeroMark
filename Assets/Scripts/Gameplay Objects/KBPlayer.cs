@@ -1,20 +1,22 @@
 ﻿using KBConstants;
-using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(PhotonView))]
 [RequireComponent(typeof(CharacterController))]
 public class KBPlayer : KBControllableGameObject
 {
-
     #region CONSTANTS
+
     private static readonly float hitFXLength = 0.250f;
-    #endregion
+
+    #endregion CONSTANTS
 
     public enum ControlStyle { ThirdPerson, TopDown };
 
     public ControlStyle controlStyle;
+    private bool tankStyleMove;
     public PlayerType type;
     public PlayerStats stats;
     public bool acceptingInputs = true;
@@ -27,8 +29,6 @@ public class KBPlayer : KBControllableGameObject
     public float boostRechargeRate;
     public float boostMax;
 
-    public int level;
-
     public TimerScript timer;
     private float movespeed;
     private float lowerbodyRotateSpeed;
@@ -36,35 +36,48 @@ public class KBPlayer : KBControllableGameObject
 
     private CharacterController charController;
 
-    private int layerMask;
-
     public string playerName;
     public PhotonPlayer networkPlayer;
 
     private Vector3 latestCorrectPos;
     private Vector3 onUpdatePos;
     private float fraction;
-    
-    public AudioClip grabSound;
+
+    public AudioClip itemPickupClip;
     public GameObject upperBody;
+    public GameObject lowerBody;
+
+    #region Player Type Components
+
+    public GameObject upperBodyDrone;
+    public GameObject lowerBodyDrone;
+    public GameObject upperBodyMech;
+    public GameObject lowerBodyMech;
+    public GameObject upperBodyTank;
+    public GameObject lowerBodyTank;
+    public GameObject upperBodyCore;
+    public GameObject lowerBodyCore;
+    private List<GameObject> allBodies;
+
+    #endregion Player Type Components
+
     public Vector3 mousePos;
     public Vector3 playerPositionOnScreen;
     public Vector3 mousePlayerDiff;
-    
+
     public List<PlayerSpawnPoint> teamSpawnpoints;
     public float respawnTime;
     private int respawnTimer;
-    public int upgradePoints;
+    //public int upgradePoints;
     public int maxHealth;
-    public int[] pointToLevel = new int[4];
 
     public Material redMat;
     public Material blueMat;
-    public MeshRenderer teamIndicator;
+    //public MeshRenderer teamIndicator;
     private AudioClip hitConfirm;
     private float hitFXTimer;
     public GameObject hitExplosion;
-    public AudioClip gotHitSFX;
+    public AudioClip[] gotHitSFX;
     public AudioClip deadSound;
     public AudioClip respawnSound;
     public AudioClip dropSound;
@@ -72,73 +85,85 @@ public class KBPlayer : KBControllableGameObject
     public ProjectileAbilityBaseScript[] gun;
     public int killTokens;
     private bool triggerLockout;
-    private int activeAbility;
-    private bool autoFire;
-    private bool isShooting;
+
+    private bool secondaryWeaponLinkedFire;
+    private int lastPrimaryFire;
+    private bool primaryWeaponLinkedFire;
+    private int lastSecondaryFire;
+
+    public new void Awake()
+    {
+        base.Awake();
+
+        allBodies = new List<GameObject>(6);
+        allBodies.Add(upperBodyDrone);
+        allBodies.Add(upperBodyMech);
+        allBodies.Add(upperBodyTank);
+        allBodies.Add(upperBodyCore);
+        allBodies.Add(lowerBodyDrone);
+        allBodies.Add(lowerBodyMech);
+        allBodies.Add(lowerBodyTank);
+        allBodies.Add(lowerBodyCore);
+    }
 
     public override void Start()
     {
         base.Start();
-        acceptingInputs = true;
-        waitingForRespawn = false;
-        triggerLockout = false;
+
+        Screen.showCursor = false;
+
+        #region Resource & reference loading
         charController = GetComponent<CharacterController>();
-        grabSound = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.ItemGrab]);
+        itemPickupClip = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.ItemPickup01]);
+        hitConfirm = Resources.Load<AudioClip>(KBConstants.AudioConstants.CLIP_NAMES[KBConstants.AudioConstants.clip.HitConfirm]);
+        GetComponentInChildren<HitboxBaseScript>().Team = team;
+
+        #endregion Resource & reference loading
+
         latestCorrectPos = transform.position;
         onUpdatePos = transform.position;
-        isShooting = false;
-        hitConfirm = Resources.Load<AudioClip>(KBConstants.AudioConstants.CLIP_NAMES[KBConstants.AudioConstants.clip.HitConfirm]);
-        SetupAbilities();
-        GetComponentInChildren<HitboxBaseScript>().Team = team;
-        autoFire = false;
-        movespeed = stats.speed;
-        lowerbodyRotateSpeed = stats.lowerbodyRotationSpeed;
 
+        
 
+        InitializeForRespawn();
 
-        int itemLayer = 8;
-        int towerLayer = 13;
-        int modelLayer = 15;
-        int layerMask1 = 1 << itemLayer;
-        int layerMask2 = 1 << towerLayer;
-        int layerMask3 = 1 << modelLayer;
-        layerMask = layerMask1 | layerMask2 | layerMask3;
+        #region Spawning
 
         teamSpawnpoints = new List<PlayerSpawnPoint>();
+        FindTeamSpawnpoints();
+        RespawnToPrespawn();
+        #endregion Spawning
+    }
 
-        switch (team)
+    private void InitializeForRespawn()
+    {
+        switch (type)
         {
-            case Team.Red:
-                {
-                    teamIndicator.material = redMat;
-                    FindTeamSpawnpoints();
-                    if (teamSpawnpoints.Count > 0)
-                    {
-                        Respawn();
-                    }
-                    break;
-                }
-                
-            case Team.Blue:
-                {
-                    teamIndicator.material = blueMat;
-                    FindTeamSpawnpoints();
-                    if (teamSpawnpoints.Count > 0)
-                    {
-                        Respawn();
-                    }
-                    break;
-                }
-                
-            case Team.None:
-                {
-                    enabled = false;
-                    break;
-                }
-                
+            case PlayerType.mech:
+                tankStyleMove = false;
+                break;
+
+            case PlayerType.drone:
+                tankStyleMove = true;
+                break;
+
+            case PlayerType.tank:
+                tankStyleMove = true;
+                break;
+
+            case PlayerType.core:
+                tankStyleMove = true;
+                break;
+
             default:
                 break;
         }
+
+        acceptingInputs = true;
+        waitingForRespawn = false;
+        triggerLockout = false;
+        movespeed = stats.speed;
+        lowerbodyRotateSpeed = stats.lowerbodyRotationSpeed;
     }
 
     private void OnDrawGizmos()
@@ -148,9 +173,6 @@ public class KBPlayer : KBControllableGameObject
 
     private void FixedUpdate()
     {
-        Screen.showCursor = false;
-       
-
         if (invulnerabilityTime > 0)
         {
             invulnerabilityTime -= Time.deltaTime;
@@ -166,54 +188,47 @@ public class KBPlayer : KBControllableGameObject
             StartCoroutine(Lockout(bankLockoutTime));
         }
 
-        if (!Input.GetButton("Boost"))
-        {
-            boostTime += boostRechargeRate * Time.deltaTime;
-            boostTime = Mathf.Clamp(boostTime, 0.0f, boostMax);
-        }
-
         mousePos = Input.mousePosition;
         fraction = fraction + Time.deltaTime * 9;
 
         if (photonView.isMine)
         {
-            playerPositionOnScreen = Camera.main.WorldToScreenPoint(transform.position);
-            mousePlayerDiff = playerPositionOnScreen - mousePos;
-            ControlKBAM();
+            if (acceptingInputs)
+            {
+
+                playerPositionOnScreen = Camera.main.WorldToScreenPoint(transform.position);
+                mousePlayerDiff = playerPositionOnScreen - mousePos;
+                ControlKBAM();
+
+                if (!Input.GetButton("Boost"))
+                {
+                    boostTime += boostRechargeRate * Time.deltaTime;
+                    boostTime = Mathf.Clamp(boostTime, 0.0f, boostMax);
+                }
+            }
         }
         else
         {
             transform.localPosition = Vector3.Lerp(onUpdatePos, latestCorrectPos, fraction);    // set our pos between A and B
         }
 
-        if (isShooting)
-        {
-            gun[activeAbility].PlayerFire();
-            if (gun[activeAbility].ammo == 0)
-            {
-                gun[activeAbility].PlayerTriggerReload();
-                isShooting = false;
-            }   
-        }
-
         CheckHealth();
     }
 
-    void OnGUI()
+    private void OnGUI()
     {
         if (networkPlayer.isLocal)
         {
-            if (gun[activeAbility].reloading)
-            {
-                GUI.Box(new Rect(Screen.width / 2, Screen.height / 2 + 100, 100, 20), "RELOADING");
-            }
-            
+            //if (gun[activeAbility].reloading)
+            //{
+            //    GUI.Box(new Rect(Screen.width / 2, Screen.height / 2 + 100, 100, 20), "RELOADING");
+            //}
 
-            GUI.Box(new Rect(0, 0, 100, 80),
-                "Kill Tokens" + System.Environment.NewLine +
-                killTokens.ToString() + System.Environment.NewLine
-                );
-            GUI.Box(new Rect(0, 60, 100, 40), "Boost" + System.Environment.NewLine + boostTime.ToString("0.00"));
+            //GUI.Box(new Rect(0, 0, 100, 80),
+            //    "Kill Tokens" + System.Environment.NewLine +
+            //    killTokens.ToString() + System.Environment.NewLine
+            //    );
+            //GUI.Box(new Rect(0, 60, 100, 40), "Boost" + System.Environment.NewLine + boostTime.ToString("0.00"));
 
             if (triggerLockout)
             {
@@ -222,26 +237,28 @@ public class KBPlayer : KBControllableGameObject
         }
     }
 
-
     private void OnPhotonInstantiate(PhotonMessageInfo msg)
     {
-        // This is our own player
-        if (photonView.isMine)
+        networkPlayer = msg.sender;
+        name += msg.sender.name;
+        GameManager.Instance.players.Add(this);
+    }
+
+    [RPC]
+    public void Setup(PhotonPlayer netPlayer, int tm)
+    {
+        Team playerTeam = (Team)tm;
+        networkPlayer = netPlayer;
+        team = playerTeam;
+
+        if (networkPlayer == PhotonNetwork.player)
         {
+            GameManager.Instance.localPlayer = this;
             GameObject newPlayerCameraObject = (GameObject)Instantiate(Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.PlayerCamera]));
             newPlayerCameraObject.transform.parent = transform;
             newPlayerCameraObject.GetComponent<KBCamera>().attachedPlayer = this;
             Camera.SetupCurrent(newPlayerCameraObject.GetComponent<Camera>());
         }
-        // This is just some remote controlled player, don't execute direct
-        // user input on this. DO enable multiplayer controll
-        else
-        {
-            name += msg.sender.name;
-        }
-
-        networkPlayer = msg.sender;
-        GameManager.Instance.players.Add(this);
     }
 
     /// <summary>
@@ -263,23 +280,17 @@ public class KBPlayer : KBControllableGameObject
             Vector3 pos = transform.localPosition;
             Quaternion rot = upperBody.transform.rotation;
             int hlth = health;
-            int lvl = level;
             int mxhlth = maxHealth;
-            bool isShting = isShooting;
             bool wtngFrRspwn = waitingForRespawn;
             int tm = (int)team;
-            int ab = activeAbility;
             float invltime = invulnerabilityTime;
 
             stream.Serialize(ref pos);
             stream.Serialize(ref rot);
             stream.Serialize(ref hlth);
-            stream.Serialize(ref lvl);
             stream.Serialize(ref mxhlth);
-            stream.Serialize(ref isShting);
             stream.Serialize(ref wtngFrRspwn);
             stream.Serialize(ref tm);
-            stream.Serialize(ref ab);
             stream.Serialize(ref invltime);
         }
         else
@@ -288,23 +299,17 @@ public class KBPlayer : KBControllableGameObject
             Vector3 pos = Vector3.zero;
             Quaternion rot = Quaternion.identity;
             int hlth = 0;
-            int lvl = 0;
             int mxhlth = 0;
-            bool isShting = false;
             bool wtngFrRspwn = false;
             int tm = 0;
-            int ab = 0;
             float invltime = 0.0f;
 
             stream.Serialize(ref pos);
             stream.Serialize(ref rot);
             stream.Serialize(ref hlth);
-            stream.Serialize(ref lvl);
             stream.Serialize(ref mxhlth);
-            stream.Serialize(ref isShting);
             stream.Serialize(ref wtngFrRspwn);
             stream.Serialize(ref tm);
-            stream.Serialize(ref ab);
             stream.Serialize(ref invltime);
 
             latestCorrectPos = pos;                 // save this to move towards it in FixedUpdate()
@@ -313,12 +318,9 @@ public class KBPlayer : KBControllableGameObject
 
             upperBody.transform.rotation = rot;          // this sample doesn't smooth rotation
             health = hlth;
-            level = lvl;
             maxHealth = mxhlth;
-            isShooting = isShting;
             waitingForRespawn = wtngFrRspwn;
             team = (Team)tm;
-            activeAbility = ab;
             invulnerabilityTime = invltime;
         }
     }
@@ -335,10 +337,18 @@ public class KBPlayer : KBControllableGameObject
                 killTokens = 0;
             }
         }
+
+
+        if (other.gameObject.CompareTag("SpawnDrone") || other.gameObject.CompareTag("SpawnMech") || other.gameObject.CompareTag("SpawnTank"))
+        {
+            photonView.RPC("SwitchType", PhotonTargets.AllBuffered, other.gameObject.tag.ToString());
+        }
     }
 
     private void ControlKBAM()
     {
+        float speed = 0;
+
         float modifiedMoveSpeed = 0;
         if (Input.GetButton("Boost") && boostTime == boostMax)
         {
@@ -359,56 +369,159 @@ public class KBPlayer : KBControllableGameObject
                 break;
 
             case ControlStyle.TopDown:
-                Vector3 m = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-                charController.SimpleMove(m.normalized * modifiedMoveSpeed);
 
-                Quaternion newRot = Quaternion.LookRotation(upperBody.transform.position + new Vector3(-mousePlayerDiff.x, 0, -mousePlayerDiff.y));
-                upperBody.transform.rotation = Quaternion.Lerp(upperBody.transform.rotation, newRot, upperbodyRotateSpeed * Time.deltaTime);
+                Vector3 m = Vector3.zero;
+                if (tankStyleMove)
+                {
+                    m = Input.GetAxis("Vertical") * lowerBody.transform.forward;
+                    speed = m.normalized.magnitude * modifiedMoveSpeed;
+                    charController.SimpleMove(m.normalized * modifiedMoveSpeed);
+                    lowerBody.transform.Rotate(Vector3.up, Input.GetAxis("Horizontal") * lowerbodyRotateSpeed * Time.deltaTime);
+
+                    if (type == PlayerType.tank)
+                    {
+                        Quaternion newRot = Quaternion.LookRotation(upperBody.transform.position + new Vector3(-mousePlayerDiff.x, 0, -mousePlayerDiff.y));
+                        upperBody.transform.rotation = Quaternion.Lerp(upperBody.transform.rotation, newRot, upperbodyRotateSpeed * Time.deltaTime);
+                    }
+                    else // Currently Drone case only
+                    {
+                        upperBody.transform.rotation = lowerBody.transform.rotation;
+                    }
+                }
+                else
+                {
+                    Quaternion newRot = Quaternion.LookRotation(upperBody.transform.position + new Vector3(-mousePlayerDiff.x, 0, -mousePlayerDiff.y));
+                    upperBody.transform.rotation = Quaternion.Lerp(upperBody.transform.rotation, newRot, upperbodyRotateSpeed * Time.deltaTime);
+                    m = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+                    speed = m.normalized.magnitude * modifiedMoveSpeed;
+                    Quaternion bottomRotation = Quaternion.LookRotation(m.normalized);
+                    lowerBody.transform.rotation = Quaternion.Lerp(lowerBody.transform.rotation, bottomRotation, 5f * Time.deltaTime);
+                    charController.SimpleMove(m.normalized * modifiedMoveSpeed);
+                }
                 break;
 
             default:
                 break;
         }
 
-        if (autoFire)
+        if (gun.GetLength(0) > 0)
         {
-            if (Input.GetMouseButton(0) && !gun[activeAbility].reloading)
+            if ((Input.GetMouseButton(0) || Input.GetMouseButton(1)))// && !gun[activeAbility].reloading)
             {
-                isShooting = true;
-            }
-            else
-            {
-                isShooting = false;
-            }
-        }
-        else
-        {
-            if (!isShooting && Input.GetMouseButtonDown(0) && !gun[activeAbility].reloading)
-            {
-                isShooting = true;
-            }
-            else if (!isShooting && Input.GetMouseButtonDown(0))
-            {
-                isShooting = false;
-            }
-        }
+                if (Input.GetMouseButton(0))
+                {
+                    if (gun[0].ammo <= 0 || gun[1].ammo <= 0)
+                    {
+                        gun[0].ammo = 0;
+                        gun[1].ammo = 0;
+                        gun[0].PlayerTriggerReload();
+                        gun[1].PlayerTriggerReload();
+                    }
+                    else
+                    {
+                        if (primaryWeaponLinkedFire)
+                        {
+                        int[] guns = { 0,1};
+                        float[] speeds = { speed,speed};
+                        photonView.RPC("Fire", PhotonTargets.All, guns, speeds);
+                        //gun[0].PlayerFire(speed);
+                        //gun[1].PlayerFire(speed);
+                        }
+                        else
+                        {
+                            int otherGun;
+                            if (lastPrimaryFire == 0)
+                            {
+                                otherGun = 1;
+                            }
+                            else
+                            {
+                                otherGun = 0;
+                            }
 
-        if(Input.GetMouseButtonUp(0))
-        {
-            isShooting = false;
-        }
+                            if (gun[lastPrimaryFire].available)
+                            {
+                            //Debug.Log(gun[lastPrimaryFire].cooldown.ToString());
+                            int[] guns = { lastPrimaryFire };
+                            float[] speeds = { speed };
+                            photonView.RPC("Fire", PhotonTargets.All, guns, speeds);
+                            //gun[lastPrimaryFire].PlayerFire(speed);
+                            }
+                            else if (!gun[lastPrimaryFire].available && gun[lastPrimaryFire].halfwayCooled)
+                            {
+                            
+                                lastPrimaryFire = otherGun;
+                            int[] guns = { otherGun };
+                            float[] speeds = { speed };
+                            photonView.RPC("Fire", PhotonTargets.All, guns, speeds);
+                            //gun[otherGun].PlayerFire(speed);
+                            
+                            }
+                        }
+                    }
+                }
+                if (Input.GetMouseButton(1))
+                {
+                    if (gun[2].ammo <= 0 || gun[3].ammo <= 0)
+                    {
+                        gun[2].ammo = 0;
+                        gun[3].ammo = 0;
+                        gun[2].PlayerTriggerReload();
+                        gun[3].PlayerTriggerReload();
+                    }
+                    else
+                    {
 
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            gun[activeAbility].PlayerTriggerReload();
-            isShooting = false;
-        }
+                        if (secondaryWeaponLinkedFire)
+                        {
+                        int[] guns = { 2, 3 };
+                        float[] speeds = { speed, speed };
+                        photonView.RPC("Fire", PhotonTargets.All, guns, speeds);
+                        //gun[2].PlayerFire(speed);
+                        //gun[3].PlayerFire(speed);
+                        }
+                        else
+                        {
+                            int otherGun;
+                            if (lastSecondaryFire == 2)
+                            {
+                                otherGun = 3;
+                            }
+                            else
+                            {
+                                otherGun = 2;
+                            }
+                            if (gun[lastSecondaryFire].available) // TODO This doesn't synchronize as intended. Can shoot same side twice if you let go and wait until it cools.
+                            {
+                            int[] guns = { lastSecondaryFire };
+                            float[] speeds = { speed };
+                            photonView.RPC("Fire", PhotonTargets.All, guns, speeds);
+                            //gun[lastSecondaryFire].PlayerFire(speed);
+                            }
+                            else if (!gun[lastSecondaryFire].available && gun[lastSecondaryFire].halfwayCooled)
+                            {
+                                lastSecondaryFire = otherGun;
+                            int[] guns = { otherGun };
+                            float[] speeds = { speed };
+                            photonView.RPC("Fire", PhotonTargets.All, guns, speeds);
+                            //gun[otherGun].PlayerFire(speed);
+                            
+                            }
+                        }
+                    }
+                }
+            }
+            } 
 
-        if (Input.GetMouseButtonDown(1))
+        
+
+        if (Input.GetKeyDown(KeyCode.Z))
         {
-            //SHERVIN: This must be sent across network.
-            //DropItem();
-            autoFire = !autoFire;
+            secondaryWeaponLinkedFire = !secondaryWeaponLinkedFire;
+        }
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            primaryWeaponLinkedFire = !primaryWeaponLinkedFire;
         }
 
         // DEBUG FUNCTIONS
@@ -417,31 +530,22 @@ public class KBPlayer : KBControllableGameObject
             TakeDamage(1);
         }
 
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-            BankKills();
-        }
+        //if (Input.GetKeyDown(KeyCode.Return))
+        //{
+        //    BankKills();
+        //}
+    }
 
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+    [RPC]
+    private void Fire(int[] gunIndex, float[] speed)
+    {
+        for (int i = 0; i < gunIndex.Length; i++)
         {
-            activeAbility = 0;
+            int rightGun = gunIndex[i];
+            float rightSpeed = speed[i];
+            gun[rightGun].PlayerFire(rightSpeed);
         }
-
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            if (gun.Length > 0)
-            {
-                activeAbility = 1;
-            }
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            if (gun.Length > 1)
-            {
-                activeAbility = 2;
-            }
-        }
+        
     }
 
     private void CheckHealth()
@@ -458,7 +562,7 @@ public class KBPlayer : KBControllableGameObject
             if (!timer.IsTimerActive(respawnTimer))
             {
                 Debug.Log("Respawning!");
-                Respawn();
+                RespawnToPrespawn();
             }
         }
     }
@@ -493,7 +597,7 @@ public class KBPlayer : KBControllableGameObject
             if (currentPlayers[i].networkPlayer == hitPhotonPlayer)
             {
                 Instantiate(hitExplosion, currentPlayers[i].transform.position, Quaternion.identity);
-                gun[activeAbility].audio.PlayOneShot(hitConfirm);
+                gun[0].audio.PlayOneShot(hitConfirm);
             }
         }
     }
@@ -507,7 +611,7 @@ public class KBPlayer : KBControllableGameObject
                 health -= amount;
                 Instantiate(hitExplosion, transform.position, Quaternion.identity);
                 Camera.main.GetComponent<ScreenShake>().StartShake(0.25f, 5.0f);
-                audio.PlayOneShot(gotHitSFX);
+                audio.PlayOneShot(gotHitSFX[Random.Range(0, gotHitSFX.Length)]);
             }
             return health;
         }
@@ -526,20 +630,39 @@ public class KBPlayer : KBControllableGameObject
     [RPC]
     public void NotifyKill(PhotonPlayer killerPlayer)
     {
-        if (killerPlayer.isLocal && photonView.isMine)
+        if (killerPlayer.isLocal && networkPlayer == PhotonNetwork.player)
         {
-            if (killTokens < 3)
-            {
-                killTokens++;
-            }
-            else
-            {
-                killTokens *= 2;
-            }
+            killTokens++;
         }
     }
 
-    private void Respawn()
+    /// <summary>
+    /// Spawns the player in the dropship (type select area)
+    /// </summary>
+    private void RespawnToPrespawn()
+    {
+        killTokens = 0;
+        waitingForRespawn = false;
+        acceptingInputs = true;
+
+        if (team == Team.Blue)
+        {
+            GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagBlue, transform.position, Quaternion.identity, (int)team);
+        }
+        else if (team == Team.Red)
+        {
+            GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagRed, transform.position, Quaternion.identity, (int)team);
+        }
+
+        Camera.main.GetComponent<ScreenShake>().StopShake();
+        transform.position = GameObject.FindGameObjectWithTag("Prespawn").transform.position;
+        health = 1000;
+    }
+
+    /// <summary>
+    /// Spawns the player in the combat area.
+    /// </summary>
+    private void Spawn()
     {
         if (teamSpawnpoints.Count > 0 && photonView.isMine)
         {
@@ -549,8 +672,6 @@ public class KBPlayer : KBControllableGameObject
             health = stats.health;
             maxHealth = health;
             movespeed = stats.speed;
-            level = stats.level;
-            killTokens = 0;
             invulnerabilityTime = spawnProtectionTime;
             lowerbodyRotateSpeed = stats.lowerbodyRotationSpeed;
             upperbodyRotateSpeed = stats.upperbodyRotationSpeed;
@@ -562,18 +683,15 @@ public class KBPlayer : KBControllableGameObject
 
     private void SetupAbilities()
     {
-        gun = gameObject.GetComponentsInChildren<ProjectileAbilityBaseScript>();
+        gun = upperBody.GetComponentsInChildren<ProjectileAbilityBaseScript>();
         for (int i = 0; i < gun.Length; i++)
         {
             gun[i].owner = this;
             gun[i].Team = team;
         }
-        activeAbility = 0;
+        lastPrimaryFire = 0;
+        lastSecondaryFire = 2;
     }
-
-    
-
-    
 
     public void BankKills()
     {
@@ -589,5 +707,117 @@ public class KBPlayer : KBControllableGameObject
         acceptingInputs = true;
         killTokens = GameManager.Instance.AddPointsToScore(team, killTokens);
         triggerLockout = false;
+    }
+
+    private void FireWeapons(int weaponOne, int weaponTwo, bool linked)
+    {
+    }
+
+    [RPC]
+    private void SwitchType(string typeTrigger, PhotonMessageInfo info)
+    {
+        if (networkPlayer == info.sender)
+        {
+            for (int i = 0; i < allBodies.Count; i++)
+            {
+                allBodies[i].SetActive(false);
+            }
+
+            switch (typeTrigger)
+            {
+                case "SpawnDrone":
+
+                    upperBody = upperBodyDrone;
+                    lowerBody = lowerBodyDrone;
+                    type = PlayerType.drone;
+
+                    break;
+                case "SpawnMech":
+
+                    upperBody = upperBodyMech;
+                    lowerBody = lowerBodyMech;
+                    type = PlayerType.mech;
+
+                    break;
+                case "SpawnTank":
+
+                    upperBody = upperBodyTank;
+                    lowerBody = lowerBodyTank;
+                    type = PlayerType.tank;
+
+                    break;
+
+                case "SpawnCore":
+
+                    upperBody = upperBodyCore;
+                    lowerBody = lowerBodyCore;
+                    type = PlayerType.core;
+                    break;
+
+                default:
+                    break;
+            }
+            upperBody.SetActive(true);
+            lowerBody.SetActive(true);
+
+            if (team == KBConstants.Team.Blue)
+            {
+                SetActiveIfFound(this.transform,"BlueBody", true);
+                SetActiveIfFound(this.transform, "RedBody", false);
+            }
+            else
+            {
+                SetActiveIfFound(this.transform,"BlueBody", false);
+                SetActiveIfFound(this.transform,"RedBody", true);
+            }
+
+
+            //Switch Stats
+            GameManager.Instance.SetPlayerStats(networkPlayer);
+            InitializeForRespawn();
+            SetupAbilities();
+
+            
+            Spawn();
+        }
+    }
+
+    private void SetActiveIfFound(Transform trans, string objectName, bool val)
+    {
+        GameObject foundObject = SetActiveChildIfFound(trans, objectName, val);
+
+        if (foundObject != null)
+        {
+            foundObject.SetActive(val);
+        }
+        else
+        {
+            Debug.LogWarning("[Player] Couldn't find player model");
+        }
+    }
+
+
+    private GameObject SetActiveChildIfFound(Transform cTranform,string objectName, bool val)
+    {
+        GameObject foundGameObject = null;
+        
+        if(cTranform.gameObject.name.Equals(objectName))
+        {
+            return cTranform.gameObject;
+        }
+        else
+        {
+            for (int i = 0; i < cTranform.childCount; i++)
+            {
+                Transform t = cTranform.GetChild(i);
+                foundGameObject = SetActiveChildIfFound(t, objectName, val);
+                if (foundGameObject != null)
+                {
+                    break;
+                }
+            }
+        }
+
+        return foundGameObject;
     }
 }

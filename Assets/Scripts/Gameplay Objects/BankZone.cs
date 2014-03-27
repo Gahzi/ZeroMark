@@ -16,6 +16,8 @@ public class BankZone : Zone
         }
     }
 
+    public FloatingText textPrefab;
+
     public override void Start()
     {
         base.Start();
@@ -24,6 +26,8 @@ public class BankZone : Zone
         bluePoints = 0;
         rigidbody.isKinematic = true;
         collider.isTrigger = true;
+        //textPrefab = Resources.Load("gui/floatingtext") as FloatingText;
+        ObjectPool.CreatePool(textPrefab);
     }
 
     public void AddPoints(int points, KBConstants.Team team)
@@ -69,14 +73,15 @@ public class BankZone : Zone
 
     private void RunPointAddFeedback(int points, KBConstants.Team team)
     {
-        GameObject obj = PhotonNetwork.Instantiate("gui/floatingtext", transform.position, Quaternion.identity, 0);
-        obj.GetComponent<TextMesh>().text = "+" + points.ToString();
+        FloatingText t = ObjectPool.Spawn(textPrefab, transform.position);
+        t.Init();
+        t.GetComponent<TextMesh>().text = "+" + points.ToString();
     }
 
     private void RunCapturedFeedback(KBConstants.Team team)
     {
-        GameObject obj = PhotonNetwork.Instantiate("gui/floatingtext", transform.position, Quaternion.identity, 0);
-        obj.GetComponent<DestroyAfterTime>().lifetime = 10000000;
+        FloatingText obj = ObjectPool.Spawn(textPrefab, transform.position);
+        obj.Init(10000f);
         obj.GetComponent<FloatUp>().upSpeed = 0;
         TextMesh t = obj.GetComponent<TextMesh>();
         t.text = "CAPTURED";

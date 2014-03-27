@@ -30,4 +30,10 @@ MonoBehaviour:
   - SetOwner
   - NotifyKill
   - ConfirmHitToOthers
+  - SetPlayerStats
+  - CreateObject
+  - DestroyObject
+  - Setup
+  - SwitchType
+  - Fire
   DisableAutoOpenWizard: 0

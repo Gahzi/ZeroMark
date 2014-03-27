@@ -2,12 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class MainMenuScript : Photon.MonoBehaviour 
+public class MainMenuScript : Photon.MonoBehaviour
 {
-
     //GUI vars
 
     private string currentGUIMethod = "join";
+    private string currentGUIWindow = "none";
 
     private Vector2 JoinScrollPosition;
 
@@ -16,11 +16,13 @@ public class MainMenuScript : Photon.MonoBehaviour
     private string failConnectMesage = "";
     bool isConnectingToRoom = false;
 
+    public Font menuFont;
+    public GUISkin skin;
 
+    public GameObject playButton;
 
     void Awake()
     {
-
         //Default join values
         joinRoomName = "";
 
@@ -28,12 +30,13 @@ public class MainMenuScript : Photon.MonoBehaviour
         hostTitle = PlayerPrefs.GetString("hostTitle", "Guests server");
         hostMaxPlayers = PlayerPrefs.GetInt("hostPlayers", 8);
 
-   
-
         if (!PhotonNetwork.connected)
             PhotonNetwork.ConnectUsingSettings("1.0");
     }
 
+    void Start()
+    {
+    }
 
     void OnConnectedToPhoton()
     {
@@ -52,9 +55,9 @@ public class MainMenuScript : Photon.MonoBehaviour
         failConnectMesage = "Failed to connect to Photon: " + status;
     }
 
-
     void OnGUI()
     {
+        GUI.skin = skin;
         if (!PhotonNetwork.connected)
         {
             GUILayout.Label("Connecting..");
@@ -68,27 +71,23 @@ public class MainMenuScript : Photon.MonoBehaviour
                 }
             }
         }
-        else
+        else if (currentGUIWindow == "serverMenu")
         {
-            GUILayout.Window(2, new Rect(Screen.width / 2 - 600 / 2, Screen.height / 2 - 550 / 2, 600, 550), WindowGUI, "");
+            GUILayout.Window(2, new Rect(Screen.width / 2 - 600 / 2, Screen.height / 2 - 550 / 2, 600, 550), ServerMenu, "");
         }
     }
 
-
-
-
-
-    void WindowGUI(int wID)
+    void ServerMenu(int wID)
     {
         GUILayout.BeginHorizontal();
-        GUILayout.Label("Multiplayer menu");
+        GUILayout.Label("Multiplayer menu", "menuText");
         GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();
         if (currentGUIMethod == "join")
         {
-            GUILayout.Label("Join");
+            GUILayout.Label("Join", "menuText");
         }
         else
         {
@@ -99,7 +98,7 @@ public class MainMenuScript : Photon.MonoBehaviour
         }
         if (currentGUIMethod == "create")
         {
-            GUILayout.Label("Create");
+            GUILayout.Label("Create", "menuText");
         }
         else
         {
@@ -112,27 +111,21 @@ public class MainMenuScript : Photon.MonoBehaviour
         GUILayout.EndHorizontal();
         GUILayout.Space(25);
 
-
         if (currentGUIMethod == "join")
             JoinMenu();
         else
             HostMenu();
-
     }
-
 
     void JoinMenu()
     {
-
         if (isConnectingToRoom)
         {
-
-            GUILayout.Label("Trying to connect to a room.");
-
+            GUILayout.Label("Trying to connect to a room.", "menuText");
         }
         else if (failConnectMesage != "")
         {
-            GUILayout.Label("The game failed to connect:\n" + failConnectMesage);
+            GUILayout.Label("The game failed to connect:\n" + failConnectMesage, "menuText");
             GUILayout.Space(10);
             if (GUILayout.Button("Cancel"))
             {
@@ -141,14 +134,12 @@ public class MainMenuScript : Photon.MonoBehaviour
         }
         else
         {
-
             //Masterlist
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Game list:");
-
+            GUILayout.Label("Game list:", "menuText");
 
             GUILayout.FlexibleSpace();
-            if ( PhotonNetwork.GetRoomList().Length > 0 &&
+            if (PhotonNetwork.GetRoomList().Length > 0 &&
                 GUILayout.Button("Join random game"))
             {
                 PhotonNetwork.JoinRandomRoom();
@@ -163,28 +154,23 @@ public class MainMenuScript : Photon.MonoBehaviour
             GUILayout.Label("Players", GUILayout.Width(55));
             GUILayout.EndHorizontal();
 
-
             JoinScrollPosition = GUILayout.BeginScrollView(JoinScrollPosition);
             foreach (RoomInfo room in PhotonNetwork.GetRoomList())
             {
                 GUILayout.BeginHorizontal();
 
-
-                if ((room.playerCount < room.maxPlayers || room.maxPlayers<=0) &&
+                if ((room.playerCount < room.maxPlayers || room.maxPlayers <= 0) &&
                     GUILayout.Button("" + room.name, GUILayout.Width(200)))
                 {
                     PhotonNetwork.JoinRoom(room.name);
                 }
                 GUILayout.Label(room.playerCount + "/" + room.maxPlayers, GUILayout.Width(55));
-        
-
-
 
                 GUILayout.EndHorizontal();
             }
             if (PhotonNetwork.GetRoomList().Length == 0)
             {
-                GUILayout.Label("No games are running right now");
+                GUILayout.Label("No games are running right now", "menuText");
             }
             GUILayout.EndScrollView();
 
@@ -194,9 +180,9 @@ public class MainMenuScript : Photon.MonoBehaviour
             //DIRECT JOIN
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Join by name:");
+            GUILayout.Label("Join by name:", "menuText");
             GUILayout.Space(5);
-            GUILayout.Label("Room name");
+            GUILayout.Label("Room name", "menuText");
             joinRoomName = (GUILayout.TextField(joinRoomName + "", GUILayout.Width(50)) + "");
 
             if (GUILayout.Button("Connect"))
@@ -206,10 +192,8 @@ public class MainMenuScript : Photon.MonoBehaviour
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
             GUILayout.Space(4);
-
         }
     }
-
 
     void OnPhotonCreateRoomFailed()
     {
@@ -229,7 +213,6 @@ public class MainMenuScript : Photon.MonoBehaviour
         failConnectMesage = "Could not connect to random room; no rooms were available.";
     }
 
-
     void OnJoinedRoom()
     {
         //Stop communication until in the game
@@ -237,23 +220,16 @@ public class MainMenuScript : Photon.MonoBehaviour
         Application.LoadLevel(Application.loadedLevel + 1);
     }
 
-
-
-
     private string hostTitle;
     //private string hostDescription;
     private int hostMaxPlayers;
-    
 
     void HostMenu()
     {
-
-
         GUILayout.BeginHorizontal();
         GUILayout.Label("Host a new game:");
         GUILayout.EndHorizontal();
 
-   
         GUILayout.BeginHorizontal();
         GUILayout.Label("Title:");
         GUILayout.FlexibleSpace();
@@ -289,7 +265,6 @@ public class MainMenuScript : Photon.MonoBehaviour
         hostMaxPlayers = Mathf.Clamp(hostMaxPlayers, 1, 64);
     }
 
-
     void StartHostingGame(string hostSettingTitle, int hostPlayers)
     {
         if (hostSettingTitle == "")
@@ -302,8 +277,20 @@ public class MainMenuScript : Photon.MonoBehaviour
         PhotonNetwork.CreateRoom(hostSettingTitle, true, true, hostPlayers);
     }
 
+    public void CloseAllWindows()
+    {
+        currentGUIWindow = "none";
+    }
 
+    public void OpenServerBrowser()
+    {
+        currentGUIWindow = "serverMenu";
+    }
 
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
 
     //
     // CUSTOM HOST LIST
@@ -314,7 +301,6 @@ public class MainMenuScript : Photon.MonoBehaviour
     /*
     private List<MyRoomData> hostDataList = new List<MyRoomData>();
 
-     
     void OnReceivedRoomList()
     {
         Debug.Log("We received a new room list, total rooms: " + PhotonNetwork.GetRoomList().Length);
@@ -327,23 +313,17 @@ public class MainMenuScript : Photon.MonoBehaviour
         ReloadHostList();
     }
 
-
-
     void ReloadHostList()
-    {        
+    {
         hostDataList =new List<MyRoomData>();
         foreach(Room room in PhotonNetwork.GetRoomList())
         {
             MyRoomData cHost= new MyRoomData();
             cHost.room = room;
-      
-            
+
             hostDataList.Add(cHost);
-            
         }
     }
-
-
 
     public class MyRoomData
     {
@@ -363,9 +343,7 @@ public class MainMenuScript : Photon.MonoBehaviour
         }
 
         //Example custom fields
-        public int gameVersion; // You could 
+        public int gameVersion; // You could
     }
      */
-
-
 }

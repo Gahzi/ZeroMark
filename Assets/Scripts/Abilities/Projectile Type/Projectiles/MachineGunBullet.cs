@@ -5,7 +5,7 @@ public class MachineGunBullet : ProjectileBaseScript {
 
     #region CONSTANTS
 
-    public static int MACHINE_GUN_DAMAGE = 1;
+    public static int _damage = 1;
 
     #endregion CONSTANTS
 
@@ -13,11 +13,18 @@ public class MachineGunBullet : ProjectileBaseScript {
     {
         base.Start();
         collideWithProjectiles = false;
-        damage = MACHINE_GUN_DAMAGE;
+        damage = _damage;
     }
 
     protected override void Update()
     {
         base.Update();
+    }
+
+    public override void DoOnHit()
+    {
+        AreaOfEffectDamageScript a = ObjectPool.Spawn(explosionPrefab, transform.position);
+        a.Init();
+        base.DoOnHit();
     }
 }

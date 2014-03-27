@@ -17,7 +17,6 @@ public abstract class KBGameObject : Photon.MonoBehaviour
         }
     }
     public int health;
-    protected GameManager gm;
     protected List<KBGameObject> collisionObjects;
 
     protected void Awake()
@@ -33,7 +32,6 @@ public abstract class KBGameObject : Photon.MonoBehaviour
 
     public virtual void Start()
     {
-        gm = GameManager.Instance;
     }
 
     protected virtual void FixedUpdate()
