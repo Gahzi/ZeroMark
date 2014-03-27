@@ -7,6 +7,7 @@ public class MainMenuScript : Photon.MonoBehaviour
     //GUI vars
 
     private string currentGUIMethod = "join";
+    private string currentGUIWindow = "none";
 
     private Vector2 JoinScrollPosition;
 
@@ -14,6 +15,11 @@ public class MainMenuScript : Photon.MonoBehaviour
 
     private string failConnectMesage = "";
     bool isConnectingToRoom = false;
+
+    public Font menuFont;
+    public GUISkin skin;
+
+    public GameObject playButton;
 
     void Awake()
     {
@@ -26,6 +32,10 @@ public class MainMenuScript : Photon.MonoBehaviour
 
         if (!PhotonNetwork.connected)
             PhotonNetwork.ConnectUsingSettings("1.0");
+    }
+
+    void Start()
+    {
     }
 
     void OnConnectedToPhoton()
@@ -47,6 +57,7 @@ public class MainMenuScript : Photon.MonoBehaviour
 
     void OnGUI()
     {
+        GUI.skin = skin;
         if (!PhotonNetwork.connected)
         {
             GUILayout.Label("Connecting..");
@@ -60,23 +71,23 @@ public class MainMenuScript : Photon.MonoBehaviour
                 }
             }
         }
-        else
+        else if (currentGUIWindow == "serverMenu")
         {
-            GUILayout.Window(2, new Rect(Screen.width / 2 - 600 / 2, Screen.height / 2 - 550 / 2, 600, 550), WindowGUI, "");
+            GUILayout.Window(2, new Rect(Screen.width / 2 - 600 / 2, Screen.height / 2 - 550 / 2, 600, 550), ServerMenu, "");
         }
     }
 
-    void WindowGUI(int wID)
+    void ServerMenu(int wID)
     {
         GUILayout.BeginHorizontal();
-        GUILayout.Label("Multiplayer menu");
+        GUILayout.Label("Multiplayer menu", "menuText");
         GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();
         if (currentGUIMethod == "join")
         {
-            GUILayout.Label("Join");
+            GUILayout.Label("Join", "menuText");
         }
         else
         {
@@ -87,7 +98,7 @@ public class MainMenuScript : Photon.MonoBehaviour
         }
         if (currentGUIMethod == "create")
         {
-            GUILayout.Label("Create");
+            GUILayout.Label("Create", "menuText");
         }
         else
         {
@@ -110,11 +121,11 @@ public class MainMenuScript : Photon.MonoBehaviour
     {
         if (isConnectingToRoom)
         {
-            GUILayout.Label("Trying to connect to a room.");
+            GUILayout.Label("Trying to connect to a room.", "menuText");
         }
         else if (failConnectMesage != "")
         {
-            GUILayout.Label("The game failed to connect:\n" + failConnectMesage);
+            GUILayout.Label("The game failed to connect:\n" + failConnectMesage, "menuText");
             GUILayout.Space(10);
             if (GUILayout.Button("Cancel"))
             {
@@ -125,7 +136,7 @@ public class MainMenuScript : Photon.MonoBehaviour
         {
             //Masterlist
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Game list:");
+            GUILayout.Label("Game list:", "menuText");
 
             GUILayout.FlexibleSpace();
             if (PhotonNetwork.GetRoomList().Length > 0 &&
@@ -159,7 +170,7 @@ public class MainMenuScript : Photon.MonoBehaviour
             }
             if (PhotonNetwork.GetRoomList().Length == 0)
             {
-                GUILayout.Label("No games are running right now");
+                GUILayout.Label("No games are running right now", "menuText");
             }
             GUILayout.EndScrollView();
 
@@ -169,9 +180,9 @@ public class MainMenuScript : Photon.MonoBehaviour
             //DIRECT JOIN
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Join by name:");
+            GUILayout.Label("Join by name:", "menuText");
             GUILayout.Space(5);
-            GUILayout.Label("Room name");
+            GUILayout.Label("Room name", "menuText");
             joinRoomName = (GUILayout.TextField(joinRoomName + "", GUILayout.Width(50)) + "");
 
             if (GUILayout.Button("Connect"))
@@ -264,6 +275,21 @@ public class MainMenuScript : Photon.MonoBehaviour
         hostPlayers = Mathf.Clamp(hostPlayers, 0, 64);
 
         PhotonNetwork.CreateRoom(hostSettingTitle, true, true, hostPlayers);
+    }
+
+    public void CloseAllWindows()
+    {
+        currentGUIWindow = "none";
+    }
+
+    public void OpenServerBrowser()
+    {
+        currentGUIWindow = "serverMenu";
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 
     //
