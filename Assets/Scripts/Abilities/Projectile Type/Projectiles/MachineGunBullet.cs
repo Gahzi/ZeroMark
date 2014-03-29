@@ -5,7 +5,7 @@ public class MachineGunBullet : ProjectileBaseScript {
 
     #region CONSTANTS
 
-    public static int _damage = 10;
+    public static int _damage = 15;
 
     #endregion CONSTANTS
 

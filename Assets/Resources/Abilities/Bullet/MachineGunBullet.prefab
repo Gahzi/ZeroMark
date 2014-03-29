@@ -119,7 +119,7 @@ MonoBehaviour:
   lifetime: .5
   damage: 1
   owner: {fileID: 0}
-  projectileSpeed: 40
+  projectileSpeed: 50
   inheritSpeed: 0
   collideWithProjectiles: 0
   collideWithEnvironment: 1
@@ -134,7 +134,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1
+  m_Radius: 1.22000003
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!198 &19800000
 ParticleSystem:
