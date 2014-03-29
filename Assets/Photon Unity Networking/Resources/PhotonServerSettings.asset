@@ -36,4 +36,5 @@ MonoBehaviour:
   - Setup
   - SwitchType
   - Fire
+  - Reload
   DisableAutoOpenWizard: 0
