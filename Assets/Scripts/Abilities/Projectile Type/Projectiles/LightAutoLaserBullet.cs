@@ -4,7 +4,7 @@ public class LightAutoLaserBullet : ProjectileBaseScript
 {
     #region CONSTANTS
 
-    public static int _damage = 1;
+    public static int _damage = 10;
 
     #endregion CONSTANTS
 

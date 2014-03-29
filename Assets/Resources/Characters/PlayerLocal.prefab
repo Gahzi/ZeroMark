@@ -4872,9 +4872,6 @@ MonoBehaviour:
   invulnerabilityTime: 0
   spawnProtectionTime: 3
   bankLockoutTime: 3
-  boostTime: 0
-  boostRechargeRate: .25
-  boostMax: 1
   timer: {fileID: 11400012}
   playerName: 
   itemPickupClip: {fileID: 0}

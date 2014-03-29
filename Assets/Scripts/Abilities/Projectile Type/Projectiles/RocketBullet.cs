@@ -6,7 +6,7 @@ public class RocketBullet : ProjectileBaseScript
 
     #region CONSTANTS
 
-    public static int ROCKET_DAMAGE = 1;
+    public static int _damage = 100;
     public float rocketInitSpeed;
 
     #endregion CONSTANTS
@@ -16,7 +16,7 @@ public class RocketBullet : ProjectileBaseScript
     public override void Start()
     {
         base.Start();
-        damage = ROCKET_DAMAGE;
+        damage = _damage;
         targetSpeed = projectileSpeed;
         projectileSpeed = rocketInitSpeed;
     }

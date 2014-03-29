@@ -28,7 +28,7 @@ namespace KBConstants
             {type.PlasmaBullet, "Abilities/bullet/PlasmaBullet"},
             {type.BasicRigidbodyCube, "Environment/BasicRigidbodyCube"},
             {type.MachinegunBullet, "Abilities/bullet/machinegunbullet"},
-            {type.Rocket, "abilities/bullet/rocket"},
+            {type.Rocket, "abilities/bullet/rocketbullet"},
             {type.KillTagBlue, "items/killtagblue"},
             {type.KillTagRed, "items/killtagred"},
             {type.LightAutoLaserBullet, "abilities/bullet/lightautolaserbullet"},

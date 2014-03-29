@@ -25,10 +25,6 @@ public class KBPlayer : KBControllableGameObject
     public float spawnProtectionTime;
     public float bankLockoutTime;
 
-    public float boostTime;
-    public float boostRechargeRate;
-    public float boostMax;
-
     public TimerScript timer;
     private float movespeed;
     private float lowerbodyRotateSpeed;
@@ -205,16 +201,17 @@ public class KBPlayer : KBControllableGameObject
         {
             if (acceptingInputs)
             {
-
+                if (Input.GetAxis("Mouse ScrollWheel") > 0)
+                {
+                    Camera.main.orthographicSize--;
+                }
+                else if (Input.GetAxis("Mouse ScrollWheel") < 0)
+                {
+                    Camera.main.orthographicSize++;
+                }
                 playerPositionOnScreen = Camera.main.WorldToScreenPoint(transform.position);
                 mousePlayerDiff = playerPositionOnScreen - mousePos;
                 ControlKBAM();
-
-                if (!Input.GetButton("Boost"))
-                {
-                    boostTime += boostRechargeRate * Time.deltaTime;
-                    boostTime = Mathf.Clamp(boostTime, 0.0f, boostMax);
-                }
             }
         }
         else
@@ -358,17 +355,8 @@ public class KBPlayer : KBControllableGameObject
     private void ControlKBAM()
     {
         float speed = 0;
-
         float modifiedMoveSpeed = 0;
-        if (Input.GetButton("Boost") && boostTime == boostMax)
-        {
-            modifiedMoveSpeed = movespeed * 10;
-            boostTime = 0;
-        }
-        else
-        {
-            modifiedMoveSpeed = movespeed;
-        }
+        modifiedMoveSpeed = movespeed;
 
         switch (controlStyle)
         {
@@ -537,7 +525,7 @@ public class KBPlayer : KBControllableGameObject
         // DEBUG FUNCTIONS
         if (Input.GetKeyDown(KeyCode.T))
         {
-            TakeDamage(1);
+            TakeDamage(100);
         }
 
         //if (Input.GetKeyDown(KeyCode.Return))
