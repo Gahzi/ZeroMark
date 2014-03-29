@@ -35,6 +35,7 @@ public class KeepMouseInWindow : MonoBehaviour
 
     public void Start()
     {
+        /*
         SetPosition(windowPosX, windowPosY);
         RECT cursorLimits;
         cursorLimits.Left = windowPosX;
@@ -42,6 +43,7 @@ public class KeepMouseInWindow : MonoBehaviour
         cursorLimits.Right = Screen.width - 1 + windowPosX;
         cursorLimits.Bottom = Screen.height - 1 + windowPosY;
         ClipCursor(ref cursorLimits);
+        */
     }
 
 }
