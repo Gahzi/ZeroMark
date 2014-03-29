@@ -66,12 +66,12 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
                         {
                             o.gameObject.GetComponent<KBPlayer>().Die(owner.gameObject);
                         }
-                        owner.ConfirmHit(o.gameObject.GetComponent<KBPlayer>());
+                        owner.ConfirmHit(o.gameObject.GetComponent<KBPlayer>(), damage);
                         DoOnHit();
                     }
                     else
                     {
-                        owner.ConfirmHitToOthers(victimPlayer.networkPlayer);
+                        owner.ConfirmHitToOthers(victimPlayer.networkPlayer, damage);
                         DoOnHit();
                     }
                 }

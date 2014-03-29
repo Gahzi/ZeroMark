@@ -1,12 +1,12 @@
-Mech,Health,3
+Mech,Health,300
 ,LB Rotation Speed,0
 ,UB Rotation Speed,50
 ,Movement Speed,15
-Drone,Health,1
+Drone,Health,100
 ,LB Rotation Speed,250
 ,UB Rotation Speed,0
 ,Movement Speed,25
-Tank,Health,6
+Tank,Health,800
 ,LB Rotation Speed,35
 ,UB Rotation Speed,1
 ,Movement Speed,10
