@@ -86,14 +86,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifetime: 10
-  damage: 1
+  damage: 50
   owner: {fileID: 0}
   projectileSpeed: 0
   inheritSpeed: 0
   collideWithProjectiles: 0
   collideWithEnvironment: 0
   explosionPrefab: {fileID: 0}
-  targetScale: {x: 30, y: 30, z: 30}
+  targetScale: {x: 35, y: 35, z: 35}
   growSpeed: 10
   fadeSpeed: 1
   originalMaterial: {fileID: 2100000, guid: 0b26d13c3739975499efc66abfac46eb, type: 2}

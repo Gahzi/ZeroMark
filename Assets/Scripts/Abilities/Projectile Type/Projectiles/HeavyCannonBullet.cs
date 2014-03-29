@@ -6,7 +6,7 @@ public class HeavyCannonBullet : ProjectileBaseScript
 
     #region CONSTANTS
 
-    public static int _damage = 1;
+    public static int _damage = 30;
 
     #endregion CONSTANTS
 
