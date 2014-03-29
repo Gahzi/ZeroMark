@@ -12,7 +12,6 @@
 /// </summary>
 abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
 {
-
     #region CONSTANTS
 
     private static int DAMAGE = 0;

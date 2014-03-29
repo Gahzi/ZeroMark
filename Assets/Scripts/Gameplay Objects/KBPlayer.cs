@@ -266,6 +266,11 @@ public class KBPlayer : KBControllableGameObject
             newPlayerCameraObject.GetComponent<KBCamera>().attachedPlayer = this;
             Camera.SetupCurrent(newPlayerCameraObject.GetComponent<Camera>());
         }
+        else
+        {
+            SetActiveIfFound(transform, "Reticle", false);
+            SetActiveIfFound(transform, "AmmoHud", false);
+        }
     }
 
     /// <summary>
@@ -349,6 +354,7 @@ public class KBPlayer : KBControllableGameObject
         if (other.gameObject.CompareTag("SpawnDrone") || other.gameObject.CompareTag("SpawnMech") || other.gameObject.CompareTag("SpawnTank"))
         {
             photonView.RPC("SwitchType", PhotonTargets.AllBuffered, other.gameObject.tag.ToString());
+            Spawn();
         }
     }
 
@@ -651,6 +657,9 @@ public class KBPlayer : KBControllableGameObject
     /// </summary>
     private void RespawnToPrespawn()
     {
+        //Spawn as Core
+        photonView.RPC("SwitchType", PhotonTargets.AllBuffered, "SpawnCore");
+
         killTokens = 0;
         waitingForRespawn = false;
         acceptingInputs = true;
@@ -792,46 +801,68 @@ public class KBPlayer : KBControllableGameObject
             SetupAbilities();
 
             
-            Spawn();
+            //Spawn();
         }
     }
 
     private void SetActiveIfFound(Transform trans, string objectName, bool val)
     {
-        GameObject foundObject = SetActiveChildIfFound(trans, objectName, val);
+        List<GameObject> foundObjects = SetActiveChildIfFound(trans, objectName, val);
 
-        if (foundObject != null)
+        if (foundObjects.Count > 0)
         {
-            foundObject.SetActive(val);
+            for (int i = 0; i < foundObjects.Count; i++)
+            {
+                foundObjects[i].SetActive(val);
+            }
+            
         }
         else
         {
-            Debug.LogWarning("[Player] Couldn't find player model");
+            Debug.LogWarning("[Player] Couldn't find " + objectName.ToString() + " player model");
         }
     }
 
 
-    private GameObject SetActiveChildIfFound(Transform cTranform,string objectName, bool val)
+    private List<GameObject> SetActiveChildIfFound(Transform cTransform,string objectName, bool val)
     {
-        GameObject foundGameObject = null;
-        
-        if(cTranform.gameObject.name.Equals(objectName))
+        List<GameObject> foundGameObjects = new List<GameObject>();
+
+        for (int i = 0; i < cTransform.childCount; i++)
         {
-            return cTranform.gameObject;
-        }
-        else
-        {
-            for (int i = 0; i < cTranform.childCount; i++)
+            GameObject currentchild = cTransform.GetChild(i).gameObject;
+
+            if (currentchild.name.Equals(objectName))
             {
-                Transform t = cTranform.GetChild(i);
-                foundGameObject = SetActiveChildIfFound(t, objectName, val);
-                if (foundGameObject != null)
-                {
-                    break;
-                }
+                foundGameObjects.Add(currentchild);
+            }
+           
+            if (currentchild.transform.childCount > 0)
+            {
+                foundGameObjects.AddRange(SetActiveChildIfFound(currentchild.transform,objectName,val));
             }
         }
 
-        return foundGameObject;
+        return foundGameObjects;
+
+        //if(cTranform.childCount > 0)
+        //{
+
+        //    return cTranform.gameObject;
+        //}
+        //else
+        //{
+        //    for (int i = 0; i < cTranform.childCount; i++)
+        //    {
+        //        Transform t = cTranform.GetChild(i);
+        //        foundGameObject = SetActiveChildIfFound(t, objectName, val);
+        //        if (foundGameObject != null)
+        //        {
+        //            break;
+        //        }
+        //    }
+        //}
+
+        //return foundGameObject;
     }
 }
