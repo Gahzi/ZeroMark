@@ -11,3 +11,5 @@
 UnityVS.Kaiju_Battles.sln.DotSettings
 UnityVS.KaijuBattles.sln.DotSettings
 *.v11.suo
+*.exe
+*_Data/

@@ -87,7 +87,9 @@ namespace KBConstants
 
     public class AudioConstants
     {
-        public enum clip { ItemPickup01,
+        public enum clip 
+        { 
+            ItemPickup01,
             PlasmaGunFire01,
             MachineGunFire01,
             CannonFire01,
@@ -95,7 +97,8 @@ namespace KBConstants
             HitConfirm,
             MachineGunReload01, MachineGunReload02,
             RocketFire01,
-            PlasmaReload01 };
+            PlasmaReload01
+        };
 
         private static readonly IDictionary<clip, string> clipNames = new Dictionary<clip, string>
         {

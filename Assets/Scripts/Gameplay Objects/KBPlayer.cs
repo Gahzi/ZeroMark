@@ -76,7 +76,7 @@ public class KBPlayer : KBControllableGameObject
     //public MeshRenderer teamIndicator;
     private AudioClip hitConfirm;
     private float hitFXTimer;
-    public GameObject hitExplosion;
+    public HitFX hitExplosion;
     public AudioClip[] gotHitSFX;
     public AudioClip deadSound;
     public AudioClip respawnSound;
@@ -116,6 +116,7 @@ public class KBPlayer : KBControllableGameObject
         Screen.showCursor = false;
 
         #region Resource & reference loading
+        ObjectPool.CreatePool(hitExplosion);
         charController = GetComponent<CharacterController>();
         itemPickupClip = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.ItemPickup01]);
         hitConfirm = Resources.Load<AudioClip>(KBConstants.AudioConstants.CLIP_NAMES[KBConstants.AudioConstants.clip.HitConfirm]);
@@ -595,16 +596,16 @@ public class KBPlayer : KBControllableGameObject
         }
     }
 
-    public void ConfirmHit(KBPlayer victimObject)
+    public void ConfirmHit(KBPlayer victimObject, int damage)
     {
-        photonView.RPC("ConfirmHitToOthers", PhotonTargets.All, victimObject.networkPlayer);
+        photonView.RPC("ConfirmHitToOthers", PhotonTargets.All, victimObject.networkPlayer, damage);
         //MIGHT BE ABLE TO REMOVE THIS IF WE DONT NOTICE A TIMING DIFFERENCE IN HITS LOCALLY VS RPC TO ALL
         //Instantiate(hitExplosion, victimObject.transform.position, Quaternion.identity);
         //gun[activeAbility].audio.PlayOneShot(hitConfirm);
     }
 
     [RPC]
-    public void ConfirmHitToOthers(PhotonPlayer hitPhotonPlayer)
+    public void ConfirmHitToOthers(PhotonPlayer hitPhotonPlayer, int damage)
     {
         List<KBPlayer> currentPlayers = GameManager.Instance.players;
 
@@ -612,7 +613,8 @@ public class KBPlayer : KBControllableGameObject
         {
             if (currentPlayers[i].networkPlayer == hitPhotonPlayer)
             {
-                Instantiate(hitExplosion, currentPlayers[i].transform.position, Quaternion.identity);
+                HitFX fx = ObjectPool.Spawn(hitExplosion, currentPlayers[i].transform.position, Quaternion.identity);
+                fx.DoEffect(damage);
                 gun[0].audio.PlayOneShot(hitConfirm);
             }
         }
@@ -625,7 +627,8 @@ public class KBPlayer : KBControllableGameObject
             if (invulnerabilityTime <= 0)
             {
                 health -= amount;
-                Instantiate(hitExplosion, transform.position, Quaternion.identity);
+                HitFX fx = ObjectPool.Spawn(hitExplosion, transform.position, Quaternion.identity);
+                fx.DoEffect(amount);
                 Camera.main.GetComponent<ScreenShake>().StartShake(0.25f, 5.0f);
                 audio.PlayOneShot(gotHitSFX[Random.Range(0, gotHitSFX.Length)]);
             }
