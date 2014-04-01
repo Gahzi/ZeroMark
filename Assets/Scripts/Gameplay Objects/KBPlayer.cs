@@ -45,6 +45,7 @@ public class KBPlayer : KBControllableGameObject
     public float invulnerabilityTime;
     public float spawnProtectionTime;
     public float bankLockoutTime;
+    public float teleportationRecharge = 5.0f;
 
     public TimerScript timer;
     private float movespeed;
@@ -89,7 +90,6 @@ public class KBPlayer : KBControllableGameObject
     public List<PlayerSpawnPoint> teamSpawnpoints;
     public float respawnTime;
     private int respawnTimer;
-    //public int upgradePoints;
     public int maxHealth;
 
     public Material redMat;
@@ -180,7 +180,6 @@ public class KBPlayer : KBControllableGameObject
         hitboxMech.GetComponent<HitboxBaseScript>().Team = team;
         hitboxTank.GetComponent<HitboxBaseScript>().Team = team;
         //GetComponentInChildren<HitboxBaseScript>().Team = team;
-
         #endregion Resource & reference loading
 
         latestCorrectPos = transform.position;
@@ -236,6 +235,12 @@ public class KBPlayer : KBControllableGameObject
 
     private void FixedUpdate()
     {
+        if (teleportationRecharge > 0)
+        {
+            teleportationRecharge -= Time.deltaTime;
+        }
+        
+        
         if (invulnerabilityTime > 0)
         {
             invulnerabilityTime -= Time.deltaTime;
@@ -258,11 +263,11 @@ public class KBPlayer : KBControllableGameObject
         {
             if (acceptingInputs)
             {
-                if (Input.GetAxis("Mouse ScrollWheel") > 0)
+                if (Input.GetAxis("Mouse ScrollWheel") > 0 && Camera.main.orthographicSize > 10)
                 {
                     Camera.main.orthographicSize--;
                 }
-                else if (Input.GetAxis("Mouse ScrollWheel") < 0)
+                else if (Input.GetAxis("Mouse ScrollWheel") < 0 && Camera.main.orthographicSize < 40)
                 {
                     Camera.main.orthographicSize++;
                 }
@@ -405,6 +410,18 @@ public class KBPlayer : KBControllableGameObject
                 b.AddPoints(killTokens, team);
                 killTokens = 0;
             }
+        }
+
+        if (other.gameObject.CompareTag("Teleporter"))
+        {
+            Teleporter t = other.gameObject.GetComponent<Teleporter>();
+            if (t != null && t.linkedTeleporter != null && teleportationRecharge <= 0)
+            {
+                Vector3 newPos = t.linkedTeleporter.transform.position;
+                transform.position = new Vector3(newPos.x, transform.position.y, newPos.z);
+                teleportationRecharge = 5.0f;
+            }
+
         }
 
 
