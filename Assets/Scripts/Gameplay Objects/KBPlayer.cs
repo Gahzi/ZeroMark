@@ -160,9 +160,6 @@ public class KBPlayer : KBControllableGameObject
         allBodies.Add(lowerBodyMech);
         allBodies.Add(lowerBodyTank);
         allBodies.Add(lowerBodyCore);
-        //allBodies.Add(hitboxDrone);
-        //allBodies.Add(hitboxMech);
-        //allBodies.Add(hitboxTank);
     }
 
     public override void Start()
@@ -283,17 +280,6 @@ public class KBPlayer : KBControllableGameObject
     {
         if (networkPlayer.isLocal)
         {
-            //if (gun[activeAbility].reloading)
-            //{
-            //    GUI.Box(new Rect(Screen.width / 2, Screen.height / 2 + 100, 100, 20), "RELOADING");
-            //}
-
-            //GUI.Box(new Rect(0, 0, 100, 80),
-            //    "Kill Tokens" + System.Environment.NewLine +
-            //    killTokens.ToString() + System.Environment.NewLine
-            //    );
-            //GUI.Box(new Rect(0, 60, 100, 40), "Boost" + System.Environment.NewLine + boostTime.ToString("0.00"));
-
             if (triggerLockout)
             {
                 GUI.Box(new Rect(Screen.width / 2 - 80, Screen.height / 2, 160, 20), "BANKING TOKENS");
@@ -305,6 +291,7 @@ public class KBPlayer : KBControllableGameObject
     {
         networkPlayer = msg.sender;
         name += msg.sender.name;
+        SetStats();
         GameManager.Instance.players.Add(this);
     }
 
@@ -455,8 +442,16 @@ public class KBPlayer : KBControllableGameObject
                     upperBody.transform.rotation = Quaternion.Lerp(upperBody.transform.rotation, newRot, upperbodyRotateSpeed * Time.deltaTime);
                     m = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
                     speed = m.normalized.magnitude * modifiedMoveSpeed;
-                    Quaternion bottomRotation = Quaternion.LookRotation(m.normalized);
-                    lowerBody.transform.rotation = Quaternion.Lerp(lowerBody.transform.rotation, bottomRotation, 5f * Time.deltaTime);
+                    if (m.normalized != Vector3.zero)
+                    {
+                        Quaternion bottomRotation = Quaternion.LookRotation(m.normalized);
+                        lowerBody.transform.rotation = Quaternion.Lerp(lowerBody.transform.rotation, bottomRotation, 5f * Time.deltaTime);
+                    }
+                    else
+                    {
+                        //lowerBody.transform.rotation = Quaternion.Lerp(lowerBody.transform.rotation, Quaternion., 5f * Time.deltaTime);
+                    }
+                    
                     charController.SimpleMove(m.normalized * modifiedMoveSpeed);
                 }
                 break;
@@ -855,10 +850,9 @@ public class KBPlayer : KBControllableGameObject
 
 
             //Switch Stats
-            GameManager.Instance.SetPlayerStats(networkPlayer);
+            SetStats();
             InitializeForRespawn();
             SetupAbilities();
-
 
             //Spawn();
         }
