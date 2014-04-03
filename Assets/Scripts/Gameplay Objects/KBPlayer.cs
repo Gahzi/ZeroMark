@@ -195,7 +195,7 @@ public class KBPlayer : KBControllableGameObject
     {
         base.Start();
 
-        Screen.showCursor = false;
+        //Screen.showCursor = false;
 
         #region Resource & reference loading
 
@@ -283,6 +283,7 @@ public class KBPlayer : KBControllableGameObject
         }
 
         mousePos = Input.mousePosition;
+
         fraction = fraction + Time.deltaTime * 9;
 
         if (photonView.isMine)
@@ -499,7 +500,7 @@ public class KBPlayer : KBControllableGameObject
 
             // Rotation
             lowerBody.transform.Rotate(Vector3.up, Input.GetAxis("Horizontal") * lowerbodyRotateSpeed * Time.deltaTime);
-            Quaternion newRot = Quaternion.LookRotation(upperBody.transform.position + new Vector3(-mousePlayerDiff.x, 0, -mousePlayerDiff.y));
+            Quaternion newRot = Quaternion.LookRotation(new Vector3(-mousePlayerDiff.x, 0, -mousePlayerDiff.y));
             upperBody.transform.rotation = Quaternion.Lerp(upperBody.transform.rotation, newRot, upperbodyRotateSpeed * Time.deltaTime);
         }
         else
@@ -511,7 +512,7 @@ public class KBPlayer : KBControllableGameObject
             charController.SimpleMove(m.normalized * modifiedMoveSpeed);
 
             //Rotation
-            Quaternion newRot = Quaternion.LookRotation(upperBody.transform.position + new Vector3(-mousePlayerDiff.x, 0, -mousePlayerDiff.y));
+            Quaternion newRot = Quaternion.LookRotation(new Vector3(-mousePlayerDiff.x, 0, -mousePlayerDiff.y));
             upperBody.transform.rotation = Quaternion.Lerp(upperBody.transform.rotation, newRot, upperbodyRotateSpeed * Time.deltaTime);
             if (m.normalized != Vector3.zero)
             {
