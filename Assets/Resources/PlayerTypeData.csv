@@ -7,8 +7,8 @@ Drone,Health,100
 ,UB Rotation Speed,0
 ,Movement Speed,25
 Tank,Health,800
-,LB Rotation Speed,35
-,UB Rotation Speed,1
+,LB Rotation Speed,100
+,UB Rotation Speed,5
 ,Movement Speed,10
 Core,Health,1000
 ,LB Rotation Speed,200

@@ -5,10 +5,10 @@ using KBConstants;
 public class HeavyCannon : ProjectileAbilityBaseScript
 {
     #region CONSTANTS
-    public static float HCANNON_COOLDOWN = 0.50f;
+    public static float HCANNON_COOLDOWN = 0.25f;
     public static int HCANNON_RANGE = 80;
-    public static float RELOAD_TIME = 5.0f;
-    public static int CLIP_SIZE = 20;
+    public static float RELOAD_TIME = 10.0f;
+    public static int CLIP_SIZE = 200;
     #endregion
 
     public override void Start()

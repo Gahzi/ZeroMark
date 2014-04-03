@@ -8,6 +8,7 @@ public class RocketBullet : ProjectileBaseScript
 
     public static int _damage = 100;
     public float rocketInitSpeed;
+    public int accel;
 
     #endregion CONSTANTS
 
@@ -25,7 +26,7 @@ public class RocketBullet : ProjectileBaseScript
     {
         if (Time.time - spawnTime > 0.5f)
         {
-            projectileSpeed = Mathf.Lerp(rocketInitSpeed, targetSpeed, 30 * Time.deltaTime);
+            projectileSpeed = Mathf.Lerp(rocketInitSpeed, targetSpeed, accel * Time.deltaTime);
         }
         base.Update();
     }
@@ -33,7 +34,7 @@ public class RocketBullet : ProjectileBaseScript
     public override void DoOnHit()
     {
         AreaOfEffectDamageScript a = ObjectPool.Spawn(explosionPrefab, transform.position);
-        a.Init(); 
+        a.Init();
         base.DoOnHit();
     }
 

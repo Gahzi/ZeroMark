@@ -13,27 +13,10 @@ public class KBCamera : MonoBehaviour
         gameCamera.fieldOfView = 60.0f;
         transform.rotation = Quaternion.identity;
         transform.parent = attachedPlayer.transform;
-        switch (attachedPlayer.controlStyle)
-        {
-            case KBPlayer.ControlStyle.ThirdPerson:
-                gameCamera.isOrthoGraphic = false;
-                CAMERA_FOLLOW_DISTANCE = new Vector3(0, 5.0f, -5.0f);
-                transform.localPosition = CAMERA_FOLLOW_DISTANCE;
-                transform.Rotate(Vector3.right, 15);
-                break;
-
-            case KBPlayer.ControlStyle.TopDown:
-                gameCamera.isOrthoGraphic = true;
-                //CAMERA_FOLLOW_DISTANCE = new Vector3(0, 20, 0);
-                //transform.Rotate(Vector3.right, 90);
-                CAMERA_FOLLOW_DISTANCE = new Vector3(0, 110, -60);
-                transform.Rotate(Vector3.right, 60);
-                transform.localPosition = CAMERA_FOLLOW_DISTANCE;
-                break;
-
-            default:
-                break;
-        }
+        gameCamera.isOrthoGraphic = true;
+        CAMERA_FOLLOW_DISTANCE = new Vector3(0, 110, -60);
+        transform.Rotate(Vector3.right, 60);
+        transform.localPosition = CAMERA_FOLLOW_DISTANCE;
     }
 
     private void Update()

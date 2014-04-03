@@ -119,7 +119,7 @@ MonoBehaviour:
   lifetime: .5
   damage: 1
   owner: {fileID: 0}
-  projectileSpeed: 40
+  projectileSpeed: 45
   inheritSpeed: 0
   collideWithProjectiles: 0
   collideWithEnvironment: 1
