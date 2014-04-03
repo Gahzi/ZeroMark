@@ -552,7 +552,7 @@ public class KBPlayer : KBControllableGameObject
 
         #region Weapons
 
-        if (gun.GetLength(0) > 0)
+        if (guns.GetLength(0) > 0)
         {
             if ((Input.GetMouseButton(0) || Input.GetMouseButton(1)))// && !gun[activeAbility].reloading)
             {
