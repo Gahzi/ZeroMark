@@ -927,7 +927,7 @@ TextMesh:
     type: 2}
   m_PrefabInternal: {fileID: 1618457581}
   m_GameObject: {fileID: 1433613612}
-  m_Text: development build
+  m_Text: development build v0.8
   m_OffsetZ: 0
   m_CharacterSize: .0500000007
   m_LineSpacing: 1
@@ -1006,6 +1006,10 @@ Prefab:
       propertyPath: menu
       value: 
       objectReference: {fileID: 2070671104}
+    - target: {fileID: 10200008, guid: 20dc237a97ee7274fa6551e82039c73d, type: 2}
+      propertyPath: m_Text
+      value: development build v0.8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 20dc237a97ee7274fa6551e82039c73d, type: 2}
   m_RootGameObject: {fileID: 1209145591}
