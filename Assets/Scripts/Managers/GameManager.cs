@@ -12,7 +12,6 @@ public class GameManager : Photon.MonoBehaviour
     public List<KillTag> killTags;
 
     public List<CaptureZone> captureZones;
-    private List<Item> items;
     private List<PlayerSpawnPoint> playerSpawnZones;
     private GameState state = GameState.PreGame;
 
@@ -35,7 +34,6 @@ public class GameManager : Photon.MonoBehaviour
     public int redBonus = 0;
     public int blueBonus = 0;
     private List<List<String>> playerStatData;
-    private List<List<String>> upgradePointReqData;
     private float startTime;
     public float gameTime;
     public float gameTimeMax;

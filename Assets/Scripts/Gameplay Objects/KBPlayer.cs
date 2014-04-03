@@ -68,21 +68,18 @@ public class KBPlayer : KBControllableGameObject
     public List<PlayerSpawnPoint> teamSpawnpoints;
     public float respawnTime;
     private int respawnTimer;
-    //public int upgradePoints;
     public int maxHealth;
 
     public Material redMat;
     public Material blueMat;
-    //public MeshRenderer teamIndicator;
     private AudioClip hitConfirm;
-    private float hitFXTimer;
     public HitFX hitExplosion;
     public AudioClip[] gotHitSFX;
     public AudioClip deadSound;
     public AudioClip respawnSound;
     public AudioClip dropSound;
 
-    public ProjectileAbilityBaseScript[] gun;
+    public ProjectileAbilityBaseScript[] guns;
     public int killTokens;
     private bool triggerLockout;
 
@@ -104,15 +101,11 @@ public class KBPlayer : KBControllableGameObject
         allBodies.Add(lowerBodyMech);
         allBodies.Add(lowerBodyTank);
         allBodies.Add(lowerBodyCore);
-        //allBodies.Add(hitboxDrone);
-        //allBodies.Add(hitboxMech);
-        //allBodies.Add(hitboxTank);
     }
 
     public override void Start()
     {
         base.Start();
-
         Screen.showCursor = false;
 
         #region Resource & reference loading
@@ -292,49 +285,78 @@ public class KBPlayer : KBControllableGameObject
         {
             Vector3 pos = transform.localPosition;
             Quaternion rot = upperBody.transform.rotation;
+            int kt = killTokens;
             int hlth = health;
             int mxhlth = maxHealth;
             bool wtngFrRspwn = waitingForRespawn;
             int tm = (int)team;
             float invltime = invulnerabilityTime;
 
+            int[] amms = new int[guns.Length];
+
+
+            for (int i = 0; i < guns.Length; i++)
+            {
+                amms[i] = guns[i].ammo;
+            }
+
             stream.Serialize(ref pos);
             stream.Serialize(ref rot);
+            stream.Serialize(ref kt);
             stream.Serialize(ref hlth);
             stream.Serialize(ref mxhlth);
             stream.Serialize(ref wtngFrRspwn);
             stream.Serialize(ref tm);
             stream.Serialize(ref invltime);
+
+            for (int j = 0; j < amms.Length; j++)
+            {
+                stream.Serialize(ref amms[j]);
+            }
         }
         else
         {
             // Receive latest state information
             Vector3 pos = Vector3.zero;
             Quaternion rot = Quaternion.identity;
+            int kt = 0;
             int hlth = 0;
             int mxhlth = 0;
             bool wtngFrRspwn = false;
             int tm = 0;
             float invltime = 0.0f;
+            int[] amms = new int[guns.Length];
 
             stream.Serialize(ref pos);
             stream.Serialize(ref rot);
+            stream.Serialize(ref kt);
             stream.Serialize(ref hlth);
             stream.Serialize(ref mxhlth);
             stream.Serialize(ref wtngFrRspwn);
             stream.Serialize(ref tm);
             stream.Serialize(ref invltime);
 
+            for (int i = 0; i < amms.Length; i++)
+            {
+                stream.Serialize(ref amms[i]);
+            }
+
             latestCorrectPos = pos;                 // save this to move towards it in FixedUpdate()
             onUpdatePos = transform.localPosition;  // we interpolate from here to latestCorrectPos
             fraction = 0;                           // reset the fraction we alreay moved. see Update()
 
             upperBody.transform.rotation = rot;          // this sample doesn't smooth rotation
+            killTokens = kt;
             health = hlth;
             maxHealth = mxhlth;
             waitingForRespawn = wtngFrRspwn;
             team = (Team)tm;
             invulnerabilityTime = invltime;
+
+            for (int j = 0; j < amms.Length; j++)
+            {
+                guns[j].ammo = amms[j];
+            }
         }
     }
 
@@ -409,25 +431,25 @@ public class KBPlayer : KBControllableGameObject
                 break;
         }
 
-        if (gun.GetLength(0) > 0)
+        if (guns.GetLength(0) > 0)
         {
             if ((Input.GetMouseButton(0) || Input.GetMouseButton(1)))// && !gun[activeAbility].reloading)
             {
                 if (Input.GetMouseButton(0))
                 {
-                    if (gun[0].ammo <= 0 || gun[1].ammo <= 0)
+                    if (guns[0].ammo <= 0 || guns[1].ammo <= 0)
                     {
-                        int[] guns = { 0, 1 };
-                        photonView.RPC("Reload", PhotonTargets.All, guns);
+                        int[] reloadingGuns = { 0, 1 };
+                        photonView.RPC("Reload", PhotonTargets.All, reloadingGuns);
                         
                     }
                     else
                     {
                         if (primaryWeaponLinkedFire)
                         {
-                        int[] guns = { 0,1};
+                        int[] shootingGuns = { 0,1};
                         float[] speeds = { speed,speed};
-                        photonView.RPC("Fire", PhotonTargets.All, guns, speeds);
+                        photonView.RPC("Fire", PhotonTargets.All, shootingGuns, speeds);
                         //gun[0].PlayerFire(speed);
                         //gun[1].PlayerFire(speed);
                         }
@@ -443,47 +465,41 @@ public class KBPlayer : KBControllableGameObject
                                 otherGun = 0;
                             }
 
-                            if (gun[lastPrimaryFire].available)
+                            if (guns[lastPrimaryFire].available)
                             {
-                            //Debug.Log(gun[lastPrimaryFire].cooldown.ToString());
-                            int[] guns = { lastPrimaryFire };
-                            float[] speeds = { speed };
-                            photonView.RPC("Fire", PhotonTargets.All, guns, speeds);
-                            //gun[lastPrimaryFire].PlayerFire(speed);
+                                int[] shootingGuns = { lastPrimaryFire };
+                                float[] speeds = { speed };
+                                photonView.RPC("Fire", PhotonTargets.All, shootingGuns, speeds);
                             }
-                            else if (!gun[lastPrimaryFire].available && gun[lastPrimaryFire].halfwayCooled)
+                            else if (!guns[lastPrimaryFire].available && guns[lastPrimaryFire].halfwayCooled)
                             {
-                            
                                 lastPrimaryFire = otherGun;
-                            int[] guns = { otherGun };
-                            float[] speeds = { speed };
-                            photonView.RPC("Fire", PhotonTargets.All, guns, speeds);
-                            //gun[otherGun].PlayerFire(speed);
-                            
+                                int[] shootingGuns = { otherGun };
+                                float[] speeds = { speed };
+                                photonView.RPC("Fire", PhotonTargets.All, shootingGuns, speeds);
+                                //gun[otherGun].PlayerFire(speed);
                             }
                         }
                     }
                 }
                 if (Input.GetMouseButton(1))
                 {
-                    if (gun[2].ammo <= 0 || gun[3].ammo <= 0)
+                    if (guns[2].ammo <= 0 || guns[3].ammo <= 0)
                     {
-                        gun[2].ammo = 0;
-                        gun[3].ammo = 0;
+                        guns[2].ammo = 0;
+                        guns[3].ammo = 0;
 
-                        int[] guns = { 2, 3 };
-                        photonView.RPC("Reload", PhotonTargets.All, guns);
+                        int[] reloadingGuns = { 2, 3 };
+                        photonView.RPC("Reload", PhotonTargets.All, reloadingGuns);
                     }
                     else
                     {
 
                         if (secondaryWeaponLinkedFire)
                         {
-                        int[] guns = { 2, 3 };
-                        float[] speeds = { speed, speed };
-                        photonView.RPC("Fire", PhotonTargets.All, guns, speeds);
-                        //gun[2].PlayerFire(speed);
-                        //gun[3].PlayerFire(speed);
+                            int[] shootingGuns = { 2, 3 };
+                            float[] speeds = { speed, speed };
+                            photonView.RPC("Fire", PhotonTargets.All, shootingGuns, speeds);
                         }
                         else
                         {
@@ -496,21 +512,19 @@ public class KBPlayer : KBControllableGameObject
                             {
                                 otherGun = 2;
                             }
-                            if (gun[lastSecondaryFire].available) // TODO This doesn't synchronize as intended. Can shoot same side twice if you let go and wait until it cools.
+                            if (guns[lastSecondaryFire].available) // TODO This doesn't synchronize as intended. Can shoot same side twice if you let go and wait until it cools.
                             {
-                            int[] guns = { lastSecondaryFire };
+                            int[] shootingGuns = { lastSecondaryFire };
                             float[] speeds = { speed };
-                            photonView.RPC("Fire", PhotonTargets.All, guns, speeds);
+                            photonView.RPC("Fire", PhotonTargets.All, shootingGuns, speeds);
                             //gun[lastSecondaryFire].PlayerFire(speed);
                             }
-                            else if (!gun[lastSecondaryFire].available && gun[lastSecondaryFire].halfwayCooled)
+                            else if (!guns[lastSecondaryFire].available && guns[lastSecondaryFire].halfwayCooled)
                             {
                                 lastSecondaryFire = otherGun;
-                            int[] guns = { otherGun };
-                            float[] speeds = { speed };
-                            photonView.RPC("Fire", PhotonTargets.All, guns, speeds);
-                            //gun[otherGun].PlayerFire(speed);
-                            
+                                int[] shootingGuns = { otherGun };
+                                float[] speeds = { speed };
+                                photonView.RPC("Fire", PhotonTargets.All, shootingGuns, speeds);
                             }
                         }
                     }
@@ -548,7 +562,7 @@ public class KBPlayer : KBControllableGameObject
         {
             int rightGun = gunIndex[i];
             float rightSpeed = speed[i];
-            gun[rightGun].PlayerFire(rightSpeed);
+            guns[rightGun].PlayerFire(rightSpeed);
         }
         
     }
@@ -559,8 +573,8 @@ public class KBPlayer : KBControllableGameObject
         for (int i = 0; i < gunIndex.Length; i++)
         {
             int rightGun = gunIndex[i];
-            gun[rightGun].ammo = 0;
-            gun[rightGun].PlayerTriggerReload();
+            guns[rightGun].ammo = 0;
+            guns[rightGun].PlayerTriggerReload();
         }
 
     }
@@ -615,7 +629,7 @@ public class KBPlayer : KBControllableGameObject
             {
                 HitFX fx = ObjectPool.Spawn(hitExplosion, currentPlayers[i].transform.position, Quaternion.identity);
                 fx.DoEffect(damage);
-                gun[0].audio.PlayOneShot(hitConfirm);
+                guns[0].audio.PlayOneShot(hitConfirm);
             }
         }
     }
@@ -688,7 +702,8 @@ public class KBPlayer : KBControllableGameObject
     {
         if (teamSpawnpoints.Count > 0 && photonView.isMine)
         {
-            transform.position = teamSpawnpoints[0].transform.position;
+            int spawnPointIndex = Random.Range(0,teamSpawnpoints.Count-1);
+            transform.position = teamSpawnpoints[spawnPointIndex].transform.position;
             waitingForRespawn = false;
             acceptingInputs = true;
             health = stats.health;
@@ -705,11 +720,11 @@ public class KBPlayer : KBControllableGameObject
 
     private void SetupAbilities()
     {
-        gun = upperBody.GetComponentsInChildren<ProjectileAbilityBaseScript>();
-        for (int i = 0; i < gun.Length; i++)
+        guns = upperBody.GetComponentsInChildren<ProjectileAbilityBaseScript>();
+        for (int i = 0; i < guns.Length; i++)
         {
-            gun[i].owner = this;
-            gun[i].Team = team;
+            guns[i].owner = this;
+            guns[i].Team = team;
         }
         lastPrimaryFire = 0;
         lastSecondaryFire = 2;
@@ -847,25 +862,5 @@ public class KBPlayer : KBControllableGameObject
         }
 
         return foundGameObjects;
-
-        //if(cTranform.childCount > 0)
-        //{
-
-        //    return cTranform.gameObject;
-        //}
-        //else
-        //{
-        //    for (int i = 0; i < cTranform.childCount; i++)
-        //    {
-        //        Transform t = cTranform.GetChild(i);
-        //        foundGameObject = SetActiveChildIfFound(t, objectName, val);
-        //        if (foundGameObject != null)
-        //        {
-        //            break;
-        //        }
-        //    }
-        //}
-
-        //return foundGameObject;
     }
 }

@@ -16,7 +16,7 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
     #endregion
 
     protected ProjectileBaseScript projectileType;
-    private int maxRange;
+    protected int maxRange;
     public int ammo;
     public bool reloading;
     protected AudioClip reloadClip;
