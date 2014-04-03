@@ -45,13 +45,12 @@ namespace KBConstants
 
     public class ManagerConstants
     {
-        public enum type { GameManager, GamepadManager, PlayerStats, UpgradePointReqs };
+        public enum type { GameManager, GamepadManager, UpgradePointReqs };
 
         private static readonly IDictionary<type, string> prefabNames = new Dictionary<type, string>
         {
             {type.GameManager,"Managers/GameManager"},
 			{type.GamepadManager, "Managers/GamepadManager"},
-            {type.PlayerStats, "PlayerTypeData.csv"},
             {type.UpgradePointReqs, "UpgradePointReqs.csv"}
         };
 
@@ -61,7 +60,6 @@ namespace KBConstants
         {
             {type.GameManager,"GameManager"},
 			{type.GamepadManager, "GamepadManager"},
-            {type.PlayerStats, "PlayerStats"},
             {type.UpgradePointReqs, "UpgradePointReqs"}
         };
 

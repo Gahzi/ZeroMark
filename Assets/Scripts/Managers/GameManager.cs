@@ -85,7 +85,6 @@ public class GameManager : Photon.MonoBehaviour
         killTags = new List<KillTag>();
         captureZones = new List<CaptureZone>();
         playerSpawnZones = new List<PlayerSpawnPoint>();
-        ReadPlayerStatData();
     }
 
     private void Start()
@@ -346,7 +345,6 @@ public class GameManager : Photon.MonoBehaviour
                     KBPlayer newPlayer = newPlayerObject.GetComponent<KBPlayer>();
                     newPlayer.photonView.RPC("Setup", PhotonTargets.AllBuffered, PhotonNetwork.player, (int)newTeam);
                     newPlayer.photonView.RPC("SwitchType", PhotonTargets.AllBuffered, "SpawnCore");
-                    photonView.RPC("SetPlayerStats", PhotonTargets.AllBuffered, PhotonNetwork.player);
                     break;
                 }
 
@@ -387,82 +385,13 @@ public class GameManager : Photon.MonoBehaviour
         // TODO
     }
 
-    private void ReadPlayerStatData()
-    {
-        playerStatData = CSVReader.ReadFile(KBConstants.ManagerConstants.PREFAB_NAMES[ManagerConstants.type.PlayerStats]);
-    }
-
-    //[RPC]
-    //void SpawnOnNetwork(Vector3 pos, Quaternion rot, PhotonViewID id1, PhotonPlayer np)
-    //{
-    //    Transform newPlayer = Instantiate(playerPrefab, pos, rot) as Transform;
-    //    //Set transform
-    //    PlayerInfo4 pNode = GetPlayer(np);
-    //    pNode.transform = newPlayer;
-    //    //Set photonviewID everywhere!
-    //    SetPhotonViewIDs(newPlayer.gameObject, id1);
-
-    //    if (pNode.IsLocal())
-    //    {
-    //        localPlayerInfo = pNode;
-    //    }
-
-    //    //Maybe call some specific action on the instantiated object?
-    //    //PLAYERSCRIPT tmp = newPlayer.GetComponent<PLAYERSCRIPT>();
-    //    //tmp.SetPlayer(pNode.networkPlayer);
-    //}
-
-    [RPC]
-    public void SetPlayerStats(PhotonPlayer phPlayer)
-    {
-        GameManager gm = GameManager.instance;
-        int numberOfStats = 4;
-        int initStatColumn = 2;
-        PlayerStats stats = new PlayerStats();
-        stats.statArray = new float[numberOfStats];
-
-        KBPlayer player = null;
-
-        if (phPlayer.isLocal)
-        {
-            player = localPlayer;
-        }
-        else
-        {
-            KBPlayer currentPlayer;
-            for (int i = 0; i < players.Count; i++)
-            {
-                currentPlayer = players[i];
-                if (currentPlayer.networkPlayer == phPlayer)
-                {
-                    player = currentPlayer;
-                }
-            }
-        }
-
-        if (player == null)
-        {
-            Debug.Log("Warning! Couldn't find player to set level");
-            return;
-        }
-
-        for (int i = 0; i < stats.statArray.Length; i++) // This loads the raw stats into a float[]
-        {
-            // finalStatValue = init + (level - 1)*(perLevelMultiplier)
-            stats.statArray[i] = Convert.ToInt32(gm.playerStatData[i + ((int)player.type * numberOfStats)][initStatColumn]);
-        }
-
-        stats.health = (int)stats.statArray[(int)PlayerStats.PlayerStatNames.Health];
-        stats.lowerbodyRotationSpeed = (int)stats.statArray[(int)PlayerStats.PlayerStatNames.LBRotationSpeed];
-        stats.upperbodyRotationSpeed = (int)stats.statArray[(int)PlayerStats.PlayerStatNames.UBRotationSpeed];
-        stats.speed = (int)stats.statArray[(int)PlayerStats.PlayerStatNames.MovementSpeed];
-        player.stats = stats;
-    }
-
     private void TakeScreenshot()
     {
-        string path = Application.persistentDataPath + "/" + System.DateTime.Now.Year.ToString() + System.DateTime.Now.Month.ToString() + System.DateTime.Now.Day.ToString() + "_" + System.DateTime.Now.Hour.ToString() + System.DateTime.Now.Minute.ToString() + System.DateTime.Now.Second.ToString() + "_kaiju_scr.png";
-        //string path = System.DateTime.Now.Hour.ToString() + System.DateTime.Now.Minute.ToString() + System.DateTime.Now.Second.ToString() + "_kaiju_scr";
+        string path = Application.persistentDataPath + "/" + System.DateTime.Now.Year.ToString() + 
+            System.DateTime.Now.Month.ToString() + System.DateTime.Now.Day.ToString() + "_" + 
+            System.DateTime.Now.Hour.ToString() + System.DateTime.Now.Minute.ToString() + 
+            System.DateTime.Now.Second.ToString() + "_kaiju_scr.png";
+
         Application.CaptureScreenshot(path, 2);
         path = Application.persistentDataPath + "/" + path;
         Debug.Log(path);

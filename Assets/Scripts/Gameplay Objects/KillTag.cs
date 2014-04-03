@@ -30,10 +30,4 @@ public class KillTag : KBGameObject
     {
         GameManager.Instance.killTags.Add(this);
     }
-
-    //private void OnDestroy()
-    //{
-    //    GameManager.Instance.killTags.Remove(this);
-    //}
-
 }
