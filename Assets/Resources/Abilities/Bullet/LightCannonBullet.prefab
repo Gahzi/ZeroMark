@@ -74,7 +74,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: b9918470fdc54e3449269163514e8902, type: 2}
+  - {fileID: 2100000, guid: 33c7430dd548daf4f9c93fc8157a68ec, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -1362,7 +1362,7 @@ ParticleSystem:
         rgba: 4294967295
       maxColor:
         serializedVersion: 2
-        rgba: 4294926592
+        rgba: 4280418048
       minMaxState: 0
     startSize:
       scalar: 1
