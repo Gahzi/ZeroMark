@@ -8,35 +8,55 @@ using UnityEngine;
 public class KBPlayer : KBControllableGameObject
 {
     #region CONSTANTS
+
     private static readonly float hitFXLength = 0.250f;
+
     #region DRONE
-    private static readonly int droneLowerRotationSpeed = 250;
-    private static readonly int droneUpperRotationSpeed = 0;
-    private static readonly int droneMovementSpeed = 25;
+
+    private static readonly int droneLowerRotationSpeed = 300;
+    private static readonly int droneUpperRotationSpeed = 75;
+    private static readonly int droneMovementSpeed = 55;
     private static readonly int droneBaseHealth = 100;
-    #endregion
+    private static readonly float droneAccel = 0.0125f;
+    private static readonly float dronePowerDecel = 0.25f;
+    private static readonly float droneFriction = 0.075f;
+    private static readonly float droneReverseSpeedFraction = 0.5f;
+
+    #endregion DRONE
+
     #region MECH
+
     private static readonly int mechLowerRotationSpeed = 0;
     private static readonly int mechUpperRotationSpeed = 50;
     private static readonly int mechMovementSpeed = 15;
     private static readonly int mechBaseHealth = 300;
-    #endregion
+
+    #endregion MECH
+
     #region TANK
+
     private static readonly int tankLowerRotationSpeed = 100;
     private static readonly int tankUpperRotationSpeed = 5;
-    private static readonly int tankMovementSpeed = 10;
+    private static readonly int tankMovementSpeed = 20;
     private static readonly int tankBaseHealth = 800;
-    #endregion
+    private static readonly float tankAccel = 0.005f;
+    private static readonly float tankPowerDecel = 0.15f;
+    private static readonly float tankFriction = 0.05f;
+    private static readonly float tankReverseSpeedFraction = 0.15f;
+
+    #endregion TANK
+
     #region CORE
+
     private static readonly int coreLowerRotationSpeed = 50;
     private static readonly int coreUpperRotationSpeed = 50;
     private static readonly int coreMovementSpeed = 10;
     private static readonly int coreBaseHealth = 10000;
-    #endregion
+
+    #endregion CORE
+
     #endregion CONSTANTS
 
-    public enum ControlStyle { ThirdPerson, TopDown };
-    public ControlStyle controlStyle;
     private bool tankStyleMove;
     public PlayerType type;
     public PlayerStats stats;
@@ -64,8 +84,10 @@ public class KBPlayer : KBControllableGameObject
     public AudioClip itemPickupClip;
     public GameObject upperBody;
     public GameObject lowerBody;
+
     //public GameObject hitbox;
     public GameObject hitboxDrone;
+
     public GameObject hitboxMech;
     public GameObject hitboxTank;
 
@@ -94,8 +116,10 @@ public class KBPlayer : KBControllableGameObject
 
     public Material redMat;
     public Material blueMat;
+
     //public MeshRenderer teamIndicator;
     private AudioClip hitConfirm;
+
     private float hitFXTimer;
     public HitFX hitExplosion;
     public AudioClip[] gotHitSFX;
@@ -111,6 +135,7 @@ public class KBPlayer : KBControllableGameObject
     private int lastPrimaryFire;
     private bool primaryWeaponLinkedFire;
     private int lastSecondaryFire;
+    private float forwardAccel;
 
     public void SetStats()
     {
@@ -124,24 +149,28 @@ public class KBPlayer : KBControllableGameObject
                 stats.upperbodyRotationSpeed = mechUpperRotationSpeed;
                 stats.speed = mechMovementSpeed;
                 break;
+
             case PlayerType.drone:
                 stats.health = droneBaseHealth;
                 stats.lowerbodyRotationSpeed = droneLowerRotationSpeed;
                 stats.upperbodyRotationSpeed = droneUpperRotationSpeed;
                 stats.speed = droneMovementSpeed;
                 break;
+
             case PlayerType.tank:
                 stats.health = tankBaseHealth;
                 stats.lowerbodyRotationSpeed = tankLowerRotationSpeed;
                 stats.upperbodyRotationSpeed = tankUpperRotationSpeed;
                 stats.speed = tankMovementSpeed;
                 break;
+
             case PlayerType.core:
                 stats.health = coreBaseHealth;
                 stats.lowerbodyRotationSpeed = coreLowerRotationSpeed;
                 stats.upperbodyRotationSpeed = coreUpperRotationSpeed;
                 stats.speed = coreMovementSpeed;
                 break;
+
             default:
                 break;
         }
@@ -169,6 +198,7 @@ public class KBPlayer : KBControllableGameObject
         Screen.showCursor = false;
 
         #region Resource & reference loading
+
         ObjectPool.CreatePool(hitExplosion);
         charController = GetComponent<CharacterController>();
         itemPickupClip = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.ItemPickup01]);
@@ -177,12 +207,11 @@ public class KBPlayer : KBControllableGameObject
         hitboxMech.GetComponent<HitboxBaseScript>().Team = team;
         hitboxTank.GetComponent<HitboxBaseScript>().Team = team;
         //GetComponentInChildren<HitboxBaseScript>().Team = team;
+
         #endregion Resource & reference loading
 
         latestCorrectPos = transform.position;
         onUpdatePos = transform.position;
-
-
 
         InitializeForRespawn();
 
@@ -191,6 +220,7 @@ public class KBPlayer : KBControllableGameObject
         teamSpawnpoints = new List<PlayerSpawnPoint>();
         FindTeamSpawnpoints();
         RespawnToPrespawn();
+
         #endregion Spawning
     }
 
@@ -236,8 +266,7 @@ public class KBPlayer : KBControllableGameObject
         {
             teleportationRecharge -= Time.deltaTime;
         }
-        
-        
+
         if (invulnerabilityTime > 0)
         {
             invulnerabilityTime -= Time.deltaTime;
@@ -408,9 +437,7 @@ public class KBPlayer : KBControllableGameObject
                 transform.position = new Vector3(newPos.x, transform.position.y, newPos.z);
                 teleportationRecharge = 5.0f;
             }
-
         }
-
 
         if (other.gameObject.CompareTag("SpawnDrone") || other.gameObject.CompareTag("SpawnMech") || other.gameObject.CompareTag("SpawnTank"))
         {
@@ -421,61 +448,81 @@ public class KBPlayer : KBControllableGameObject
 
     private void ControlKBAM()
     {
-        float speed = 0;
+        #region Movement
+
         float modifiedMoveSpeed = 0;
-        modifiedMoveSpeed = movespeed;
-
-        switch (controlStyle)
+        if (tankStyleMove)
         {
-            case ControlStyle.ThirdPerson:
-                float d = modifiedMoveSpeed * Input.GetAxis("Vertical");
-                charController.SimpleMove(transform.TransformDirection(Vector3.forward) * d);
-                transform.Rotate(0, Input.GetAxis("Horizontal") * lowerbodyRotateSpeed, 0);
-                break;
+            float accel = 0;
+            float decel = 0;
+            float friction = 0;
+            float reverseSpeed = 0;
+            switch (type)
+            {
+                case PlayerType.drone:
+                    accel = droneAccel;
+                    decel = dronePowerDecel;
+                    friction = droneFriction;
+                    reverseSpeed = droneReverseSpeedFraction;
+                    break;
 
-            case ControlStyle.TopDown:
+                case PlayerType.tank:
+                    accel = tankAccel;
+                    decel = tankPowerDecel;
+                    friction = tankFriction;
+                    reverseSpeed = tankReverseSpeedFraction;
+                    break;
 
-                Vector3 m = Vector3.zero;
-                if (tankStyleMove)
-                {
-                    m = Input.GetAxis("Vertical") * lowerBody.transform.forward;
-                    speed = m.normalized.magnitude * modifiedMoveSpeed;
-                    charController.SimpleMove(m.normalized * modifiedMoveSpeed);
-                    lowerBody.transform.Rotate(Vector3.up, Input.GetAxis("Horizontal") * lowerbodyRotateSpeed * Time.deltaTime);
+                case PlayerType.core:
+                    accel = tankAccel;
+                    decel = tankPowerDecel;
+                    friction = tankFriction;
+                    reverseSpeed = tankReverseSpeedFraction;
+                    break;
+            }
 
-                    if (type == PlayerType.tank)
-                    {
-                        Quaternion newRot = Quaternion.LookRotation(upperBody.transform.position + new Vector3(-mousePlayerDiff.x, 0, -mousePlayerDiff.y));
-                        upperBody.transform.rotation = Quaternion.Lerp(upperBody.transform.rotation, newRot, upperbodyRotateSpeed * Time.deltaTime);
-                    }
-                    else // Currently Drone case only
-                    {
-                        upperBody.transform.rotation = lowerBody.transform.rotation;
-                    }
-                }
-                else
-                {
-                    Quaternion newRot = Quaternion.LookRotation(upperBody.transform.position + new Vector3(-mousePlayerDiff.x, 0, -mousePlayerDiff.y));
-                    upperBody.transform.rotation = Quaternion.Lerp(upperBody.transform.rotation, newRot, upperbodyRotateSpeed * Time.deltaTime);
-                    m = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-                    speed = m.normalized.magnitude * modifiedMoveSpeed;
-                    if (m.normalized != Vector3.zero)
-                    {
-                        Quaternion bottomRotation = Quaternion.LookRotation(m.normalized);
-                        lowerBody.transform.rotation = Quaternion.Lerp(lowerBody.transform.rotation, bottomRotation, 5f * Time.deltaTime);
-                    }
-                    else
-                    {
-                        //lowerBody.transform.rotation = Quaternion.Lerp(lowerBody.transform.rotation, Quaternion., 5f * Time.deltaTime);
-                    }
-                    
-                    charController.SimpleMove(m.normalized * modifiedMoveSpeed);
-                }
-                break;
+            // Movement
+            if (Input.GetAxis("Vertical") > 0)
+            {
+                forwardAccel = Mathf.Lerp(forwardAccel, 1.0f, accel);
+            }
+            else if (Input.GetAxis("Vertical") == 0)
+            {
+                forwardAccel = Mathf.Lerp(forwardAccel, 0.0f, friction);
+            }
+            else if (Input.GetAxis("Vertical") < 0)
+            {
+                forwardAccel = Mathf.Lerp(forwardAccel, -reverseSpeed, decel);
+            }
+            modifiedMoveSpeed = movespeed * forwardAccel;
+            charController.SimpleMove(lowerBody.transform.forward * modifiedMoveSpeed);
 
-            default:
-                break;
+            // Rotation
+            lowerBody.transform.Rotate(Vector3.up, Input.GetAxis("Horizontal") * lowerbodyRotateSpeed * Time.deltaTime);
+            Quaternion newRot = Quaternion.LookRotation(upperBody.transform.position + new Vector3(-mousePlayerDiff.x, 0, -mousePlayerDiff.y));
+            upperBody.transform.rotation = Quaternion.Lerp(upperBody.transform.rotation, newRot, upperbodyRotateSpeed * Time.deltaTime);
         }
+        else
+        {
+            // Movement
+            Vector3 m = Vector3.zero;
+            m = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+            modifiedMoveSpeed = movespeed;
+            charController.SimpleMove(m.normalized * modifiedMoveSpeed);
+
+            //Rotation
+            Quaternion newRot = Quaternion.LookRotation(upperBody.transform.position + new Vector3(-mousePlayerDiff.x, 0, -mousePlayerDiff.y));
+            upperBody.transform.rotation = Quaternion.Lerp(upperBody.transform.rotation, newRot, upperbodyRotateSpeed * Time.deltaTime);
+            if (m.normalized != Vector3.zero)
+            {
+                Quaternion bottomRotation = Quaternion.LookRotation(m.normalized);
+                lowerBody.transform.rotation = Quaternion.Lerp(lowerBody.transform.rotation, bottomRotation, 5f * Time.deltaTime);
+            }
+        }
+
+        #endregion Movement
+
+        #region Weapons
 
         if (gun.GetLength(0) > 0)
         {
@@ -487,14 +534,13 @@ public class KBPlayer : KBControllableGameObject
                     {
                         int[] guns = { 0, 1 };
                         photonView.RPC("Reload", PhotonTargets.All, guns);
-
                     }
                     else
                     {
                         if (primaryWeaponLinkedFire)
                         {
                             int[] guns = { 0, 1 };
-                            float[] speeds = { speed, speed };
+                            float[] speeds = { modifiedMoveSpeed, modifiedMoveSpeed };
                             photonView.RPC("Fire", PhotonTargets.All, guns, speeds);
                             //gun[0].PlayerFire(speed);
                             //gun[1].PlayerFire(speed);
@@ -515,19 +561,17 @@ public class KBPlayer : KBControllableGameObject
                             {
                                 //Debug.Log(gun[lastPrimaryFire].cooldown.ToString());
                                 int[] guns = { lastPrimaryFire };
-                                float[] speeds = { speed };
+                                float[] speeds = { modifiedMoveSpeed };
                                 photonView.RPC("Fire", PhotonTargets.All, guns, speeds);
                                 //gun[lastPrimaryFire].PlayerFire(speed);
                             }
                             else if (!gun[lastPrimaryFire].available && gun[lastPrimaryFire].halfwayCooled)
                             {
-
                                 lastPrimaryFire = otherGun;
                                 int[] guns = { otherGun };
-                                float[] speeds = { speed };
+                                float[] speeds = { modifiedMoveSpeed };
                                 photonView.RPC("Fire", PhotonTargets.All, guns, speeds);
                                 //gun[otherGun].PlayerFire(speed);
-
                             }
                         }
                     }
@@ -544,11 +588,10 @@ public class KBPlayer : KBControllableGameObject
                     }
                     else
                     {
-
                         if (secondaryWeaponLinkedFire)
                         {
                             int[] guns = { 2, 3 };
-                            float[] speeds = { speed, speed };
+                            float[] speeds = { modifiedMoveSpeed, modifiedMoveSpeed };
                             photonView.RPC("Fire", PhotonTargets.All, guns, speeds);
                             //gun[2].PlayerFire(speed);
                             //gun[3].PlayerFire(speed);
@@ -567,7 +610,7 @@ public class KBPlayer : KBControllableGameObject
                             if (gun[lastSecondaryFire].available) // TODO This doesn't synchronize as intended. Can shoot same side twice if you let go and wait until it cools.
                             {
                                 int[] guns = { lastSecondaryFire };
-                                float[] speeds = { speed };
+                                float[] speeds = { modifiedMoveSpeed };
                                 photonView.RPC("Fire", PhotonTargets.All, guns, speeds);
                                 //gun[lastSecondaryFire].PlayerFire(speed);
                             }
@@ -575,19 +618,15 @@ public class KBPlayer : KBControllableGameObject
                             {
                                 lastSecondaryFire = otherGun;
                                 int[] guns = { otherGun };
-                                float[] speeds = { speed };
+                                float[] speeds = { modifiedMoveSpeed };
                                 photonView.RPC("Fire", PhotonTargets.All, guns, speeds);
                                 //gun[otherGun].PlayerFire(speed);
-
                             }
                         }
                     }
                 }
             }
         }
-
-
-
         if (Input.GetKeyDown(KeyCode.Z))
         {
             secondaryWeaponLinkedFire = !secondaryWeaponLinkedFire;
@@ -597,16 +636,13 @@ public class KBPlayer : KBControllableGameObject
             primaryWeaponLinkedFire = !primaryWeaponLinkedFire;
         }
 
+        #endregion Weapons
+
         // DEBUG FUNCTIONS
         if (Input.GetKeyDown(KeyCode.T))
         {
             TakeDamage(100);
         }
-
-        //if (Input.GetKeyDown(KeyCode.Return))
-        //{
-        //    BankKills();
-        //}
     }
 
     [RPC]
@@ -618,7 +654,6 @@ public class KBPlayer : KBControllableGameObject
             float rightSpeed = speed[i];
             gun[rightGun].PlayerFire(rightSpeed);
         }
-
     }
 
     [RPC]
@@ -630,7 +665,6 @@ public class KBPlayer : KBControllableGameObject
             gun[rightGun].ammo = 0;
             gun[rightGun].PlayerTriggerReload();
         }
-
     }
 
     private void CheckHealth()
@@ -795,7 +829,7 @@ public class KBPlayer : KBControllableGameObject
         acceptingInputs = false;
         yield return new WaitForSeconds(time);
         acceptingInputs = true;
-        killTokens = GameManager.Instance.AddPointsToScore(team, killTokens);
+        //killTokens = GameManager.Instance.AddPointsToScore(team, killTokens);
         triggerLockout = false;
     }
 
@@ -823,6 +857,7 @@ public class KBPlayer : KBControllableGameObject
                     type = PlayerType.drone;
 
                     break;
+
                 case "SpawnMech":
 
                     upperBody = upperBodyMech;
@@ -831,6 +866,7 @@ public class KBPlayer : KBControllableGameObject
                     type = PlayerType.mech;
 
                     break;
+
                 case "SpawnTank":
 
                     upperBody = upperBodyTank;
@@ -865,7 +901,6 @@ public class KBPlayer : KBControllableGameObject
                 SetActiveIfFound(this.transform, "RedBody", true);
             }
 
-
             //Switch Stats
             SetStats();
             InitializeForRespawn();
@@ -885,14 +920,12 @@ public class KBPlayer : KBControllableGameObject
             {
                 foundObjects[i].SetActive(val);
             }
-
         }
         else
         {
             Debug.LogWarning("[Player] Couldn't find " + objectName.ToString() + " player model");
         }
     }
-
 
     private List<GameObject> SetActiveChildIfFound(Transform cTransform, string objectName, bool val)
     {
@@ -917,7 +950,6 @@ public class KBPlayer : KBControllableGameObject
 
         //if(cTranform.childCount > 0)
         //{
-
         //    return cTranform.gameObject;
         //}
         //else
