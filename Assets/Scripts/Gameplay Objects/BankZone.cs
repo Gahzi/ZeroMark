@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using KBConstants;
 
 [RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(Rigidbody))]
@@ -30,10 +31,12 @@ public class BankZone : Zone
         ObjectPool.CreatePool(textPrefab);
     }
 
-    public void AddPoints(int points, KBConstants.Team team)
+    [RPC]
+    public void AddPoints(int points, int teamNum, PhotonMessageInfo msg)
     {
         if (!captured)
         {
+            Team team = (Team)teamNum;
             switch (team)
             {
                 case KBConstants.Team.Red:

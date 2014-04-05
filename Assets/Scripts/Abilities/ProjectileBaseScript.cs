@@ -58,7 +58,7 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
                 if (victimPlayer.Team != Team && victimPlayer.health > 0 && victimPlayer.invulnerabilityTime <= 0)
                 {
 
-                    if (victimPlayer.photonView.isMine)
+                    if (victimPlayer.photonView.isMine && owner != null)
                     {
                         int victimHealth = o.TakeDamage(damage);
                         if (victimHealth <= 0)
@@ -68,7 +68,7 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
                         owner.ConfirmHit(o.gameObject.GetComponent<KBPlayer>(), damage);
                         DoOnHit();
                     }
-                    else
+                    else if (owner != null)
                     {
                         owner.ConfirmHitToOthers(victimPlayer.networkPlayer, damage);
                         DoOnHit();

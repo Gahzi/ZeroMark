@@ -21,12 +21,6 @@ public abstract class KBGameObject : Photon.MonoBehaviour
 
     protected void Awake()
     {
-        /*
-        if (photonView.isMine)
-        {
-            this.enabled = true;
-        }
-         */
         collisionObjects = new List<KBGameObject>();
     }
 

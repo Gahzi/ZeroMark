@@ -451,7 +451,8 @@ public class KBPlayer : KBControllableGameObject
             if (killTokens > 0)
             {
                 BankZone b = other.gameObject.GetComponent<BankZone>();
-                b.AddPoints(killTokens, team);
+                b.photonView.RPC("AddPoints", PhotonTargets.AllBuffered, killTokens,(int)team);
+                //b.AddPoints(killTokens, team);
                 killTokens = 0;
             }
         }

@@ -34,6 +34,7 @@ public class RocketBullet : ProjectileBaseScript
     public override void DoOnHit()
     {
         AreaOfEffectDamageScript a = ObjectPool.Spawn(explosionPrefab, transform.position);
+        a.owner = owner;
         a.Init();
         base.DoOnHit();
     }
