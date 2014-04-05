@@ -13,7 +13,8 @@ public class HeavyCannon : ProjectileAbilityBaseScript
 
     public override void Start()
     {
-        projectileType = (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.HeavyCannonBullet], typeof(ProjectileBaseScript));
+        projectileType[0] = (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.HeavyCannonBullet], typeof(ProjectileBaseScript));
+        projectileType[1] = (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.HeavyCannonBullet], typeof(ProjectileBaseScript));
         cooldown = HCANNON_COOLDOWN;
         sound = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.CannonFire01]);
         reloadClip = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.MachineGunReload02]);

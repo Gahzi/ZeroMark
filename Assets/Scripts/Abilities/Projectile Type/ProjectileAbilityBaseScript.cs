@@ -15,7 +15,8 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
     protected int clipSize;
     #endregion
 
-    protected ProjectileBaseScript projectileType;
+    public ProjectileBaseScript[] projectileType = new ProjectileBaseScript[2];
+    public int level;
     protected int maxRange;
     public int ammo;
     public bool reloading;
@@ -24,12 +25,24 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
     public override void Start()
     {
         base.Start();
-        ObjectPool.CreatePool(projectileType);
+        for (int i = 0; i < projectileType.Length; i++)
+        {
+            ObjectPool.CreatePool(projectileType[i]);
+        }
+        level = 0;
     }
 
     public override void FixedUpdate()
     {
         base.FixedUpdate();
+        if (owner.killTokens < 50)
+        {
+            level = 0;
+        }
+        else if (owner.killTokens >= 50)
+        {
+            level = 1;
+        }
     }
 
     protected ProjectileBaseScript Fire(Vector3 direction, KBPlayer firedBy, float _inheritSpeed = 0.0f)
@@ -37,7 +50,7 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
         ProjectileBaseScript projectile = null;
         if (cooldown <= 0 && ammo > 0 && !reloading)
         {
-            projectile = ObjectPool.Spawn(projectileType, transform.position, Quaternion.Euler(direction));
+            projectile = ObjectPool.Spawn(projectileType[level], transform.position, Quaternion.Euler(direction));
             projectile.inheritSpeed = _inheritSpeed;
             projectile.Team = firedBy.Team;
             projectile.Init(firedBy);

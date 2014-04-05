@@ -13,7 +13,7 @@ public class LightAutoLaser : ProjectileAbilityBaseScript
 
     public override void Start()
     {
-        projectileType = (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.LightAutoLaserBullet], typeof(ProjectileBaseScript));
+        projectileType[0] = (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.LightAutoLaserBullet], typeof(ProjectileBaseScript));
         cooldown = _cooldown;
         //sound = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.PlasmaGunFire]);
         audio.clip = sound;
