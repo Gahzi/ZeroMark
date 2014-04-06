@@ -193,8 +193,20 @@ public class GameManager : Photon.MonoBehaviour
 
         if (Input.GetButtonDown("Screenshot"))
         {
-            TakeScreenshot();
+            GameManager.TakeScreenshot();
         }
+    }
+
+    public static void TakeScreenshot()
+    {
+        string path = Application.persistentDataPath + "/" + System.DateTime.Now.Year.ToString() +
+            System.DateTime.Now.Month.ToString() + System.DateTime.Now.Day.ToString() + "_" +
+            System.DateTime.Now.Hour.ToString() + System.DateTime.Now.Minute.ToString() +
+            System.DateTime.Now.Second.ToString() + "_zm_scr.png";
+
+        Application.CaptureScreenshot(path, 2);
+        path = Application.persistentDataPath + "/" + path;
+        Debug.Log(path);
     }
     
     void OnGUI()
@@ -381,18 +393,6 @@ public class GameManager : Photon.MonoBehaviour
     private void SendGlobalMessageToPlayers(string msg)
     {
         // TODO
-    }
-
-    private void TakeScreenshot()
-    {
-        string path = Application.persistentDataPath + "/" + System.DateTime.Now.Year.ToString() + 
-            System.DateTime.Now.Month.ToString() + System.DateTime.Now.Day.ToString() + "_" + 
-            System.DateTime.Now.Hour.ToString() + System.DateTime.Now.Minute.ToString() + 
-            System.DateTime.Now.Second.ToString() + "_kaiju_scr.png";
-
-        Application.CaptureScreenshot(path, 2);
-        path = Application.persistentDataPath + "/" + path;
-        Debug.Log(path);
     }
 
     public int AddPointsToScore(Team team, int points)
