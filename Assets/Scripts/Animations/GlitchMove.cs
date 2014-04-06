@@ -36,7 +36,7 @@ public class GlitchMove : MonoBehaviour
     {
         for (int i = 0; i < glitchAmount; i++)
         {
-            transform.Translate(Random.Range(-magnitude.x - magnitudeMin.x, magnitude.x + magnitudeMin.x), 0, 0);
+            transform.Translate(Random.Range(-magnitude.x - magnitudeMin.x, magnitude.x + magnitudeMin.x), Random.Range(-magnitude.y - magnitudeMin.y, magnitude.y + magnitudeMin.y), Random.Range(-magnitude.z - magnitudeMin.z, magnitude.z + magnitudeMin.z));
             yield return new WaitForSeconds(Random.Range(iterationGapMin, iterationGapMax));
             transform.position = originalPos;
         }

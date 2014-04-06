@@ -50,8 +50,12 @@ public class KBPlayer : KBControllableGameObject
 
     private static readonly int coreLowerRotationSpeed = 50;
     private static readonly int coreUpperRotationSpeed = 50;
-    private static readonly int coreMovementSpeed = 10;
+    private static readonly int coreMovementSpeed = 20;
     private static readonly int coreBaseHealth = 10000;
+    private static readonly float coreAccel = 0.05f;
+    private static readonly float corePowerDecel = 0.15f;
+    private static readonly float coreFriction = 0.5f;
+    private static readonly float coreReverseSpeedFraction = 0.15f;
 
     #endregion CORE
 
@@ -135,6 +139,8 @@ public class KBPlayer : KBControllableGameObject
     private int lastSecondaryFire;
     private float forwardAccel;
 
+    private KBCamera camera;
+
     public void SetStats()
     {
         stats = new PlayerStats();
@@ -192,7 +198,7 @@ public class KBPlayer : KBControllableGameObject
     public override void Start()
     {
         base.Start();
-
+        camera = Camera.main.GetComponent<KBCamera>();
         //Screen.showCursor = false;
 
         #region Resource & reference loading
@@ -288,13 +294,13 @@ public class KBPlayer : KBControllableGameObject
         {
             if (acceptingInputs)
             {
-                if (Input.GetAxis("Mouse ScrollWheel") > 0 && Camera.main.orthographicSize > 10)
+                if (Input.GetAxis("Mouse ScrollWheel") > 0 && camera.zoomTarget > 0.75f)
                 {
-                    Camera.main.orthographicSize--;
+                    camera.zoomTarget *= 1.0f / 1.05f;
                 }
-                else if (Input.GetAxis("Mouse ScrollWheel") < 0 && Camera.main.orthographicSize < 40)
+                else if (Input.GetAxis("Mouse ScrollWheel") < 0 && camera.zoomTarget < 2.0f)
                 {
-                    Camera.main.orthographicSize++;
+                    camera.zoomTarget *= 1.05f;
                 }
                 playerPositionOnScreen = Camera.main.WorldToScreenPoint(transform.position);
                 mousePlayerDiff = playerPositionOnScreen - mousePos;
@@ -502,10 +508,10 @@ public class KBPlayer : KBControllableGameObject
                     break;
 
                 case PlayerType.core:
-                    accel = tankAccel;
-                    decel = tankPowerDecel;
-                    friction = tankFriction;
-                    reverseSpeed = tankReverseSpeedFraction;
+                    accel = coreAccel;
+                    decel = corePowerDecel;
+                    friction = coreFriction;
+                    reverseSpeed = coreReverseSpeedFraction;
                     break;
             }
 

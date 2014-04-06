@@ -1362,7 +1362,7 @@ ParticleSystem:
         rgba: 4294967295
       maxColor:
         serializedVersion: 2
-        rgba: 4280418048
+        rgba: 2904686336
       minMaxState: 0
     startSize:
       scalar: 1
@@ -1567,10 +1567,10 @@ ParticleSystem:
       maxGradient:
         key0:
           serializedVersion: 2
-          rgba: 2969567487
+          rgba: 2902458623
         key1:
           serializedVersion: 2
-          rgba: 4287269624
+          rgba: 3247082232
         key2:
           serializedVersion: 2
           rgba: 0
@@ -2275,7 +2275,7 @@ ParticleSystemRenderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: f184215ab16acbd44a56b2759529bb94, type: 2}
+  - {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
