@@ -48,9 +48,6 @@ public class BankZone : Zone
                         captured = true;
                         RunCapturedFeedback(team);
                     }
-                    else
-                    {
-                    }
                     break;
                 case KBConstants.Team.Blue:
                     bluePoints += points;
@@ -60,9 +57,6 @@ public class BankZone : Zone
                         team = KBConstants.Team.Blue;
                         captured = true;
                         RunCapturedFeedback(team);
-                    }
-                    else
-                    {
                     }
                     break;
                 case KBConstants.Team.None:

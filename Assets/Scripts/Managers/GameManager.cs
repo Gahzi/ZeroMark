@@ -12,6 +12,7 @@ public class GameManager : Photon.MonoBehaviour
     public List<KillTag> killTags;
 
     public List<CaptureZone> captureZones;
+    public List<BankZone> bankZones;
     private List<PlayerSpawnPoint> playerSpawnZones;
     private GameState state = GameState.PreGame;
 
@@ -82,6 +83,7 @@ public class GameManager : Photon.MonoBehaviour
         players = new List<KBPlayer>();
         killTags = new List<KillTag>();
         captureZones = new List<CaptureZone>();
+        bankZones = new List<BankZone>();
         playerSpawnZones = new List<PlayerSpawnPoint>();
     }
 
@@ -94,6 +96,7 @@ public class GameManager : Photon.MonoBehaviour
 
         KillTag[] loadedKillTags = FindObjectsOfType<KillTag>();
         CaptureZone[] loadedCaptureZones = FindObjectsOfType<CaptureZone>();
+        BankZone[] loadedBankZones = FindObjectsOfType<BankZone>();
         ItemSpawn[] loadedItemZones = FindObjectsOfType<ItemSpawn>();
         PlayerSpawnPoint[] loadedPSpawns = FindObjectsOfType<PlayerSpawnPoint>();
 
@@ -106,6 +109,11 @@ public class GameManager : Photon.MonoBehaviour
         foreach (CaptureZone c in loadedCaptureZones)
         {
             captureZones.Add(c);
+        }
+
+        foreach (BankZone b in loadedBankZones)
+        {
+            bankZones.Add(b);
         }
 
         for (int i = 0; i < loadedKillTags.Length; i++)
@@ -122,7 +130,6 @@ public class GameManager : Photon.MonoBehaviour
         {
             Team nextTeam = (Team)(PhotonNetwork.otherPlayers.Length % 2);
             GameManager.Instance.CreateObject((int)ObjectConstants.type.Player, Vector3.zero, Quaternion.identity, (int)nextTeam);
-            
         }
         
     }
@@ -145,11 +152,8 @@ public class GameManager : Photon.MonoBehaviour
 
                 case GameState.InGame:
                     gameTime += Time.deltaTime;
-                    
-                    if (IsGameTimeOver())
-                    {
-                        state = GameState.EndGame;
-                    }
+
+                    CheckGameOver();
                       
                     //CheckPlayerUpgradePoints();
                     RunGui();
@@ -426,6 +430,50 @@ public class GameManager : Photon.MonoBehaviour
         else
         {
             return false;
+        }
+    }
+
+    /// <summary>
+    /// Checks to see if the 2/3 capture points are taken.
+    /// </summary>
+    /// <returns>True if a team has more than 2/3rds of the capture points</returns>
+    private void CheckGameOver()
+    {
+
+        int redCount = 0;
+        int blueCount = 0;
+
+        for (int i = 0; i < bankZones.Count; i++)
+        {
+            BankZone bz = bankZones[i];
+            switch (bz.team)
+            {
+                case Team.Blue:
+                {
+                    blueCount++;
+                    break;
+                }
+
+                case Team.Red:
+                {
+                    redCount++;
+                    break;
+                }
+
+                case Team.None:
+                {
+                    break;
+                }
+            }
+        }
+
+        if(redCount > bankZones.Count/2)
+        {
+            state = GameState.RedWins;
+        }
+        else if (blueCount > bankZones.Count / 2)
+        {
+            state = GameState.BlueWins;
         }
     }
 }
