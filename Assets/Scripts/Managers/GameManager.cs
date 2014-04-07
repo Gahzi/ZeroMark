@@ -193,18 +193,18 @@ public class GameManager : Photon.MonoBehaviour
 
         if (Input.GetButtonDown("Screenshot"))
         {
-            GameManager.TakeScreenshot();
+            GameManager.TakeScreenshot(1);
         }
     }
 
-    public static void TakeScreenshot()
+    public static void TakeScreenshot(int res)
     {
         string path = Application.persistentDataPath + "/" + System.DateTime.Now.Year.ToString() +
             System.DateTime.Now.Month.ToString() + System.DateTime.Now.Day.ToString() + "_" +
             System.DateTime.Now.Hour.ToString() + System.DateTime.Now.Minute.ToString() +
             System.DateTime.Now.Second.ToString() + "_zm_scr.png";
 
-        Application.CaptureScreenshot(path, 2);
+        Application.CaptureScreenshot(path, res);
         path = Application.persistentDataPath + "/" + path;
         Debug.Log(path);
     }
