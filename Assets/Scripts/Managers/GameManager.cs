@@ -150,9 +150,6 @@ public class GameManager : Photon.MonoBehaviour
                     {
                         state = GameState.EndGame;
                     }
-                      
-                    //CheckPlayerUpgradePoints();
-                    //RunGui();
                     break;
 
                 case GameState.RedWins:

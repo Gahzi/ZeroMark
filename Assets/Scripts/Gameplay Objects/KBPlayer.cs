@@ -116,7 +116,8 @@ public class KBPlayer : KBControllableGameObject
     public List<PlayerSpawnPoint> teamSpawnpoints;
     public float respawnTime;
     private int respawnTimer;
-    public int maxHealth;
+    public float regenDelay;
+    private float lastDamageTime;
 
     public Material redMat;
     public Material blueMat;
@@ -199,7 +200,6 @@ public class KBPlayer : KBControllableGameObject
     {
         base.Start();
         camera = Camera.main.GetComponent<KBCamera>();
-        //Screen.showCursor = false;
 
         #region Resource & reference loading
 
@@ -266,6 +266,12 @@ public class KBPlayer : KBControllableGameObject
 
     private void FixedUpdate()
     {
+        if (Time.time > lastDamageTime + regenDelay)
+        {
+            health = stats.health;
+        }
+        
+        
         if (teleportationRecharge > 0)
         {
             teleportationRecharge -= Time.deltaTime;
@@ -376,7 +382,7 @@ public class KBPlayer : KBControllableGameObject
             Quaternion rot = upperBody.transform.rotation;
             int kt = killTokens;
             int hlth = health;
-            int mxhlth = maxHealth;
+            int mxhlth = stats.health;
             bool wtngFrRspwn = waitingForRespawn;
             int tm = (int)team;
             float invltime = invulnerabilityTime;
@@ -437,7 +443,6 @@ public class KBPlayer : KBControllableGameObject
             upperBody.transform.rotation = rot;          // this sample doesn't smooth rotation
             killTokens = kt;
             health = hlth;
-            maxHealth = mxhlth;
             waitingForRespawn = wtngFrRspwn;
             team = (Team)tm;
             invulnerabilityTime = invltime;
@@ -769,6 +774,7 @@ public class KBPlayer : KBControllableGameObject
                 fx.DoEffect(amount);
                 Camera.main.GetComponent<ScreenShake>().StartShake(0.25f, 5.0f);
                 audio.PlayOneShot(gotHitSFX[Random.Range(0, gotHitSFX.Length)]);
+                lastDamageTime = Time.time;
             }
             return health;
         }
@@ -831,7 +837,6 @@ public class KBPlayer : KBControllableGameObject
             waitingForRespawn = false;
             acceptingInputs = true;
             health = stats.health;
-            maxHealth = health;
             movespeed = stats.speed;
             invulnerabilityTime = spawnProtectionTime;
             lowerbodyRotateSpeed = stats.lowerbodyRotationSpeed;
@@ -890,7 +895,6 @@ public class KBPlayer : KBControllableGameObject
 
                     upperBody = upperBodyDrone;
                     lowerBody = lowerBodyDrone;
-                    //hitbox = hitboxDrone;
                     type = PlayerType.drone;
 
                     break;
@@ -899,7 +903,6 @@ public class KBPlayer : KBControllableGameObject
 
                     upperBody = upperBodyMech;
                     lowerBody = lowerBodyMech;
-                    //hitbox = hitboxMech;
                     type = PlayerType.mech;
 
                     break;
@@ -908,7 +911,6 @@ public class KBPlayer : KBControllableGameObject
 
                     upperBody = upperBodyTank;
                     lowerBody = lowerBodyTank;
-                    //hitbox = hitboxTank;
                     type = PlayerType.tank;
 
                     break;
@@ -925,7 +927,6 @@ public class KBPlayer : KBControllableGameObject
             }
             upperBody.SetActive(true);
             lowerBody.SetActive(true);
-            //hitbox.SetActive(true);
 
             if (team == KBConstants.Team.Blue)
             {
@@ -943,7 +944,6 @@ public class KBPlayer : KBControllableGameObject
             InitializeForRespawn();
             SetupAbilities();
 
-            //Spawn();
         }
     }
 
