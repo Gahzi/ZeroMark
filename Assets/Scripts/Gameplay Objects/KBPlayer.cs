@@ -325,13 +325,13 @@ public class KBPlayer : KBControllableGameObject
 
     private void OnGUI()
     {
-        if (networkPlayer.isLocal)
-        {
-            if (triggerLockout)
-            {
-                GUI.Box(new Rect(Screen.width / 2 - 80, Screen.height / 2, 160, 20), "BANKING TOKENS");
-            }
-        }
+        //if (networkPlayer.isLocal)
+        //{
+        //    if (triggerLockout)
+        //    {
+        //        GUI.Box(new Rect(Screen.width / 2 - 80, Screen.height / 2, 160, 20), "BANKING TOKENS");
+        //    }
+        //}
     }
 
     private void OnPhotonInstantiate(PhotonMessageInfo msg)

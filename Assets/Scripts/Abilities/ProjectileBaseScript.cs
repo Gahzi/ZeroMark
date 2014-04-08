@@ -24,8 +24,11 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
     protected Vector3 direction;
     public bool collideWithProjectiles;
     public bool collideWithEnvironment;
+    public bool homingProjectile;
 
     public AreaOfEffectDamageScript explosionPrefab;
+
+    public KBPlayer target;
 
     public override void Start()
     {
@@ -41,6 +44,10 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
     protected override void Update()
     {
         base.Update();
+        if (homingProjectile && target != null)
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(target.transform.position - owner.transform.position), 5.0f * Time.deltaTime);
+        }
         transform.Translate(Vector3.forward * (projectileSpeed + inheritSpeed) * Time.deltaTime);
     }
 

@@ -13,7 +13,7 @@ namespace KBConstants
         public enum type
         {
             Player, Gamepad, Item, PlayerCamera,  BasicRigidbodyCube,
-            MachinegunBullet, Rocket, PlasmaBullet, LightAutoLaserBullet, HeavyCannonBullet, LightCannonBullet,
+            MachinegunBullet, Rocket, PlasmaBullet, LightAutoLaserBullet, HeavyCannonBullet, LightCannonBullet, HomingRocket,
             KillTagBlue, KillTagRed, 
             SmallExplosion, RocketExplosion, NoDamageExplosionMedium,
             FloatingText
@@ -37,7 +37,8 @@ namespace KBConstants
             {type.NoDamageExplosionMedium, "abilities/explosion/mediumexplosion"},
             {type.FloatingText, "gui/floatingtext"},
             {type.HeavyCannonBullet, "abilities/bullet/heavycannonbullet"},
-            {type.LightCannonBullet, "abilities/bullet/lightcannonbullet"}
+            {type.LightCannonBullet, "abilities/bullet/lightcannonbullet"},
+            {type.HomingRocket, "abilities/bullet/homingrocketbullet"}
         };
 
         public static IDictionary<type, string> PREFAB_NAMES { get { return prefabNames; } }

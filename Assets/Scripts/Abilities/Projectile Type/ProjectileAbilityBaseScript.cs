@@ -15,7 +15,7 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
     protected int clipSize;
     #endregion
 
-    public ProjectileBaseScript[] projectileType = new ProjectileBaseScript[2];
+    public ProjectileBaseScript[] projectileType = new ProjectileBaseScript[3];
     public int level;
     protected int maxRange;
     public int ammo;
@@ -35,13 +35,17 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
     public override void FixedUpdate()
     {
         base.FixedUpdate();
-        if (owner.killTokens < 50)
+        if (owner.killTokens < 1)
         {
             level = 0;
         }
-        else if (owner.killTokens >= 50)
+        else if (owner.killTokens > 0 && owner.killTokens <= 50)
         {
             level = 1;
+        }
+        else if (owner.killTokens > 50)
+        {
+            level = 2;
         }
     }
 
@@ -54,6 +58,10 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
             projectile.inheritSpeed = _inheritSpeed;
             projectile.Team = firedBy.Team;
             projectile.Init(firedBy);
+            if (projectile.homingProjectile)
+            {
+                projectile.target = GameManager.Instance.FindClosestPlayer(owner, 10, true);
+            }
             if (audio.clip != null)
             {
                 audio.PlayOneShot(audio.clip);

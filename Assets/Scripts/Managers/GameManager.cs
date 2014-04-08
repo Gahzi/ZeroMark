@@ -425,4 +425,40 @@ public class GameManager : Photon.MonoBehaviour
             return false;
         }
     }
+
+    public KBPlayer FindClosestPlayer(KBPlayer fromPlayer, float minimumDist, bool oppositeTeamOnly)
+    {
+        List<KBPlayer> players = GameManager.Instance.players;
+        KBPlayer target = null;
+        float closest = 0;
+        for (int i = 0; i < players.Count; i++)
+        {
+            if (players[i].GetHashCode() != fromPlayer.GetHashCode())
+            {
+                float distance = 0;
+                if (oppositeTeamOnly && players[i].team != fromPlayer.team)
+                {
+                    distance = Vector3.Distance(fromPlayer.transform.position, players[i].transform.position);
+                }
+                else if (!oppositeTeamOnly)
+                {
+                    distance = Vector3.Distance(fromPlayer.transform.position, players[i].transform.position);
+                }
+                if (distance > minimumDist)
+                {
+                    if (closest == 0)
+                    {
+                        closest = distance;
+                        target = players[i];
+                    }
+                    else if (closest != 0 && distance < closest)
+                    {
+                        closest = distance;
+                        target = players[i];
+                    }
+                }
+            }
+        }
+        return target;
+    }
 }
