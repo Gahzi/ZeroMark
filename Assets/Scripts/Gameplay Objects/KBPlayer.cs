@@ -268,7 +268,9 @@ public class KBPlayer : KBControllableGameObject
     {
         if (Time.time > lastDamageTime + regenDelay)
         {
-            health = stats.health;
+            //float floatHealth = Mathf.Lerp(health, stats.health, 3.0f * Time.deltaTime);
+            float floatHealth = Mathf.MoveTowards(health, stats.health, 5.0f);
+            health = Mathf.FloorToInt(floatHealth);
         }
         
         
@@ -822,7 +824,7 @@ public class KBPlayer : KBControllableGameObject
 
         Camera.main.GetComponent<ScreenShake>().StopShake();
         transform.position = GameObject.FindGameObjectWithTag("Prespawn").transform.position;
-        health = 1000;
+        health = coreBaseHealth;
     }
 
     /// <summary>
