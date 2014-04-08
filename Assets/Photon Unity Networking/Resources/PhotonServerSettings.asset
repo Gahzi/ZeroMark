@@ -27,4 +27,14 @@ MonoBehaviour:
   - AddPlayer
   - SetPlayerLevel
   - createObject
+  - SetOwner
+  - NotifyKill
+  - ConfirmHitToOthers
+  - SetPlayerStats
+  - CreateObject
+  - DestroyObject
+  - Setup
+  - SwitchType
+  - Fire
+  - Reload
   DisableAutoOpenWizard: 0

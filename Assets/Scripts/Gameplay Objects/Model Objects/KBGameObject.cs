@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class KBGameObject : Photon.MonoBehaviour
+public abstract class KBGameObject : Photon.MonoBehaviour
 {
     public Team team;
     public Team Team
@@ -17,10 +17,9 @@ public class KBGameObject : Photon.MonoBehaviour
         }
     }
     public int health;
-    protected GameManager gm;
     protected List<KBGameObject> collisionObjects;
 
-    private void Awake()
+    protected void Awake()
     {
         /*
         if (photonView.isMine)
@@ -33,18 +32,15 @@ public class KBGameObject : Photon.MonoBehaviour
 
     public virtual void Start()
     {
-        gm = GameManager.Instance;
     }
 
-    private void Update()
+    protected virtual void FixedUpdate()
     {
     }
 
-    public virtual void takeDamage(int amount)
-    {
-    }
+    public virtual int TakeDamage(int amount) { return 0; }
 
-    protected void OnTriggerEnter(Collider other)
+    protected virtual void OnTriggerEnter(Collider other)
     {
         KBGameObject o = (KBGameObject)other.gameObject.GetComponentInChildren<KBGameObject>();
         if (o != null)
@@ -53,7 +49,7 @@ public class KBGameObject : Photon.MonoBehaviour
         }
     }
 
-    protected void OnTriggerExit(Collider other)
+    protected virtual void OnTriggerExit(Collider other)
     {
         KBGameObject o = (KBGameObject)other.gameObject.GetComponentInChildren<KBGameObject>();
         if (o != null)

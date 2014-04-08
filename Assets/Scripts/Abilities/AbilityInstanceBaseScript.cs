@@ -25,24 +25,48 @@ abstract public class AbilityInstanceBaseScript : MonoBehaviour
     public float lifetime;
     protected float spawnTime;
     public int damage;
+    public KBPlayer owner;
 
-    // Use this for initialization
     public virtual void Start()
     {
         spawnTime = Time.time;
         rigidbody.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY;
         rigidbody.isKinematic = true;
         collider.isTrigger = true;
-        //gameObject.layer = LayerMask.NameToLayer("Hitboxes1");
+        damage = 0;
     }
 
-    // Update is called once per frame
-    public virtual void Update()
+    /// <summary>
+    /// Call this after spawning an instance of an ability out of ObjectPool to reinitialize the instance.
+    /// </summary>
+    public virtual void Init(KBPlayer _owner)
+    {
+        spawnTime = Time.time;
+        owner = _owner;
+    }
+
+    public virtual void Init()
+    {
+        Init(null);
+    }
+
+    protected virtual void Update()
     {
         if (Time.time - spawnTime > lifetime)
         {
-            Destroy(gameObject);
+            //DoOnHit(); // Uncomment this line to have projecticles "hit" on timeout
+            ObjectPool.Recycle(this);
         }
+    }
+
+    public virtual void DoOnHit()
+    {
+        Reset();
+    }
+
+    public virtual void Reset()
+    {
+        ObjectPool.Recycle(this);
     }
 
     public abstract void OnTriggerEnter(Collider other);

@@ -13,8 +13,9 @@ public class ItemSpawn : KBGameObject
     private float lastSpawn;
     private bool spawnedItem;
 
-    private void Start()
+    public override void Start()
     {
+        base.Start();
         if (connectedCaptureZone == null)
         {
             Debug.LogWarning("ItemSpawn #" + gameObject.GetInstanceID() + " is missing a reference to its parent CaptureZone");
@@ -53,10 +54,10 @@ public class ItemSpawn : KBGameObject
     public void SpawnItem()
     {
         //createObject(ObjectConstants.type.Player, new Vector3(0, 0, 0), Quaternion.identity, Team.Red).GetComponent<PlayerLocal>(); ;
-        GameManager.Instance.createObject(ObjectConstants.type.Item, new Vector3(
-                transform.position.x,
-                2.0f,
-                transform.position.z),Quaternion.identity,controllingTeam);
+        //GameManager.Instance.createObject(ObjectConstants.type.Item, new Vector3(
+        //        transform.position.x,
+        //        2.0f,
+        //        transform.position.z),Quaternion.identity,controllingTeam);
             
         waitingForSpawn = false;
         spawnedItem = true;

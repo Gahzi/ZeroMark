@@ -7,63 +7,119 @@ using KBConstants;
 /// in the direction the source obj is "aiming" (Vec3)
 /// Plays sound on fire.
 /// </summary>
-public class ProjectileAbilityBaseScript : AbilitySlotBaseScript
+public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
 {
 
+    #region CONSTANTS
+    protected float reloadTime;
+    protected int clipSize;
+    #endregion
+
     protected ProjectileBaseScript projectileType;
-    private int maxRange;
-    public bool fired;
+    protected int maxRange;
+    public int ammo;
+    public bool reloading;
+    protected AudioClip reloadClip;
 
     public override void Start()
     {
         base.Start();
-    }
-    
-    void Update()
-    {
-        if (abilityActive)
-        {
-            if (!cooldownTimer.IsTimerActive(cooldownTimerNumber))
-            {
-                Fire(maxRange, Team);
-            }
-        }
+        ObjectPool.CreatePool(projectileType);
     }
 
-    public ProjectileBaseScript Fire(Vector3 direction, Team firedBy)
+    public override void FixedUpdate()
     {
-        ProjectileBaseScript projectile = (ProjectileBaseScript)Instantiate(projectileType, transform.position, Quaternion.Euler(direction));
-        projectile.Team = firedBy;
-        audio.Play();
-        cooldownTimerNumber = cooldownTimer.StartTimer(cooldown);
+        base.FixedUpdate();
+    }
 
-        Collider[] collider = transform.parent.GetComponentsInChildren<Collider>();
-        foreach (Collider c in collider)
+    protected ProjectileBaseScript Fire(Vector3 direction, KBPlayer firedBy, float _inheritSpeed = 0.0f)
+    {
+        ProjectileBaseScript projectile = null;
+        if (cooldown <= 0 && ammo > 0 && !reloading)
         {
-            if (c.enabled)
+            projectile = ObjectPool.Spawn(projectileType, transform.position, Quaternion.Euler(direction));
+            projectile.inheritSpeed = _inheritSpeed;
+            projectile.Team = firedBy.Team;
+            projectile.Init(firedBy);
+            if (audio.clip != null)
             {
-                Physics.IgnoreCollision(c, projectile.collider, true); 
+                audio.PlayOneShot(audio.clip);
             }
+            if (particleSystem != null)
+            {
+                StartCoroutine(ParticleBurstStaged());
+            }
+            cooldown = cooldownStart;
+            available = false;
 
+            ammo--;
+
+            Collider[] collider = transform.parent.GetComponentsInChildren<Collider>();
+            foreach (Collider c in collider)
+            {
+                if (c.enabled)
+                {
+                    Physics.IgnoreCollision(c, projectile.collider, true);
+                }
+            }
         }
         return projectile;
     }
 
-    public ProjectileBaseScript Fire(Team firedBy)
+    protected ProjectileBaseScript Fire(KBPlayer firedBy, float _inheritSpeed = 0)
     {
-        return Fire(transform.rotation.eulerAngles, firedBy);
+        return Fire(transform.rotation.eulerAngles, firedBy, _inheritSpeed);
     }
 
-    public ProjectileBaseScript Fire(int maxRange, Team firedBy)
+    protected ProjectileBaseScript Fire(int maxRange, KBPlayer firedBy, float _inheritSpeed = 0)
     {
-        ProjectileBaseScript p = Fire(firedBy);
-        p.setLifetimeForMaxRange(maxRange);
+        ProjectileBaseScript p = Fire(firedBy, _inheritSpeed);
+        if (p != null)
+        {
+            p.setLifetimeForMaxRange(maxRange);
+        }
         return p;
+    }
+
+    public void PlayerFire(float _inheritSpeed)
+    {
+        Fire(maxRange, owner, _inheritSpeed);
     }
 
     public void SetMaxRange(int maxRange)
     {
         this.maxRange = maxRange;
+    }
+
+    protected IEnumerator Reload()
+    {
+        reloading = true;
+        if (reloadClip != null)
+        {
+            audio.PlayOneShot(reloadClip);
+        }
+        yield return new WaitForSeconds(reloadTime);
+        ammo = clipSize;
+        reloading = false;
+    }
+
+    public void PlayerTriggerReload()
+    {
+        if (!reloading)
+        {
+            StartCoroutine(Reload());
+        }
+    }
+
+    private IEnumerator ParticleBurstStaged()
+    {
+        particleSystem.Emit(30);
+        yield return new WaitForSeconds(0.05f);
+        particleSystem.Emit(30);
+        yield return new WaitForSeconds(0.05f);
+        particleSystem.Emit(30);
+        yield return new WaitForSeconds(0.05f);
+        particleSystem.Emit(30);
     }
 
 }

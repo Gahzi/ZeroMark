@@ -8,18 +8,18 @@ TagManager:
   - Environment
   - Hitbox
   - Item
-  - Factory
+  - KillTag
   - CaptureZone
-  - RangeTrigger
+  - Teleporter
   - ItemZone
-  - Core
-  - Model
+  - 
+  - 
   - GUI
-  - 
-  - 
-  - 
-  - 
-  - 
+  - BankZone
+  - SpawnDrone
+  - SpawnMech
+  - SpawnTank
+  - Prespawn
   - 
   - 
   - 

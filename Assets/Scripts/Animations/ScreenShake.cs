@@ -5,7 +5,6 @@ public class ScreenShake : MonoBehaviour
     Vector3 target;
     Vector3 originalPosition;
     Transform camPos;
-    Camera camera;
     public bool shake;
     private float startTime;
     private float activeTime;
@@ -13,9 +12,8 @@ public class ScreenShake : MonoBehaviour
     
     private void Start()
     {
-        camera = FindObjectOfType<Camera>();
-        originalPosition = camera.gameObject.transform.position;
-        camPos = camera.gameObject.transform;
+        originalPosition = Camera.main.gameObject.transform.position;
+        camPos = Camera.main.gameObject.transform;
         target = originalPosition;
         shake = false;
         StopShake();
@@ -38,8 +36,8 @@ public class ScreenShake : MonoBehaviour
 
     public void Shake()
     {
-        target = new Vector3(camera.transform.position.x + Random.Range(-intensity, intensity), camera.transform.position.y + Random.Range(-intensity, intensity), camera.transform.position.z);
-        camPos.position = Vector3.Lerp(camera.transform.position, target, 10 * Time.deltaTime);
+        target = new Vector3(Camera.main.transform.position.x + Random.Range(-intensity, intensity), camera.transform.position.y + Random.Range(-intensity, intensity), camera.transform.position.z);
+        camPos.position = Vector3.Lerp(Camera.main.transform.position, target, 10 * Time.deltaTime);
     }
 
     public void StartShake(float time, float _intensity)

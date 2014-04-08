@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CaptureZone : KBGameObject
+public class CaptureZone : Zone
 {
+    
+    // Capture zone class should probably inherit from a more generic type of zone.
+    
     #region CONSTANTS
 
     public static int CAPTURE_REQUIRED = 1000;
@@ -33,22 +36,20 @@ public class CaptureZone : KBGameObject
     public CaptureZone[] requiredZones = new CaptureZone[0];
     public ItemSpawn[] connectedItemSpawns = new ItemSpawn[0];
     private bool canSwitchState = true;
-    public List<PlayerLocal> players;
+    public List<KBPlayer> players;
     private AudioClip captureProgress;
     private AudioClip captureComplete;
     public RotatableGuiItem rGui;
     public bool redUnlocked, blueUnlocked;
     private float captureFraction = 0.0f;
 
-    private void Start()
+    public override void Start()
     {
         base.Start();
         captureTotal = 0;
         state = ZoneState.Unoccupied;
-        players = new List<PlayerLocal>(10);
-
-        captureComplete = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.CaptureComplete]);
-        captureProgress = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.CaptureProgress]);
+        players = new List<KBPlayer>(10);
+		LoadSounds();
 
         if (upgradePointsOnCapture == 0)
         {
@@ -60,18 +61,9 @@ public class CaptureZone : KBGameObject
         {
             i.connectedCaptureZone = this;
         }
-
-        rGui = GetComponent<RotatableGuiItem>();
-        if (rGui == null)
-        {
-            gameObject.AddComponent<RotatableGuiItem>();
-        }
-        rGui.ScreenpointToAlign = RotatableGuiItem.AlignmentScreenpoint.BottomLeft;
-        rGui.angle = 45;
-        rGui.enabled = false;
     }
 
-    private void OnDrawGizmos()
+    protected void OnDrawGizmos()
     {
         Vector3 p = new Vector3(transform.position.x, 5, transform.position.z);
         if (requiredZones.Length > 0)
@@ -122,7 +114,7 @@ public class CaptureZone : KBGameObject
         }
     }
 
-    private void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         #region Unlock Handling
 
@@ -273,32 +265,32 @@ public class CaptureZone : KBGameObject
                 break;
         }
 
-        if (t == Team.Red || t == Team.Blue)
-        {
-            foreach (KBGameObject o in collisionObjects)
-            {
-                PlayerLocal p = o.gameObject.GetComponentInChildren<PlayerLocal>();
-                if (p != null)
-                {
-                    switch (p.team)
-                    {
-                        case Team.Red:
-                            p.upgradePoints += upgradePointsOnCapture;
-                            break;
+        //if (t == Team.Red || t == Team.Blue)
+        //{
+        //    foreach (KBGameObject o in collisionObjects)
+        //    {
+        //        KBPlayer p = o.gameObject.GetComponentInChildren<KBPlayer>();
+        //        if (p != null)
+        //        {
+        //            switch (p.team)
+        //            {
+        //                case Team.Red:
+        //                    p.upgradePoints += upgradePointsOnCapture;
+        //                    break;
 
-                        case Team.Blue:
-                            p.upgradePoints += upgradePointsOnCapture;
-                            break;
+        //                case Team.Blue:
+        //                    p.upgradePoints += upgradePointsOnCapture;
+        //                    break;
 
-                        case Team.None:
-                            break;
+        //                case Team.None:
+        //                    break;
 
-                        default:
-                            break;
-                    }
-                }
-            }
-        }
+        //                default:
+        //                    break;
+        //            }
+        //        }
+        //    }
+        //}
     }
 
     private void OnTriggerStay(Collider other)
@@ -312,29 +304,15 @@ public class CaptureZone : KBGameObject
         }
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        base.OnTriggerEnter(other);
-        //if (other.gameObject.CompareTag("Player"))
-        //{
-        //    Player p = other.gameObject.GetComponent<Player>();
-        //    players.Add(p);
-        //    audio.clip = captureProgress;
-        //    audio.Play();
-        //    audio.loop = true;
-        //}
-    }
+    //protected override void OnTriggerEnter(Collider other)
+    //{
+    //    base.OnTriggerEnter(other);
+    //}
 
-    private void OnTriggerExit(Collider other)
-    {
-        base.OnTriggerExit(other);
-        //if (other.gameObject.CompareTag("Player"))
-        //{
-        //    Player p = other.gameObject.GetComponent<Player>();
-        //    players.Remove(p);
-        //    audio.Stop();
-        //}
-    }
+    //protected override void OnTriggerExit(Collider other)
+    //{
+    //    base.OnTriggerExit(other);
+    //}
 
     /// <summary>
     /// Calculates the capture delta & applies team-wide percentage bonus to final rate and applies final delta to capture total.
@@ -369,33 +347,30 @@ public class CaptureZone : KBGameObject
         
         foreach (KBGameObject o in collisionObjects)
         {
-            PlayerLocal p = o.gameObject.GetComponentInChildren<PlayerLocal>();
+            KBPlayer p = o.gameObject.GetComponentInChildren<KBPlayer>();
             if (p != null)
             {
-                if (p.canCapture)
+                switch (p.team)
                 {
-                    switch (p.team)
-                    {
-                        case Team.Red:
-                            if (redUnlocked && p.health > 0)
-                            {
-                                x += p.stats.captureSpeed;
-                            }
-                            break;
+                    case Team.Red:
+                        if (redUnlocked && p.health > 0)
+                        {
+                            x += p.stats.captureSpeed;
+                        }
+                        break;
 
-                        case Team.Blue:
-                            if (blueUnlocked && p.health > 0)
-                            {
-                                x -= p.stats.captureSpeed;
-                            }
-                            break;
+                    case Team.Blue:
+                        if (blueUnlocked && p.health > 0)
+                        {
+                            x -= p.stats.captureSpeed;
+                        }
+                        break;
 
-                        case Team.None:
-                            break;
+                    case Team.None:
+                        break;
 
-                        default:
-                            break;
-                    }
+                    default:
+                        break;
                 }
             }
         }
@@ -455,7 +430,7 @@ public class CaptureZone : KBGameObject
         }
     }
 
-    private void RunVisualFeedback(int capturePoints)
+    protected void RunVisualFeedback(int capturePoints)
     {
         if (capturePoints > 0)
         {
@@ -506,5 +481,23 @@ public class CaptureZone : KBGameObject
                     break;
             }
         }
+    }
+
+    protected void SetRGUI()
+    {
+        rGui = GetComponent<RotatableGuiItem>();
+        if (rGui == null)
+        {
+            gameObject.AddComponent<RotatableGuiItem>();
+        }
+        rGui.ScreenpointToAlign = RotatableGuiItem.AlignmentScreenpoint.BottomLeft;
+        rGui.angle = 45;
+        rGui.enabled = false;
+    }
+
+    protected void LoadSounds()
+    {
+        //captureComplete = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.CaptureComplete]);
+        //captureProgress = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.CaptureProgress]);
     }
 }

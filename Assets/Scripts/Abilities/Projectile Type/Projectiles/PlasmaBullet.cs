@@ -4,36 +4,26 @@ public class PlasmaBullet : ProjectileBaseScript
 {
     #region CONSTANTS
 
-    public static int PLASMABULLET_DAMAGE = 1;
+    public static int _damage = 50;
 
     #endregion CONSTANTS
-
+    
     public override void Start()
     {
         base.Start();
         collideWithProjectiles = false;
+        damage = _damage;
     }
 
-    private void Update()
+    protected override void Update()
     {
         base.Update();
     }
 
-    private void OnTriggerEnter(Collider other)
+    public override void DoOnHit()
     {
-        if (other.gameObject.CompareTag("Hitbox"))
-        {
-            KBGameObject o = other.gameObject.transform.parent.GetComponent<KBGameObject>();
-            if (o.Team != Team)
-            {
-                o.takeDamage(PLASMABULLET_DAMAGE);
-                Destroy(gameObject);
-            }
-        }
-        if (other.gameObject.CompareTag("Environment"))
-        {
-            Destroy(gameObject);
-        }
+        AreaOfEffectDamageScript a = ObjectPool.Spawn(explosionPrefab, transform.position);
+        a.Init(); 
+        base.DoOnHit();
     }
-
 }

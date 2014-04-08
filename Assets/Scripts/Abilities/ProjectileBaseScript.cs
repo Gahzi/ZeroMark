@@ -12,49 +12,83 @@
 /// </summary>
 abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
 {
-    [Range(1.0f, 100.0f)]
-    public float projectileSpeed;
+    #region CONSTANTS
 
+    private static int DAMAGE = 0;
+
+    #endregion CONSTANTS
+
+    [Range(1.0f, 500.0f)]
+    public float projectileSpeed;
+    public float inheritSpeed;
     protected Vector3 direction;
-    public bool physicsProjectile;
-    protected bool collideWithProjectiles;
+    public bool collideWithProjectiles;
+    public bool collideWithEnvironment;
+
+    public AreaOfEffectDamageScript explosionPrefab;
 
     public override void Start()
     {
         base.Start();
         gameObject.tag = "Projectile";
-        collideWithProjectiles = true;
-
-        if (physicsProjectile)
+        damage = DAMAGE;
+        if (explosionPrefab != null)
         {
-            rigidbody.isKinematic = false;
-            direction.Normalize();
-            direction.z = 0;
-            rigidbody.AddForce(projectileSpeed * direction, ForceMode.VelocityChange);
+            ObjectPool.CreatePool(explosionPrefab);
         }
     }
 
-    public virtual void Update()
+    protected override void Update()
     {
         base.Update();
-
-        if (physicsProjectile)
-        {
-            // Physics movement occurs @ init
-        }
-        else
-        {
-            transform.Translate(Vector3.forward * projectileSpeed * Time.deltaTime);
-        }
+        transform.Translate(Vector3.forward * (projectileSpeed + inheritSpeed) * Time.deltaTime);
     }
 
     public override void OnTriggerEnter(Collider other)
     {
+        // Bullet will collide with anything that is a projectile, environment, or hitbox tagged.
+        // If it hits a hitbox, it needs to inform the owner of the bullet that it has hit a player.
+        if (other.gameObject.CompareTag("Hitbox"))
+        {
+            KBGameObject o = other.gameObject.transform.parent.transform.parent.GetComponent<KBGameObject>();
+            KBPlayer victimPlayer = other.gameObject.transform.parent.transform.parent.GetComponent<KBPlayer>();
+
+            if (victimPlayer != null)
+            {
+                if (victimPlayer.Team != Team && victimPlayer.health > 0 && victimPlayer.invulnerabilityTime <= 0)
+                {
+
+                    if (victimPlayer.photonView.isMine)
+                    {
+                        int victimHealth = o.TakeDamage(damage);
+                        if (victimHealth <= 0)
+                        {
+                            o.gameObject.GetComponent<KBPlayer>().Die(owner.gameObject);
+                        }
+                        owner.ConfirmHit(o.gameObject.GetComponent<KBPlayer>(), damage);
+                        DoOnHit();
+                    }
+                    else
+                    {
+                        owner.ConfirmHitToOthers(victimPlayer.networkPlayer, damage);
+                        DoOnHit();
+                    }
+                }
+            }
+        }
+        if (collideWithEnvironment)
+        {
+            if (other.gameObject.CompareTag("Environment"))
+            {
+                DoOnHit();
+            }
+        }
+
         if (collideWithProjectiles)
         {
             if (other.gameObject.CompareTag("Projectile"))
             {
-                Destroy(gameObject);
+                DoOnHit();
             }
         }
     }
