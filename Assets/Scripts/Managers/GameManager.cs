@@ -152,7 +152,7 @@ public class GameManager : Photon.MonoBehaviour
                     }
                       
                     //CheckPlayerUpgradePoints();
-                    RunGui();
+                    //RunGui();
                     break;
 
                 case GameState.RedWins:
@@ -325,23 +325,23 @@ public class GameManager : Photon.MonoBehaviour
         return spawnpoints;
     }
 
-    private void RunGui()
-    {
-        foreach (var c in captureZones)
-        {
-            if ((localPlayer.team == Team.Blue && c.state != CaptureZone.ZoneState.Blue && c.blueUnlocked) || (localPlayer.team == Team.Red && c.state != CaptureZone.ZoneState.Red && c.redUnlocked))
-            {
-                c.rGui.enabled = true;
-                Vector3 sPos = Camera.main.WorldToScreenPoint(c.transform.position);
-                c.rGui.relativePosition = new Vector2(sPos.x, -sPos.y);
-                c.rGui.size = new Vector2((Mathf.Sin(Time.time * 4) + 1) * 32 + 64, (Mathf.Sin(Time.time * 4) + 1) * 32 + 64);
-            }
-            else
-            {
-                c.rGui.enabled = false;
-            }
-        }
-    }
+    //private void RunGui()
+    //{
+    //    foreach (var c in captureZones)
+    //    {
+    //        if ((localPlayer.team == Team.Blue && c.state != CaptureZone.ZoneState.Blue && c.blueUnlocked) || (localPlayer.team == Team.Red && c.state != CaptureZone.ZoneState.Red && c.redUnlocked))
+    //        {
+    //            c.rGui.enabled = true;
+    //            Vector3 sPos = Camera.main.WorldToScreenPoint(c.transform.position);
+    //            c.rGui.relativePosition = new Vector2(sPos.x, -sPos.y);
+    //            c.rGui.size = new Vector2((Mathf.Sin(Time.time * 4) + 1) * 32 + 64, (Mathf.Sin(Time.time * 4) + 1) * 32 + 64);
+    //        }
+    //        else
+    //        {
+    //            c.rGui.enabled = false;
+    //        }
+    //    }
+    //}
 
     public void CreateObject(int type, Vector3 position, Quaternion rotation, int newTeam)
     {
