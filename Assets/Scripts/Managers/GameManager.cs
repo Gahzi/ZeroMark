@@ -156,7 +156,7 @@ public class GameManager : Photon.MonoBehaviour
                     CheckGameOver();
                       
                     //CheckPlayerUpgradePoints();
-                    RunGui();
+                    //RunGui();
                     break;
 
                 case GameState.RedWins:
