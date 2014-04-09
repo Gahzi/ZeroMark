@@ -6,7 +6,9 @@ public class RocketBullet : ProjectileBaseScript
 
     #region CONSTANTS
 
-    public static int _damage = 100;
+    public static int damageL0 = 200;
+    public static int damageL1 = 300;
+    public static int damageL2 = 450;
     public float rocketInitSpeed;
     public int accel;
 
@@ -17,9 +19,9 @@ public class RocketBullet : ProjectileBaseScript
     public override void Start()
     {
         base.Start();
-        damage = _damage;
         targetSpeed = projectileSpeed;
         projectileSpeed = rocketInitSpeed;
+        damageLevel = new int[3] { damageL0, damageL1, damageL2 };
     }
 
     protected override void Update()

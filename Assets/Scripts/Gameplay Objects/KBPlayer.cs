@@ -16,7 +16,7 @@ public class KBPlayer : KBControllableGameObject
     private static readonly int droneLowerRotationSpeed = 300;
     private static readonly int droneUpperRotationSpeed = 75;
     private static readonly int droneMovementSpeed = 55;
-    private static readonly int droneBaseHealth = 100;
+    private static readonly int droneBaseHealth = 150;
     private static readonly float droneAccel = 0.0125f;
     private static readonly float dronePowerDecel = 0.25f;
     private static readonly float droneFriction = 0.075f;

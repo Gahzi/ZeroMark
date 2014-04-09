@@ -10,6 +10,7 @@ public class MoveCameraWithMouse : MonoBehaviour
     public Transform startTransform;
     public float targetFov;
     private float startFov;
+    public float lerpSpeed;
 
     private void Start()
     {
@@ -21,9 +22,9 @@ public class MoveCameraWithMouse : MonoBehaviour
     private void Update()
     {
         targetPos = new Vector3(anchorTrans.position.x + (moveAmount.x * (Input.mousePosition.x - (Screen.currentResolution.width / 2)) / Screen.currentResolution.width), anchorTrans.position.y + (moveAmount.y * (Input.mousePosition.y - (Screen.currentResolution.height / 2)) / Screen.currentResolution.height), anchorTrans.position.z);
-        transform.rotation = Quaternion.Slerp(transform.rotation, anchorTrans.rotation, 0.5f * Time.deltaTime);
-        transform.position = Vector3.Lerp(transform.position, targetPos, 0.5f * Time.deltaTime);
-        Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, targetFov, 0.5f * Time.deltaTime);
+        transform.rotation = Quaternion.Slerp(transform.rotation, anchorTrans.rotation, lerpSpeed * Time.deltaTime);
+        transform.position = Vector3.Lerp(transform.position, targetPos, lerpSpeed * Time.deltaTime);
+        Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, targetFov, lerpSpeed * Time.deltaTime);
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             transform.rotation = anchorTrans.rotation;

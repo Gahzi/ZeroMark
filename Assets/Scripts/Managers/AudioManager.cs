@@ -10,6 +10,7 @@ public class AudioManager : MonoBehaviour
     {
         audio.clip = bgm;
         audio.playOnAwake = true;
+        audio.volume = 0.35f;
     }
 
     void Update()

@@ -6,7 +6,9 @@ public class HeavyCannonBullet : ProjectileBaseScript
 
     #region CONSTANTS
 
-    public static int _damage = 30;
+    public static int damageL0 = 60;
+    public static int damageL1 = 80;
+    public static int damageL2 = 100;
 
     #endregion CONSTANTS
 
@@ -14,7 +16,7 @@ public class HeavyCannonBullet : ProjectileBaseScript
     {
         base.Start();
         collideWithProjectiles = false;
-        damage = _damage;
+        damageLevel = new int[3] { damageL0, damageL1, damageL2 };
     }
 
     protected override void Update()

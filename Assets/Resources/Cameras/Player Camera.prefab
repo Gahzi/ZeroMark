@@ -79,7 +79,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: .300000012
-  far clip plane: 300
+  far clip plane: 1000
   field of view: 90
   orthographic: 0
   orthographic size: 20
@@ -238,7 +238,7 @@ MonoBehaviour:
       tangentMode: 10
     m_PreInfinity: 2
     m_PostInfinity: 2
-  saturation: .540000021
+  saturation: .800000012
   selectiveCc: 0
   selectiveFromColor: {r: 1, g: 1, b: 1, a: 1}
   selectiveToColor: {r: 1, g: 1, b: 1, a: 1}
@@ -261,22 +261,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a773099f140e846f7835d27351846623, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tweakMode: 0
+  tweakMode: 1
   screenBlendMode: 0
   hdr: 0
   sepBlurSpread: 2.36999989
-  quality: 0
-  bloomIntensity: 1.49000001
-  bloomThreshhold: .140000001
+  quality: 1
+  bloomIntensity: 1.07000005
+  bloomThreshhold: .119999997
   bloomThreshholdColor: {r: 1, g: 1, b: 1, a: 1}
   bloomBlurIterations: 1
   hollywoodFlareBlurIterations: 4
   flareRotation: 0
   lensflareMode: 2
-  hollyStretchWidth: .50999999
-  lensflareIntensity: 1.20000005
-  lensflareThreshhold: .300000012
-  lensFlareSaturation: .600000024
+  hollyStretchWidth: .349999994
+  lensflareIntensity: 1.99000001
+  lensflareThreshhold: .209999993
+  lensFlareSaturation: .99000001
   flareColorA: {r: .400000006, g: .400000006, b: .800000012, a: .75}
   flareColorB: {r: .400000006, g: .800000012, b: .800000012, a: .75}
   flareColorC: {r: .800000012, g: .400000006, b: .800000012, a: .75}

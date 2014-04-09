@@ -11082,6 +11082,7 @@ MonoBehaviour:
   anchorTrans: {fileID: 0}
   startTransform: {fileID: 0}
   targetFov: 0
+  lerpSpeed: 0
 --- !u!82 &236898031
 AudioSource:
   m_ObjectHideFlags: 0
@@ -67584,7 +67585,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 3
   m_audioClip: {fileID: 8300000, guid: bab04e0165b554541a31f12aaac784ff, type: 3}
-  m_PlayOnAwake: 0
+  m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
   Loop: 1
@@ -67648,6 +67649,7 @@ MonoBehaviour:
   anchorTrans: {fileID: 236898022}
   startTransform: {fileID: 236898022}
   targetFov: 0
+  lerpSpeed: 1
 --- !u!114 &1492969334
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -68574,6 +68576,7 @@ MonoBehaviour:
   anchorTrans: {fileID: 236898022}
   startTransform: {fileID: 236898022}
   targetFov: 0
+  lerpSpeed: 0
 --- !u!114 &1501695607
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -90662,6 +90665,7 @@ MonoBehaviour:
   anchorTrans: {fileID: 0}
   startTransform: {fileID: 0}
   targetFov: 0
+  lerpSpeed: 0
 --- !u!114 &1996765807
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -96177,6 +96181,7 @@ MonoBehaviour:
   anchorTrans: {fileID: 236898022}
   startTransform: {fileID: 236898022}
   targetFov: 0
+  lerpSpeed: 0
 --- !u!114 &2129725696
 MonoBehaviour:
   m_ObjectHideFlags: 0

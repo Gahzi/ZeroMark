@@ -7,7 +7,9 @@ public class HomingMiniRocket : ProjectileBaseScript
 
     #region CONSTANTS
 
-    public static int _damage = 10;
+    public static int damageL0 = 30;
+    public static int damageL1 = 30;
+    public static int damageL2 = 45;
     public float rocketInitSpeed;
     public int accel;
 
@@ -18,10 +20,10 @@ public class HomingMiniRocket : ProjectileBaseScript
     public override void Start()
     {
         base.Start();
-        damage = _damage;
         targetSpeed = projectileSpeed;
         projectileSpeed = rocketInitSpeed;
         homingProjectile = true;
+        damageLevel = new int[3] { damageL0, damageL1, damageL2 };
     }
 
     protected override void Update()
@@ -44,6 +46,11 @@ public class HomingMiniRocket : ProjectileBaseScript
     {
         projectileSpeed = rocketInitSpeed;
         base.Reset();
+    }
+
+    protected override void DoHomingBehavior()
+    {
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetPlayer.transform.position - owner.transform.position), 5.0f * Time.deltaTime);
     }
 
 }

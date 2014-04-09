@@ -12,9 +12,15 @@ namespace KBConstants
     {
         public enum type
         {
-            Player, Gamepad, Item, PlayerCamera,  BasicRigidbodyCube,
-            MachinegunBullet, Rocket, PlasmaBullet, LightAutoLaserBullet, HeavyCannonBullet, LightCannonBullet, HomingRocket,
-            KillTagBlue, KillTagRed, 
+            Player, Gamepad, Item, PlayerCamera, BasicRigidbodyCube,
+            MachinegunBulletLevel0, MachinegunBulletLevel1, MachinegunBulletLevel2,
+            RocketBulletLevel0, RocketBulletLevel1, RocketBulletLevel2,
+            PlasmaBulletLevel0, PlasmaBulletLevel1, PlasmaBulletLevel2,
+            LightAutoLaserBullet,
+            HeavyCannonBulletLevel0, HeavyCannonBulletLevel1, HeavyCannonBulletLevel2,
+            LightCannonBulletLevel0, LightCannonBulletLevel1, LightCannonBulletLevel2,
+            HomingRocket,
+            KillTagBlue, KillTagRed,
             SmallExplosion, RocketExplosion, NoDamageExplosionMedium,
             FloatingText
         };
@@ -25,10 +31,16 @@ namespace KBConstants
 			{type.Gamepad, "Gamepads/Gamepad"},
             {type.Item, "Items/Item"},
             {type.PlayerCamera, "Cameras/Player Camera"},
-            {type.PlasmaBullet, "Abilities/bullet/PlasmaBullet"},
+            {type.PlasmaBulletLevel0, "Abilities/bullet/PlasmaBulletl0"},
+            {type.PlasmaBulletLevel1, "Abilities/bullet/PlasmaBulletl1"},
+            {type.PlasmaBulletLevel2, "Abilities/bullet/PlasmaBulletl2"},
             {type.BasicRigidbodyCube, "Environment/BasicRigidbodyCube"},
-            {type.MachinegunBullet, "Abilities/bullet/machinegunbullet"},
-            {type.Rocket, "abilities/bullet/rocketbullet"},
+            {type.MachinegunBulletLevel0, "Abilities/bullet/machinegunbulletl0"},
+            {type.MachinegunBulletLevel1, "Abilities/bullet/machinegunbulletl1"},
+            {type.MachinegunBulletLevel2, "Abilities/bullet/machinegunbulletl2"},
+            {type.RocketBulletLevel0, "abilities/bullet/rocketbulletl0"},
+            {type.RocketBulletLevel1, "abilities/bullet/rocketbulletl1"},
+            {type.RocketBulletLevel2, "abilities/bullet/rocketbulletl2"},
             {type.KillTagBlue, "items/killtagblue"},
             {type.KillTagRed, "items/killtagred"},
             {type.LightAutoLaserBullet, "abilities/bullet/lightautolaserbullet"},
@@ -36,8 +48,12 @@ namespace KBConstants
             {type.RocketExplosion, "abilities/explosion/rocketexplosion"},
             {type.NoDamageExplosionMedium, "abilities/explosion/mediumexplosion"},
             {type.FloatingText, "gui/floatingtext"},
-            {type.HeavyCannonBullet, "abilities/bullet/heavycannonbullet"},
-            {type.LightCannonBullet, "abilities/bullet/lightcannonbullet"},
+            {type.HeavyCannonBulletLevel0, "abilities/bullet/heavycannonbulletl0"},
+            {type.HeavyCannonBulletLevel1, "abilities/bullet/heavycannonbulletl1"},
+            {type.HeavyCannonBulletLevel2, "abilities/bullet/heavycannonbulletl2"},
+            {type.LightCannonBulletLevel0, "abilities/bullet/lightcannonbulletl0"},
+            {type.LightCannonBulletLevel1, "abilities/bullet/lightcannonbulletl1"},
+            {type.LightCannonBulletLevel2, "abilities/bullet/lightcannonbulletl2"},
             {type.HomingRocket, "abilities/bullet/homingrocketbullet"}
         };
 
@@ -86,8 +102,8 @@ namespace KBConstants
 
     public class AudioConstants
     {
-        public enum clip 
-        { 
+        public enum clip
+        {
             ItemPickup01,
             PlasmaGunFire01,
             MachineGunFire01,

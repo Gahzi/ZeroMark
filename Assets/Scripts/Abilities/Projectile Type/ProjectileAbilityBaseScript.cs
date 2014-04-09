@@ -21,6 +21,7 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
     public int ammo;
     public bool reloading;
     protected AudioClip reloadClip;
+    private int lastSetLevel;
 
     public override void Start()
     {
@@ -47,6 +48,10 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
         {
             level = 2;
         }
+        if (lastSetLevel != level)
+        {
+            lastSetLevel = SetLevel(level);
+        }
     }
 
     protected ProjectileBaseScript Fire(Vector3 direction, KBPlayer firedBy, float _inheritSpeed = 0.0f)
@@ -58,9 +63,14 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
             projectile.inheritSpeed = _inheritSpeed;
             projectile.Team = firedBy.Team;
             projectile.Init(firedBy);
+            projectile.damage = projectile.damageLevel[level];
             if (projectile.homingProjectile)
             {
-                projectile.target = GameManager.Instance.FindClosestPlayer(owner, 10, true);
+                projectile.targetPlayer = GameManager.Instance.FindClosestPlayer(owner, 10, true);
+            }
+            if (projectile.aimedProjectile)
+            {
+                projectile.targetPosition = new Vector3(-owner.mousePlayerDiff.x, owner.transform.position.y, -owner.mousePlayerDiff.y);
             }
             if (audio.clip != null)
             {
@@ -142,5 +152,12 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
         yield return new WaitForSeconds(0.05f);
         particleSystem.Emit(30);
     }
+
+    /// <summary>
+    /// Sets level and returns level set at
+    /// </summary>
+    /// <param name="level"></param>
+    /// <returns></returns>
+    public abstract int SetLevel(int level);
 
 }

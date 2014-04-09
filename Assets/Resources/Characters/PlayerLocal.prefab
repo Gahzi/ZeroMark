@@ -1424,7 +1424,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 39.7278442, y: 24.8244781, z: 57.1722717}
+  m_LocalPosition: {x: 49.8771706, y: 24.8244781, z: 57.1722717}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400094}
@@ -1617,7 +1617,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100030}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2, y: 0, z: 0}
+  m_LocalPosition: {x: -1, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400038}
@@ -1628,7 +1628,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100032}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2, y: 0, z: 0}
+  m_LocalPosition: {x: 1, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400038}
@@ -1639,7 +1639,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100034}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1, y: 0, z: 1.89340997}
+  m_LocalPosition: {x: .5, y: 0, z: 1.89340997}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400038}
@@ -1650,7 +1650,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100036}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1, y: 0, z: 1.89340997}
+  m_LocalPosition: {x: -.5, y: 0, z: 1.89340997}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400038}
@@ -5060,7 +5060,7 @@ MonoBehaviour:
   mousePlayerDiff: {x: 0, y: 0, z: 0}
   teamSpawnpoints: []
   respawnTime: 2
-  regenDelay: 1.5
+  regenDelay: 3
   redMat: {fileID: 2100000, guid: 372241dd454df024d870058faef4d843, type: 2}
   blueMat: {fileID: 2100000, guid: 21af203b3a6ec874383d3ec97387749f, type: 2}
   hitExplosion: {fileID: 11400000, guid: b5462acd6b4c87b42b000f13705b8f09, type: 2}
