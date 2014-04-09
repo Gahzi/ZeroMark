@@ -14,6 +14,7 @@ public class KillTag : KBGameObject
         {
             if (player.team != team && PhotonNetwork.player.Equals(player.networkPlayer))
             {
+                player.totalTokensGained += player.killTokens;
                 player.killTokens *= 2;
                 // play pickup sound;
 

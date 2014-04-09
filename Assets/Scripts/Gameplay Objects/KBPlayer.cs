@@ -124,9 +124,15 @@ public class KBPlayer : KBControllableGameObject
     public AudioClip deadSound;
     public AudioClip respawnSound;
     public AudioClip dropSound;
+    
+    public int killCount;
+    public int deathCount;
+    public int killTokens;
+    public int totalTokensGained;
+    public int totalTokensLost;
+    public int totalTokensBanked;
 
     public ProjectileAbilityBaseScript[] guns;
-    public int killTokens;
     private bool triggerLockout;
 
     private bool secondaryWeaponLinkedFire;
@@ -369,6 +375,11 @@ public class KBPlayer : KBControllableGameObject
             Vector3 pos = transform.localPosition;
             Quaternion rot = upperBody.transform.rotation;
             int kt = killTokens;
+            int kc = killCount;
+            int dc = deathCount;
+            int ttg = totalTokensGained;
+            int ttl = totalTokensLost;
+            int ttb = totalTokensBanked;
             int hlth = health;
             int mxhlth = maxHealth;
             bool wtngFrRspwn = waitingForRespawn;
@@ -386,6 +397,11 @@ public class KBPlayer : KBControllableGameObject
             stream.Serialize(ref pos);
             stream.Serialize(ref rot);
             stream.Serialize(ref kt);
+            stream.Serialize(ref kc);
+            stream.Serialize(ref dc);
+            stream.Serialize(ref ttg);
+            stream.Serialize(ref ttl);
+            stream.Serialize(ref ttb);
             stream.Serialize(ref hlth);
             stream.Serialize(ref mxhlth);
             stream.Serialize(ref wtngFrRspwn);
@@ -403,6 +419,11 @@ public class KBPlayer : KBControllableGameObject
             Vector3 pos = Vector3.zero;
             Quaternion rot = Quaternion.identity;
             int kt = 0;
+            int kc = 0;
+            int dc = 0;
+            int ttg = 0;
+            int ttl = 0;
+            int ttb = 0;
             int hlth = 0;
             int mxhlth = 0;
             bool wtngFrRspwn = false;
@@ -413,6 +434,11 @@ public class KBPlayer : KBControllableGameObject
             stream.Serialize(ref pos);
             stream.Serialize(ref rot);
             stream.Serialize(ref kt);
+            stream.Serialize(ref kc);
+            stream.Serialize(ref dc);
+            stream.Serialize(ref ttg);
+            stream.Serialize(ref ttl);
+            stream.Serialize(ref ttb);
             stream.Serialize(ref hlth);
             stream.Serialize(ref mxhlth);
             stream.Serialize(ref wtngFrRspwn);
@@ -430,6 +456,11 @@ public class KBPlayer : KBControllableGameObject
 
             upperBody.transform.rotation = rot;          // this sample doesn't smooth rotation
             killTokens = kt;
+            killCount = kc;
+            deathCount = dc;
+            totalTokensGained = ttg;
+            totalTokensLost = ttl;
+            totalTokensBanked = ttb;
             health = hlth;
             maxHealth = mxhlth;
             waitingForRespawn = wtngFrRspwn;
@@ -450,6 +481,7 @@ public class KBPlayer : KBControllableGameObject
         {
             if (killTokens > 0)
             {
+                totalTokensBanked += killTokens;
                 BankZone b = other.gameObject.GetComponent<BankZone>();
                 b.photonView.RPC("AddPoints", PhotonTargets.AllBuffered, killTokens,(int)team);
                 //b.AddPoints(killTokens, team);
@@ -665,6 +697,21 @@ public class KBPlayer : KBControllableGameObject
             primaryWeaponLinkedFire = !primaryWeaponLinkedFire;
         }
 
+        //if (Input.GetKeyDown(KeyCode.Tab))
+        //{
+        //    if(GUIManager.Instance.state.Equals(GUIManager.GUIManagerState.Hidden))
+        //    {
+        //        GUIManager.Instance.state = GUIManager.GUIManagerState.ShowingStatTab;
+        //    }
+        //}
+        //else
+        //{
+        //    if (GUIManager.Instance.state.Equals(GUIManager.GUIManagerState.ShowingStatTab))
+        //    {
+        //        GUIManager.Instance.state = GUIManager.GUIManagerState.Hidden;
+        //    }
+        //}
+
         #endregion Weapons
 
         // DEBUG FUNCTIONS
@@ -702,6 +749,7 @@ public class KBPlayer : KBControllableGameObject
     {
         if (health <= 0 && !waitingForRespawn) // should respawn
         {
+            deathCount++;
             respawnTimer = timer.StartTimer(respawnTime);
             waitingForRespawn = true;
             audio.PlayOneShot(deadSound);
@@ -784,6 +832,8 @@ public class KBPlayer : KBControllableGameObject
     {
         if (killerPlayer.isLocal && networkPlayer == PhotonNetwork.player)
         {
+            killCount++;
+            totalTokensGained++;
             killTokens++;
         }
     }
@@ -796,6 +846,7 @@ public class KBPlayer : KBControllableGameObject
         //Spawn as Core
         photonView.RPC("SwitchType", PhotonTargets.AllBuffered, "SpawnCore");
 
+        totalTokensLost += killTokens;
         killTokens = 0;
         waitingForRespawn = false;
         acceptingInputs = true;
