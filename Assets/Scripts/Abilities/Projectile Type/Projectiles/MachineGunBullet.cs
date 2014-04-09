@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MachineGunBullet : ProjectileBaseScript {
+public class MachineGunBullet : ProjectileBaseScript
+{
 
     #region CONSTANTS
 
-    public static int _damage = 15;
+    public static int damageL0 = 30;
+    public static int damageL1 = 40;
+    public static int damageL2 = 60;
 
     #endregion CONSTANTS
 
@@ -13,7 +16,7 @@ public class MachineGunBullet : ProjectileBaseScript {
     {
         base.Start();
         collideWithProjectiles = false;
-        damage = _damage;
+        damageLevel = new int[3] { damageL0, damageL1, damageL2 };
     }
 
     protected override void Update()

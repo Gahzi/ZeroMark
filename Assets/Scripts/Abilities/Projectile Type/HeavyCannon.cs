@@ -5,24 +5,74 @@ using KBConstants;
 public class HeavyCannon : ProjectileAbilityBaseScript
 {
     #region CONSTANTS
-    public static float HCANNON_COOLDOWN = 0.25f;
-    public static int HCANNON_RANGE = 80;
-    public static float RELOAD_TIME = 10.0f;
-    public static int CLIP_SIZE = 200;
+    public static float COOLDOWN_0 = 0.25f;
+    public static int RANGE_0 = 60;
+    public static float RELOAD_TIME_0 = 5.0f;
+    public static int CLIP_SIZE_0 = 50;
+
+    public static float COOLDOWN_1 = 0.225f;
+    public static int RANGE_1 = 70;
+    public static float RELOAD_TIME_1 = 5.0f;
+    public static int CLIP_SIZE_1 = 70;
+
+    public static float COOLDOWN_2 = 0.20f;
+    public static int RANGE_2 = 90;
+    public static float RELOAD_TIME_2 = 5.0f;
+    public static int CLIP_SIZE_2 = 120;
     #endregion
 
     public override void Start()
     {
-        projectileType = (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.HeavyCannonBullet], typeof(ProjectileBaseScript));
-        cooldown = HCANNON_COOLDOWN;
+        projectileType = new ProjectileBaseScript[3]
+        {
+            (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.HeavyCannonBulletLevel0], typeof(ProjectileBaseScript)),
+            (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.HeavyCannonBulletLevel1], typeof(ProjectileBaseScript)),
+            (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.HeavyCannonBulletLevel2], typeof(ProjectileBaseScript))
+        };
+        for (int i = 0; i < projectileType.Length; i++)
+        {
+            ObjectPool.CreatePool(projectileType[i]);
+        }
         sound = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.CannonFire01]);
         reloadClip = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.MachineGunReload02]);
         audio.clip = sound;
-        SetMaxRange(HCANNON_RANGE);
-        cooldownStart = HCANNON_COOLDOWN;
-        ammo = CLIP_SIZE;
-        reloadTime = RELOAD_TIME;
-        clipSize = CLIP_SIZE;
+        SetLevel(0);
         base.Start();
+    }
+
+    public override int SetLevel(int level)
+    {
+        switch (level)
+        {
+            case 0:
+                cooldown = COOLDOWN_0;
+                SetMaxRange(RANGE_0);
+                cooldownStart = COOLDOWN_0;
+                ammo = CLIP_SIZE_0;
+                reloadTime = RELOAD_TIME_0;
+                clipSize = CLIP_SIZE_0;
+                return level;
+
+            case 1:
+                cooldown = COOLDOWN_1;
+                SetMaxRange(RANGE_1);
+                cooldownStart = COOLDOWN_1;
+                ammo = CLIP_SIZE_1;
+                reloadTime = RELOAD_TIME_1;
+                clipSize = CLIP_SIZE_1;
+                return level;
+
+            case 2:
+                cooldown = COOLDOWN_2;
+                SetMaxRange(RANGE_2);
+                cooldownStart = COOLDOWN_2;
+                ammo = CLIP_SIZE_2;
+                reloadTime = RELOAD_TIME_2;
+                clipSize = CLIP_SIZE_2;
+                return level;
+
+            default:
+                return -1;
+        }
     }
 }

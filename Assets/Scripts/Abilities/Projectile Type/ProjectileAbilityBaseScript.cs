@@ -15,21 +15,43 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
     protected int clipSize;
     #endregion
 
-    protected ProjectileBaseScript projectileType;
+    public ProjectileBaseScript[] projectileType = new ProjectileBaseScript[3];
+    public int level;
     protected int maxRange;
     public int ammo;
     public bool reloading;
     protected AudioClip reloadClip;
+    private int lastSetLevel;
 
     public override void Start()
     {
         base.Start();
-        ObjectPool.CreatePool(projectileType);
+        for (int i = 0; i < projectileType.Length; i++)
+        {
+            ObjectPool.CreatePool(projectileType[i]);
+        }
+        level = 0;
     }
 
     public override void FixedUpdate()
     {
         base.FixedUpdate();
+        if (owner.killTokens < 1)
+        {
+            level = 0;
+        }
+        else if (owner.killTokens > 0 && owner.killTokens <= 50)
+        {
+            level = 1;
+        }
+        else if (owner.killTokens > 50)
+        {
+            level = 2;
+        }
+        if (lastSetLevel != level)
+        {
+            lastSetLevel = SetLevel(level);
+        }
     }
 
     protected ProjectileBaseScript Fire(Vector3 direction, KBPlayer firedBy, float _inheritSpeed = 0.0f)
@@ -37,10 +59,19 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
         ProjectileBaseScript projectile = null;
         if (cooldown <= 0 && ammo > 0 && !reloading)
         {
-            projectile = ObjectPool.Spawn(projectileType, transform.position, Quaternion.Euler(direction));
+            projectile = ObjectPool.Spawn(projectileType[level], transform.position, Quaternion.Euler(direction));
             projectile.inheritSpeed = _inheritSpeed;
             projectile.Team = firedBy.Team;
             projectile.Init(firedBy);
+            projectile.damage = projectile.damageLevel[level];
+            if (projectile.homingProjectile)
+            {
+                projectile.targetPlayer = GameManager.Instance.FindClosestPlayer(owner, 10, true);
+            }
+            if (projectile.aimedProjectile)
+            {
+                projectile.targetPosition = new Vector3(-owner.mousePlayerDiff.x, owner.transform.position.y, -owner.mousePlayerDiff.y);
+            }
             if (audio.clip != null)
             {
                 audio.PlayOneShot(audio.clip);
@@ -121,5 +152,12 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
         yield return new WaitForSeconds(0.05f);
         particleSystem.Emit(30);
     }
+
+    /// <summary>
+    /// Sets level and returns level set at
+    /// </summary>
+    /// <param name="level"></param>
+    /// <returns></returns>
+    public abstract int SetLevel(int level);
 
 }

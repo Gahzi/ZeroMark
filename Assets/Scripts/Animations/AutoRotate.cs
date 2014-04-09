@@ -2,9 +2,8 @@
 
 public class AutoRotate : MonoBehaviour
 {
-
     public Vector3 rotateSpeed;
-    
+
     private void Start()
     {
     }
@@ -13,4 +12,7 @@ public class AutoRotate : MonoBehaviour
     {
         transform.Rotate(rotateSpeed * Time.deltaTime);
     }
+
 }
+
+    

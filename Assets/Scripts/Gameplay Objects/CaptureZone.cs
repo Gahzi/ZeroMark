@@ -39,7 +39,7 @@ public class CaptureZone : Zone
     public List<KBPlayer> players;
     private AudioClip captureProgress;
     private AudioClip captureComplete;
-    public RotatableGuiItem rGui;
+    //public RotatableGuiItem rGui;
     public bool redUnlocked, blueUnlocked;
     private float captureFraction = 0.0f;
 
@@ -483,17 +483,17 @@ public class CaptureZone : Zone
         }
     }
 
-    protected void SetRGUI()
-    {
-        rGui = GetComponent<RotatableGuiItem>();
-        if (rGui == null)
-        {
-            gameObject.AddComponent<RotatableGuiItem>();
-        }
-        rGui.ScreenpointToAlign = RotatableGuiItem.AlignmentScreenpoint.BottomLeft;
-        rGui.angle = 45;
-        rGui.enabled = false;
-    }
+    //protected void SetRGUI()
+    //{
+    //    rGui = GetComponent<RotatableGuiItem>();
+    //    if (rGui == null)
+    //    {
+    //        gameObject.AddComponent<RotatableGuiItem>();
+    //    }
+    //    rGui.ScreenpointToAlign = RotatableGuiItem.AlignmentScreenpoint.BottomLeft;
+    //    rGui.angle = 45;
+    //    rGui.enabled = false;
+    //}
 
     protected void LoadSounds()
     {

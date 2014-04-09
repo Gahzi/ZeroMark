@@ -4,7 +4,9 @@ public class PlasmaBullet : ProjectileBaseScript
 {
     #region CONSTANTS
 
-    public static int _damage = 50;
+    public static int damageL0 = 100;
+    public static int damageL1 = 120;
+    public static int damageL2 = 150;
 
     #endregion CONSTANTS
     
@@ -12,7 +14,7 @@ public class PlasmaBullet : ProjectileBaseScript
     {
         base.Start();
         collideWithProjectiles = false;
-        damage = _damage;
+        damageLevel = new int[3] { damageL0, damageL1, damageL2 };
     }
 
     protected override void Update()

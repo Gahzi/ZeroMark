@@ -197,8 +197,20 @@ public class GameManager : Photon.MonoBehaviour
 
         if (Input.GetButtonDown("Screenshot"))
         {
-            TakeScreenshot();
+            GameManager.TakeScreenshot(1);
         }
+    }
+
+    public static void TakeScreenshot(int res)
+    {
+        string path = Application.persistentDataPath + "/" + System.DateTime.Now.Year.ToString() +
+            System.DateTime.Now.Month.ToString() + System.DateTime.Now.Day.ToString() + "_" +
+            System.DateTime.Now.Hour.ToString() + System.DateTime.Now.Minute.ToString() +
+            System.DateTime.Now.Second.ToString() + "_zm_scr.png";
+
+        Application.CaptureScreenshot(path, res);
+        path = Application.persistentDataPath + "/" + path;
+        Debug.Log(path);
     }
     
     void OnGUI()
@@ -317,23 +329,23 @@ public class GameManager : Photon.MonoBehaviour
         return spawnpoints;
     }
 
-    private void RunGui()
-    {
-        foreach (var c in captureZones)
-        {
-            if ((localPlayer.team == Team.Blue && c.state != CaptureZone.ZoneState.Blue && c.blueUnlocked) || (localPlayer.team == Team.Red && c.state != CaptureZone.ZoneState.Red && c.redUnlocked))
-            {
-                c.rGui.enabled = true;
-                Vector3 sPos = Camera.main.WorldToScreenPoint(c.transform.position);
-                c.rGui.relativePosition = new Vector2(sPos.x, -sPos.y);
-                c.rGui.size = new Vector2((Mathf.Sin(Time.time * 4) + 1) * 32 + 64, (Mathf.Sin(Time.time * 4) + 1) * 32 + 64);
-            }
-            else
-            {
-                c.rGui.enabled = false;
-            }
-        }
-    }
+    //private void RunGui()
+    //{
+    //    foreach (var c in captureZones)
+    //    {
+    //        if ((localPlayer.team == Team.Blue && c.state != CaptureZone.ZoneState.Blue && c.blueUnlocked) || (localPlayer.team == Team.Red && c.state != CaptureZone.ZoneState.Red && c.redUnlocked))
+    //        {
+    //            c.rGui.enabled = true;
+    //            Vector3 sPos = Camera.main.WorldToScreenPoint(c.transform.position);
+    //            c.rGui.relativePosition = new Vector2(sPos.x, -sPos.y);
+    //            c.rGui.size = new Vector2((Mathf.Sin(Time.time * 4) + 1) * 32 + 64, (Mathf.Sin(Time.time * 4) + 1) * 32 + 64);
+    //        }
+    //        else
+    //        {
+    //            c.rGui.enabled = false;
+    //        }
+    //    }
+    //}
 
     public void CreateObject(int type, Vector3 position, Quaternion rotation, int newTeam)
     {
@@ -387,18 +399,6 @@ public class GameManager : Photon.MonoBehaviour
         // TODO
     }
 
-    private void TakeScreenshot()
-    {
-        string path = Application.persistentDataPath + "/" + System.DateTime.Now.Year.ToString() + 
-            System.DateTime.Now.Month.ToString() + System.DateTime.Now.Day.ToString() + "_" + 
-            System.DateTime.Now.Hour.ToString() + System.DateTime.Now.Minute.ToString() + 
-            System.DateTime.Now.Second.ToString() + "_kaiju_scr.png";
-
-        Application.CaptureScreenshot(path, 2);
-        path = Application.persistentDataPath + "/" + path;
-        Debug.Log(path);
-    }
-
     public int AddPointsToScore(Team team, int points)
     {
         switch (team)
@@ -433,7 +433,43 @@ public class GameManager : Photon.MonoBehaviour
         }
     }
 
-    /// <summary>
+    public KBPlayer FindClosestPlayer(KBPlayer fromPlayer, float minimumDist, bool oppositeTeamOnly)
+    {
+        List<KBPlayer> players = GameManager.Instance.players;
+        KBPlayer target = null;
+        float closest = 0;
+        for (int i = 0; i < players.Count; i++)
+        {
+            if (players[i].GetHashCode() != fromPlayer.GetHashCode())
+            {
+                float distance = 0;
+                if (oppositeTeamOnly && players[i].team != fromPlayer.team)
+                {
+                    distance = Vector3.Distance(fromPlayer.transform.position, players[i].transform.position);
+                }
+                else if (!oppositeTeamOnly)
+                {
+                    distance = Vector3.Distance(fromPlayer.transform.position, players[i].transform.position);
+                }
+                if (distance > minimumDist)
+                {
+                    if (closest == 0)
+                    {
+                        closest = distance;
+                        target = players[i];
+                    }
+                    else if (closest != 0 && distance < closest)
+                    {
+                        closest = distance;
+                        target = players[i];
+                    }
+                }
+            }
+        }
+        return target;
+    }
+	
+	 /// <summary>
     /// Checks to see if the 2/3 capture points are taken.
     /// </summary>
     /// <returns>True if a team has more than 2/3rds of the capture points</returns>

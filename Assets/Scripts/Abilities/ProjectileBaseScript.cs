@@ -14,7 +14,7 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
 {
     #region CONSTANTS
 
-    private static int DAMAGE = 0;
+    public int[] damageLevel;
 
     #endregion CONSTANTS
 
@@ -24,14 +24,19 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
     protected Vector3 direction;
     public bool collideWithProjectiles;
     public bool collideWithEnvironment;
+    public bool homingProjectile;
+    public bool aimedProjectile;
 
     public AreaOfEffectDamageScript explosionPrefab;
+
+    public KBPlayer targetPlayer;
+    public Vector3 targetPosition;
 
     public override void Start()
     {
         base.Start();
         gameObject.tag = "Projectile";
-        damage = DAMAGE;
+        //damage = DAMAGE;
         if (explosionPrefab != null)
         {
             ObjectPool.CreatePool(explosionPrefab);
@@ -41,8 +46,34 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
     protected override void Update()
     {
         base.Update();
+        if (aimedProjectile && homingProjectile)
+        {
+            Debug.LogWarning("Projectile cannot be both aimed & homing");
+        }
+        if (homingProjectile && targetPlayer != null)
+        {
+            DoHomingBehavior();
+        }
+        if (aimedProjectile && targetPosition != null)
+        {
+            DoAimedBehavior();
+        }
         transform.Translate(Vector3.forward * (projectileSpeed + inheritSpeed) * Time.deltaTime);
     }
+
+    void OnDrawGizmos()
+    {
+        if (targetPosition != null)
+        {
+            Gizmos.DrawWireSphere(targetPosition, 1.0f);
+        }
+        if (targetPlayer != null)
+        {
+            Gizmos.DrawWireSphere(targetPlayer.transform.position, 1.0f);
+        }
+    }
+
+
 
     public override void OnTriggerEnter(Collider other)
     {
@@ -96,5 +127,15 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
     public void setLifetimeForMaxRange(int maxRange)
     {
         lifetime = maxRange / projectileSpeed;
+    }
+
+    protected virtual void DoHomingBehavior()
+    {
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetPlayer.transform.position - owner.transform.position), 5.0f * Time.deltaTime);
+    }
+
+    protected virtual void DoAimedBehavior()
+    {
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetPosition - owner.transform.position), 5.0f * Time.deltaTime);
     }
 }

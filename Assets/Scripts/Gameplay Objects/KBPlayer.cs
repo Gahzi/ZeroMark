@@ -16,7 +16,7 @@ public class KBPlayer : KBControllableGameObject
     private static readonly int droneLowerRotationSpeed = 300;
     private static readonly int droneUpperRotationSpeed = 75;
     private static readonly int droneMovementSpeed = 55;
-    private static readonly int droneBaseHealth = 100;
+    private static readonly int droneBaseHealth = 150;
     private static readonly float droneAccel = 0.0125f;
     private static readonly float dronePowerDecel = 0.25f;
     private static readonly float droneFriction = 0.075f;
@@ -50,8 +50,12 @@ public class KBPlayer : KBControllableGameObject
 
     private static readonly int coreLowerRotationSpeed = 50;
     private static readonly int coreUpperRotationSpeed = 50;
-    private static readonly int coreMovementSpeed = 10;
+    private static readonly int coreMovementSpeed = 20;
     private static readonly int coreBaseHealth = 10000;
+    private static readonly float coreAccel = 0.05f;
+    private static readonly float corePowerDecel = 0.15f;
+    private static readonly float coreFriction = 0.5f;
+    private static readonly float coreReverseSpeedFraction = 0.15f;
 
     #endregion CORE
 
@@ -112,7 +116,8 @@ public class KBPlayer : KBControllableGameObject
     public List<PlayerSpawnPoint> teamSpawnpoints;
     public float respawnTime;
     private int respawnTimer;
-    public int maxHealth;
+    public float regenDelay;
+    private float lastDamageTime;
 
     public Material redMat;
     public Material blueMat;
@@ -140,6 +145,8 @@ public class KBPlayer : KBControllableGameObject
     private bool primaryWeaponLinkedFire;
     private int lastSecondaryFire;
     private float forwardAccel;
+
+    private KBCamera camera;
 
     public void SetStats()
     {
@@ -198,8 +205,7 @@ public class KBPlayer : KBControllableGameObject
     public override void Start()
     {
         base.Start();
-
-        //Screen.showCursor = false;
+        camera = Camera.main.GetComponent<KBCamera>();
 
         #region Resource & reference loading
 
@@ -266,6 +272,14 @@ public class KBPlayer : KBControllableGameObject
 
     private void FixedUpdate()
     {
+        if (Time.time > lastDamageTime + regenDelay)
+        {
+            //float floatHealth = Mathf.Lerp(health, stats.health, 3.0f * Time.deltaTime);
+            float floatHealth = Mathf.MoveTowards(health, stats.health, 5.0f);
+            health = Mathf.FloorToInt(floatHealth);
+        }
+        
+        
         if (teleportationRecharge > 0)
         {
             teleportationRecharge -= Time.deltaTime;
@@ -294,13 +308,13 @@ public class KBPlayer : KBControllableGameObject
         {
             if (acceptingInputs)
             {
-                if (Input.GetAxis("Mouse ScrollWheel") > 0 && Camera.main.orthographicSize > 10)
+                if (Input.GetAxis("Mouse ScrollWheel") > 0 && camera.zoomTarget > 0.75f)
                 {
-                    Camera.main.orthographicSize--;
+                    camera.zoomTarget *= 1.0f / 1.05f;
                 }
-                else if (Input.GetAxis("Mouse ScrollWheel") < 0 && Camera.main.orthographicSize < 40)
+                else if (Input.GetAxis("Mouse ScrollWheel") < 0 && camera.zoomTarget < 2.0f)
                 {
-                    Camera.main.orthographicSize++;
+                    camera.zoomTarget *= 1.05f;
                 }
                 playerPositionOnScreen = Camera.main.WorldToScreenPoint(transform.position);
                 mousePlayerDiff = playerPositionOnScreen - mousePos;
@@ -317,13 +331,13 @@ public class KBPlayer : KBControllableGameObject
 
     private void OnGUI()
     {
-        if (networkPlayer.isLocal)
-        {
-            if (triggerLockout)
-            {
-                GUI.Box(new Rect(Screen.width / 2 - 80, Screen.height / 2, 160, 20), "BANKING TOKENS");
-            }
-        }
+        //if (networkPlayer.isLocal)
+        //{
+        //    if (triggerLockout)
+        //    {
+        //        GUI.Box(new Rect(Screen.width / 2 - 80, Screen.height / 2, 160, 20), "BANKING TOKENS");
+        //    }
+        //}
     }
 
     private void OnPhotonInstantiate(PhotonMessageInfo msg)
@@ -381,7 +395,7 @@ public class KBPlayer : KBControllableGameObject
             int ttl = totalTokensLost;
             int ttb = totalTokensBanked;
             int hlth = health;
-            int mxhlth = maxHealth;
+            int mxhlth = stats.health;
             bool wtngFrRspwn = waitingForRespawn;
             int tm = (int)team;
             float invltime = invulnerabilityTime;
@@ -462,7 +476,6 @@ public class KBPlayer : KBControllableGameObject
             totalTokensLost = ttl;
             totalTokensBanked = ttb;
             health = hlth;
-            maxHealth = mxhlth;
             waitingForRespawn = wtngFrRspwn;
             team = (Team)tm;
             invulnerabilityTime = invltime;
@@ -535,10 +548,10 @@ public class KBPlayer : KBControllableGameObject
                     break;
 
                 case PlayerType.core:
-                    accel = tankAccel;
-                    decel = tankPowerDecel;
-                    friction = tankFriction;
-                    reverseSpeed = tankReverseSpeedFraction;
+                    accel = coreAccel;
+                    decel = corePowerDecel;
+                    friction = coreFriction;
+                    reverseSpeed = coreReverseSpeedFraction;
                     break;
             }
 
@@ -812,6 +825,7 @@ public class KBPlayer : KBControllableGameObject
                 fx.DoEffect(amount);
                 Camera.main.GetComponent<ScreenShake>().StartShake(0.25f, 5.0f);
                 audio.PlayOneShot(gotHitSFX[Random.Range(0, gotHitSFX.Length)]);
+                lastDamageTime = Time.time;
             }
             return health;
         }
@@ -862,7 +876,7 @@ public class KBPlayer : KBControllableGameObject
 
         Camera.main.GetComponent<ScreenShake>().StopShake();
         transform.position = GameObject.FindGameObjectWithTag("Prespawn").transform.position;
-        health = 1000;
+        health = coreBaseHealth;
     }
 
     /// <summary>
@@ -877,7 +891,6 @@ public class KBPlayer : KBControllableGameObject
             waitingForRespawn = false;
             acceptingInputs = true;
             health = stats.health;
-            maxHealth = health;
             movespeed = stats.speed;
             invulnerabilityTime = spawnProtectionTime;
             lowerbodyRotateSpeed = stats.lowerbodyRotationSpeed;
@@ -936,7 +949,6 @@ public class KBPlayer : KBControllableGameObject
 
                     upperBody = upperBodyDrone;
                     lowerBody = lowerBodyDrone;
-                    //hitbox = hitboxDrone;
                     type = PlayerType.drone;
 
                     break;
@@ -945,7 +957,6 @@ public class KBPlayer : KBControllableGameObject
 
                     upperBody = upperBodyMech;
                     lowerBody = lowerBodyMech;
-                    //hitbox = hitboxMech;
                     type = PlayerType.mech;
 
                     break;
@@ -954,7 +965,6 @@ public class KBPlayer : KBControllableGameObject
 
                     upperBody = upperBodyTank;
                     lowerBody = lowerBodyTank;
-                    //hitbox = hitboxTank;
                     type = PlayerType.tank;
 
                     break;
@@ -971,7 +981,6 @@ public class KBPlayer : KBControllableGameObject
             }
             upperBody.SetActive(true);
             lowerBody.SetActive(true);
-            //hitbox.SetActive(true);
 
             if (team == KBConstants.Team.Blue)
             {
@@ -989,7 +998,6 @@ public class KBPlayer : KBControllableGameObject
             InitializeForRespawn();
             SetupAbilities();
 
-            //Spawn();
         }
     }
 
