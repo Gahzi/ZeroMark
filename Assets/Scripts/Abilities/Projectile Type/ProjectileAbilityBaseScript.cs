@@ -64,6 +64,7 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
             projectile.Team = firedBy.Team;
             projectile.Init(firedBy);
             projectile.damage = projectile.damageLevel[level];
+            
             if (projectile.homingProjectile)
             {
                 projectile.targetPlayer = GameManager.Instance.FindClosestPlayer(owner, 10, true);

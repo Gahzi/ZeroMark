@@ -161,34 +161,39 @@ public class GameManager : Photon.MonoBehaviour
 
                 case GameState.RedWins:
                     Debug.Log("Red won");
+                    localPlayer.acceptingInputs = false;
                     state = GameState.EndGame;
+                    GUIManager.Instance.state = GUIManager.GUIManagerState.ShowingEndGameTab;
                     break;
 
                 case GameState.BlueWins:
                     Debug.Log("Blue won");
+                    localPlayer.acceptingInputs = false;
                     state = GameState.EndGame;
+                    GUIManager.Instance.state = GUIManager.GUIManagerState.ShowingEndGameTab;
                     break;
 
                 case GameState.Tie:
                     Debug.Log("Tie");
                     state = GameState.EndGame;
+
                     break;
 
-                case GameState.EndGame:
-                    // check winners here;
-                    if (redTeamScore > blueTeamScore)
-                    {
-                        state = GameState.RedWins;
-                    }
-                    else if (blueTeamScore > redTeamScore)
-                    {
-                        state = GameState.BlueWins;
-                    }
-                    else
-                    {
-                        state = GameState.Tie;
-                    }
-                    break;
+                //case GameState.EndGame:
+                //    // check winners here;
+                //    if (redTeamScore > blueTeamScore)
+                //    {
+                //        state = GameState.RedWins;
+                //    }
+                //    else if (blueTeamScore > redTeamScore)
+                //    {
+                //        state = GameState.BlueWins;
+                //    }
+                //    else
+                //    {
+                //        state = GameState.Tie;
+                //    }
+                //    break;
 
                 default:
                     break;
@@ -469,7 +474,7 @@ public class GameManager : Photon.MonoBehaviour
         return target;
     }
 	
-	 /// <summary>
+	/// <summary>
     /// Checks to see if the 2/3 capture points are taken.
     /// </summary>
     /// <returns>True if a team has more than 2/3rds of the capture points</returns>
