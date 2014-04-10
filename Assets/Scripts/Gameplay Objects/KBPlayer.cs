@@ -710,20 +710,20 @@ public class KBPlayer : KBControllableGameObject
             primaryWeaponLinkedFire = !primaryWeaponLinkedFire;
         }
 
-        //if (Input.GetKeyDown(KeyCode.Tab))
-        //{
-        //    if(GUIManager.Instance.state.Equals(GUIManager.GUIManagerState.Hidden))
-        //    {
-        //        GUIManager.Instance.state = GUIManager.GUIManagerState.ShowingStatTab;
-        //    }
-        //}
-        //else
-        //{
-        //    if (GUIManager.Instance.state.Equals(GUIManager.GUIManagerState.ShowingStatTab))
-        //    {
-        //        GUIManager.Instance.state = GUIManager.GUIManagerState.Hidden;
-        //    }
-        //}
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            if (GUIManager.Instance.state.Equals(GUIManager.GUIManagerState.Hidden))
+            {
+                GUIManager.Instance.state = GUIManager.GUIManagerState.ShowingStatTab;
+            }
+        }
+        else if (Input.GetKeyUp(KeyCode.Tab))
+        {
+            if (GUIManager.Instance.state.Equals(GUIManager.GUIManagerState.ShowingStatTab))
+            {
+                GUIManager.Instance.state = GUIManager.GUIManagerState.Hidden;
+            }
+        }
 
         #endregion Weapons
 
