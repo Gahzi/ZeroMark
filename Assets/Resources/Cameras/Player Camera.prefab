@@ -89,7 +89,7 @@ Camera:
     m_Bits: 4294967295
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
-  m_HDR: 1
+  m_HDR: 0
   m_OcclusionCulling: 1
 --- !u!81 &8100000
 AudioListener:
@@ -274,7 +274,7 @@ MonoBehaviour:
   flareRotation: 0
   lensflareMode: 2
   hollyStretchWidth: .349999994
-  lensflareIntensity: 1.99000001
+  lensflareIntensity: 1
   lensflareThreshhold: .209999993
   lensFlareSaturation: .99000001
   flareColorA: {r: .400000006, g: .400000006, b: .800000012, a: .75}

@@ -508,7 +508,7 @@ public class KBPlayer : KBControllableGameObject
             if (t != null && t.linkedTeleporter != null && teleportationRecharge <= 0)
             {
                 Vector3 newPos = t.linkedTeleporter.transform.position;
-                transform.position = new Vector3(newPos.x, transform.position.y, newPos.z);
+                transform.position = new Vector3(newPos.x, newPos.y, newPos.z);
                 teleportationRecharge = 5.0f;
             }
         }
