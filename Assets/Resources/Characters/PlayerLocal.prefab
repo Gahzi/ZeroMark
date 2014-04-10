@@ -438,7 +438,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &100046
 GameObject:
   m_ObjectHideFlags: 1
@@ -1417,6 +1417,24 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &100162
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 400162}
+  - 33: {fileID: 3300052}
+  - 23: {fileID: 2300078}
+  - 95: {fileID: 9500010}
+  m_Layer: 0
+  m_Name: CD_MODEL_oculus_drone_2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!4 &400000
 Transform:
   m_ObjectHideFlags: 1
@@ -1424,7 +1442,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 49.8771706, y: 24.8244781, z: 57.1722717}
+  m_LocalPosition: {x: -17.7612801, y: 5.27193069, z: -50.9532623}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400094}
@@ -1617,7 +1635,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100030}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1, y: 0, z: 0}
+  m_LocalPosition: {x: -2, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400038}
@@ -1628,7 +1646,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100032}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1, y: 0, z: 0}
+  m_LocalPosition: {x: 2, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400038}
@@ -1639,7 +1657,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100034}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: .5, y: 0, z: 1.89340997}
+  m_LocalPosition: {x: 1, y: 0, z: 1.89340997}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400038}
@@ -1650,7 +1668,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100036}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -.5, y: 0, z: 1.89340997}
+  m_LocalPosition: {x: -1, y: 0, z: 1.89340997}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400038}
@@ -1705,6 +1723,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 2.5597229, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 400162}
   - {fileID: 400154}
   - {fileID: 400042}
   - {fileID: 400040}
@@ -2388,6 +2407,17 @@ Transform:
   - {fileID: 400158}
   - {fileID: 400156}
   m_Father: {fileID: 400026}
+--- !u!4 &400162
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100162}
+  m_LocalRotation: {x: -.707106829, y: 0, z: -0, w: .707106709}
+  m_LocalPosition: {x: -0, y: 4, z: -1.74845553e-07}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 400044}
 --- !u!23 &2300000
 Renderer:
   m_ObjectHideFlags: 1
@@ -3225,6 +3255,28 @@ Renderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_SortingLayerID: 0
+--- !u!23 &2300078
+Renderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100162}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_LightmapIndex: 255
+  m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
+  m_Materials:
+  - {fileID: 2100000, guid: 05408abe2533b445db0a10ba30ceb06a, type: 2}
+  - {fileID: 2100000, guid: 4df998fcbe80c422489c13c135660bbf, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 0
+  m_LightProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!33 &3300000
 MeshFilter:
   m_ObjectHideFlags: 1
@@ -3350,7 +3402,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100042}
-  m_Mesh: {fileID: 4300000, guid: f16fb183a7dfd874f975e7d41640fd33, type: 3}
+  m_Mesh: {fileID: 4300000, guid: d24a6b5cc88d54f799399148a1a538bc, type: 3}
 --- !u!33 &3300036
 MeshFilter:
   m_ObjectHideFlags: 1
@@ -3407,6 +3459,13 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100132}
   m_Mesh: {fileID: 4300000, guid: ac909aba4b11aff4e8cd7f2283369057, type: 3}
+--- !u!33 &3300052
+MeshFilter:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100162}
+  m_Mesh: {fileID: 4300000, guid: 1ae1011bff7fd4dafb17c900832f20fb, type: 3}
 --- !u!54 &5400000
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -4376,7 +4435,21 @@ Animator:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100042}
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: f16fb183a7dfd874f975e7d41640fd33, type: 3}
+  m_Avatar: {fileID: 9000000, guid: 8bec7ba8567f14fed8e3dbc42856fab8, type: 3}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_ApplyRootMotion: 1
+  m_AnimatePhysics: 0
+  m_HasTransformHierarchy: 1
+--- !u!95 &9500010
+Animator:
+  serializedVersion: 2
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100162}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 1ae1011bff7fd4dafb17c900832f20fb, type: 3}
   m_Controller: {fileID: 0}
   m_CullingMode: 0
   m_ApplyRootMotion: 1
@@ -5060,7 +5133,7 @@ MonoBehaviour:
   mousePlayerDiff: {x: 0, y: 0, z: 0}
   teamSpawnpoints: []
   respawnTime: 2
-  regenDelay: 3
+  maxHealth: 0
   redMat: {fileID: 2100000, guid: 372241dd454df024d870058faef4d843, type: 2}
   blueMat: {fileID: 2100000, guid: 21af203b3a6ec874383d3ec97387749f, type: 2}
   hitExplosion: {fileID: 11400000, guid: b5462acd6b4c87b42b000f13705b8f09, type: 2}
@@ -5165,10 +5238,6 @@ MonoBehaviour:
   owner: {fileID: 0}
   available: 0
   halfwayCooled: 0
-  projectileType:
-  - {fileID: 0}
-  - {fileID: 0}
-  level: 0
   ammo: 0
   reloading: 0
 --- !u!114 &11400010
@@ -5243,10 +5312,6 @@ MonoBehaviour:
   owner: {fileID: 0}
   available: 0
   halfwayCooled: 0
-  projectileType:
-  - {fileID: 0}
-  - {fileID: 0}
-  level: 0
   ammo: 0
   reloading: 0
 --- !u!114 &11400018
@@ -5264,10 +5329,6 @@ MonoBehaviour:
   owner: {fileID: 0}
   available: 0
   halfwayCooled: 0
-  projectileType:
-  - {fileID: 0}
-  - {fileID: 0}
-  level: 0
   ammo: 0
   reloading: 0
 --- !u!114 &11400020
@@ -5334,10 +5395,6 @@ MonoBehaviour:
   owner: {fileID: 0}
   available: 0
   halfwayCooled: 0
-  projectileType:
-  - {fileID: 0}
-  - {fileID: 0}
-  level: 0
   ammo: 0
   reloading: 0
 --- !u!114 &11400028
@@ -5378,10 +5435,6 @@ MonoBehaviour:
   owner: {fileID: 0}
   available: 0
   halfwayCooled: 0
-  projectileType:
-  - {fileID: 0}
-  - {fileID: 0}
-  level: 0
   ammo: 0
   reloading: 0
 --- !u!114 &11400032
@@ -5422,10 +5475,6 @@ MonoBehaviour:
   owner: {fileID: 0}
   available: 0
   halfwayCooled: 0
-  projectileType:
-  - {fileID: 0}
-  - {fileID: 0}
-  level: 0
   ammo: 0
   reloading: 0
 --- !u!114 &11400036
@@ -5466,10 +5515,6 @@ MonoBehaviour:
   owner: {fileID: 0}
   available: 0
   halfwayCooled: 0
-  projectileType:
-  - {fileID: 0}
-  - {fileID: 0}
-  level: 0
   ammo: 0
   reloading: 0
 --- !u!114 &11400040
@@ -5510,10 +5555,6 @@ MonoBehaviour:
   owner: {fileID: 0}
   available: 0
   halfwayCooled: 0
-  projectileType:
-  - {fileID: 0}
-  - {fileID: 0}
-  level: 0
   ammo: 0
   reloading: 0
 --- !u!114 &11400044
@@ -5554,10 +5595,6 @@ MonoBehaviour:
   owner: {fileID: 0}
   available: 0
   halfwayCooled: 0
-  projectileType:
-  - {fileID: 0}
-  - {fileID: 0}
-  level: 0
   ammo: 0
   reloading: 0
 --- !u!114 &11400048
@@ -5598,10 +5635,6 @@ MonoBehaviour:
   owner: {fileID: 0}
   available: 0
   halfwayCooled: 0
-  projectileType:
-  - {fileID: 0}
-  - {fileID: 0}
-  level: 0
   ammo: 0
   reloading: 0
 --- !u!114 &11400052
@@ -5665,10 +5698,6 @@ MonoBehaviour:
   owner: {fileID: 0}
   available: 0
   halfwayCooled: 0
-  projectileType:
-  - {fileID: 0}
-  - {fileID: 0}
-  level: 0
   ammo: 0
   reloading: 0
 --- !u!114 &11400058
@@ -5709,10 +5738,6 @@ MonoBehaviour:
   owner: {fileID: 0}
   available: 0
   halfwayCooled: 0
-  projectileType:
-  - {fileID: 0}
-  - {fileID: 0}
-  level: 0
   ammo: 0
   reloading: 0
 --- !u!114 &11400062
