@@ -11,7 +11,6 @@ public class GameManager : Photon.MonoBehaviour
     public List<KBPlayer> players;
     public List<KillTag> killTags;
 
-    public List<CaptureZone> captureZones;
     public List<BankZone> bankZones;
     private List<PlayerSpawnPoint> playerSpawnZones;
     private GameState state = GameState.PreGame;
@@ -82,7 +81,6 @@ public class GameManager : Photon.MonoBehaviour
         instance = this;
         players = new List<KBPlayer>();
         killTags = new List<KillTag>();
-        captureZones = new List<CaptureZone>();
         bankZones = new List<BankZone>();
         playerSpawnZones = new List<PlayerSpawnPoint>();
     }
@@ -95,9 +93,7 @@ public class GameManager : Photon.MonoBehaviour
         state = GameState.PreGame;
 
         KillTag[] loadedKillTags = FindObjectsOfType<KillTag>();
-        CaptureZone[] loadedCaptureZones = FindObjectsOfType<CaptureZone>();
         BankZone[] loadedBankZones = FindObjectsOfType<BankZone>();
-        ItemSpawn[] loadedItemZones = FindObjectsOfType<ItemSpawn>();
         PlayerSpawnPoint[] loadedPSpawns = FindObjectsOfType<PlayerSpawnPoint>();
 
         //TODO:Remove 6 value and replace with constant representing max player size;
@@ -106,10 +102,6 @@ public class GameManager : Photon.MonoBehaviour
         //captureZones = new List<CaptureZone>(loadedCaptureZones.Length);
         //playerSpawnZones = new List<PlayerSpawnPoint>(loadedPSpawns.Length);
 
-        foreach (CaptureZone c in loadedCaptureZones)
-        {
-            captureZones.Add(c);
-        }
 
         foreach (BankZone b in loadedBankZones)
         {
