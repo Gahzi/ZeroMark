@@ -5,19 +5,19 @@ public class LightCannon : ProjectileAbilityBaseScript
 {
     #region CONSTANTS
 
-    public static float COOLDOWN_0 = 0.035f;
+    public static float COOLDOWN_0 = 0.0001f;
     public static int RANGE_0 = 15;
-    public static float RELOAD_TIME_0 = 0.25f;
+    public static float RELOAD_TIME_0 = 0.45f;
     public static int CLIP_SIZE_0 = 5;
 
-    public static float COOLDOWN_1 = 0.025f;
+    public static float COOLDOWN_1 = 0.0025f;
     public static int RANGE_1 = 25;
-    public static float RELOAD_TIME_1 = 0.20f;
+    public static float RELOAD_TIME_1 = 0.40f;
     public static int CLIP_SIZE_1 = 7;
 
-    public static float COOLDOWN_2 = 0.025f;
+    public static float COOLDOWN_2 = 0.0025f;
     public static int RANGE_2 = 20;
-    public static float RELOAD_TIME_2 = 0.25f;
+    public static float RELOAD_TIME_2 = 0.35f;
     public static int CLIP_SIZE_2 = 5;
 
     #endregion CONSTANTS
@@ -38,7 +38,11 @@ public class LightCannon : ProjectileAbilityBaseScript
         //reloadClip = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.MachineGunReload02]);
         audio.clip = sound;
         SetLevel(0);
+
         base.Start();
+
+        minimumSpreadAngle = 0.0f;
+        maximumSpreadAngle = 10.0f;
     }
 
     public override int SetLevel(int level)

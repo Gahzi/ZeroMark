@@ -1029,7 +1029,7 @@ public class KBPlayer : KBControllableGameObject
             SetStats();
             InitializeForRespawn();
             SetupAbilities();
-
+            GetComponentInChildren<WeaponAmmoGUI>().Setup();
         }
     }
 

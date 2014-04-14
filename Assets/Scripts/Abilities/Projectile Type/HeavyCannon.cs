@@ -5,19 +5,19 @@ public class HeavyCannon : ProjectileAbilityBaseScript
 {
     #region CONSTANTS
 
-    public static float COOLDOWN_0 = 0.25f;
+    public static float COOLDOWN_0 = 0.100f;
     public static int RANGE_0 = 60;
-    public static float RELOAD_TIME_0 = 4.0f;
+    public static float RELOAD_TIME_0 = 2.3f;
     public static int CLIP_SIZE_0 = 30;
 
-    public static float COOLDOWN_1 = 0.225f;
+    public static float COOLDOWN_1 = 0.0750f;
     public static int RANGE_1 = 70;
-    public static float RELOAD_TIME_1 = 4.0f;
-    public static int CLIP_SIZE_1 = 35;
+    public static float RELOAD_TIME_1 = 2.0f;
+    public static int CLIP_SIZE_1 = 45;
 
-    public static float COOLDOWN_2 = 0.20f;
+    public static float COOLDOWN_2 = 0.050f;
     public static int RANGE_2 = 90;
-    public static float RELOAD_TIME_2 = 4.0f;
+    public static float RELOAD_TIME_2 = 1.8f;
     public static int CLIP_SIZE_2 = 60;
 
     #endregion CONSTANTS
@@ -39,6 +39,8 @@ public class HeavyCannon : ProjectileAbilityBaseScript
         audio.clip = sound;
         SetLevel(0);
         base.Start();
+        minimumSpreadAngle = 0.1f;
+        maximumSpreadAngle = 2.5f;
     }
 
     public override int SetLevel(int level)

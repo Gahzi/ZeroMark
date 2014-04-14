@@ -22,6 +22,8 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
     public bool reloading;
     protected AudioClip reloadClip;
     private int lastSetLevel;
+    public float minimumSpreadAngle;
+    public float maximumSpreadAngle;
 
     public override void Start()
     {
@@ -31,6 +33,8 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
             ObjectPool.CreatePool(projectileType[i]);
         }
         level = 0;
+        minimumSpreadAngle = 0.0f;
+        maximumSpreadAngle = 0.0f;
     }
 
     public override void FixedUpdate()
@@ -59,6 +63,14 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
         ProjectileBaseScript projectile = null;
         if (cooldown <= 0 && ammo > 0 && !reloading)
         {
+            if (Random.Range(0, 2) == 0)
+            {
+                direction.y += minimumSpreadAngle + Random.Range(0, maximumSpreadAngle - minimumSpreadAngle);
+            }
+            else
+            {
+                direction.y -= minimumSpreadAngle + Random.Range(0, maximumSpreadAngle - minimumSpreadAngle);
+            }
             projectile = ObjectPool.Spawn(projectileType[level], transform.position, Quaternion.Euler(direction));
             projectile.inheritSpeed = _inheritSpeed;
             projectile.Team = firedBy.Team;

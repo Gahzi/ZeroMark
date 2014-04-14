@@ -9,20 +9,20 @@ public class PlasmaGun : ProjectileAbilityBaseScript
 {
 
     #region CONSTANTS
-    public static float COOLDOWN_0 = 0.5f;
+    public static float COOLDOWN_0 = 0.25f;
     public static int RANGE_0 = 65;
     public static float RELOAD_TIME_0 = 4.0f;
-    public static int CLIP_SIZE_0 = 4;
+    public static int CLIP_SIZE_0 = 6;
 
-    public static float COOLDOWN_1 = 0.35f;
+    public static float COOLDOWN_1 = 0.185f;
     public static int RANGE_1 = 65;
     public static float RELOAD_TIME_1 = 4.0f;
-    public static int CLIP_SIZE_1 = 6;
+    public static int CLIP_SIZE_1 = 8;
 
-    public static float COOLDOWN_2 = 0.25f;
+    public static float COOLDOWN_2 = 0.15f;
     public static int RANGE_2 = 65;
     public static float RELOAD_TIME_2 = 3.0f;
-    public static int CLIP_SIZE_2 = 8;
+    public static int CLIP_SIZE_2 = 10;
     #endregion
 
     public override void Start()
