@@ -118,6 +118,7 @@ public class KBPlayer : KBControllableGameObject
     private int respawnTimer;
     public float regenDelay;
     private float lastDamageTime;
+    public float regenSpeed;
 
     public Material redMat;
     public Material blueMat;
@@ -275,7 +276,7 @@ public class KBPlayer : KBControllableGameObject
         if (Time.time > lastDamageTime + regenDelay)
         {
             //float floatHealth = Mathf.Lerp(health, stats.health, 3.0f * Time.deltaTime);
-            float floatHealth = Mathf.MoveTowards(health, stats.health, 5.0f);
+            float floatHealth = Mathf.MoveTowards(health, stats.health, regenSpeed);
             health = Mathf.FloorToInt(floatHealth);
         }
         

@@ -17,7 +17,7 @@ GameObject:
   m_Layer: 0
   m_Name: RocketLauncher
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -1003283189, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -156,6 +156,11 @@ MonoBehaviour:
   owner: {fileID: 0}
   available: 0
   halfwayCooled: 0
+  projectileType:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  level: 0
   ammo: 0
   reloading: 0
 --- !u!136 &13600000

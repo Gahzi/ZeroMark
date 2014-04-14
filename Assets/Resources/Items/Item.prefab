@@ -141,7 +141,7 @@ MonoBehaviour:
   rotateSpeed: 7
 --- !u!114 &11400002
 MonoBehaviour:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
@@ -170,7 +170,6 @@ MonoBehaviour:
   health: 0
   itemType: 0
   respawnTime: 1
-  state: 0
   disableTime: .25
 --- !u!114 &11400006
 MonoBehaviour:

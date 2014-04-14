@@ -1,10 +1,10 @@
-﻿using UnityEngine;
-using System.Collections;
-using KBConstants;
+﻿using KBConstants;
+using UnityEngine;
 
 public class Rocketlauncher : ProjectileAbilityBaseScript
 {
     #region CONSTANTS
+
     public static float COOLDOWN_0 = 0.5f;
     public static int RANGE_0 = 200;
     public static float RELOAD_TIME_0 = 7.0f;
@@ -19,10 +19,11 @@ public class Rocketlauncher : ProjectileAbilityBaseScript
     public static int RANGE_2 = 200;
     public static float RELOAD_TIME_2 = 7.0f;
     public static int CLIP_SIZE_2 = 6;
-    #endregion
+
+    #endregion CONSTANTS
 
     public override void Start()
-    {       
+    {
         projectileType = new ProjectileBaseScript[3]
         {
             (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.RocketBulletLevel0], typeof(ProjectileBaseScript)),

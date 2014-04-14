@@ -1,10 +1,10 @@
-﻿using UnityEngine;
-using System.Collections;
-using KBConstants;
+﻿using KBConstants;
+using UnityEngine;
 
 public class HeavyCannon : ProjectileAbilityBaseScript
 {
     #region CONSTANTS
+
     public static float COOLDOWN_0 = 0.25f;
     public static int RANGE_0 = 60;
     public static float RELOAD_TIME_0 = 4.0f;
@@ -19,7 +19,8 @@ public class HeavyCannon : ProjectileAbilityBaseScript
     public static int RANGE_2 = 90;
     public static float RELOAD_TIME_2 = 4.0f;
     public static int CLIP_SIZE_2 = 60;
-    #endregion
+
+    #endregion CONSTANTS
 
     public override void Start()
     {

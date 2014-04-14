@@ -42,7 +42,7 @@ GameObject:
   m_Layer: 11
   m_Name: HitboxCubeMech
   m_TagString: Hitbox
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -771928, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -115,7 +115,7 @@ GameObject:
   m_Layer: 0
   m_Name: RocketLauncher
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -1003283189, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -138,7 +138,7 @@ GameObject:
   m_Layer: 0
   m_Name: RocketLauncher
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -1003283189, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -177,7 +177,7 @@ GameObject:
   m_Layer: 0
   m_Name: Cannon
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -1003283189, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -200,7 +200,7 @@ GameObject:
   m_Layer: 0
   m_Name: Cannon
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -1003283189, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -302,7 +302,7 @@ GameObject:
   m_Layer: 0
   m_Name: PlasmaGun
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -1003283189, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -325,7 +325,7 @@ GameObject:
   m_Layer: 0
   m_Name: PlasmaGun
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -1003283189, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -348,7 +348,7 @@ GameObject:
   m_Layer: 0
   m_Name: MachineGun
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -1003283189, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -371,7 +371,7 @@ GameObject:
   m_Layer: 0
   m_Name: MachineGun
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -1003283189, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -458,7 +458,7 @@ GameObject:
   m_Layer: 0
   m_Name: LightCannon
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -1003283189, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -479,7 +479,7 @@ GameObject:
   m_Layer: 0
   m_Name: LightCannon
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -1003283189, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -500,7 +500,7 @@ GameObject:
   m_Layer: 0
   m_Name: PlasmaGun
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -1003283189, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
@@ -521,7 +521,7 @@ GameObject:
   m_Layer: 0
   m_Name: PlasmaGun
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -1003283189, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
@@ -5618,6 +5618,7 @@ MonoBehaviour:
   teamSpawnpoints: []
   respawnTime: 2
   regenDelay: 0
+  regenSpeed: 0
   redMat: {fileID: 2100000, guid: 372241dd454df024d870058faef4d843, type: 2}
   blueMat: {fileID: 2100000, guid: 21af203b3a6ec874383d3ec97387749f, type: 2}
   hitExplosion: {fileID: 11400000, guid: b5462acd6b4c87b42b000f13705b8f09, type: 2}

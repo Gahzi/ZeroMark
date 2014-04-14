@@ -5,6 +5,7 @@ using KBConstants;
 public class MachineGun : ProjectileAbilityBaseScript
 {
     #region CONSTANTS
+
     public static float COOLDOWN_0 = 0.25f;
     public static int RANGE_0 = 35;
     public static float RELOAD_TIME_0 = 0.35f;
@@ -19,7 +20,6 @@ public class MachineGun : ProjectileAbilityBaseScript
     public static int RANGE_2 = 45;
     public static float RELOAD_TIME_2 = 0.225f;
     public static int CLIP_SIZE_2 = 3;
-
 
     #endregion
 

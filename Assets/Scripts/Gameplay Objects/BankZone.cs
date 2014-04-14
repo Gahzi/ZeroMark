@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using KBConstants;
+﻿using KBConstants;
+using UnityEngine;
 
 [RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(Rigidbody))]
@@ -9,6 +9,7 @@ public class BankZone : Zone
     public int redPoints;
     public int bluePoints;
     private bool captured;
+
     public bool Captured
     {
         get
@@ -31,6 +32,10 @@ public class BankZone : Zone
         ObjectPool.CreatePool(textPrefab);
     }
 
+    private void OnDrawGizmos()
+    {
+    }
+
     [RPC]
     public void AddPoints(int points, int teamNum, PhotonMessageInfo msg)
     {
@@ -49,6 +54,7 @@ public class BankZone : Zone
                         RunCapturedFeedback(team);
                     }
                     break;
+
                 case KBConstants.Team.Blue:
                     bluePoints += points;
                     RunPointAddFeedback(points, team);
@@ -59,9 +65,11 @@ public class BankZone : Zone
                         RunCapturedFeedback(team);
                     }
                     break;
+
                 case KBConstants.Team.None:
                     Debug.LogError("You're trying to add points to a zone, but the player has no team.");
                     break;
+
                 default:
                     break;
             }
@@ -87,14 +95,16 @@ public class BankZone : Zone
             case KBConstants.Team.Red:
                 t.color = Color.red;
                 break;
+
             case KBConstants.Team.Blue:
                 t.color = Color.blue;
                 break;
+
             case KBConstants.Team.None:
                 break;
+
             default:
                 break;
         }
     }
-
 }
