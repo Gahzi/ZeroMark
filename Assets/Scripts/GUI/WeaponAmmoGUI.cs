@@ -15,7 +15,7 @@ public class WeaponAmmoGUI : MonoBehaviour
     {
         for (int i = 0; i < text.Length; i++)
         {
-            if (attachedAbility != null)
+            if (attachedAbility.Length > 0 && text.Length == attachedAbility.Length)
             {
                 text[i].text = attachedAbility[i].ammo.ToString();
             }
