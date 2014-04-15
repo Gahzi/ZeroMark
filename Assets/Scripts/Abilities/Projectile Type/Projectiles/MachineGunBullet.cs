@@ -6,9 +6,9 @@ public class MachineGunBullet : ProjectileBaseScript
 
     #region CONSTANTS
 
-    public static int damageL0 = 30;
-    public static int damageL1 = 40;
-    public static int damageL2 = 60;
+    public static int damageL0 = 60;
+    public static int damageL1 = 80;
+    public static int damageL2 = 120;
 
     #endregion CONSTANTS
 
