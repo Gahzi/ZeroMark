@@ -36,7 +36,7 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
     {
         base.Start();
         gameObject.tag = "Projectile";
-        //damage = DAMAGE;
+        damageLevel = new int[3] { 0, 0, 0 };
         if (explosionPrefab != null)
         {
             ObjectPool.CreatePool(explosionPrefab);

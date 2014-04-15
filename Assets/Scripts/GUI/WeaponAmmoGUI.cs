@@ -8,7 +8,7 @@ public class WeaponAmmoGUI : MonoBehaviour
     
     private void Start()
     {
-        
+        attachedAbility = transform.parent.GetComponentsInChildren<ProjectileAbilityBaseScript>();
     }
 
     private void Update()
