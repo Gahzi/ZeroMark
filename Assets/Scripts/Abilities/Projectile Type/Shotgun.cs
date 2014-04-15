@@ -1,23 +1,23 @@
 ﻿using KBConstants;
 using UnityEngine;
 
-public class LightCannon : ProjectileAbilityBaseScript
+public class Shotgun : ProjectileAbilityBaseScript
 {
     #region CONSTANTS
 
-    public static float COOLDOWN_0 = 0.0001f;
+    public static float COOLDOWN_0 = 0.0005f;
     public static int RANGE_0 = 15;
-    public static float RELOAD_TIME_0 = 0.45f;
+    public static float RELOAD_TIME_0 = 0.70f;
     public static int CLIP_SIZE_0 = 5;
 
-    public static float COOLDOWN_1 = 0.0025f;
+    public static float COOLDOWN_1 = 0.0005f;
     public static int RANGE_1 = 25;
-    public static float RELOAD_TIME_1 = 0.40f;
-    public static int CLIP_SIZE_1 = 7;
+    public static float RELOAD_TIME_1 = 0.65f;
+    public static int CLIP_SIZE_1 = 5;
 
-    public static float COOLDOWN_2 = 0.0025f;
+    public static float COOLDOWN_2 = 0.0005f;
     public static int RANGE_2 = 20;
-    public static float RELOAD_TIME_2 = 0.35f;
+    public static float RELOAD_TIME_2 = 0.60f;
     public static int CLIP_SIZE_2 = 5;
 
     #endregion CONSTANTS
@@ -26,9 +26,9 @@ public class LightCannon : ProjectileAbilityBaseScript
     {
         projectileType = new ProjectileBaseScript[3]
         {
-            (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.LightCannonBulletLevel0], typeof(ProjectileBaseScript)),
-            (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.LightCannonBulletLevel1], typeof(ProjectileBaseScript)),
-            (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.HeavyCannonBulletLevel2], typeof(ProjectileBaseScript))
+            (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.ShotgunLevel0], typeof(ProjectileBaseScript)),
+            (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.ShotgunLevel1], typeof(ProjectileBaseScript)),
+            (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.ShotgunLevel2], typeof(ProjectileBaseScript))
         };
         for (int i = 0; i < projectileType.Length; i++)
         {

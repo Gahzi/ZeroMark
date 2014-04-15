@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MachineGunBullet : ProjectileBaseScript
+public class ShotgunBullet : ProjectileBaseScript
 {
 
     public override void Start()
@@ -10,9 +10,9 @@ public class MachineGunBullet : ProjectileBaseScript
         collideWithProjectiles = false;
         damageLevel = new int[3] 
         { 
-            KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.MachinegunLevel0],
-            KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.MachinegunLevel1],
-            KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.MachinegunLevel2]
+            KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.ShotgunLevel0],
+            KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.ShotgunLevel1],
+            KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.ShotgunLevel2]
         };
     }
 

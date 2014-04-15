@@ -6,9 +6,6 @@ public class RocketBullet : ProjectileBaseScript
 
     #region CONSTANTS
 
-    public static int damageL0 = 200;
-    public static int damageL1 = 300;
-    public static int damageL2 = 450;
     public float rocketInitSpeed;
     public int accel;
 
@@ -21,7 +18,12 @@ public class RocketBullet : ProjectileBaseScript
         base.Start();
         targetSpeed = projectileSpeed;
         projectileSpeed = rocketInitSpeed;
-        damageLevel = new int[3] { damageL0, damageL1, damageL2 };
+        damageLevel = new int[3] 
+        { 
+            KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.RocketLevel0],
+            KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.RocketLevel1],
+            KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.RocketLevel2]
+        };
     }
 
     protected override void Update()

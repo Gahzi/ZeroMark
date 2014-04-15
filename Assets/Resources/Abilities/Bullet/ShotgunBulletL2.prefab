@@ -34,7 +34,7 @@ GameObject:
   - 54: {fileID: 5400000}
   - 96: {fileID: 9600000}
   m_Layer: 12
-  m_Name: HeavyCannonBulletL0
+  m_Name: ShotgunBulletL2
   m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -59,7 +59,7 @@ Transform:
   m_GameObject: {fileID: 100002}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 87.0682602, y: -42.0591278, z: 164.050079}
-  m_LocalScale: {x: .200000003, y: .200000003, z: .699999988}
+  m_LocalScale: {x: .150000006, y: .150000006, z: .5}
   m_Children:
   - {fileID: 400000}
   m_Father: {fileID: 0}
@@ -75,7 +75,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 762cf01e80f344da8888c16318ab96c4, type: 2}
+  - {fileID: 2100000, guid: 33c7430dd548daf4f9c93fc8157a68ec, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -127,25 +127,25 @@ TrailRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_SortingLayerID: 0
-  m_Time: .100000001
-  m_StartWidth: .300000012
-  m_EndWidth: .100000001
+  m_Time: .0250000004
+  m_StartWidth: .25
+  m_EndWidth: .200000003
   m_Colors:
     m_Color[0]:
       serializedVersion: 2
-      rgba: 4289063679
+      rgba: 4294956288
     m_Color[1]:
       serializedVersion: 2
-      rgba: 4293786366
+      rgba: 4291493455
     m_Color[2]:
       serializedVersion: 2
-      rgba: 4293720573
+      rgba: 4288315014
     m_Color[3]:
       serializedVersion: 2
-      rgba: 4293654780
+      rgba: 4289810348
     m_Color[4]:
       serializedVersion: 2
-      rgba: 4293588987
+      rgba: 4294901977
   m_MinVertexDistance: .100000001
   m_Autodestruct: 0
 --- !u!114 &11400000
@@ -156,20 +156,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 100002}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62ead7c6e7b766b40b3e6404ea670098, type: 3}
+  m_Script: {fileID: 11500000, guid: ea43ed9e214e4c545aa1bf5e905fc066, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   lifetime: .5
   damage: 1
   owner: {fileID: 0}
   damageLevel: 
-  projectileSpeed: 55
+  projectileSpeed: 80
   inheritSpeed: 0
   collideWithProjectiles: 0
   collideWithEnvironment: 1
   homingProjectile: 0
   aimedProjectile: 0
-  explosionPrefab: {fileID: 11400000, guid: 21897c768a636ab43b27cd57609ad170, type: 2}
+  explosionPrefab: {fileID: 0}
   targetPlayer: {fileID: 0}
   targetPosition: {x: 0, y: 0, z: 0}
 --- !u!135 &13500000
@@ -1410,10 +1410,10 @@ ParticleSystem:
         rgba: 4294967295
       maxColor:
         serializedVersion: 2
-        rgba: 4278226943
+        rgba: 2904686336
       minMaxState: 0
     startSize:
-      scalar: 2
+      scalar: 1
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -1615,10 +1615,10 @@ ParticleSystem:
       maxGradient:
         key0:
           serializedVersion: 2
-          rgba: 2969567487
+          rgba: 2902458623
         key1:
           serializedVersion: 2
-          rgba: 4287269624
+          rgba: 3247082232
         key2:
           serializedVersion: 2
           rgba: 0
@@ -2272,7 +2272,7 @@ ParticleSystem:
     collisionMessages: 0
   SubModule:
     enabled: 0
-    subEmitterBirth: {fileID: 19800000}
+    subEmitterBirth: {fileID: 19800000, guid: dd1a4051d2a3ef84a905191d0ea1c16e, type: 2}
     subEmitterBirth1: {fileID: 0}
     subEmitterCollision: {fileID: 0}
     subEmitterCollision1: {fileID: 0}
@@ -2323,7 +2323,7 @@ ParticleSystemRenderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: f184215ab16acbd44a56b2759529bb94, type: 2}
+  - {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0

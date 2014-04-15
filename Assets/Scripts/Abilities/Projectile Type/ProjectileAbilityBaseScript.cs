@@ -24,6 +24,7 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
     private int lastSetLevel;
     public float minimumSpreadAngle;
     public float maximumSpreadAngle;
+    public bool oneClickFireAll;
 
     public override void Start()
     {
@@ -80,7 +81,7 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
             projectile.Team = firedBy.Team;
             projectile.Init(firedBy);
             projectile.damage = projectile.damageLevel[level];
-            
+
             if (projectile.homingProjectile)
             {
                 projectile.targetPlayer = GameManager.Instance.FindClosestPlayer(owner, 10, true);
@@ -131,7 +132,17 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
 
     public void PlayerFire(float _inheritSpeed)
     {
-        Fire(maxRange, owner, _inheritSpeed);
+        if (oneClickFireAll)
+        {
+            for (int i = 0; i < ammo; i++)
+            {
+                Fire(maxRange, owner, _inheritSpeed);
+            }
+        }
+        else
+        {
+            Fire(maxRange, owner, _inheritSpeed);
+        }
     }
 
     public void SetMaxRange(int maxRange)
