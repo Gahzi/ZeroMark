@@ -610,21 +610,9 @@ public class KBPlayer : KBControllableGameObject
                     {
                         if (guns[0].available)
                         {
-                            if (guns[0].oneClickFireAll)
-                            {
-                                while (guns[0].ammo > 0)
-                                {
-                                    int[] shootingGuns = { 0 };
-                                    float[] speeds = { modifiedMoveSpeed };
-                                    photonView.RPC("Fire", PhotonTargets.All, shootingGuns, speeds);
-                                }
-                            }
-                            else
-                            {
-                                int[] shootingGuns = { 0 };
-                                float[] speeds = { modifiedMoveSpeed };
-                                photonView.RPC("Fire", PhotonTargets.All, shootingGuns, speeds);
-                            }
+                            int[] shootingGuns = { 0 };
+                            float[] speeds = { modifiedMoveSpeed };
+                            photonView.RPC("Fire", PhotonTargets.All, shootingGuns, speeds);
                         }
                     }
                 }

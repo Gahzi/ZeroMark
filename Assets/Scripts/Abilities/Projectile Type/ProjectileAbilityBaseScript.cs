@@ -134,8 +134,9 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
     {
         if (oneClickFireAll)
         {
-            for (int i = 0; i < ammo; i++)
+            for (int i = 0; i < clipSize; i++)
             {
+                cooldown = 0;
                 Fire(maxRange, owner, _inheritSpeed);
             }
         }
