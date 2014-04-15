@@ -16,12 +16,18 @@ public class RocketBullet : ProjectileBaseScript
 
     private float targetSpeed;
 
+    public override void Awake()
+    {
+        base.Awake();
+        damageLevel = new int[3] { damageL0, damageL1, damageL2 };
+    }
+
     public override void Start()
     {
         base.Start();
         targetSpeed = projectileSpeed;
         projectileSpeed = rocketInitSpeed;
-        damageLevel = new int[3] { damageL0, damageL1, damageL2 };
+        
     }
 
     protected override void Update()

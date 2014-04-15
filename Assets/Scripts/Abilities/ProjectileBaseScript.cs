@@ -32,6 +32,11 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
     public KBPlayer targetPlayer;
     public Vector3 targetPosition;
 
+    public override void Awake()
+    {
+        base.Awake();
+    }
+
     public override void Start()
     {
         base.Start();

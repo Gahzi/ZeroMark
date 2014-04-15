@@ -9,12 +9,17 @@ public class PlasmaBullet : ProjectileBaseScript
     public static int damageL2 = 150;
 
     #endregion CONSTANTS
-    
+
+    public override void Awake()
+    {
+        base.Awake();
+        damageLevel = new int[3] { damageL0, damageL1, damageL2 };
+    }
+
     public override void Start()
     {
         base.Start();
-        collideWithProjectiles = false;
-        damageLevel = new int[3] { damageL0, damageL1, damageL2 };
+        collideWithProjectiles = false;   
     }
 
     protected override void Update()

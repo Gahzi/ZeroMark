@@ -27,6 +27,11 @@ abstract public class AbilityInstanceBaseScript : MonoBehaviour
     public int damage;
     public KBPlayer owner;
 
+    public virtual void Awake()
+    {
+
+    }
+
     public virtual void Start()
     {
         spawnTime = Time.time;
