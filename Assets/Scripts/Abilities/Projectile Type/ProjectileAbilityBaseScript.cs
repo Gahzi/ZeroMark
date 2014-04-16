@@ -72,6 +72,10 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
                 direction.y -= minimumSpreadAngle + Random.Range(0, maximumSpreadAngle - minimumSpreadAngle);
             }
             projectile = ObjectPool.Spawn(projectileType[level], transform.position, Quaternion.Euler(direction));
+            if (projectile.damageLevel.Length < 2)
+            {
+                projectile.Start();
+            }
             projectile.inheritSpeed = _inheritSpeed;
             projectile.Team = firedBy.Team;
             projectile.Init(firedBy);
