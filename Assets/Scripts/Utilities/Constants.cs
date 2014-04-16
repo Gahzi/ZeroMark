@@ -32,9 +32,9 @@ namespace KBConstants
             {type.HeavyCannonLevel1, 80},
             {type.HeavyCannonLevel2, 120},
 
-            {type.ShotgunLevel0, 60},
-            {type.ShotgunLevel1, 80},
-            {type.ShotgunLevel2, 100},
+            {type.ShotgunLevel0, 40},
+            {type.ShotgunLevel1, 60},
+            {type.ShotgunLevel2, 80},
 
             {type.PlasmaLevel0, 100},
             {type.PlasmaLevel1, 120},

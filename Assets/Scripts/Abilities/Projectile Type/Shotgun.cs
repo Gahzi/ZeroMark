@@ -5,20 +5,20 @@ public class Shotgun : ProjectileAbilityBaseScript
 {
     #region CONSTANTS
 
-    public static float COOLDOWN_0 = 0.0005f;
+    public static float COOLDOWN_0 = 0.0000f;
     public static int RANGE_0 = 15;
-    public static float RELOAD_TIME_0 = 0.70f;
-    public static int CLIP_SIZE_0 = 5;
+    public static float RELOAD_TIME_0 = 0.75f;
+    public static int CLIP_SIZE_0 = 8;
 
-    public static float COOLDOWN_1 = 0.0005f;
-    public static int RANGE_1 = 25;
-    public static float RELOAD_TIME_1 = 0.65f;
-    public static int CLIP_SIZE_1 = 5;
+    public static float COOLDOWN_1 = 0.0000f;
+    public static int RANGE_1 = 20;
+    public static float RELOAD_TIME_1 = 0.70f;
+    public static int CLIP_SIZE_1 = 8;
 
-    public static float COOLDOWN_2 = 0.0005f;
-    public static int RANGE_2 = 20;
-    public static float RELOAD_TIME_2 = 0.60f;
-    public static int CLIP_SIZE_2 = 5;
+    public static float COOLDOWN_2 = 0.0000f;
+    public static int RANGE_2 = 22;
+    public static float RELOAD_TIME_2 = 0.65f;
+    public static int CLIP_SIZE_2 = 8;
 
     #endregion CONSTANTS
 
@@ -42,8 +42,8 @@ public class Shotgun : ProjectileAbilityBaseScript
         base.Start();
 
         minimumSpreadAngle = 0.0f;
-        maximumSpreadAngle = 10.0f;
-        oneClickFireAll = true;
+        maximumSpreadAngle = 12.0f;
+        concurrentBurstFireWeapon = true;
     }
 
     public override int SetLevel(int level)
