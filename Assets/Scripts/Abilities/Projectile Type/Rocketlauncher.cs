@@ -5,19 +5,19 @@ public class Rocketlauncher : ProjectileAbilityBaseScript
 {
     #region CONSTANTS
 
-    public static float COOLDOWN_0 = 0.5f;
+    public static float COOLDOWN_0 = 0.3f;
     public static int RANGE_0 = 200;
-    public static float RELOAD_TIME_0 = 7.0f;
+    public static float RELOAD_TIME_0 = 5.0f;
     public static int CLIP_SIZE_0 = 6;
 
-    public static float COOLDOWN_1 = 0.5f;
+    public static float COOLDOWN_1 = 0.25f;
     public static int RANGE_1 = 200;
-    public static float RELOAD_TIME_1 = 7.0f;
+    public static float RELOAD_TIME_1 = 5.0f;
     public static int CLIP_SIZE_1 = 6;
 
-    public static float COOLDOWN_2 = 0.5f;
+    public static float COOLDOWN_2 = 0.25f;
     public static int RANGE_2 = 200;
-    public static float RELOAD_TIME_2 = 7.0f;
+    public static float RELOAD_TIME_2 = 5.0f;
     public static int CLIP_SIZE_2 = 6;
 
     #endregion CONSTANTS

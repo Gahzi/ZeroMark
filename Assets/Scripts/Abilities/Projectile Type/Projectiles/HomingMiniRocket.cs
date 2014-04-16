@@ -7,9 +7,6 @@ public class HomingMiniRocket : ProjectileBaseScript
 
     #region CONSTANTS
 
-    public static int damageL0 = 30;
-    public static int damageL1 = 30;
-    public static int damageL2 = 45;
     public float rocketInitSpeed;
     public int accel;
 
@@ -20,7 +17,12 @@ public class HomingMiniRocket : ProjectileBaseScript
     public override void Awake()
     {
         base.Awake();
-        damageLevel = new int[3] { damageL0, damageL1, damageL2 };
+        damageLevel = new int[3]
+        { 
+            KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.HomingRocketLevel0],
+            KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.HomingRocketLevel1],
+            KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.HomingRocketLevel2]
+        };
     }
 
     public override void Start()

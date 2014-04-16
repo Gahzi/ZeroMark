@@ -41,32 +41,32 @@ public class BankZone : Zone
     {
         if (!captured)
         {
-            Team team = (Team)teamNum;
-            switch (team)
+            Team bankingPlayerTeam = (Team)teamNum;
+            switch (bankingPlayerTeam)
             {
-                case KBConstants.Team.Red:
+                case Team.Red:
                     redPoints += points;
-                    RunPointAddFeedback(points, team);
+                    RunPointAddFeedback(points, Team.Red);
                     if (redPoints >= pointsToControl)
                     {
-                        team = KBConstants.Team.Red;
+                        team = Team.Red;
                         captured = true;
-                        RunCapturedFeedback(team);
+                        RunCapturedFeedback(Team.Red);
                     }
                     break;
 
-                case KBConstants.Team.Blue:
+                case Team.Blue:
                     bluePoints += points;
-                    RunPointAddFeedback(points, team);
+                    RunPointAddFeedback(points, Team.Blue);
                     if (bluePoints >= pointsToControl)
                     {
-                        team = KBConstants.Team.Blue;
+                        team = Team.Blue;
                         captured = true;
-                        RunCapturedFeedback(team);
+                        RunCapturedFeedback(Team.Blue);
                     }
                     break;
 
-                case KBConstants.Team.None:
+                case Team.None:
                     Debug.LogError("You're trying to add points to a zone, but the player has no team.");
                     break;
 

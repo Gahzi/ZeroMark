@@ -13,7 +13,7 @@
 *.exe
 *_Data/
 
-UnityVS.Kaiju_Battles.sln.DotSettings
-UnityVS.KaijuBattles.sln.DotSettings
-UnityVS.VersionSpecific.dll
-UnityVS.KaijuBattles.v11.suo
+*.DotSettings
+*.KaijuBattles.sln.DotSettings
+*.VersionSpecific.dll
+*.KaijuBattles.v11.suo
