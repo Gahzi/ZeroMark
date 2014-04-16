@@ -4,24 +4,22 @@ using System.Collections;
 public class MachineGunBullet : ProjectileBaseScript
 {
 
-    #region CONSTANTS
-
-    public static int damageL0 = 60;
-    public static int damageL1 = 80;
-    public static int damageL2 = 120;
-
-    #endregion CONSTANTS
-
     public override void Awake()
     {
         base.Awake();
         damageLevel = new int[3] { damageL0, damageL1, damageL2 };
+        { 
+            KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.MachinegunLevel0],
+            KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.MachinegunLevel1],
+            KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.MachinegunLevel2]
+        };
     }
 
     public override void Start()
     {
         base.Start();
         collideWithProjectiles = false;
+        
     }
 
     protected override void Update()

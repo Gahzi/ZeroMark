@@ -8,6 +8,63 @@ namespace KBConstants
 
     public enum ItemType { common, uncommon, rare, legendary, undefined };
 
+    public class AbilityConstants
+    {
+        public enum type
+        {
+            MachinegunLevel0, MachinegunLevel1, MachinegunLevel2,
+            RocketLevel0, RocketLevel1, RocketLevel2,
+            PlasmaLevel0, PlasmaLevel1, PlasmaLevel2,
+            LightAutoLaser,
+            HeavyCannonLevel0, HeavyCannonLevel1, HeavyCannonLevel2,
+            LightCannonLevel0, LightCannonLevel1, LightCannonLevel2,
+            HomingRocketLevel0, HomingRocketLevel1, HomingRocketLevel2,
+            ShotgunLevel0, ShotgunLevel1, ShotgunLevel2
+        };
+
+        private static readonly IDictionary<type, int> damageValues = new Dictionary<type, int>
+        {
+            {type.MachinegunLevel0, 60},
+            {type.MachinegunLevel1, 80},
+            {type.MachinegunLevel2, 120},
+
+            {type.HeavyCannonLevel0, 60},
+            {type.HeavyCannonLevel1, 80},
+            {type.HeavyCannonLevel2, 120},
+
+            {type.ShotgunLevel0, 40},
+            {type.ShotgunLevel1, 60},
+            {type.ShotgunLevel2, 80},
+
+            {type.PlasmaLevel0, 100},
+            {type.PlasmaLevel1, 120},
+            {type.PlasmaLevel2, 150},
+
+            {type.RocketLevel0, 200},
+            {type.RocketLevel1, 300},
+            {type.RocketLevel2, 450},
+
+            {type.LightCannonLevel0, 60},
+            {type.LightCannonLevel1, 80},
+            {type.LightCannonLevel2, 120},
+
+            {type.HomingRocketLevel0, 50},
+            {type.HomingRocketLevel1, 50},
+            {type.HomingRocketLevel2, 50},
+        };
+
+        public static IDictionary<type, int> DAMAGE_VALUES { get { return damageValues; } }
+
+        private static readonly IDictionary<type, float> speedValues = new Dictionary<type, float>
+        {
+            {type.MachinegunLevel0, 50.0f},
+            {type.MachinegunLevel1, 50.0f},
+            {type.MachinegunLevel2, 50.0f},
+        };
+
+        public static IDictionary<type, float> SPEED_VALUES { get { return speedValues; } }
+    }
+
     public class ObjectConstants
     {
         public enum type
@@ -19,6 +76,7 @@ namespace KBConstants
             LightAutoLaserBullet,
             HeavyCannonBulletLevel0, HeavyCannonBulletLevel1, HeavyCannonBulletLevel2,
             LightCannonBulletLevel0, LightCannonBulletLevel1, LightCannonBulletLevel2,
+            ShotgunLevel0, ShotgunLevel1, ShotgunLevel2,
             HomingRocket,
             KillTagBlue, KillTagRed,
             SmallExplosion, RocketExplosion, NoDamageExplosionMedium,
@@ -54,6 +112,9 @@ namespace KBConstants
             {type.LightCannonBulletLevel0, "abilities/bullet/lightcannonbulletl0"},
             {type.LightCannonBulletLevel1, "abilities/bullet/lightcannonbulletl1"},
             {type.LightCannonBulletLevel2, "abilities/bullet/lightcannonbulletl2"},
+            {type.ShotgunLevel0, "abilities/bullet/shotgunbulletl0"},
+            {type.ShotgunLevel1, "abilities/bullet/shotgunbulletl1"},
+            {type.ShotgunLevel2, "abilities/bullet/shotgunbulletl2"},
             {type.HomingRocket, "abilities/bullet/homingrocketbullet"}
         };
 

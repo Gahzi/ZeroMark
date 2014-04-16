@@ -163,7 +163,7 @@ MonoBehaviour:
   damage: 5
   owner: {fileID: 0}
   damageLevel: 
-  projectileSpeed: 65
+  projectileSpeed: 70
   inheritSpeed: 0
   collideWithProjectiles: 0
   collideWithEnvironment: 1

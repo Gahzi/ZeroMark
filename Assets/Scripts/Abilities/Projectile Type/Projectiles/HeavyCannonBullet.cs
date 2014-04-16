@@ -4,18 +4,15 @@ using System.Collections;
 public class HeavyCannonBullet : ProjectileBaseScript
 {
 
-    #region CONSTANTS
-
-    public static int damageL0 = 60;
-    public static int damageL1 = 80;
-    public static int damageL2 = 100;
-
-    #endregion CONSTANTS
-
     public override void Awake()
     {
         base.Awake();
-        damageLevel = new int[3] { damageL0, damageL1, damageL2 };
+        damageLevel = new int[3] 
+        { 
+            KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.HeavyCannonLevel0],
+            KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.HeavyCannonLevel1],
+            KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.HeavyCannonLevel2]
+        };
     }
 
     public override void Start()
