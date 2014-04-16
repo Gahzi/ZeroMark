@@ -9,8 +9,11 @@
 *.sln
 *.pidb
 *,userprefs
-UnityVS.Kaiju_Battles.sln.DotSettings
-UnityVS.KaijuBattles.sln.DotSettings
 *.v11.suo
 *.exe
 *_Data/
+
+UnityVS.Kaiju_Battles.sln.DotSettings
+UnityVS.KaijuBattles.sln.DotSettings
+UnityVS.VersionSpecific.dll
+UnityVS.KaijuBattles.v11.suo
