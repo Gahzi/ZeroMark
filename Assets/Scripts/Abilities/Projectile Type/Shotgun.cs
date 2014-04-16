@@ -43,7 +43,6 @@ public class Shotgun : ProjectileAbilityBaseScript
 
         minimumSpreadAngle = 0.0f;
         maximumSpreadAngle = 12.0f;
-        concurrentBurstFireWeapon = true;
     }
 
     public override int SetLevel(int level)
