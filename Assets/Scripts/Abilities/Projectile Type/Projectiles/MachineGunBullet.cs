@@ -7,7 +7,7 @@ public class MachineGunBullet : ProjectileBaseScript
     public override void Awake()
     {
         base.Awake();
-        damageLevel = new int[3] { damageL0, damageL1, damageL2 };
+        damageLevel = new int[3]
         { 
             KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.MachinegunLevel0],
             KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.MachinegunLevel1],
