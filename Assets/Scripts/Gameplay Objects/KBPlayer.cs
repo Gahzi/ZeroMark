@@ -637,113 +637,6 @@ public class KBPlayer : KBControllableGameObject
             }
         }
 
-
-        /* OLD DUMB CODE WE DONT LIKE
-        if (guns.GetLength(0) > 0)
-        {
-            if ((Input.GetMouseButton(0) || Input.GetMouseButton(1)))// && !gun[activeAbility].reloading)
-            {
-                if (Input.GetMouseButton(0))
-                {
-                    if (guns[0].ammo <= 0 || guns[1].ammo <= 0)
-                    {
-                        int[] reloadingGuns = { 0, 1 };
-                        photonView.RPC("Reload", PhotonTargets.All, reloadingGuns);
-                    }
-                    else
-                    {
-                        if (primaryWeaponLinkedFire)
-                        {
-                            int[] shootingGuns = { 0, 1 };
-                            float[] speeds = { modifiedMoveSpeed, modifiedMoveSpeed };
-                            photonView.RPC("Fire", PhotonTargets.All, shootingGuns, speeds);
-                            //gun[0].PlayerFire(speed);
-                            //gun[1].PlayerFire(speed);
-                        }
-                        else
-                        {
-                            int otherGun;
-                            if (lastPrimaryFire == 0)
-                            {
-                                otherGun = 1;
-                            }
-                            else
-                            {
-                                otherGun = 0;
-                            }
-
-                            if (guns[lastPrimaryFire].available)
-                            {
-                                //Debug.Log(gun[lastPrimaryFire].cooldown.ToString());
-                                int[] shootingGuns = { lastPrimaryFire };
-                                float[] speeds = { modifiedMoveSpeed };
-                                photonView.RPC("Fire", PhotonTargets.All, shootingGuns, speeds);
-                                //gun[lastPrimaryFire].PlayerFire(speed);
-                            }
-                            else if (!guns[lastPrimaryFire].available && guns[lastPrimaryFire].halfwayCooled)
-                            {
-                                lastPrimaryFire = otherGun;
-                                int[] shootingGuns = { otherGun };
-                                float[] speeds = { modifiedMoveSpeed };
-                                photonView.RPC("Fire", PhotonTargets.All, shootingGuns, speeds);
-                                //gun[otherGun].PlayerFire(speed);
-                            }
-                        }
-                    }
-                }
-                if (Input.GetMouseButton(1))
-                {
-                    if (guns[2].ammo <= 0 || guns[3].ammo <= 0)
-                    {
-                        guns[2].ammo = 0;
-                        guns[3].ammo = 0;
-
-                        int[] reloadingGuns = { 2, 3 };
-                        photonView.RPC("Reload", PhotonTargets.All, reloadingGuns);
-                    }
-                    else
-                    {
-                        if (secondaryWeaponLinkedFire)
-                        {
-                            int[] shootingGuns = { 2, 3 };
-                            float[] speeds = { modifiedMoveSpeed, modifiedMoveSpeed };
-                            photonView.RPC("Fire", PhotonTargets.All, shootingGuns, speeds);
-                            //gun[2].PlayerFire(speed);
-                            //gun[3].PlayerFire(speed);
-                        }
-                        else
-                        {
-                            int otherGun;
-                            if (lastSecondaryFire == 2)
-                            {
-                                otherGun = 3;
-                            }
-                            else
-                            {
-                                otherGun = 2;
-                            }
-                            if (guns[lastSecondaryFire].available) // TODO This doesn't synchronize as intended. Can shoot same side twice if you let go and wait until it cools.
-                            {
-                                int[] shootingGuns = { lastSecondaryFire };
-                                float[] speeds = { modifiedMoveSpeed };
-                                photonView.RPC("Fire", PhotonTargets.All, shootingGuns, speeds);
-                                //gun[lastSecondaryFire].PlayerFire(speed);
-                            }
-                            else if (!guns[lastSecondaryFire].available && guns[lastSecondaryFire].halfwayCooled)
-                            {
-                                lastSecondaryFire = otherGun;
-                                int[] shootingGuns = { otherGun };
-                                float[] speeds = { modifiedMoveSpeed };
-                                photonView.RPC("Fire", PhotonTargets.All, shootingGuns, speeds);
-                                //gun[otherGun].PlayerFire(speed);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        */
-
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             if (GUIManager.Instance.state.Equals(GUIManager.GUIManagerState.Hidden))
@@ -1029,7 +922,11 @@ public class KBPlayer : KBControllableGameObject
             SetStats();
             InitializeForRespawn();
             SetupAbilities();
-            GetComponentInChildren<WeaponAmmoGUI>().Setup();
+
+            if (photonView.isMine)
+            {
+                GetComponentInChildren<WeaponAmmoGUI>().Setup();
+            }
         }
     }
 

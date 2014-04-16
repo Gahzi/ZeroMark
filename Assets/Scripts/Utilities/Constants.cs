@@ -2,7 +2,7 @@
 
 namespace KBConstants
 {
-    public enum Team { Red, Blue, None };
+    public enum Team { Red = 0, Blue = 1, None = 2 };
 
     public enum PlayerType { mech, drone, tank, core };
 
