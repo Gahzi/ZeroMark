@@ -30,10 +30,13 @@ public class Rocketlauncher : ProjectileAbilityBaseScript
             (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.RocketBulletLevel1], typeof(ProjectileBaseScript)),
             (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.HomingRocket], typeof(ProjectileBaseScript))
         };
+        for (int i = 0; i < projectileType.Length; i++)
+        {
+            ObjectPool.CreatePool(projectileType[i]);
+        }
         sound = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.RocketFire01]);
         audio.clip = sound;
         SetLevel(0);
-        base.Start();
     }
 
     public override int SetLevel(int level)

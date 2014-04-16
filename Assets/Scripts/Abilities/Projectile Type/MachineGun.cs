@@ -6,20 +6,29 @@ public class MachineGun : ProjectileAbilityBaseScript
 {
     #region CONSTANTS
 
-    public static float COOLDOWN_0 = 0.125f;
+    public static float COOLDOWN_0 = 0.55f;
     public static int RANGE_0 = 35;
-    public static float RELOAD_TIME_0 = 0.45f;
-    public static int CLIP_SIZE_0 = 3;
+    public static float RELOAD_TIME_0 = 1.2f;
+    public static int CLIP_SIZE_0 = 10;
+    public static int BURST_SIZE_0 = 2;
+    public static float BURST_DELAY_0 = 0.10f;
+    public static float SPREAD_0 = 0.5f;
 
-    public static float COOLDOWN_1 = 0.125f;
+    public static float COOLDOWN_1 = 0.5235f;
     public static int RANGE_1 = 40;
-    public static float RELOAD_TIME_1 = 0.35f;
-    public static int CLIP_SIZE_1 = 3;
+    public static float RELOAD_TIME_1 = 1.1f;
+    public static int CLIP_SIZE_1 = 10;
+    public static int BURST_SIZE_1 = 3;
+    public static float BURST_DELAY_1 = 0.09f;
+    public static float SPREAD_1 = 0.6f;
 
-    public static float COOLDOWN_2 = 0.125f;
+    public static float COOLDOWN_2 = 0.52f;
     public static int RANGE_2 = 45;
-    public static float RELOAD_TIME_2 = 0.225f;
-    public static int CLIP_SIZE_2 = 3;
+    public static float RELOAD_TIME_2 = 1.0f;
+    public static int CLIP_SIZE_2 = 10;
+    public static int BURST_SIZE_2 = 3;
+    public static float BURST_DELAY_2 = 0.08f;
+    public static float SPREAD_2 = 0.7f;
 
     #endregion
 
@@ -36,9 +45,12 @@ public class MachineGun : ProjectileAbilityBaseScript
             ObjectPool.CreatePool(projectileType[i]);
         }
         sound = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.MachineGunFire01]);
-        //reloadClip = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.MachineGunReload01]);
+        reloadClip = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.MachineGunReload01]);
         audio.clip = sound;
+
         SetLevel(0);
+
+        burstFireWeapon = true;
     }
 
     public override int SetLevel(int level)
@@ -52,6 +64,9 @@ public class MachineGun : ProjectileAbilityBaseScript
                 ammo = CLIP_SIZE_0;
                 reloadTime = RELOAD_TIME_0;
                 clipSize = CLIP_SIZE_0;
+                burstSize = BURST_SIZE_0;
+                burstDelay = BURST_DELAY_0;
+                maximumSpreadAngle = SPREAD_0;
                 return level;
 
             case 1:
@@ -61,6 +76,10 @@ public class MachineGun : ProjectileAbilityBaseScript
                 ammo = CLIP_SIZE_1;
                 reloadTime = RELOAD_TIME_1;
                 clipSize = CLIP_SIZE_1;
+                burstSize = BURST_SIZE_1;
+                burstDelay = BURST_DELAY_1;
+                maximumSpreadAngle = SPREAD_1;
+
                 return level;
 
             case 2:
@@ -70,6 +89,10 @@ public class MachineGun : ProjectileAbilityBaseScript
                 ammo = CLIP_SIZE_2;
                 reloadTime = RELOAD_TIME_2;
                 clipSize = CLIP_SIZE_2;
+                burstSize = BURST_SIZE_2;
+                burstDelay = BURST_DELAY_2;
+                maximumSpreadAngle = SPREAD_2;
+
                 return level;
 
             default:

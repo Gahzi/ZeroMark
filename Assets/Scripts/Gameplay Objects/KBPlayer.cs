@@ -15,11 +15,11 @@ public class KBPlayer : KBControllableGameObject
 
     private static readonly int droneLowerRotationSpeed = 300;
     private static readonly int droneUpperRotationSpeed = 75;
-    private static readonly int droneMovementSpeed = 55;
+    private static readonly int droneMovementSpeed = 45;
     private static readonly int droneBaseHealth = 150;
-    private static readonly float droneAccel = 0.0125f;
+    private static readonly float droneAccel = 0.02f;
     private static readonly float dronePowerDecel = 0.25f;
-    private static readonly float droneFriction = 0.075f;
+    private static readonly float droneFriction = 0.10f;
     private static readonly float droneReverseSpeedFraction = 0.5f;
 
     #endregion DRONE
@@ -48,14 +48,14 @@ public class KBPlayer : KBControllableGameObject
 
     #region CORE
 
-    private static readonly int coreLowerRotationSpeed = 50;
-    private static readonly int coreUpperRotationSpeed = 50;
-    private static readonly int coreMovementSpeed = 20;
+    private static readonly int coreLowerRotationSpeed = 70;
+    private static readonly int coreUpperRotationSpeed = 70;
+    private static readonly int coreMovementSpeed = 40;
     private static readonly int coreBaseHealth = 10000;
-    private static readonly float coreAccel = 0.05f;
+    private static readonly float coreAccel = 0.25f;
     private static readonly float corePowerDecel = 0.15f;
-    private static readonly float coreFriction = 0.5f;
-    private static readonly float coreReverseSpeedFraction = 0.15f;
+    private static readonly float coreFriction = 0.8f;
+    private static readonly float coreReverseSpeedFraction = 0.35f;
 
     #endregion CORE
 
@@ -626,7 +626,7 @@ public class KBPlayer : KBControllableGameObject
                     }
                     else
                     {
-                        if (guns[1].available) // TODO This doesn't synchronize as intended. Can shoot same side twice if you let go and wait until it cools.
+                        if (guns[1].available)
                         {
                             int[] shootingGuns = { 1 };
                             float[] speeds = { modifiedMoveSpeed };

@@ -348,7 +348,7 @@ GameObject:
   - 82: {fileID: 8200022}
   - 114: {fileID: 11400050}
   m_Layer: 0
-  m_Name: LightCannon
+  m_Name: Shotgun
   m_TagString: Untagged
   m_Icon: {fileID: -1003283189, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -4330,7 +4330,6 @@ MonoBehaviour:
   sound: {fileID: 0}
   owner: {fileID: 0}
   available: 0
-  halfwayCooled: 0
   projectileType:
   - {fileID: 0}
   - {fileID: 0}
@@ -4338,9 +4337,7 @@ MonoBehaviour:
   level: 0
   ammo: 0
   reloading: 0
-  minimumSpreadAngle: 0
-  maximumSpreadAngle: 0
-  oneClickFireAll: 0
+  burstSize: 0
 --- !u!114 &11400020
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4404,7 +4401,6 @@ MonoBehaviour:
   sound: {fileID: 0}
   owner: {fileID: 0}
   available: 0
-  halfwayCooled: 0
   projectileType:
   - {fileID: 0}
   - {fileID: 0}
@@ -4412,9 +4408,7 @@ MonoBehaviour:
   level: 0
   ammo: 0
   reloading: 0
-  minimumSpreadAngle: 0
-  maximumSpreadAngle: 0
-  oneClickFireAll: 0
+  burstSize: 0
 --- !u!114 &11400028
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4452,7 +4446,6 @@ MonoBehaviour:
   sound: {fileID: 0}
   owner: {fileID: 0}
   available: 0
-  halfwayCooled: 0
   projectileType:
   - {fileID: 0}
   - {fileID: 0}
@@ -4460,9 +4453,7 @@ MonoBehaviour:
   level: 0
   ammo: 0
   reloading: 0
-  minimumSpreadAngle: 0
-  maximumSpreadAngle: 0
-  oneClickFireAll: 0
+  burstSize: 0
 --- !u!114 &11400040
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4500,7 +4491,6 @@ MonoBehaviour:
   sound: {fileID: 0}
   owner: {fileID: 0}
   available: 0
-  halfwayCooled: 0
   projectileType:
   - {fileID: 0}
   - {fileID: 0}
@@ -4508,9 +4498,7 @@ MonoBehaviour:
   level: 0
   ammo: 0
   reloading: 0
-  minimumSpreadAngle: 0
-  maximumSpreadAngle: 0
-  oneClickFireAll: 0
+  burstSize: 3
 --- !u!114 &11400048
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4548,7 +4536,6 @@ MonoBehaviour:
   sound: {fileID: 0}
   owner: {fileID: 0}
   available: 0
-  halfwayCooled: 0
   projectileType:
   - {fileID: 0}
   - {fileID: 0}
@@ -4556,9 +4543,7 @@ MonoBehaviour:
   level: 0
   ammo: 0
   reloading: 0
-  minimumSpreadAngle: 0
-  maximumSpreadAngle: 0
-  oneClickFireAll: 1
+  burstSize: 0
 --- !u!114 &11400052
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4619,7 +4604,6 @@ MonoBehaviour:
   sound: {fileID: 0}
   owner: {fileID: 0}
   available: 0
-  halfwayCooled: 0
   projectileType:
   - {fileID: 0}
   - {fileID: 0}
@@ -4627,9 +4611,7 @@ MonoBehaviour:
   level: 0
   ammo: 0
   reloading: 0
-  minimumSpreadAngle: 0
-  maximumSpreadAngle: 0
-  oneClickFireAll: 0
+  burstSize: 0
 --- !u!114 &11400062
 MonoBehaviour:
   m_ObjectHideFlags: 1

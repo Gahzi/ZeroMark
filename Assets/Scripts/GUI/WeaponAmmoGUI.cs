@@ -13,11 +13,12 @@ public class WeaponAmmoGUI : MonoBehaviour
 
     private void Update()
     {
-        for (int i = 0; i < text.Length; i++)
+        for (int i = 0; i < attachedAbility.Length; i++)
         {
             if (attachedAbility != null)
             {
-                text[i].text = attachedAbility[i].ammo.ToString();
+                int ammo = attachedAbility[i].ammo * attachedAbility[i].burstSize;
+                text[i].text = ammo.ToString();
             }
             else
             {
