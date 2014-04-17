@@ -35,8 +35,8 @@ public class KBPlayer : KBControllableGameObject
 
     #region TANK
 
-    private static readonly int tankLowerRotationSpeed = 100;
-    private static readonly int tankUpperRotationSpeed = 5;
+    private static readonly int tankLowerRotationSpeed = 120;
+    private static readonly int tankUpperRotationSpeed = 10;
     private static readonly int tankMovementSpeed = 20;
     private static readonly int tankBaseHealth = 800;
     private static readonly float tankAccel = 0.005f;
@@ -48,8 +48,8 @@ public class KBPlayer : KBControllableGameObject
 
     #region CORE
 
-    private static readonly int coreLowerRotationSpeed = 70;
-    private static readonly int coreUpperRotationSpeed = 70;
+    private static readonly int coreLowerRotationSpeed = 140;
+    private static readonly int coreUpperRotationSpeed = 140;
     private static readonly int coreMovementSpeed = 40;
     private static readonly int coreBaseHealth = 10000;
     private static readonly float coreAccel = 0.25f;

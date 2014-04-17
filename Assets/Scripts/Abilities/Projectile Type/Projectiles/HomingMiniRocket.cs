@@ -17,7 +17,7 @@ public class HomingMiniRocket : ProjectileBaseScript
     public override void Start()
     {
         base.Start();
-        targetSpeed = projectileSpeed;
+        targetSpeed = 100;
         projectileSpeed = rocketInitSpeed;
         homingProjectile = true;
         damageLevel = new int[3] 
