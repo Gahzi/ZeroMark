@@ -170,12 +170,6 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
 
             // Spawn projectile
             projectile = ObjectPool.Spawn(projectileType[level], transform.position, Quaternion.Euler(direction));
-
-            if (projectile.damageLevel.Length < 2)
-            {
-                projectile.Start();
-            }
-
             projectile.inheritSpeed = _inheritSpeed;
             projectile.Team = firedBy.Team;
             projectile.Init(firedBy);

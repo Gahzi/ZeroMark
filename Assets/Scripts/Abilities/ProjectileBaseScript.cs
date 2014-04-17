@@ -35,13 +35,14 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
     public override void Awake()
     {
         base.Awake();
+        damageLevel = new int[3] { 0, 0, 0 };
     }
 
     public override void Start()
     {
         base.Start();
         gameObject.tag = "Projectile";
-        damageLevel = new int[3] { 0, 0, 0 };
+        
         if (explosionPrefab != null)
         {
             ObjectPool.CreatePool(explosionPrefab);

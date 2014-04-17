@@ -3,17 +3,21 @@ using System.Collections;
 
 public class ShotgunBullet : ProjectileBaseScript
 {
-
-    public override void Start()
+    public override void Awake()
     {
-        base.Start();
-        collideWithProjectiles = false;
+        base.Awake();
         damageLevel = new int[3] 
         { 
             KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.ShotgunLevel0],
             KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.ShotgunLevel1],
             KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.ShotgunLevel2]
         };
+    }
+
+    public override void Start()
+    {
+        base.Start();
+        collideWithProjectiles = false;
     }
 
     protected override void Update()
