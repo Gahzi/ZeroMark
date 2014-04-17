@@ -128,8 +128,8 @@ TrailRenderer:
   m_SortingOrder: 0
   m_SortingLayerID: 0
   m_Time: .100000001
-  m_StartWidth: .25
-  m_EndWidth: .0500000007
+  m_StartWidth: .150000006
+  m_EndWidth: .00499999989
   m_Colors:
     m_Color[0]:
       serializedVersion: 2
@@ -163,7 +163,7 @@ MonoBehaviour:
   damage: 5
   owner: {fileID: 0}
   damageLevel: 
-  projectileSpeed: 70
+  projectileSpeed: 90
   inheritSpeed: 0
   collideWithProjectiles: 0
   collideWithEnvironment: 1

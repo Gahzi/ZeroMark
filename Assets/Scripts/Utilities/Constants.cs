@@ -28,29 +28,29 @@ namespace KBConstants
             {type.MachinegunLevel1, 80},
             {type.MachinegunLevel2, 120},
 
-            {type.HeavyCannonLevel0, 60},
-            {type.HeavyCannonLevel1, 80},
-            {type.HeavyCannonLevel2, 120},
+            {type.HeavyCannonLevel0, 100},
+            {type.HeavyCannonLevel1, 120},
+            {type.HeavyCannonLevel2, 150},
 
             {type.ShotgunLevel0, 40},
             {type.ShotgunLevel1, 60},
             {type.ShotgunLevel2, 80},
 
             {type.PlasmaLevel0, 100},
-            {type.PlasmaLevel1, 120},
-            {type.PlasmaLevel2, 150},
+            {type.PlasmaLevel1, 100},
+            {type.PlasmaLevel2, 100},
 
             {type.RocketLevel0, 200},
-            {type.RocketLevel1, 300},
-            {type.RocketLevel2, 450},
+            {type.RocketLevel1, 250},
+            {type.RocketLevel2, 300},
 
             {type.LightCannonLevel0, 60},
             {type.LightCannonLevel1, 80},
             {type.LightCannonLevel2, 120},
 
-            {type.HomingRocketLevel0, 50},
-            {type.HomingRocketLevel1, 50},
-            {type.HomingRocketLevel2, 50},
+            {type.HomingRocketLevel0, 100},
+            {type.HomingRocketLevel1, 150},
+            {type.HomingRocketLevel2, 200},
         };
 
         public static IDictionary<type, int> DAMAGE_VALUES { get { return damageValues; } }
@@ -77,7 +77,7 @@ namespace KBConstants
             HeavyCannonBulletLevel0, HeavyCannonBulletLevel1, HeavyCannonBulletLevel2,
             LightCannonBulletLevel0, LightCannonBulletLevel1, LightCannonBulletLevel2,
             ShotgunLevel0, ShotgunLevel1, ShotgunLevel2,
-            HomingRocket,
+            HomingRocketL0,
             KillTagBlue, KillTagRed,
             SmallExplosion, RocketExplosion, NoDamageExplosionMedium,
             FloatingText
@@ -115,7 +115,7 @@ namespace KBConstants
             {type.ShotgunLevel0, "abilities/bullet/shotgunbulletl0"},
             {type.ShotgunLevel1, "abilities/bullet/shotgunbulletl1"},
             {type.ShotgunLevel2, "abilities/bullet/shotgunbulletl2"},
-            {type.HomingRocket, "abilities/bullet/homingrocketbullet"}
+            {type.HomingRocketL0, "abilities/bullet/homingrocketbulletl0"}
         };
 
         public static IDictionary<type, string> PREFAB_NAMES { get { return prefabNames; } }

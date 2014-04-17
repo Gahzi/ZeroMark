@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using KBConstants;
 
 /// <summary>
@@ -22,9 +23,12 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
     public bool reloading;
     protected AudioClip reloadClip;
     private int lastSetLevel;
-    public float minimumSpreadAngle;
-    public float maximumSpreadAngle;
-    public bool oneClickFireAll;
+    protected float minimumSpreadAngle;
+    protected float maximumSpreadAngle;
+    protected bool burstFireWeapon;
+    public int burstSize;
+    protected float burstDelay;
+    private ProjectileBaseScript lastProjectile;
 
     public override void Start()
     {
@@ -36,11 +40,19 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
         level = 0;
         minimumSpreadAngle = 0.0f;
         maximumSpreadAngle = 0.0f;
+        burstSize = 1;
+        burstDelay = 0;
     }
 
     public override void FixedUpdate()
     {
         base.FixedUpdate();
+
+        if (reloading || ammo <= 0)
+        {
+            available = false;
+        }
+
         if (owner.killTokens < 1)
         {
             level = 0;
@@ -62,64 +74,35 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
     protected ProjectileBaseScript Fire(Vector3 direction, KBPlayer firedBy, float _inheritSpeed = 0.0f)
     {
         ProjectileBaseScript projectile = null;
-        if (cooldown <= 0 && ammo > 0 && !reloading)
+        if (available)
         {
-            if (Random.Range(0, 2) == 0)
-            {
-                direction.y += minimumSpreadAngle + Random.Range(0, maximumSpreadAngle - minimumSpreadAngle);
-            }
-            else
-            {
-                direction.y -= minimumSpreadAngle + Random.Range(0, maximumSpreadAngle - minimumSpreadAngle);
-            }
-            projectile = ObjectPool.Spawn(projectileType[level], transform.position, Quaternion.Euler(direction));
-            if (projectile.damageLevel.Length < 2)
-            {
-                projectile.Start();
-            }
-            projectile.inheritSpeed = _inheritSpeed;
-            projectile.Team = firedBy.Team;
-            projectile.Init(firedBy);
-            projectile.damage = projectile.damageLevel[level];
-
-            if (projectile.homingProjectile)
-            {
-                projectile.targetPlayer = GameManager.Instance.FindClosestPlayer(owner, 10, true);
-            }
-            if (projectile.aimedProjectile)
-            {
-                projectile.targetPosition = new Vector3(-owner.mousePlayerDiff.x, owner.transform.position.y, -owner.mousePlayerDiff.y);
-            }
-            if (audio.clip != null)
-            {
-                audio.PlayOneShot(audio.clip);
-            }
-            if (particleSystem != null)
-            {
-                StartCoroutine(ParticleBurstStaged());
-            }
-            cooldown = cooldownStart;
             available = false;
-
+            cooldown = cooldownStart;
             ammo--;
-
-            Collider[] collider = transform.parent.GetComponentsInChildren<Collider>();
-            foreach (Collider c in collider)
-            {
-                if (c.enabled)
-                {
-                    Physics.IgnoreCollision(c, projectile.collider, true);
-                }
-            }
+            StartCoroutine(DoFiringCoroutine(direction, firedBy, _inheritSpeed));
         }
+        projectile = lastProjectile;
         return projectile;
     }
 
+    /// <summary>
+    /// Fires projectile (does not alter lifetime)
+    /// </summary>
+    /// <param name="firedBy"></param>
+    /// <param name="_inheritSpeed"></param>
+    /// <returns></returns>
     protected ProjectileBaseScript Fire(KBPlayer firedBy, float _inheritSpeed = 0)
     {
         return Fire(transform.rotation.eulerAngles, firedBy, _inheritSpeed);
     }
 
+    /// <summary>
+    /// Fires and sets max range of projectile at runtime
+    /// </summary>
+    /// <param name="maxRange"></param>
+    /// <param name="firedBy"></param>
+    /// <param name="_inheritSpeed"></param>
+    /// <returns></returns>
     protected ProjectileBaseScript Fire(int maxRange, KBPlayer firedBy, float _inheritSpeed = 0)
     {
         ProjectileBaseScript p = Fire(firedBy, _inheritSpeed);
@@ -132,18 +115,7 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
 
     public void PlayerFire(float _inheritSpeed)
     {
-        if (oneClickFireAll)
-        {
-            for (int i = 0; i < clipSize; i++)
-            {
-                cooldown = 0;
-                Fire(maxRange, owner, _inheritSpeed);
-            }
-        }
-        else
-        {
-            Fire(maxRange, owner, _inheritSpeed);
-        }
+        Fire(maxRange, owner, _inheritSpeed);
     }
 
     public void SetMaxRange(int maxRange)
@@ -180,6 +152,78 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
         particleSystem.Emit(30);
         yield return new WaitForSeconds(0.05f);
         particleSystem.Emit(30);
+    }
+
+    private IEnumerator DoFiringCoroutine(Vector3 direction, KBPlayer firedBy, float _inheritSpeed = 0.0f)
+    {
+        for (int i = 0; i < burstSize; i++)
+        {
+            ProjectileBaseScript projectile = null;
+            if (Random.Range(0, 2) == 0) // Adjust angle by spread value
+            {
+                direction.y += minimumSpreadAngle + Random.Range(0, maximumSpreadAngle - minimumSpreadAngle);
+            }
+            else
+            {
+                direction.y -= minimumSpreadAngle + Random.Range(0, maximumSpreadAngle - minimumSpreadAngle);
+            }
+
+            // Spawn projectile
+            projectile = ObjectPool.Spawn(projectileType[level], transform.position, Quaternion.Euler(direction));
+
+            if (projectile.damageLevel.Length < 2)
+            {
+                projectile.Start();
+            }
+
+            projectile.inheritSpeed = _inheritSpeed;
+            projectile.Team = firedBy.Team;
+            projectile.Init(firedBy);
+            projectile.damage = projectile.damageLevel[level];
+
+            Collider[] collider = transform.parent.GetComponentsInChildren<Collider>();
+            foreach (Collider c in collider)
+            {
+                if (c.enabled)
+                {
+                    Physics.IgnoreCollision(c, projectile.collider, true);
+                }
+            }
+
+            // Alter behavior if special projectile type
+            if (projectile.homingProjectile)
+            {
+                projectile.targetPlayer = GameManager.Instance.FindClosestPlayer(owner, 10, true);
+            }
+            if (projectile.aimedProjectile)
+            {
+                projectile.targetPosition = new Vector3(-owner.mousePlayerDiff.x, owner.transform.position.y, -owner.mousePlayerDiff.y);
+            }
+
+            // Play effects
+            if (audio.clip != null)
+            {
+                audio.PlayOneShot(audio.clip);
+            }
+            if (particleSystem != null)
+            {
+                StartCoroutine(ParticleBurstStaged());
+            }
+
+            lastProjectile = projectile;
+
+            if (i < burstSize)
+            {
+                if (burstDelay > 0.0f)
+                {
+                    yield return new WaitForSeconds(burstDelay);
+                }
+            }
+            else if (burstDelay == 0)
+            {
+                yield return new WaitForEndOfFrame();
+            }
+        }
     }
 
     /// <summary>

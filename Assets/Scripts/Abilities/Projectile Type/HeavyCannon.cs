@@ -38,9 +38,9 @@ public class HeavyCannon : ProjectileAbilityBaseScript
         reloadClip = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.MachineGunReload02]);
         audio.clip = sound;
         SetLevel(0);
-        base.Start();
         minimumSpreadAngle = 0.1f;
         maximumSpreadAngle = 2.5f;
+        burstSize = 1;
     }
 
     public override int SetLevel(int level)
