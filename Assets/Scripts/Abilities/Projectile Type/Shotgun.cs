@@ -5,20 +5,23 @@ public class Shotgun : ProjectileAbilityBaseScript
 {
     #region CONSTANTS
 
-    public static float COOLDOWN_0 = 0.0000f;
+    public static float COOLDOWN_0 = 0.60f;
     public static int RANGE_0 = 15;
-    public static float RELOAD_TIME_0 = 0.75f;
-    public static int CLIP_SIZE_0 = 8;
+    public static float RELOAD_TIME_0 = 2.0f;
+    public static int CLIP_SIZE_0 = 5;
+    public static int BURST_SIZE_0 = 8;
 
-    public static float COOLDOWN_1 = 0.0000f;
-    public static int RANGE_1 = 20;
-    public static float RELOAD_TIME_1 = 0.70f;
-    public static int CLIP_SIZE_1 = 8;
+    public static float COOLDOWN_1 = 0.60f;
+    public static int RANGE_1 = 15;
+    public static float RELOAD_TIME_1 = 1.9f;
+    public static int CLIP_SIZE_1 = 6;
+    public static int BURST_SIZE_1 = 8;
 
-    public static float COOLDOWN_2 = 0.0000f;
-    public static int RANGE_2 = 22;
-    public static float RELOAD_TIME_2 = 0.65f;
-    public static int CLIP_SIZE_2 = 8;
+    public static float COOLDOWN_2 = 0.60f;
+    public static int RANGE_2 = 15;
+    public static float RELOAD_TIME_2 = 1.8f;
+    public static int CLIP_SIZE_2 = 7;
+    public static int BURST_SIZE_2 = 8;
 
     #endregion CONSTANTS
 
@@ -35,14 +38,15 @@ public class Shotgun : ProjectileAbilityBaseScript
             ObjectPool.CreatePool(projectileType[i]);
         }
         sound = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.CannonFire01]);
-        //reloadClip = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.MachineGunReload02]);
+        reloadClip = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.MachineGunReload02]);
         audio.clip = sound;
+
         SetLevel(0);
 
-        base.Start();
-
+        burstDelay = 0.00000000f;
         minimumSpreadAngle = 0.0f;
         maximumSpreadAngle = 12.0f;
+        burstFireWeapon = true;
     }
 
     public override int SetLevel(int level)
@@ -56,6 +60,7 @@ public class Shotgun : ProjectileAbilityBaseScript
                 ammo = CLIP_SIZE_0;
                 reloadTime = RELOAD_TIME_0;
                 clipSize = CLIP_SIZE_0;
+                burstSize = BURST_SIZE_0;
                 return level;
 
             case 1:
@@ -65,6 +70,7 @@ public class Shotgun : ProjectileAbilityBaseScript
                 ammo = CLIP_SIZE_1;
                 reloadTime = RELOAD_TIME_1;
                 clipSize = CLIP_SIZE_1;
+                burstSize = BURST_SIZE_1;
                 return level;
 
             case 2:
@@ -74,6 +80,7 @@ public class Shotgun : ProjectileAbilityBaseScript
                 ammo = CLIP_SIZE_2;
                 reloadTime = RELOAD_TIME_2;
                 clipSize = CLIP_SIZE_2;
+                burstSize = BURST_SIZE_2;
                 return level;
 
             default:

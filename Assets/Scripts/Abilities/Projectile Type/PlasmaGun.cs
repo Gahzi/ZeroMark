@@ -11,18 +11,29 @@ public class PlasmaGun : ProjectileAbilityBaseScript
     #region CONSTANTS
     public static float COOLDOWN_0 = 0.25f;
     public static int RANGE_0 = 65;
-    public static float RELOAD_TIME_0 = 4.0f;
+    public static float RELOAD_TIME_0 = 3.0f;
     public static int CLIP_SIZE_0 = 6;
+    public static int BURST_SIZE_0 = 1;
+    public static float BURST_DELAY_0 = 0.00f;
+    public static float SPREADMAX_0 = 0.0f;
 
     public static float COOLDOWN_1 = 0.185f;
     public static int RANGE_1 = 65;
-    public static float RELOAD_TIME_1 = 4.0f;
+    public static float RELOAD_TIME_1 = 3.0f;
     public static int CLIP_SIZE_1 = 8;
+    public static int BURST_SIZE_1 = 2;
+    public static float BURST_DELAY_1 = 0.00f;
+    public static float SPREADMIN_1 = 1.5f;
+    public static float SPREADMAX_1= 3.0f;
 
     public static float COOLDOWN_2 = 0.15f;
     public static int RANGE_2 = 65;
-    public static float RELOAD_TIME_2 = 3.0f;
+    public static float RELOAD_TIME_2 = 2.5f;
     public static int CLIP_SIZE_2 = 10;
+    public static int BURST_SIZE_2 = 3;
+    public static float BURST_DELAY_2 = 0.00f;
+    public static float SPREADMIN_2 = 1.0f;
+    public static float SPREADMAX_2 = 3.0f;
     #endregion
 
     public override void Start()
@@ -55,6 +66,9 @@ public class PlasmaGun : ProjectileAbilityBaseScript
                 ammo = CLIP_SIZE_0;
                 reloadTime = RELOAD_TIME_0;
                 clipSize = CLIP_SIZE_0;
+                burstSize = BURST_SIZE_0;
+                burstDelay = BURST_DELAY_0;
+                maximumSpreadAngle = SPREADMAX_0;
                 return level;
 
             case 1:
@@ -64,6 +78,11 @@ public class PlasmaGun : ProjectileAbilityBaseScript
                 ammo = CLIP_SIZE_1;
                 reloadTime = RELOAD_TIME_1;
                 clipSize = CLIP_SIZE_1;
+                burstSize = BURST_SIZE_1;
+                burstDelay = BURST_DELAY_1;
+                minimumSpreadAngle = SPREADMIN_1;
+                maximumSpreadAngle = SPREADMAX_1;
+
                 return level;
 
             case 2:
@@ -73,6 +92,11 @@ public class PlasmaGun : ProjectileAbilityBaseScript
                 ammo = CLIP_SIZE_2;
                 reloadTime = RELOAD_TIME_2;
                 clipSize = CLIP_SIZE_2;
+                burstSize = BURST_SIZE_2;
+                burstDelay = BURST_DELAY_2;
+                minimumSpreadAngle = SPREADMIN_2;
+                maximumSpreadAngle = SPREADMAX_2;
+
                 return level;
 
             default:

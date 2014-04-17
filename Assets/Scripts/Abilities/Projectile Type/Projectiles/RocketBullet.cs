@@ -11,7 +11,7 @@ public class RocketBullet : ProjectileBaseScript
 
     #endregion CONSTANTS
 
-    private float targetSpeed;
+    public float targetSpeed;
 
     public override void Awake()
     {
