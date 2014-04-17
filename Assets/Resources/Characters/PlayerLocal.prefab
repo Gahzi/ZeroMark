@@ -801,7 +801,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &100124
 GameObject:
   m_ObjectHideFlags: 1
@@ -4167,7 +4167,7 @@ MonoBehaviour:
   totalTokensLost: 0
   totalTokensBanked: 0
   guns: []
-  ammoHud: {fileID: 0}
+  ammoHud: {fileID: 100120}
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4295,6 +4295,7 @@ MonoBehaviour:
   sound: {fileID: 0}
   owner: {fileID: 0}
   available: 0
+  clipSize: 0
   projectileType:
   - {fileID: 0}
   - {fileID: 0}
@@ -4366,6 +4367,7 @@ MonoBehaviour:
   sound: {fileID: 0}
   owner: {fileID: 0}
   available: 0
+  clipSize: 0
   projectileType:
   - {fileID: 0}
   - {fileID: 0}
@@ -4435,6 +4437,7 @@ MonoBehaviour:
   sound: {fileID: 0}
   owner: {fileID: 0}
   available: 0
+  clipSize: 0
   projectileType:
   - {fileID: 0}
   - {fileID: 0}
@@ -4480,6 +4483,7 @@ MonoBehaviour:
   sound: {fileID: 0}
   owner: {fileID: 0}
   available: 0
+  clipSize: 0
   projectileType:
   - {fileID: 0}
   - {fileID: 0}
@@ -4525,6 +4529,7 @@ MonoBehaviour:
   sound: {fileID: 0}
   owner: {fileID: 0}
   available: 0
+  clipSize: 0
   projectileType:
   - {fileID: 0}
   - {fileID: 0}
@@ -4593,6 +4598,7 @@ MonoBehaviour:
   sound: {fileID: 0}
   owner: {fileID: 0}
   available: 0
+  clipSize: 0
   projectileType:
   - {fileID: 0}
   - {fileID: 0}

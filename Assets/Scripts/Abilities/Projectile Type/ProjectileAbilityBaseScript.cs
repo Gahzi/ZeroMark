@@ -13,7 +13,7 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
 
     #region CONSTANTS
     protected float reloadTime;
-    protected int clipSize;
+    public int clipSize;
     #endregion
 
     public ProjectileBaseScript[] projectileType = new ProjectileBaseScript[3];

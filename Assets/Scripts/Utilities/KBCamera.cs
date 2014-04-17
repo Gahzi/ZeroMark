@@ -26,7 +26,7 @@ public class KBCamera : MonoBehaviour
         {
             if (zoom < 1.0f)
             {
-                rotation = 65.0f * zoom;
+                //rotation = 65.0f * zoom;
             }
             else
             {
