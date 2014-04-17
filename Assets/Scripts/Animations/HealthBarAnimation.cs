@@ -19,7 +19,6 @@ public class HealthBarAnimation : MonoBehaviour {
     {
         if (player != null)
         {
-            Debug.Log("Lowest Health: 0 Max Health: " + player.stats.health.ToString() + "  CurrentHealth: " + player.health.ToString() + " Inverse Lerp Value: " + Mathf.InverseLerp(0, player.stats.health, player.health).ToString() + " Lerp Value: " + Mathf.Lerp(1, 1, (float)player.health / player.stats.health).ToString());
             renderer.material.SetFloat("_Cutoff", Mathf.InverseLerp(player.stats.health, 0, player.health-1));
         }
 	}
