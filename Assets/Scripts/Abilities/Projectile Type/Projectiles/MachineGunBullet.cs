@@ -19,7 +19,6 @@ public class MachineGunBullet : ProjectileBaseScript
     {
         base.Start();
         collideWithProjectiles = false;
-        
     }
 
     protected override void Update()

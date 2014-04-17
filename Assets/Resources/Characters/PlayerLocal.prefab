@@ -1308,7 +1308,7 @@ Transform:
   m_GameObject: {fileID: 100002}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.46000004, y: 5.82000017, z: 1.33000004}
+  m_LocalScale: {x: 2.5, y: 10, z: 2.5}
   m_Children: []
   m_Father: {fileID: 400026}
 --- !u!4 &400004
@@ -1544,7 +1544,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100048}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1, y: 0, z: 1.89340997}
+  m_LocalPosition: {x: 0, y: 0, z: 1.89340997}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400028}
@@ -2017,7 +2017,7 @@ Transform:
   m_GameObject: {fileID: 100154}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -2.29445457, z: 0}
-  m_LocalScale: {x: 1.75, y: 7.21999979, z: 1.49000001}
+  m_LocalScale: {x: 2, y: 10, z: 2}
   m_Children: []
   m_Father: {fileID: 400044}
 --- !u!4 &400156
@@ -4167,6 +4167,7 @@ MonoBehaviour:
   totalTokensLost: 0
   totalTokensBanked: 0
   guns: []
+  ammoHud: {fileID: 0}
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1

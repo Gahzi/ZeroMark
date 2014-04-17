@@ -145,6 +145,8 @@ public class KBPlayer : KBControllableGameObject
 
     private KBCamera camera;
 
+    public GameObject ammoHud;
+
     public void SetStats()
     {
         stats = new PlayerStats();
@@ -792,6 +794,13 @@ public class KBPlayer : KBControllableGameObject
         waitingForRespawn = false;
         acceptingInputs = true;
 
+        for (int i = 0; i < guns.Length; i++)
+        {
+            guns[i].ammo = 0;
+        }
+
+        ammoHud.SetActive(false);
+
         if (team == Team.Blue)
         {
             GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagBlue, transform.position, Quaternion.identity, (int)team);
@@ -922,6 +931,7 @@ public class KBPlayer : KBControllableGameObject
             SetStats();
             InitializeForRespawn();
             SetupAbilities();
+            ammoHud.SetActive(true);
 
             if (photonView.isMine)
             {
