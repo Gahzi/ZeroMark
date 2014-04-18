@@ -133,19 +133,19 @@ TrailRenderer:
   m_Colors:
     m_Color[0]:
       serializedVersion: 2
-      rgba: 4278255369
+      rgba: 4278226949
     m_Color[1]:
       serializedVersion: 2
-      rgba: 4278255183
+      rgba: 4278226693
     m_Color[2]:
       serializedVersion: 2
-      rgba: 4278254982
+      rgba: 4278226437
     m_Color[3]:
       serializedVersion: 2
-      rgba: 4278254764
+      rgba: 4278226181
     m_Color[4]:
       serializedVersion: 2
-      rgba: 4278254553
+      rgba: 4279763251
   m_MinVertexDistance: .100000001
   m_Autodestruct: 0
 --- !u!114 &11400000
@@ -1479,7 +1479,7 @@ ParticleSystem:
         m_PostInfinity: 2
       minMaxState: 0
     gravityModifier: 0
-    inheritVelocity: -.379999995
+    inheritVelocity: 0
     maxNumParticles: 500
   ShapeModule:
     serializedVersion: 2

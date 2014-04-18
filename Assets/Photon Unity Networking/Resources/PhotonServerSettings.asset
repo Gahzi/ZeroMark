@@ -38,4 +38,5 @@ MonoBehaviour:
   - Fire
   - Reload
   - AddPoints
+  - SetPointValue
   DisableAutoOpenWizard: 0

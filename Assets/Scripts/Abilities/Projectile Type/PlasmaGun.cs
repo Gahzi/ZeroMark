@@ -21,7 +21,7 @@ public class PlasmaGun : ProjectileAbilityBaseScript
     public static int RANGE_1 = 100;
     public static float RELOAD_TIME_1 = 3.0f;
     public static int CLIP_SIZE_1 = 8;
-    public static int BURST_SIZE_1 = 2;
+    public static int BURST_SIZE_1 = 4;
     public static float BURST_DELAY_1 = 0.00f;
     public static float SPREADMIN_1 = 1.5f;
     public static float SPREADMAX_1= 3.0f;
@@ -30,7 +30,7 @@ public class PlasmaGun : ProjectileAbilityBaseScript
     public static int RANGE_2 = 100;
     public static float RELOAD_TIME_2 = 2.5f;
     public static int CLIP_SIZE_2 = 10;
-    public static int BURST_SIZE_2 = 3;
+    public static int BURST_SIZE_2 = 6;
     public static float BURST_DELAY_2 = 0.00f;
     public static float SPREADMIN_2 = 1.0f;
     public static float SPREADMAX_2 = 3.0f;
@@ -53,6 +53,7 @@ public class PlasmaGun : ProjectileAbilityBaseScript
         reloadClip = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.PlasmaReload01]);
         SetLevel(0);
         base.Start();
+        burstFireWeapon = true;
     }
 
     public override int SetLevel(int level)

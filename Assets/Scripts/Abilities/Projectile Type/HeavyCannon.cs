@@ -54,6 +54,8 @@ public class HeavyCannon : ProjectileAbilityBaseScript
                 ammo = CLIP_SIZE_0;
                 reloadTime = RELOAD_TIME_0;
                 clipSize = CLIP_SIZE_0;
+                particleSystem.startSize = 0.75f;
+                particleSystem.startLifetime = 1.0f;
                 return level;
 
             case 1:
@@ -63,6 +65,8 @@ public class HeavyCannon : ProjectileAbilityBaseScript
                 ammo = CLIP_SIZE_1;
                 reloadTime = RELOAD_TIME_1;
                 clipSize = CLIP_SIZE_1;
+                particleSystem.startSize = 2.0f;
+                particleSystem.startLifetime = 2.0f;
                 return level;
 
             case 2:
@@ -72,6 +76,9 @@ public class HeavyCannon : ProjectileAbilityBaseScript
                 ammo = CLIP_SIZE_2;
                 reloadTime = RELOAD_TIME_2;
                 clipSize = CLIP_SIZE_2;
+                particleSystem.startSize = 6.5f;
+                particleSystem.startLifetime = 3.0f;
+
                 return level;
 
             default:

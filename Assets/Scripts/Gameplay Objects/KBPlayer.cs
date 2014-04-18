@@ -485,12 +485,12 @@ public class KBPlayer : KBControllableGameObject
             }
         }
     }
-    
+
     void OnCollisionEnter(Collision collision)
     {
         forwardAccel *= 0.00f;
     }
-    
+
 
     private new void OnTriggerEnter(Collider other)
     {
@@ -809,13 +809,18 @@ public class KBPlayer : KBControllableGameObject
         GameObject newTag = null;
         if (team == Team.Blue)
         {
-           newTag = GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagBlue, transform.position, Quaternion.identity, (int)team);
+            newTag = GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagBlue, transform.position, Quaternion.identity, (int)team);
         }
         else if (team == Team.Red)
         {
-           newTag = GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagRed, transform.position, Quaternion.identity, (int)team);
+            newTag = GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagRed, transform.position, Quaternion.identity, (int)team);
         }
-        newTag.GetPhotonView().RPC("SetPointValue", PhotonTargets.AllBuffered, Mathf.FloorToInt(killTokens * GameConstants.pointPercentDropOnDeath));
+        int points = Mathf.FloorToInt(killTokens * GameConstants.pointPercentDropOnDeath);
+        if (points == 0)
+        {
+            points = 1;
+        }
+        newTag.GetPhotonView().RPC("SetPointValue", PhotonTargets.AllBuffered, points);
         killTokens = 0;
 
 

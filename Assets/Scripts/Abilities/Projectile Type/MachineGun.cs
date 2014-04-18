@@ -67,6 +67,7 @@ public class MachineGun : ProjectileAbilityBaseScript
                 burstSize = BURST_SIZE_0;
                 burstDelay = BURST_DELAY_0;
                 maximumSpreadAngle = SPREAD_0;
+                particleSystem.startSize = 0.3f;
                 return level;
 
             case 1:
@@ -79,7 +80,7 @@ public class MachineGun : ProjectileAbilityBaseScript
                 burstSize = BURST_SIZE_1;
                 burstDelay = BURST_DELAY_1;
                 maximumSpreadAngle = SPREAD_1;
-
+                particleSystem.startSize = 1.2f;
                 return level;
 
             case 2:
@@ -92,6 +93,7 @@ public class MachineGun : ProjectileAbilityBaseScript
                 burstSize = BURST_SIZE_2;
                 burstDelay = BURST_DELAY_2;
                 maximumSpreadAngle = SPREAD_2;
+                particleSystem.startSize = 2.5f;
 
                 return level;
 

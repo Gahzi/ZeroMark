@@ -25,6 +25,7 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
     private int lastSetLevel;
     protected float minimumSpreadAngle;
     protected float maximumSpreadAngle;
+    protected float[] angleModifierArray;
     protected bool burstFireWeapon;
     public int burstSize;
     protected float burstDelay;
@@ -42,6 +43,7 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
         maximumSpreadAngle = 0.0f;
         burstSize = 1;
         burstDelay = 0;
+        angleModifierArray = new float[0];
     }
 
     public override void FixedUpdate()
@@ -53,15 +55,15 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
             available = false;
         }
 
-        if (owner.killTokens < 1)
+        if (owner.killTokens < GameConstants.levelOneThreshold)
         {
             level = 0;
         }
-        else if (owner.killTokens > 0 && owner.killTokens <= 50)
+        else if (owner.killTokens >= GameConstants.levelOneThreshold && owner.killTokens <= GameConstants.levelTwoThreshold)
         {
             level = 1;
         }
-        else if (owner.killTokens > 50)
+        else if (owner.killTokens > GameConstants.levelTwoThreshold)
         {
             level = 2;
         }
@@ -159,17 +161,27 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
         for (int i = 0; i < burstSize; i++)
         {
             ProjectileBaseScript projectile = null;
-            if (Random.Range(0, 2) == 0) // Adjust angle by spread value
+            Vector3 modifiedDirection = direction;
+            if (burstFireWeapon)
             {
-                direction.y += minimumSpreadAngle + Random.Range(0, maximumSpreadAngle - minimumSpreadAngle);
+                modifiedDirection.y = (direction.y - maximumSpreadAngle) + (i * 2.0f * maximumSpreadAngle / burstSize);
+
             }
-            else
-            {
-                direction.y -= minimumSpreadAngle + Random.Range(0, maximumSpreadAngle - minimumSpreadAngle);
-            }
+            //else
+            //{
+            //    if (Random.Range(0, 2) == 0) // Adjust angle by spread value
+            //    {
+            //        direction.y += minimumSpreadAngle + Random.Range(0, maximumSpreadAngle - minimumSpreadAngle);
+            //    }
+            //    else
+            //    {
+            //        direction.y -= minimumSpreadAngle + Random.Range(0, maximumSpreadAngle - minimumSpreadAngle);
+            //    }
+            //}
+
 
             // Spawn projectile
-            projectile = ObjectPool.Spawn(projectileType[level], transform.position, Quaternion.Euler(direction));
+            projectile = ObjectPool.Spawn(projectileType[level], transform.position, Quaternion.Euler(modifiedDirection));
             projectile.inheritSpeed = _inheritSpeed;
             projectile.Team = firedBy.Team;
             projectile.Init(firedBy);

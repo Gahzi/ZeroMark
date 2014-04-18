@@ -9,19 +9,19 @@ public class Shotgun : ProjectileAbilityBaseScript
     public static int RANGE_0 = 15;
     public static float RELOAD_TIME_0 = 2.0f;
     public static int CLIP_SIZE_0 = 5;
-    public static int BURST_SIZE_0 = 8;
+    public static int BURST_SIZE_0 = 10;
 
     public static float COOLDOWN_1 = 0.60f;
     public static int RANGE_1 = 15;
     public static float RELOAD_TIME_1 = 1.9f;
     public static int CLIP_SIZE_1 = 6;
-    public static int BURST_SIZE_1 = 8;
+    public static int BURST_SIZE_1 = 10;
 
     public static float COOLDOWN_2 = 0.60f;
     public static int RANGE_2 = 15;
     public static float RELOAD_TIME_2 = 1.8f;
     public static int CLIP_SIZE_2 = 7;
-    public static int BURST_SIZE_2 = 8;
+    public static int BURST_SIZE_2 = 10;
 
     #endregion CONSTANTS
 
@@ -47,6 +47,7 @@ public class Shotgun : ProjectileAbilityBaseScript
         minimumSpreadAngle = 0.0f;
         maximumSpreadAngle = 12.0f;
         burstFireWeapon = true;
+
     }
 
     public override int SetLevel(int level)

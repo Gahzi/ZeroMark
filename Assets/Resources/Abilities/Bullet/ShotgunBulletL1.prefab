@@ -128,7 +128,7 @@ TrailRenderer:
   m_SortingOrder: 0
   m_SortingLayerID: 0
   m_Time: .0700000003
-  m_StartWidth: .200000003
+  m_StartWidth: .300000012
   m_EndWidth: .00999999978
   m_Colors:
     m_Color[0]:
@@ -1479,7 +1479,7 @@ ParticleSystem:
         m_PostInfinity: 2
       minMaxState: 0
     gravityModifier: 0
-    inheritVelocity: -.379999995
+    inheritVelocity: 0
     maxNumParticles: 500
   ShapeModule:
     serializedVersion: 2
