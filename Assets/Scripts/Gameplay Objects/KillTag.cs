@@ -28,6 +28,17 @@ public class KillTag : KBGameObject
                 renderer.enabled = false;
                 // todo play return sound
             }
+            else if (player.team == team && PhotonNetwork.player.Equals(player.networkPlayer))
+            {
+                //player.totalTokensGained += player.killTokens;
+                //player.killTokens += Mathf.FloorToInt(pointValue / 2);
+
+                //GameManager.Instance.photonView.RPC("DestroyObject", PhotonTargets.All, photonView.viewID);
+                //player.audio.PlayOneShot(player.itemPickupClip);
+                //collider.enabled = false;
+                //renderer.enabled = false;
+                //// todo play return sound
+            }
         }
     }
 
