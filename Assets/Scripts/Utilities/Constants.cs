@@ -8,6 +8,11 @@ namespace KBConstants
 
     public enum ItemType { common, uncommon, rare, legendary, undefined };
 
+    public class GameConstants
+    {
+        public static readonly float pointPercentDropOnDeath = 0.5f;
+    }
+
     public class AbilityConstants
     {
         public enum type

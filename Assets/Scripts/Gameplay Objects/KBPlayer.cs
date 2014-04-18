@@ -29,7 +29,7 @@ public class KBPlayer : KBControllableGameObject
     private static readonly int mechLowerRotationSpeed = 10;
     private static readonly int mechUpperRotationSpeed = 50;
     private static readonly int mechMovementSpeed = 15;
-    private static readonly int mechBaseHealth = 300;
+    private static readonly int mechBaseHealth = 450;
 
     #endregion MECH
 
@@ -38,7 +38,7 @@ public class KBPlayer : KBControllableGameObject
     private static readonly int tankLowerRotationSpeed = 120;
     private static readonly int tankUpperRotationSpeed = 20;
     private static readonly int tankMovementSpeed = 15;
-    private static readonly int tankBaseHealth = 800;
+    private static readonly int tankBaseHealth = 1600;
     private static readonly float tankAccel = 0.015f;
     private static readonly float tankPowerDecel = 0.15f;
     private static readonly float tankFriction = 0.05f;
@@ -796,7 +796,6 @@ public class KBPlayer : KBControllableGameObject
         photonView.RPC("SwitchType", PhotonTargets.AllBuffered, "SpawnCore");
 
         totalTokensLost += killTokens;
-        killTokens = 0;
         waitingForRespawn = false;
         acceptingInputs = true;
 
@@ -807,14 +806,18 @@ public class KBPlayer : KBControllableGameObject
 
         ammoHud.SetActive(false);
 
+        GameObject newTag = null;
         if (team == Team.Blue)
         {
-            GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagBlue, transform.position, Quaternion.identity, (int)team);
+           newTag = GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagBlue, transform.position, Quaternion.identity, (int)team);
         }
         else if (team == Team.Red)
         {
-            GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagRed, transform.position, Quaternion.identity, (int)team);
+           newTag = GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagRed, transform.position, Quaternion.identity, (int)team);
         }
+        newTag.GetPhotonView().RPC("SetPointValue", PhotonTargets.AllBuffered, Mathf.FloorToInt(killTokens * GameConstants.pointPercentDropOnDeath));
+        killTokens = 0;
+
 
         Camera.main.GetComponent<ScreenShake>().StopShake();
         transform.position = GameObject.FindGameObjectWithTag("Prespawn").transform.position;

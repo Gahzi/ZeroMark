@@ -2,9 +2,14 @@
 using System.Collections;
 public class KillTag : KBGameObject
 {
+
+    public int pointValue;
+    public TextMesh textMesh;
+    
     public override void Start()
     {
         base.Start();
+        //textMesh = GetComponentInChildren<TextMesh>();
     }
 
     private new void OnTriggerEnter(Collider other)
@@ -15,8 +20,7 @@ public class KillTag : KBGameObject
             if (player.team != team && PhotonNetwork.player.Equals(player.networkPlayer))
             {
                 player.totalTokensGained += player.killTokens;
-                player.killTokens *= 2;
-                // play pickup sound;
+                player.killTokens += pointValue;
 
                 GameManager.Instance.photonView.RPC("DestroyObject", PhotonTargets.All, photonView.viewID);
                 player.audio.PlayOneShot(player.itemPickupClip);
@@ -25,6 +29,19 @@ public class KillTag : KBGameObject
                 // todo play return sound
             }
         }
+    }
+
+    void Update()
+    {
+        textMesh.text = pointValue.ToString();
+    }
+    
+    
+
+    [RPC]
+    private void SetPointValue(int _points)
+    {
+        pointValue = _points;
     }
 
     private void OnPhotonInstantiate(PhotonMessageInfo msg)

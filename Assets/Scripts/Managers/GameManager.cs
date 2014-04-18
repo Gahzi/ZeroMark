@@ -86,7 +86,7 @@ public class GameManager : Photon.MonoBehaviour
     }
 
     private void Start()
-    {        
+    {
         PhotonNetwork.isMessageQueueRunning = true;
         startTime = Time.time;
         lastTick = Time.time;
@@ -101,7 +101,6 @@ public class GameManager : Photon.MonoBehaviour
         //killTags = new List<KillTag>(loadedKillTags.Length);
         //captureZones = new List<CaptureZone>(loadedCaptureZones.Length);
         //playerSpawnZones = new List<PlayerSpawnPoint>(loadedPSpawns.Length);
-
 
         foreach (BankZone b in loadedBankZones)
         {
@@ -123,7 +122,6 @@ public class GameManager : Photon.MonoBehaviour
             Team nextTeam = (Team)(PhotonNetwork.otherPlayers.Length % 2);
             GameManager.Instance.CreateObject((int)ObjectConstants.type.Player, Vector3.zero, Quaternion.identity, (int)nextTeam);
         }
-        
     }
 
     private void FixedUpdate()
@@ -146,7 +144,7 @@ public class GameManager : Photon.MonoBehaviour
                     gameTime += Time.deltaTime;
 
                     CheckGameOver();
-                      
+
                     //CheckPlayerUpgradePoints();
                     //RunGui();
                     break;
@@ -209,26 +207,25 @@ public class GameManager : Photon.MonoBehaviour
         path = Application.persistentDataPath + "/" + path;
         Debug.Log(path);
     }
-    
-    void OnGUI()
+
+    private void OnGUI()
     {
         //GUI.Box(new Rect(Screen.width / 2 - 50, 0, 100, 40), "Blue" + System.Environment.NewLine +  blueTeamScore.ToString());
         //GUI.Box(new Rect(Screen.width / 2 + 50, 0, 100, 40), "Red" + System.Environment.NewLine + redTeamScore.ToString());
     }
-    
 
-     //<summary>
-     //While script is observed (in a PhotonView), this is called by PUN with a stream to write or read.
-     //</summary>
-     //<remarks>
-     //The property stream.isWriting is true for the owner of a PhotonView. This is the only client that
-     //should write into the stream. Others will receive the content written by the owner and can read it.
-    
-     //Note: Send only what you actually want to consume/use, too!
-     //Note: If the owner doesn't write something into the stream, PUN won't send anything.
-     //</remarks>
-     //<param name="stream">Read or write stream to pass state of this GameObject (or whatever else).</param>
-     //<param name="info">Some info about the sender of this stream, who is the owner of this PhotonView (and GameObject).</param>
+    //<summary>
+    //While script is observed (in a PhotonView), this is called by PUN with a stream to write or read.
+    //</summary>
+    //<remarks>
+    //The property stream.isWriting is true for the owner of a PhotonView. This is the only client that
+    //should write into the stream. Others will receive the content written by the owner and can read it.
+
+    //Note: Send only what you actually want to consume/use, too!
+    //Note: If the owner doesn't write something into the stream, PUN won't send anything.
+    //</remarks>
+    //<param name="stream">Read or write stream to pass state of this GameObject (or whatever else).</param>
+    //<param name="info">Some info about the sender of this stream, who is the owner of this PhotonView (and GameObject).</param>
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.isWriting)
@@ -290,7 +287,6 @@ public class GameManager : Photon.MonoBehaviour
             startTime = strtTime;
             gameTime = gmTime;
             gameTimeMax = gmTimeMax;
-
         }
     }
 
@@ -344,7 +340,7 @@ public class GameManager : Photon.MonoBehaviour
     //    }
     //}
 
-    public void CreateObject(int type, Vector3 position, Quaternion rotation, int newTeam)
+    public GameObject CreateObject(int type, Vector3 position, Quaternion rotation, int newTeam)
     {
         KBConstants.ObjectConstants.type newType = (KBConstants.ObjectConstants.type)type;
 
@@ -356,26 +352,28 @@ public class GameManager : Photon.MonoBehaviour
                     KBPlayer newPlayer = newPlayerObject.GetComponent<KBPlayer>();
                     newPlayer.photonView.RPC("Setup", PhotonTargets.AllBuffered, PhotonNetwork.player, (int)newTeam);
                     newPlayer.photonView.RPC("SwitchType", PhotonTargets.AllBuffered, "SpawnCore");
-                    break;
+                    return newPlayerObject;
                 }
 
             case ObjectConstants.type.KillTagBlue:
                 {
-                    GameObject newKillTakeBlueObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.KillTagBlue], position, rotation, 0);
-                    KillTag newKillTagBlue = newKillTakeBlueObject.GetComponent<KillTag>();
+                    GameObject newKillTagBlueObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.KillTagBlue], position, Quaternion.Euler(33.3f, 330.0f, 48.36f), 0);
+                    KillTag newKillTagBlue = newKillTagBlueObject.GetComponent<KillTag>();
                     newKillTagBlue.team = (Team)newTeam;
                     killTags.Add(newKillTagBlue);
-                    break;
+                    return newKillTagBlueObject;
                 }
 
             case ObjectConstants.type.KillTagRed:
                 {
-                    GameObject newKillTakeRedObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.KillTagRed], position, rotation, 0);
-                    KillTag newKillTagRed = newKillTakeRedObject.GetComponent<KillTag>();
+                    GameObject newKillTagRedObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.KillTagRed], position, Quaternion.Euler(33.3f, 330.0f, 48.36f), 0);
+                    KillTag newKillTagRed = newKillTagRedObject.GetComponent<KillTag>();
                     newKillTagRed.team = (Team)newTeam;
                     killTags.Add(newKillTagRed);
-                    break;
+                    return newKillTagRedObject;
                 }
+            default:
+                return null;
         }
     }
 
@@ -403,11 +401,14 @@ public class GameManager : Photon.MonoBehaviour
             case Team.Red:
                 redTeamScore += points;
                 break;
+
             case Team.Blue:
                 blueTeamScore += points;
                 break;
+
             case Team.None:
                 break;
+
             default:
                 break;
         }
@@ -465,14 +466,13 @@ public class GameManager : Photon.MonoBehaviour
         }
         return target;
     }
-	
-	/// <summary>
+
+    /// <summary>
     /// Checks to see if the 2/3 capture points are taken.
     /// </summary>
     /// <returns>True if a team has more than 2/3rds of the capture points</returns>
     private void CheckGameOver()
     {
-
         int redCount = 0;
         int blueCount = 0;
 
@@ -482,25 +482,25 @@ public class GameManager : Photon.MonoBehaviour
             switch (bz.team)
             {
                 case Team.Blue:
-                {
-                    blueCount++;
-                    break;
-                }
+                    {
+                        blueCount++;
+                        break;
+                    }
 
                 case Team.Red:
-                {
-                    redCount++;
-                    break;
-                }
+                    {
+                        redCount++;
+                        break;
+                    }
 
                 case Team.None:
-                {
-                    break;
-                }
+                    {
+                        break;
+                    }
             }
         }
 
-        if(redCount > bankZones.Count/2)
+        if (redCount > bankZones.Count / 2)
         {
             state = GameState.RedWins;
         }
