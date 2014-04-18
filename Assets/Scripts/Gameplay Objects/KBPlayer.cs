@@ -13,20 +13,20 @@ public class KBPlayer : KBControllableGameObject
 
     #region DRONE
 
-    private static readonly int droneLowerRotationSpeed = 300;
-    private static readonly int droneUpperRotationSpeed = 75;
+    private static readonly int droneLowerRotationSpeed = 5;
+    private static readonly int droneUpperRotationSpeed = 100;
     private static readonly int droneMovementSpeed = 45;
     private static readonly int droneBaseHealth = 150;
-    private static readonly float droneAccel = 0.02f;
+    private static readonly float droneAccel = 0.04f;
     private static readonly float dronePowerDecel = 0.25f;
-    private static readonly float droneFriction = 0.10f;
-    private static readonly float droneReverseSpeedFraction = 0.5f;
+    private static readonly float droneFriction = 0.05f;
+    private static readonly float droneReverseSpeedFraction = 1.0f;
 
     #endregion DRONE
 
     #region MECH
 
-    private static readonly int mechLowerRotationSpeed = 0;
+    private static readonly int mechLowerRotationSpeed = 10;
     private static readonly int mechUpperRotationSpeed = 50;
     private static readonly int mechMovementSpeed = 15;
     private static readonly int mechBaseHealth = 300;
@@ -36,13 +36,13 @@ public class KBPlayer : KBControllableGameObject
     #region TANK
 
     private static readonly int tankLowerRotationSpeed = 120;
-    private static readonly int tankUpperRotationSpeed = 10;
-    private static readonly int tankMovementSpeed = 20;
+    private static readonly int tankUpperRotationSpeed = 20;
+    private static readonly int tankMovementSpeed = 15;
     private static readonly int tankBaseHealth = 800;
-    private static readonly float tankAccel = 0.005f;
+    private static readonly float tankAccel = 0.015f;
     private static readonly float tankPowerDecel = 0.15f;
     private static readonly float tankFriction = 0.05f;
-    private static readonly float tankReverseSpeedFraction = 0.15f;
+    private static readonly float tankReverseSpeedFraction = 0.00f;
 
     #endregion TANK
 
@@ -242,7 +242,7 @@ public class KBPlayer : KBControllableGameObject
                 break;
 
             case PlayerType.drone:
-                tankStyleMove = true;
+                tankStyleMove = false;
                 break;
 
             case PlayerType.tank:
@@ -250,7 +250,7 @@ public class KBPlayer : KBControllableGameObject
                 break;
 
             case PlayerType.core:
-                tankStyleMove = true;
+                tankStyleMove = false;
                 break;
 
             default:
@@ -485,6 +485,12 @@ public class KBPlayer : KBControllableGameObject
             }
         }
     }
+    
+    void OnCollisionEnter(Collision collision)
+    {
+        forwardAccel *= 0.00f;
+    }
+    
 
     private new void OnTriggerEnter(Collider other)
     {
@@ -589,7 +595,7 @@ public class KBPlayer : KBControllableGameObject
             if (m.normalized != Vector3.zero)
             {
                 Quaternion bottomRotation = Quaternion.LookRotation(m.normalized);
-                lowerBody.transform.rotation = Quaternion.Lerp(lowerBody.transform.rotation, bottomRotation, 5f * Time.deltaTime);
+                lowerBody.transform.rotation = Quaternion.Lerp(lowerBody.transform.rotation, bottomRotation, lowerbodyRotateSpeed * Time.deltaTime);
             }
         }
 
