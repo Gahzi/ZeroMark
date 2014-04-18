@@ -59,7 +59,7 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
         {
             DoHomingBehavior();
         }
-        if (aimedProjectile && targetPosition != null)
+        if (aimedProjectile)
         {
             DoAimedBehavior();
         }
@@ -68,10 +68,8 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
 
     void OnDrawGizmos()
     {
-        if (targetPosition != null)
-        {
-            Gizmos.DrawWireSphere(targetPosition, 1.0f);
-        }
+        Gizmos.DrawWireSphere(targetPosition, 1.0f);
+        
         if (targetPlayer != null)
         {
             Gizmos.DrawWireSphere(targetPlayer.transform.position, 1.0f);

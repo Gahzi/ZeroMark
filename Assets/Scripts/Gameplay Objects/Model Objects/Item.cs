@@ -117,8 +117,6 @@ public class Item : KBGameObject
                 }
 
                 particleSystem.enableEmission = false;
-
-                Vector3 sPos = Camera.main.WorldToScreenPoint(transform.position);
                 break;
 
             case ItemState.isPickedUp:

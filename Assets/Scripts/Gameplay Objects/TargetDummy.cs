@@ -16,7 +16,7 @@
         return health;
     }
 
-    public void FixedUpdate()
+    public new void FixedUpdate()
     {
         if (health <= 0)
         {

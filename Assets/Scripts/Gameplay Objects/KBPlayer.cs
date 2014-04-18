@@ -9,8 +9,6 @@ public class KBPlayer : KBControllableGameObject
 {
     #region CONSTANTS
 
-    private static readonly float hitFXLength = 0.250f;
-
     #region DRONE
 
     private static readonly int droneLowerRotationSpeed = 300;
@@ -139,11 +137,10 @@ public class KBPlayer : KBControllableGameObject
     public int totalTokensBanked;
 
     public ProjectileAbilityBaseScript[] guns;
-    private bool triggerLockout;
 
     private float forwardAccel;
 
-    private KBCamera camera;
+    private new KBCamera camera;
 
     public void SetStats()
     {
@@ -257,7 +254,6 @@ public class KBPlayer : KBControllableGameObject
 
         acceptingInputs = true;
         waitingForRespawn = false;
-        triggerLockout = false;
         movespeed = stats.speed;
         lowerbodyRotateSpeed = stats.lowerbodyRotationSpeed;
     }
@@ -267,7 +263,7 @@ public class KBPlayer : KBControllableGameObject
         Debug.DrawRay(upperBody.transform.position, upperBody.transform.TransformDirection(new Vector3(0, 0, 5.0f)), new Color(255, 0, 0, 255), 0.0f);
     }
 
-    private void FixedUpdate()
+    private new void FixedUpdate()
     {
         if (Time.time > lastDamageTime + regenDelay)
         {
@@ -290,11 +286,6 @@ public class KBPlayer : KBControllableGameObject
                 invulnerabilityTime = 0;
             }
             // activate visual indication of invulnerability
-        }
-
-        if (triggerLockout)
-        {
-            StartCoroutine(Lockout(bankLockoutTime));
         }
 
         mousePos = Input.mousePosition;
@@ -348,9 +339,8 @@ public class KBPlayer : KBControllableGameObject
     [RPC]
     public void Setup(PhotonPlayer netPlayer, int tm)
     {
-        Team playerTeam = (Team)tm;
+        team = (Team)tm;
         networkPlayer = netPlayer;
-        team = playerTeam;
 
         if (networkPlayer == PhotonNetwork.player)
         {
@@ -491,6 +481,7 @@ public class KBPlayer : KBControllableGameObject
         {
             if (killTokens > 0)
             {
+
                 totalTokensBanked += killTokens;
                 BankZone b = other.gameObject.GetComponent<BankZone>();
                 b.photonView.RPC("AddPoints", PhotonTargets.AllBuffered, killTokens, (int)team);
@@ -595,7 +586,7 @@ public class KBPlayer : KBControllableGameObject
 
         #region Weapons
 
-        if (guns.GetLength(0) > 0)
+        if (guns.Length > 0)
         {
             if ((Input.GetMouseButton(0) || Input.GetMouseButton(1)))
             {
@@ -666,11 +657,10 @@ public class KBPlayer : KBControllableGameObject
     {
         for (int i = 0; i < gunIndex.Length; i++)
         {
-            int rightGun = gunIndex[i];
-            float rightSpeed = speed[i];
-            guns[rightGun].PlayerFire(rightSpeed);
+            int currentGun = gunIndex[i];
+            float currentGunSpeed = speed[i];
+            guns[currentGun].PlayerFire(currentGunSpeed);
         }
-
     }
 
     [RPC]
@@ -678,9 +668,9 @@ public class KBPlayer : KBControllableGameObject
     {
         for (int i = 0; i < gunIndex.Length; i++)
         {
-            int rightGun = gunIndex[i];
-            guns[rightGun].ammo = 0;
-            guns[rightGun].PlayerTriggerReload();
+            int currentGun = gunIndex[i];
+            guns[currentGun].ammo = 0;
+            guns[currentGun].PlayerTriggerReload();
         }
 
     }
@@ -720,9 +710,6 @@ public class KBPlayer : KBControllableGameObject
     public void ConfirmHit(KBPlayer victimObject, int damage)
     {
         photonView.RPC("ConfirmHitToOthers", PhotonTargets.All, victimObject.networkPlayer, damage);
-        //MIGHT BE ABLE TO REMOVE THIS IF WE DONT NOTICE A TIMING DIFFERENCE IN HITS LOCALLY VS RPC TO ALL
-        //Instantiate(hitExplosion, victimObject.transform.position, Quaternion.identity);
-        //gun[activeAbility].audio.PlayOneShot(hitConfirm);
     }
 
     [RPC]
@@ -836,26 +823,6 @@ public class KBPlayer : KBControllableGameObject
             guns[i].owner = this;
             guns[i].Team = team;
         }
-    }
-
-    public void BankKills()
-    {
-        invulnerabilityTime = bankLockoutTime;
-        triggerLockout = true;
-        // make them look different
-    }
-
-    private IEnumerator Lockout(float time)
-    {
-        acceptingInputs = false;
-        yield return new WaitForSeconds(time);
-        acceptingInputs = true;
-        //killTokens = GameManager.Instance.AddPointsToScore(team, killTokens);
-        triggerLockout = false;
-    }
-
-    private void FireWeapons(int weaponOne, int weaponTwo, bool linked)
-    {
     }
 
     [RPC]

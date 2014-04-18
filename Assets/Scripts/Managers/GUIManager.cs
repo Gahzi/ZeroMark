@@ -38,6 +38,12 @@ public class GUIManager : MonoBehaviour
         }
     }
 
+    private void Awake()
+    {
+        instance = this;
+    }
+
+
     private void Start()
     {
 
