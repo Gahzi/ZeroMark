@@ -11,36 +11,36 @@ public class KBPlayer : KBControllableGameObject
 
     #region DRONE
 
-    private static readonly int droneLowerRotationSpeed = 300;
-    private static readonly int droneUpperRotationSpeed = 75;
+    private static readonly int droneLowerRotationSpeed = 5;
+    private static readonly int droneUpperRotationSpeed = 100;
     private static readonly int droneMovementSpeed = 45;
     private static readonly int droneBaseHealth = 150;
-    private static readonly float droneAccel = 0.02f;
+    private static readonly float droneAccel = 0.04f;
     private static readonly float dronePowerDecel = 0.25f;
-    private static readonly float droneFriction = 0.10f;
-    private static readonly float droneReverseSpeedFraction = 0.5f;
+    private static readonly float droneFriction = 0.05f;
+    private static readonly float droneReverseSpeedFraction = 1.0f;
 
     #endregion DRONE
 
     #region MECH
 
-    private static readonly int mechLowerRotationSpeed = 0;
+    private static readonly int mechLowerRotationSpeed = 10;
     private static readonly int mechUpperRotationSpeed = 50;
     private static readonly int mechMovementSpeed = 15;
-    private static readonly int mechBaseHealth = 300;
+    private static readonly int mechBaseHealth = 450;
 
     #endregion MECH
 
     #region TANK
 
     private static readonly int tankLowerRotationSpeed = 120;
-    private static readonly int tankUpperRotationSpeed = 10;
-    private static readonly int tankMovementSpeed = 20;
-    private static readonly int tankBaseHealth = 800;
-    private static readonly float tankAccel = 0.005f;
+    private static readonly int tankUpperRotationSpeed = 20;
+    private static readonly int tankMovementSpeed = 15;
+    private static readonly int tankBaseHealth = 1600;
+    private static readonly float tankAccel = 0.015f;
     private static readonly float tankPowerDecel = 0.15f;
     private static readonly float tankFriction = 0.05f;
-    private static readonly float tankReverseSpeedFraction = 0.15f;
+    private static readonly float tankReverseSpeedFraction = 0.00f;
 
     #endregion TANK
 
@@ -142,6 +142,8 @@ public class KBPlayer : KBControllableGameObject
 
     private new KBCamera camera;
 
+    public GameObject ammoHud;
+
     public void SetStats()
     {
         stats = new PlayerStats();
@@ -237,7 +239,7 @@ public class KBPlayer : KBControllableGameObject
                 break;
 
             case PlayerType.drone:
-                tankStyleMove = true;
+                tankStyleMove = false;
                 break;
 
             case PlayerType.tank:
@@ -245,7 +247,7 @@ public class KBPlayer : KBControllableGameObject
                 break;
 
             case PlayerType.core:
-                tankStyleMove = true;
+                tankStyleMove = false;
                 break;
 
             default:
@@ -474,6 +476,12 @@ public class KBPlayer : KBControllableGameObject
         }
     }
 
+    void OnCollisionEnter(Collision collision)
+    {
+        forwardAccel *= 0.00f;
+    }
+
+
     private new void OnTriggerEnter(Collider other)
     {
         base.OnTriggerEnter(other);
@@ -578,7 +586,7 @@ public class KBPlayer : KBControllableGameObject
             if (m.normalized != Vector3.zero)
             {
                 Quaternion bottomRotation = Quaternion.LookRotation(m.normalized);
-                lowerBody.transform.rotation = Quaternion.Lerp(lowerBody.transform.rotation, bottomRotation, 5f * Time.deltaTime);
+                lowerBody.transform.rotation = Quaternion.Lerp(lowerBody.transform.rotation, bottomRotation, lowerbodyRotateSpeed * Time.deltaTime);
             }
         }
 
@@ -775,18 +783,33 @@ public class KBPlayer : KBControllableGameObject
         photonView.RPC("SwitchType", PhotonTargets.AllBuffered, "SpawnCore");
 
         totalTokensLost += killTokens;
-        killTokens = 0;
         waitingForRespawn = false;
         acceptingInputs = true;
 
+        for (int i = 0; i < guns.Length; i++)
+        {
+            guns[i].ammo = 0;
+        }
+
+        ammoHud.SetActive(false);
+
+        GameObject newTag = null;
         if (team == Team.Blue)
         {
-            GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagBlue, transform.position, Quaternion.identity, (int)team);
+            newTag = GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagBlue, transform.position, Quaternion.identity, (int)team);
         }
         else if (team == Team.Red)
         {
-            GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagRed, transform.position, Quaternion.identity, (int)team);
+            newTag = GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagRed, transform.position, Quaternion.identity, (int)team);
         }
+        int points = Mathf.FloorToInt(killTokens * GameConstants.pointPercentDropOnDeath);
+        if (points == 0)
+        {
+            points = 1;
+        }
+        newTag.GetPhotonView().RPC("SetPointValue", PhotonTargets.AllBuffered, points);
+        killTokens = 0;
+
 
         Camera.main.GetComponent<ScreenShake>().StopShake();
         transform.position = GameObject.FindGameObjectWithTag("Prespawn").transform.position;
@@ -822,6 +845,7 @@ public class KBPlayer : KBControllableGameObject
         {
             guns[i].owner = this;
             guns[i].Team = team;
+            guns[i].ammo = guns[i].clipSize;
         }
     }
 
@@ -889,6 +913,7 @@ public class KBPlayer : KBControllableGameObject
             SetStats();
             InitializeForRespawn();
             SetupAbilities();
+            ammoHud.SetActive(true);
 
             if (photonView.isMine)
             {

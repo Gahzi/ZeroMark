@@ -7,18 +7,18 @@ public class RocketLauncher : ProjectileAbilityBaseScript
 
     public static float COOLDOWN_0 = 1.0f;
     public static int RANGE_0 = 100;
-    public static float RELOAD_TIME_0 = 3.0f;
-    public static int CLIP_SIZE_0 = 2;
-    public static int BURST_SIZE_0 = 3;
-    public static float BURST_DELAY_0 = 0.30f;
-    public static float SPREAD_0 = 0.2f;
+    public static float RELOAD_TIME_0 = 3.5f;
+    public static int CLIP_SIZE_0 = 1;
+    public static int BURST_SIZE_0 = 8;
+    public static float BURST_DELAY_0 = 0.1f;
+    public static float SPREAD_0 = 5.0f;
 
     public static float COOLDOWN_1 = 0.8f;
     public static int RANGE_1 = 100;
-    public static float RELOAD_TIME_1 = 3.0f;
+    public static float RELOAD_TIME_1 = 3.5f;
     public static int CLIP_SIZE_1 = 1;
-    public static int BURST_SIZE_1 = 15;
-    public static float BURST_DELAY_1 = 0.1f;
+    public static int BURST_SIZE_1 = 12;
+    public static float BURST_DELAY_1 = 0.075f;
     public static float SPREAD_1 = 5.0f;
 
     public static float COOLDOWN_2 = 0.6f;

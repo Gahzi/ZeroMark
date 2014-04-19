@@ -7,7 +7,7 @@ public class MachineGun : ProjectileAbilityBaseScript
     #region CONSTANTS
 
     public static float COOLDOWN_0 = 0.55f;
-    public static int RANGE_0 = 35;
+    public static int RANGE_0 = 100;
     public static float RELOAD_TIME_0 = 1.2f;
     public static int CLIP_SIZE_0 = 10;
     public static int BURST_SIZE_0 = 2;
@@ -15,7 +15,7 @@ public class MachineGun : ProjectileAbilityBaseScript
     public static float SPREAD_0 = 0.5f;
 
     public static float COOLDOWN_1 = 0.5235f;
-    public static int RANGE_1 = 40;
+    public static int RANGE_1 = 100;
     public static float RELOAD_TIME_1 = 1.1f;
     public static int CLIP_SIZE_1 = 10;
     public static int BURST_SIZE_1 = 3;
@@ -23,7 +23,7 @@ public class MachineGun : ProjectileAbilityBaseScript
     public static float SPREAD_1 = 0.6f;
 
     public static float COOLDOWN_2 = 0.52f;
-    public static int RANGE_2 = 45;
+    public static int RANGE_2 = 100;
     public static float RELOAD_TIME_2 = 1.0f;
     public static int CLIP_SIZE_2 = 10;
     public static int BURST_SIZE_2 = 3;
@@ -67,6 +67,7 @@ public class MachineGun : ProjectileAbilityBaseScript
                 burstSize = BURST_SIZE_0;
                 burstDelay = BURST_DELAY_0;
                 maximumSpreadAngle = SPREAD_0;
+                particleSystem.startSize = 0.3f;
                 return level;
 
             case 1:
@@ -79,7 +80,7 @@ public class MachineGun : ProjectileAbilityBaseScript
                 burstSize = BURST_SIZE_1;
                 burstDelay = BURST_DELAY_1;
                 maximumSpreadAngle = SPREAD_1;
-
+                particleSystem.startSize = 1.2f;
                 return level;
 
             case 2:
@@ -92,6 +93,7 @@ public class MachineGun : ProjectileAbilityBaseScript
                 burstSize = BURST_SIZE_2;
                 burstDelay = BURST_DELAY_2;
                 maximumSpreadAngle = SPREAD_2;
+                particleSystem.startSize = 2.5f;
 
                 return level;
 

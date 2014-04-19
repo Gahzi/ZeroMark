@@ -129,8 +129,8 @@ TrailRenderer:
   m_SortingOrder: 0
   m_SortingLayerID: 0
   m_Time: .100000001
-  m_StartWidth: .25
-  m_EndWidth: .0149999997
+  m_StartWidth: .400000006
+  m_EndWidth: .00999999978
   m_Colors:
     m_Color[0]:
       serializedVersion: 2
@@ -205,7 +205,7 @@ MonoBehaviour:
   collideWithEnvironment: 1
   homingProjectile: 0
   aimedProjectile: 0
-  explosionPrefab: {fileID: 11400000, guid: 12a2fc82ddd99084f8c8cec0b0def40c, type: 2}
+  explosionPrefab: {fileID: 11400000, guid: 7ff8766d794999245a35b62e0792ea4d, type: 2}
   targetPlayer: {fileID: 0}
   targetPosition: {x: 0, y: 0, z: 0}
 --- !u!135 &13500000

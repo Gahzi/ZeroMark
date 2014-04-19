@@ -27,7 +27,6 @@ public class RocketBullet : ProjectileBaseScript
     public override void Start()
     {
         base.Start();
-        targetSpeed = projectileSpeed;
         projectileSpeed = rocketInitSpeed;
         
     }

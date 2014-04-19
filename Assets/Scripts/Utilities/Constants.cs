@@ -8,6 +8,13 @@ namespace KBConstants
 
     public enum ItemType { common, uncommon, rare, legendary, undefined };
 
+    public class GameConstants
+    {
+        public static readonly float pointPercentDropOnDeath = 1.0f;
+        public static readonly int levelOneThreshold = 4;
+        public static readonly int levelTwoThreshold = 50;
+    }
+
     public class AbilityConstants
     {
         public enum type
@@ -32,21 +39,21 @@ namespace KBConstants
             {type.HeavyCannonLevel1, 120},
             {type.HeavyCannonLevel2, 150},
 
-            {type.ShotgunLevel0, 40},
-            {type.ShotgunLevel1, 60},
-            {type.ShotgunLevel2, 80},
+            {type.ShotgunLevel0, 30},
+            {type.ShotgunLevel1, 50},
+            {type.ShotgunLevel2, 70},
 
             {type.PlasmaLevel0, 100},
-            {type.PlasmaLevel1, 100},
-            {type.PlasmaLevel2, 100},
+            {type.PlasmaLevel1, 50},
+            {type.PlasmaLevel2, 50},
 
-            {type.RocketLevel0, 200},
-            {type.RocketLevel1, 250},
+            {type.RocketLevel0, 75},
+            {type.RocketLevel1, 100},
             {type.RocketLevel2, 300},
 
-            {type.LightCannonLevel0, 60},
-            {type.LightCannonLevel1, 80},
-            {type.LightCannonLevel2, 120},
+            {type.LightCannonLevel0, 15},
+            {type.LightCannonLevel1, 30},
+            {type.LightCannonLevel2, 45},
 
             {type.HomingRocketLevel0, 100},
             {type.HomingRocketLevel1, 150},
@@ -79,6 +86,7 @@ namespace KBConstants
             ShotgunLevel0, ShotgunLevel1, ShotgunLevel2,
             HomingRocketL0,
             KillTagBlue, KillTagRed,
+            PlasmaExplosionL0, PlasmaExplosionL1, PlasmaExplosionL2,
             SmallExplosion, RocketExplosion, NoDamageExplosionMedium,
             FloatingText
         };
@@ -105,6 +113,10 @@ namespace KBConstants
             {type.SmallExplosion, "abilities/explosion/smallexplosion"},
             {type.RocketExplosion, "abilities/explosion/rocketexplosion"},
             {type.NoDamageExplosionMedium, "abilities/explosion/mediumexplosion"},
+            {type.PlasmaExplosionL0, "abilities/explosion/plasmaexplosionl0"},
+            {type.PlasmaExplosionL1, "abilities/explosion/plasmaexplosionl1"},
+            {type.PlasmaExplosionL2, "abilities/explosion/plasmaexplosionl2"},
+
             {type.FloatingText, "gui/floatingtext"},
             {type.HeavyCannonBulletLevel0, "abilities/bullet/heavycannonbulletl0"},
             {type.HeavyCannonBulletLevel1, "abilities/bullet/heavycannonbulletl1"},
