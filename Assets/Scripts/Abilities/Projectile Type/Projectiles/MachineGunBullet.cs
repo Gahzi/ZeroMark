@@ -13,6 +13,7 @@ public class MachineGunBullet : ProjectileBaseScript
             KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.MachinegunLevel1],
             KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.MachinegunLevel2]
         };
+
     }
 
     public override void Start()

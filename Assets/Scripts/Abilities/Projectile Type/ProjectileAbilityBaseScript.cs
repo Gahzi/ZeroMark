@@ -1,7 +1,6 @@
-﻿using UnityEngine;
+﻿using KBConstants;
 using System.Collections;
-using System.Collections.Generic;
-using KBConstants;
+using UnityEngine;
 
 /// <summary>
 /// Basic projectile ability class. Fires attached ammo type @ firerate
@@ -10,11 +9,12 @@ using KBConstants;
 /// </summary>
 public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
 {
-
     #region CONSTANTS
+
     protected float reloadTime;
     public int clipSize;
-    #endregion
+
+    #endregion CONSTANTS
 
     public ProjectileBaseScript[] projectileType = new ProjectileBaseScript[3];
     public int level;
@@ -30,6 +30,7 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
     public int burstSize;
     protected float burstDelay;
     private ProjectileBaseScript lastProjectile;
+    public ShellCasing casing;
 
     public override void Start()
     {
@@ -158,14 +159,48 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
 
     private IEnumerator DoFiringCoroutine(Vector3 direction, KBPlayer firedBy, float _inheritSpeed = 0.0f)
     {
+        if (sound.Length > 0)
+        {
+            audio.PlayOneShot(sound[Random.Range(0, sound.Length)]);
+        }
+        if (particleSystem != null)
+        {
+            StartCoroutine(ParticleBurstStaged());
+        }
+        
         for (int i = 0; i < burstSize; i++)
         {
+            switch (level)
+            {
+                case 0:
+                    Camera.main.GetComponent<ScreenShake>().StartShake(0.1000f, 0.5000f);
+                    break;
+
+                case 1:
+                    Camera.main.GetComponent<ScreenShake>().StartShake(0.1000f, 1.0000f);
+                    break;
+
+                case 2:
+                    Camera.main.GetComponent<ScreenShake>().StartShake(0.1000f, 2.0000f);
+                    break;
+
+                default:
+                    Camera.main.GetComponent<ScreenShake>().StartShake(0.0500f, 0.500f);
+                    break;
+            }
+
+            if (casing != null)
+            {
+                ShellCasing c = ObjectPool.Spawn(casing, transform.position);
+                c.spawnTime = Time.time;
+                c.rigidbody.AddExplosionForce(35.0f, transform.position + Vector3.left + Vector3.down + Vector3.back, 55.0f);
+            }
+
             ProjectileBaseScript projectile = null;
             Vector3 modifiedDirection = direction;
             if (burstFireWeapon)
             {
                 modifiedDirection.y = (direction.y - maximumSpreadAngle) + (i * 2.0f * maximumSpreadAngle / burstSize);
-
             }
             //else
             //{
@@ -178,7 +213,6 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
             //        direction.y -= minimumSpreadAngle + Random.Range(0, maximumSpreadAngle - minimumSpreadAngle);
             //    }
             //}
-
 
             // Spawn projectile
             projectile = ObjectPool.Spawn(projectileType[level], transform.position, Quaternion.Euler(modifiedDirection));
@@ -207,14 +241,6 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
             }
 
             // Play effects
-            if (audio.clip != null)
-            {
-                audio.PlayOneShot(audio.clip);
-            }
-            if (particleSystem != null)
-            {
-                StartCoroutine(ParticleBurstStaged());
-            }
 
             lastProjectile = projectile;
 
@@ -238,5 +264,4 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
     /// <param name="level"></param>
     /// <returns></returns>
     public abstract int SetLevel(int level);
-
 }

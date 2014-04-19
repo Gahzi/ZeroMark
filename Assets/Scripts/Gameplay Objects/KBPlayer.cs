@@ -15,12 +15,13 @@ public class KBPlayer : KBControllableGameObject
 
     private static readonly int droneLowerRotationSpeed = 5;
     private static readonly int droneUpperRotationSpeed = 100;
-    private static readonly int droneMovementSpeed = 45;
+    private static readonly int droneMovementSpeed = 35;
     private static readonly int droneBaseHealth = 150;
     private static readonly float droneAccel = 0.04f;
     private static readonly float dronePowerDecel = 0.25f;
     private static readonly float droneFriction = 0.05f;
     private static readonly float droneReverseSpeedFraction = 1.0f;
+    private static readonly float droneRegenRate = 1.0f;
 
     #endregion DRONE
 
@@ -28,21 +29,23 @@ public class KBPlayer : KBControllableGameObject
 
     private static readonly int mechLowerRotationSpeed = 10;
     private static readonly int mechUpperRotationSpeed = 50;
-    private static readonly int mechMovementSpeed = 15;
+    private static readonly int mechMovementSpeed = 20;
     private static readonly int mechBaseHealth = 450;
+    private static readonly float mechRegenRate = 1.0f;
 
     #endregion MECH
 
     #region TANK
 
-    private static readonly int tankLowerRotationSpeed = 120;
-    private static readonly int tankUpperRotationSpeed = 20;
+    private static readonly int tankLowerRotationSpeed = 200;
+    private static readonly int tankUpperRotationSpeed = 45;
     private static readonly int tankMovementSpeed = 15;
     private static readonly int tankBaseHealth = 1600;
-    private static readonly float tankAccel = 0.015f;
-    private static readonly float tankPowerDecel = 0.15f;
-    private static readonly float tankFriction = 0.05f;
+    private static readonly float tankAccel = 0.060f;
+    private static readonly float tankPowerDecel = 0.150f;
+    private static readonly float tankFriction = 0.010f;
     private static readonly float tankReverseSpeedFraction = 0.00f;
+    private static readonly float tankRegenRate = 4.0f;
 
     #endregion TANK
 
@@ -70,6 +73,8 @@ public class KBPlayer : KBControllableGameObject
     public float spawnProtectionTime;
     public float bankLockoutTime;
     public float teleportationRecharge = 5.0f;
+    public GameObject spawnAnimator;
+    public float spawnDelay = 2.50f;
 
     public TimerScript timer;
     private float movespeed;
@@ -118,7 +123,6 @@ public class KBPlayer : KBControllableGameObject
     private int respawnTimer;
     public float regenDelay;
     private float lastDamageTime;
-    public float regenSpeed;
 
     public Material redMat;
     public Material blueMat;
@@ -158,6 +162,7 @@ public class KBPlayer : KBControllableGameObject
                 stats.lowerbodyRotationSpeed = mechLowerRotationSpeed;
                 stats.upperbodyRotationSpeed = mechUpperRotationSpeed;
                 stats.speed = mechMovementSpeed;
+                stats.regerationRate = mechRegenRate;
                 break;
 
             case PlayerType.drone:
@@ -165,6 +170,7 @@ public class KBPlayer : KBControllableGameObject
                 stats.lowerbodyRotationSpeed = droneLowerRotationSpeed;
                 stats.upperbodyRotationSpeed = droneUpperRotationSpeed;
                 stats.speed = droneMovementSpeed;
+                stats.regerationRate = droneRegenRate;
                 break;
 
             case PlayerType.tank:
@@ -172,6 +178,7 @@ public class KBPlayer : KBControllableGameObject
                 stats.lowerbodyRotationSpeed = tankLowerRotationSpeed;
                 stats.upperbodyRotationSpeed = tankUpperRotationSpeed;
                 stats.speed = tankMovementSpeed;
+                stats.regerationRate = tankRegenRate;
                 break;
 
             case PlayerType.core:
@@ -273,8 +280,7 @@ public class KBPlayer : KBControllableGameObject
     {
         if (Time.time > lastDamageTime + regenDelay)
         {
-            //float floatHealth = Mathf.Lerp(health, stats.health, 3.0f * Time.deltaTime);
-            float floatHealth = Mathf.MoveTowards(health, stats.health, regenSpeed);
+            float floatHealth = Mathf.MoveTowards(health, stats.health, stats.regerationRate);
             health = Mathf.FloorToInt(floatHealth);
         }
 
@@ -520,8 +526,7 @@ public class KBPlayer : KBControllableGameObject
 
         if (other.gameObject.CompareTag("SpawnDrone") || other.gameObject.CompareTag("SpawnMech") || other.gameObject.CompareTag("SpawnTank"))
         {
-            photonView.RPC("SwitchType", PhotonTargets.AllBuffered, other.gameObject.tag.ToString());
-            Spawn();
+            StartCoroutine(Spawn(other.gameObject.tag.ToString()));
         }
     }
 
@@ -832,10 +837,15 @@ public class KBPlayer : KBControllableGameObject
     /// <summary>
     /// Spawns the player in the combat area.
     /// </summary>
-    private void Spawn()
+    private IEnumerator Spawn(string tag)
     {
+        audio.PlayOneShot(respawnSound);
+        spawnAnimator.GetComponent<FlyUpAndReturn>().Activate();
+        acceptingInputs = false;
+        yield return new WaitForSeconds(spawnDelay);
         if (teamSpawnpoints.Count > 0 && photonView.isMine)
         {
+            photonView.RPC("SwitchType", PhotonTargets.AllBuffered, tag);
             int spawnPointIndex = Random.Range(0, teamSpawnpoints.Count - 1);
             transform.position = teamSpawnpoints[spawnPointIndex].transform.position;
             waitingForRespawn = false;
@@ -847,8 +857,8 @@ public class KBPlayer : KBControllableGameObject
             upperbodyRotateSpeed = stats.upperbodyRotationSpeed;
 
             Camera.main.GetComponent<ScreenShake>().StopShake();
-            audio.PlayOneShot(respawnSound);
         }
+        spawnAnimator.GetComponent<FlyUpAndReturn>().Reset();
     }
 
     private void SetupAbilities()

@@ -35,9 +35,9 @@ namespace KBConstants
             {type.MachinegunLevel1, 80},
             {type.MachinegunLevel2, 120},
 
-            {type.HeavyCannonLevel0, 100},
-            {type.HeavyCannonLevel1, 120},
-            {type.HeavyCannonLevel2, 150},
+            {type.HeavyCannonLevel0, 50},
+            {type.HeavyCannonLevel1, 60},
+            {type.HeavyCannonLevel2, 75},
 
             {type.ShotgunLevel0, 30},
             {type.ShotgunLevel1, 50},
@@ -88,7 +88,8 @@ namespace KBConstants
             KillTagBlue, KillTagRed,
             PlasmaExplosionL0, PlasmaExplosionL1, PlasmaExplosionL2,
             SmallExplosion, RocketExplosion, NoDamageExplosionMedium,
-            FloatingText
+            FloatingText,
+            MachineGunShellCasing, HCannonShellCasing
         };
 
         private static readonly IDictionary<type, string> prefabNames = new Dictionary<type, string>
@@ -127,7 +128,9 @@ namespace KBConstants
             {type.ShotgunLevel0, "abilities/bullet/shotgunbulletl0"},
             {type.ShotgunLevel1, "abilities/bullet/shotgunbulletl1"},
             {type.ShotgunLevel2, "abilities/bullet/shotgunbulletl2"},
-            {type.HomingRocketL0, "abilities/bullet/homingrocketbulletl0"}
+            {type.HomingRocketL0, "abilities/bullet/homingrocketbulletl0"},
+            {type.MachineGunShellCasing, "abilities/machinegunshellcasing"},
+            {type.HCannonShellCasing, "abilities/HCannonShellCasing"}
         };
 
         public static IDictionary<type, string> PREFAB_NAMES { get { return prefabNames; } }
@@ -179,8 +182,17 @@ namespace KBConstants
         {
             ItemPickup01,
             PlasmaGunFire01,
+            PlasmaGunFire02,
             MachineGunFire01,
+            MachineGunFire02,
+            LightCannonFire01,
+            LightCannonFire02,
+            LightCannonFire03,
             CannonFire01,
+            CannonFire02,
+            CannonFire03,
+            CannonFire04,
+            CannonFire05,
             CannonReload01,
             HitConfirm,
             MachineGunReload01, MachineGunReload02,
@@ -190,15 +202,22 @@ namespace KBConstants
 
         private static readonly IDictionary<clip, string> clipNames = new Dictionary<clip, string>
         {
-            {clip.PlasmaGunFire01, "sounds/cyberstorm select/gun single shots/artillery-08"},
+            {clip.PlasmaGunFire01, "sounds/cyberstorm select/gun single shots/subgun-04"},
+            {clip.PlasmaGunFire02, "sounds/cyberstorm select/gun single shots/subgun-05"},            
             {clip.HitConfirm, "sounds/hitmarker"},
-            {clip.MachineGunFire01, "sounds/cyberstorm select/gun single shots/gun-01"},
+            {clip.MachineGunFire01, "sounds/cyberstorm select/cuts/machinegun_double_01"},
+            {clip.MachineGunFire02, "sounds/cyberstorm select/cuts/machinegun_triple_01"},
             {clip.RocketFire01, "sounds/cyberstorm select/gun single shots/rocket-07"},
             {clip.MachineGunReload01, "sounds/cyberstorm select/reload/machine-sequence-03"},
             {clip.MachineGunReload02, "sounds/cyberstorm select/reload/machine-sequence-04"},
             {clip.PlasmaReload01, "sounds/cyberstorm select/reload/tr_2-reployservo-01"},
             {clip.ItemPickup01, "sounds/cyberstorm select/item attach/interface-servos-06"},
-            {clip.CannonFire01, "sounds/cyberstorm select/gun single shots/gun-02"}
+            {clip.LightCannonFire01, "sounds/cyberstorm select/cuts/laserfire_01"},
+            {clip.CannonFire01, "sounds/cyberstorm select/gun single shots/subgun-16"},
+            {clip.CannonFire02, "sounds/cyberstorm select/gun single shots/subgun-17"},
+            {clip.CannonFire03, "sounds/cyberstorm select/gun single shots/subgun-18"},
+            {clip.CannonFire04, "sounds/cyberstorm select/gun single shots/subgun-19"},
+            {clip.CannonFire05, "sounds/cyberstorm select/gun single shots/subgun-20"},
         };
 
         public static IDictionary<clip, string> CLIP_NAMES { get { return clipNames; } }

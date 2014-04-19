@@ -13,7 +13,7 @@ using KBConstants;
 abstract public class AbilitySlotBaseScript : MonoBehaviour
 {
 
-    public AudioClip sound;
+    public AudioClip[] sound;
     protected float cooldown;
     protected float cooldownStart;
     protected Team team;
@@ -42,7 +42,7 @@ abstract public class AbilitySlotBaseScript : MonoBehaviour
         {
             gameObject.AddComponent("TimerScript");
         }
-        audio.clip = sound;
+        audio.clip = sound[0];
         cooldown = 0;
         //abilityActive = false;
 

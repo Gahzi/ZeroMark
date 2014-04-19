@@ -43,8 +43,10 @@ public class RocketLauncher : ProjectileAbilityBaseScript
         {
             ObjectPool.CreatePool(projectileType[i]);
         }
-        sound = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.RocketFire01]);
-        audio.clip = sound;
+        sound = new AudioClip[1]
+        {
+            Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.RocketFire01])
+        };
         SetLevel(0);
         burstFireWeapon = true;
     }

@@ -79,7 +79,10 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
         }
     }
 
-
+    public override void Init()
+    {
+        base.Init();
+    }
 
     public override void OnTriggerEnter(Collider other)
     {
