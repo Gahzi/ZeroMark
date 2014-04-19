@@ -167,7 +167,7 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
         {
             StartCoroutine(ParticleBurstStaged());
         }
-        
+
         for (int i = 0; i < burstSize; i++)
         {
             switch (level)
@@ -191,9 +191,22 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
 
             if (casing != null)
             {
-                ShellCasing c = ObjectPool.Spawn(casing, transform.position);
-                c.spawnTime = Time.time;
-                c.rigidbody.AddExplosionForce(35.0f, transform.position + Vector3.left + Vector3.down + Vector3.back, 55.0f);
+                if (burstDelay > 0.0f)
+                {
+                    ShellCasing c = ObjectPool.Spawn(casing, transform.position);
+                    c.spawnTime = Time.time;
+                    c.rigidbody.AddExplosionForce(35.0f, transform.position + Vector3.left + Vector3.down + Vector3.back, 55.0f);
+                }
+                else
+                {
+                    if (i == 0)
+                    {
+                        ShellCasing c = ObjectPool.Spawn(casing, transform.position);
+                        c.spawnTime = Time.time;
+                        c.rigidbody.AddExplosionForce(35.0f, transform.position + Vector3.left + Vector3.down + Vector3.back, 55.0f);
+                    }
+                }
+
             }
 
             ProjectileBaseScript projectile = null;

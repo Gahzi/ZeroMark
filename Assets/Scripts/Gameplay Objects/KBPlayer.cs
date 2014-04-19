@@ -763,7 +763,7 @@ public class KBPlayer : KBControllableGameObject
                 health -= amount;
                 HitFX fx = ObjectPool.Spawn(hitExplosion, transform.position, Quaternion.identity);
                 fx.DoEffect(amount);
-                Camera.main.GetComponent<ScreenShake>().StartShake(0.25f, 5.0f);
+                Camera.main.GetComponent<ScreenShake>().StartShake(0.125f, 10.0f * (amount / 100));
                 audio.PlayOneShot(gotHitSFX[Random.Range(0, gotHitSFX.Length)]);
                 lastDamageTime = Time.time;
             }
