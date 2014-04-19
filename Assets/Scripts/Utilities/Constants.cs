@@ -10,7 +10,7 @@ namespace KBConstants
 
     public class GameConstants
     {
-        public static readonly float pointPercentDropOnDeath = 0.75f;
+        public static readonly float pointPercentDropOnDeath = 1.0f;
         public static readonly int levelOneThreshold = 4;
         public static readonly int levelTwoThreshold = 50;
     }
