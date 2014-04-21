@@ -3,7 +3,7 @@
 public class ShellCasing : MonoBehaviour
 {
 
-    private float lifetime = 15.0f;
+    private float lifetime = 7.0f;
     public float spawnTime;
     
     private void Start()

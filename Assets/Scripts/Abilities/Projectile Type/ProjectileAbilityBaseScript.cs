@@ -195,7 +195,9 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
                 {
                     ShellCasing c = ObjectPool.Spawn(casing, transform.position);
                     c.spawnTime = Time.time;
-                    c.rigidbody.AddExplosionForce(35.0f, transform.position + Vector3.left + Vector3.down + Vector3.back, 55.0f);
+                    // this needs to be relative
+                    Vector3 pushDir = -direction + Vector3.down;
+                    c.rigidbody.AddExplosionForce(35.0f, transform.position + pushDir, 55.0f);
                 }
                 else
                 {
@@ -203,7 +205,7 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
                     {
                         ShellCasing c = ObjectPool.Spawn(casing, transform.position);
                         c.spawnTime = Time.time;
-                        c.rigidbody.AddExplosionForce(35.0f, transform.position + Vector3.left + Vector3.down + Vector3.back, 55.0f);
+                        c.rigidbody.AddExplosionForce(45.0f, transform.position + Vector3.left + Vector3.down + Vector3.back, 55.0f);
                     }
                 }
 
