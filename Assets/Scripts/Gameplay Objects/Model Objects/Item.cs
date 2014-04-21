@@ -11,7 +11,6 @@ public class Item : KBGameObject
     private float respawnStart;
     public enum ItemState { isDown = 0, isPickedUp = 1, respawning = 2, disabled = 3 };
     private ItemState _state;
-    RotatableGuiItem rGui;
     public float disableTime;
     private float disableTimer = 0.25f;
     public ItemState state
@@ -44,8 +43,6 @@ public class Item : KBGameObject
         transform.Rotate(Vector3.forward, 45);
         transform.Rotate(Vector3.right, 33.3f);
 
-        rGui = GetComponent<RotatableGuiItem>();
-        rGui.ScreenpointToAlign = RotatableGuiItem.AlignmentScreenpoint.BottomLeft;
     }
     public void setItemType(ItemType type)
     {
@@ -120,17 +117,12 @@ public class Item : KBGameObject
                 }
 
                 particleSystem.enableEmission = false;
-                rGui.enabled = true;
 
-                rGui.angle = Mathf.Sin(Time.time / 2.0f) * 360.0f;
-                rGui.size = new Vector2((Mathf.Sin(Time.time) + 1) * 16.0f + 16.0f, (Mathf.Sin(Time.time) + 1) * 16.0f + 16.0f);
                 Vector3 sPos = Camera.main.WorldToScreenPoint(transform.position);
-                rGui.relativePosition = new Vector2(sPos.x, -sPos.y);
                 break;
 
             case ItemState.isPickedUp:
                 particleSystem.enableEmission = false;
-                rGui.enabled = false;
                 break;
 
             case ItemState.respawning:
@@ -144,7 +136,6 @@ public class Item : KBGameObject
                     }
                 }
                 particleSystem.enableEmission = true;
-                rGui.enabled = false;
                 break;
 
             case ItemState.disabled:

@@ -2,19 +2,91 @@
 
 namespace KBConstants
 {
-    public enum Team { Red, Blue, None };
+    public enum Team { Red = 0, Blue = 1, None = 2 };
 
     public enum PlayerType { mech, drone, tank, core };
 
     public enum ItemType { common, uncommon, rare, legendary, undefined };
 
+    public class GameConstants
+    {
+        public static readonly float pointPercentDropOnDeath = 1.0f;
+        public static readonly int levelOneThreshold = 4;
+        public static readonly int levelTwoThreshold = 50;
+    }
+
+    public class AbilityConstants
+    {
+        public enum type
+        {
+            MachinegunLevel0, MachinegunLevel1, MachinegunLevel2,
+            RocketLevel0, RocketLevel1, RocketLevel2,
+            PlasmaLevel0, PlasmaLevel1, PlasmaLevel2,
+            LightAutoLaser,
+            HeavyCannonLevel0, HeavyCannonLevel1, HeavyCannonLevel2,
+            LightCannonLevel0, LightCannonLevel1, LightCannonLevel2,
+            HomingRocketLevel0, HomingRocketLevel1, HomingRocketLevel2,
+            ShotgunLevel0, ShotgunLevel1, ShotgunLevel2
+        };
+
+        private static readonly IDictionary<type, int> damageValues = new Dictionary<type, int>
+        {
+            {type.MachinegunLevel0, 60},
+            {type.MachinegunLevel1, 80},
+            {type.MachinegunLevel2, 120},
+
+            {type.HeavyCannonLevel0, 100},
+            {type.HeavyCannonLevel1, 120},
+            {type.HeavyCannonLevel2, 150},
+
+            {type.ShotgunLevel0, 30},
+            {type.ShotgunLevel1, 50},
+            {type.ShotgunLevel2, 70},
+
+            {type.PlasmaLevel0, 100},
+            {type.PlasmaLevel1, 50},
+            {type.PlasmaLevel2, 50},
+
+            {type.RocketLevel0, 75},
+            {type.RocketLevel1, 100},
+            {type.RocketLevel2, 300},
+
+            {type.LightCannonLevel0, 15},
+            {type.LightCannonLevel1, 30},
+            {type.LightCannonLevel2, 45},
+
+            {type.HomingRocketLevel0, 100},
+            {type.HomingRocketLevel1, 150},
+            {type.HomingRocketLevel2, 200},
+        };
+
+        public static IDictionary<type, int> DAMAGE_VALUES { get { return damageValues; } }
+
+        private static readonly IDictionary<type, float> speedValues = new Dictionary<type, float>
+        {
+            {type.MachinegunLevel0, 50.0f},
+            {type.MachinegunLevel1, 50.0f},
+            {type.MachinegunLevel2, 50.0f},
+        };
+
+        public static IDictionary<type, float> SPEED_VALUES { get { return speedValues; } }
+    }
+
     public class ObjectConstants
     {
         public enum type
         {
-            Player, Gamepad, Item, PlayerCamera,  BasicRigidbodyCube,
-            MachinegunBullet, Rocket, PlasmaBullet, LightAutoLaserBullet, HeavyCannonBullet, LightCannonBullet,
-            KillTagBlue, KillTagRed, 
+            Player, Gamepad, Item, PlayerCamera, BasicRigidbodyCube,
+            MachinegunBulletLevel0, MachinegunBulletLevel1, MachinegunBulletLevel2,
+            RocketBulletLevel0, RocketBulletLevel1, RocketBulletLevel2,
+            PlasmaBulletLevel0, PlasmaBulletLevel1, PlasmaBulletLevel2,
+            LightAutoLaserBullet,
+            HeavyCannonBulletLevel0, HeavyCannonBulletLevel1, HeavyCannonBulletLevel2,
+            LightCannonBulletLevel0, LightCannonBulletLevel1, LightCannonBulletLevel2,
+            ShotgunLevel0, ShotgunLevel1, ShotgunLevel2,
+            HomingRocketL0,
+            KillTagBlue, KillTagRed,
+            PlasmaExplosionL0, PlasmaExplosionL1, PlasmaExplosionL2,
             SmallExplosion, RocketExplosion, NoDamageExplosionMedium,
             FloatingText
         };
@@ -25,19 +97,37 @@ namespace KBConstants
 			{type.Gamepad, "Gamepads/Gamepad"},
             {type.Item, "Items/Item"},
             {type.PlayerCamera, "Cameras/Player Camera"},
-            {type.PlasmaBullet, "Abilities/bullet/PlasmaBullet"},
+            {type.PlasmaBulletLevel0, "Abilities/bullet/PlasmaBulletl0"},
+            {type.PlasmaBulletLevel1, "Abilities/bullet/PlasmaBulletl1"},
+            {type.PlasmaBulletLevel2, "Abilities/bullet/PlasmaBulletl2"},
             {type.BasicRigidbodyCube, "Environment/BasicRigidbodyCube"},
-            {type.MachinegunBullet, "Abilities/bullet/machinegunbullet"},
-            {type.Rocket, "abilities/bullet/rocketbullet"},
+            {type.MachinegunBulletLevel0, "Abilities/bullet/machinegunbulletl0"},
+            {type.MachinegunBulletLevel1, "Abilities/bullet/machinegunbulletl1"},
+            {type.MachinegunBulletLevel2, "Abilities/bullet/machinegunbulletl2"},
+            {type.RocketBulletLevel0, "abilities/bullet/rocketbulletl0"},
+            {type.RocketBulletLevel1, "abilities/bullet/rocketbulletl1"},
+            {type.RocketBulletLevel2, "abilities/bullet/rocketbulletl2"},
             {type.KillTagBlue, "items/killtagblue"},
             {type.KillTagRed, "items/killtagred"},
             {type.LightAutoLaserBullet, "abilities/bullet/lightautolaserbullet"},
             {type.SmallExplosion, "abilities/explosion/smallexplosion"},
             {type.RocketExplosion, "abilities/explosion/rocketexplosion"},
             {type.NoDamageExplosionMedium, "abilities/explosion/mediumexplosion"},
+            {type.PlasmaExplosionL0, "abilities/explosion/plasmaexplosionl0"},
+            {type.PlasmaExplosionL1, "abilities/explosion/plasmaexplosionl1"},
+            {type.PlasmaExplosionL2, "abilities/explosion/plasmaexplosionl2"},
+
             {type.FloatingText, "gui/floatingtext"},
-            {type.HeavyCannonBullet, "abilities/bullet/heavycannonbullet"},
-            {type.LightCannonBullet, "abilities/bullet/lightcannonbullet"}
+            {type.HeavyCannonBulletLevel0, "abilities/bullet/heavycannonbulletl0"},
+            {type.HeavyCannonBulletLevel1, "abilities/bullet/heavycannonbulletl1"},
+            {type.HeavyCannonBulletLevel2, "abilities/bullet/heavycannonbulletl2"},
+            {type.LightCannonBulletLevel0, "abilities/bullet/lightcannonbulletl0"},
+            {type.LightCannonBulletLevel1, "abilities/bullet/lightcannonbulletl1"},
+            {type.LightCannonBulletLevel2, "abilities/bullet/lightcannonbulletl2"},
+            {type.ShotgunLevel0, "abilities/bullet/shotgunbulletl0"},
+            {type.ShotgunLevel1, "abilities/bullet/shotgunbulletl1"},
+            {type.ShotgunLevel2, "abilities/bullet/shotgunbulletl2"},
+            {type.HomingRocketL0, "abilities/bullet/homingrocketbulletl0"}
         };
 
         public static IDictionary<type, string> PREFAB_NAMES { get { return prefabNames; } }
@@ -85,8 +175,8 @@ namespace KBConstants
 
     public class AudioConstants
     {
-        public enum clip 
-        { 
+        public enum clip
+        {
             ItemPickup01,
             PlasmaGunFire01,
             MachineGunFire01,

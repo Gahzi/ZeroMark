@@ -2,17 +2,23 @@
 
 public class PlasmaBullet : ProjectileBaseScript
 {
-    #region CONSTANTS
 
-    public static int _damage = 50;
+    public override void Awake()
+    {
+        base.Awake();
+        damageLevel = new int[3]
+        { 
+            KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.PlasmaLevel0],
+            KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.PlasmaLevel1],
+            KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.PlasmaLevel2]
+        };
+    }
 
-    #endregion CONSTANTS
-    
     public override void Start()
     {
         base.Start();
-        collideWithProjectiles = false;
-        damage = _damage;
+        collideWithProjectiles = false;   
+        
     }
 
     protected override void Update()
@@ -23,6 +29,7 @@ public class PlasmaBullet : ProjectileBaseScript
     public override void DoOnHit()
     {
         AreaOfEffectDamageScript a = ObjectPool.Spawn(explosionPrefab, transform.position);
+        a.owner = owner;
         a.Init(); 
         base.DoOnHit();
     }

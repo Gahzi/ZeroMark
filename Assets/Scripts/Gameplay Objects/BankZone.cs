@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using KBConstants;
+using UnityEngine;
 
 [RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(Rigidbody))]
@@ -8,6 +9,7 @@ public class BankZone : Zone
     public int redPoints;
     public int bluePoints;
     private bool captured;
+
     public bool Captured
     {
         get
@@ -30,41 +32,44 @@ public class BankZone : Zone
         ObjectPool.CreatePool(textPrefab);
     }
 
-    public void AddPoints(int points, KBConstants.Team team)
+    private void OnDrawGizmos()
+    {
+    }
+
+    [RPC]
+    public void AddPoints(int points, int teamNum, PhotonMessageInfo msg)
     {
         if (!captured)
         {
-            switch (team)
+            Team bankingPlayerTeam = (Team)teamNum;
+            switch (bankingPlayerTeam)
             {
-                case KBConstants.Team.Red:
+                case Team.Red:
                     redPoints += points;
-                    RunPointAddFeedback(points, team);
+                    RunPointAddFeedback(points, Team.Red);
                     if (redPoints >= pointsToControl)
                     {
-                        team = KBConstants.Team.Red;
+                        team = Team.Red;
                         captured = true;
-                        RunCapturedFeedback(team);
-                    }
-                    else
-                    {
+                        RunCapturedFeedback(Team.Red);
                     }
                     break;
-                case KBConstants.Team.Blue:
+
+                case Team.Blue:
                     bluePoints += points;
-                    RunPointAddFeedback(points, team);
+                    RunPointAddFeedback(points, Team.Blue);
                     if (bluePoints >= pointsToControl)
                     {
-                        team = KBConstants.Team.Blue;
+                        team = Team.Blue;
                         captured = true;
-                        RunCapturedFeedback(team);
-                    }
-                    else
-                    {
+                        RunCapturedFeedback(Team.Blue);
                     }
                     break;
-                case KBConstants.Team.None:
+
+                case Team.None:
                     Debug.LogError("You're trying to add points to a zone, but the player has no team.");
                     break;
+
                 default:
                     break;
             }
@@ -90,14 +95,16 @@ public class BankZone : Zone
             case KBConstants.Team.Red:
                 t.color = Color.red;
                 break;
+
             case KBConstants.Team.Blue:
                 t.color = Color.blue;
                 break;
+
             case KBConstants.Team.None:
                 break;
+
             default:
                 break;
         }
     }
-
 }

@@ -4,17 +4,21 @@ using System.Collections;
 public class HeavyCannonBullet : ProjectileBaseScript
 {
 
-    #region CONSTANTS
-
-    public static int _damage = 30;
-
-    #endregion CONSTANTS
+    public override void Awake()
+    {
+        base.Awake();
+        damageLevel = new int[3] 
+        { 
+            KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.HeavyCannonLevel0],
+            KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.HeavyCannonLevel1],
+            KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.HeavyCannonLevel2]
+        };
+    }
 
     public override void Start()
     {
         base.Start();
         collideWithProjectiles = false;
-        damage = _damage;
     }
 
     protected override void Update()
@@ -25,6 +29,7 @@ public class HeavyCannonBullet : ProjectileBaseScript
     public override void DoOnHit()
     {
         AreaOfEffectDamageScript a = ObjectPool.Spawn(explosionPrefab, transform.position);
+        a.owner = owner;
         a.Init();
         base.DoOnHit();
     }

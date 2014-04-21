@@ -4,6 +4,7 @@ public class HighlightOnMouseover : MonoBehaviour
 {
     public Color highlightColor;
     private Color originalColor;
+    public Color pressColor;
     public TextMesh text;
 
     public void Start()
@@ -13,7 +14,7 @@ public class HighlightOnMouseover : MonoBehaviour
     }
 
     void OnMouseEnter()
-    {        
+    {
         text.color = highlightColor;
     }
 
@@ -21,5 +22,17 @@ public class HighlightOnMouseover : MonoBehaviour
     {
         text.color = originalColor;
     }
+
+    void OnMouseDown()
+    {
+        text.color = pressColor;
+    }
+
+    void OnMouseUp()
+    {
+        text.color = highlightColor;
+    }
+
+
 
 }

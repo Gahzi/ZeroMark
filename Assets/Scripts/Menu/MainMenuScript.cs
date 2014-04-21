@@ -21,6 +21,7 @@ public class MainMenuScript : Photon.MonoBehaviour
 
     public GameObject playButton;
 
+
     void Awake()
     {
         //Default join values
@@ -33,11 +34,7 @@ public class MainMenuScript : Photon.MonoBehaviour
         if (!PhotonNetwork.connected)
             PhotonNetwork.ConnectUsingSettings("1.0");
     }
-
-    void Start()
-    {
-    }
-
+    
     void OnConnectedToPhoton()
     {
         Debug.Log("This client has connected to a server");

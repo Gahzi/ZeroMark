@@ -6,20 +6,29 @@ public class RocketBullet : ProjectileBaseScript
 
     #region CONSTANTS
 
-    public static int _damage = 100;
     public float rocketInitSpeed;
     public int accel;
 
     #endregion CONSTANTS
 
-    private float targetSpeed;
+    public float targetSpeed;
+
+    public override void Awake()
+    {
+        base.Awake();
+        damageLevel = new int[3]
+        { 
+            KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.RocketLevel0],
+            KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.RocketLevel1],
+            KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.RocketLevel2]
+        };
+    }
 
     public override void Start()
     {
         base.Start();
-        damage = _damage;
-        targetSpeed = projectileSpeed;
         projectileSpeed = rocketInitSpeed;
+        
     }
 
     protected override void Update()
@@ -34,6 +43,7 @@ public class RocketBullet : ProjectileBaseScript
     public override void DoOnHit()
     {
         AreaOfEffectDamageScript a = ObjectPool.Spawn(explosionPrefab, transform.position);
+        a.owner = owner;
         a.Init();
         base.DoOnHit();
     }

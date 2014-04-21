@@ -26,6 +26,13 @@ abstract public class AbilityInstanceBaseScript : MonoBehaviour
     protected float spawnTime;
     public int damage;
     public KBPlayer owner;
+    private TrailRenderer trailRenderer;
+    private float originalTrailTime;
+
+    public virtual void Awake()
+    {
+
+    }
 
     public virtual void Start()
     {
@@ -34,6 +41,11 @@ abstract public class AbilityInstanceBaseScript : MonoBehaviour
         rigidbody.isKinematic = true;
         collider.isTrigger = true;
         damage = 0;
+        trailRenderer = GetComponent<TrailRenderer>();
+        if (trailRenderer != null)
+        {
+            originalTrailTime = trailRenderer.time;
+        }
     }
 
     /// <summary>
@@ -42,6 +54,10 @@ abstract public class AbilityInstanceBaseScript : MonoBehaviour
     public virtual void Init(KBPlayer _owner)
     {
         spawnTime = Time.time;
+        if (trailRenderer != null)
+        {
+            Invoke("ResetTrail", 0.01f);
+        }
         owner = _owner;
     }
 
@@ -64,9 +80,22 @@ abstract public class AbilityInstanceBaseScript : MonoBehaviour
         Reset();
     }
 
+    public void ResetTrail()
+    {
+        trailRenderer.time = originalTrailTime;
+    }
+
     public virtual void Reset()
     {
+        if (trailRenderer != null)
+        {
+            trailRenderer.time = -1;
+        }
         ObjectPool.Recycle(this);
+        if (gameObject.particleSystem != null)
+        {
+            gameObject.particleSystem.Clear();
+        }
     }
 
     public abstract void OnTriggerEnter(Collider other);

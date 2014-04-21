@@ -1,28 +1,88 @@
-﻿using UnityEngine;
-using System.Collections;
-using KBConstants;
+﻿using KBConstants;
+using UnityEngine;
 
 public class HeavyCannon : ProjectileAbilityBaseScript
 {
     #region CONSTANTS
-    public static float HCANNON_COOLDOWN = 0.25f;
-    public static int HCANNON_RANGE = 80;
-    public static float RELOAD_TIME = 10.0f;
-    public static int CLIP_SIZE = 200;
-    #endregion
+
+    public static float COOLDOWN_0 = 0.100f;
+    public static int RANGE_0 = 100;
+    public static float RELOAD_TIME_0 = 2.3f;
+    public static int CLIP_SIZE_0 = 30;
+
+    public static float COOLDOWN_1 = 0.0750f;
+    public static int RANGE_1 = 100;
+    public static float RELOAD_TIME_1 = 2.0f;
+    public static int CLIP_SIZE_1 = 45;
+
+    public static float COOLDOWN_2 = 0.050f;
+    public static int RANGE_2 = 100;
+    public static float RELOAD_TIME_2 = 1.8f;
+    public static int CLIP_SIZE_2 = 60;
+
+    #endregion CONSTANTS
 
     public override void Start()
     {
-        projectileType = (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.HeavyCannonBullet], typeof(ProjectileBaseScript));
-        cooldown = HCANNON_COOLDOWN;
+        projectileType = new ProjectileBaseScript[3]
+        {
+            (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.HeavyCannonBulletLevel0], typeof(ProjectileBaseScript)),
+            (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.HeavyCannonBulletLevel1], typeof(ProjectileBaseScript)),
+            (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.HeavyCannonBulletLevel2], typeof(ProjectileBaseScript))
+        };
+        for (int i = 0; i < projectileType.Length; i++)
+        {
+            ObjectPool.CreatePool(projectileType[i]);
+        }
         sound = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.CannonFire01]);
         reloadClip = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.MachineGunReload02]);
         audio.clip = sound;
-        SetMaxRange(HCANNON_RANGE);
-        cooldownStart = HCANNON_COOLDOWN;
-        ammo = CLIP_SIZE;
-        reloadTime = RELOAD_TIME;
-        clipSize = CLIP_SIZE;
-        base.Start();
+        SetLevel(0);
+        minimumSpreadAngle = 0.1f;
+        maximumSpreadAngle = 2.5f;
+        burstSize = 1;
+    }
+
+    public override int SetLevel(int level)
+    {
+        switch (level)
+        {
+            case 0:
+                cooldown = COOLDOWN_0;
+                SetMaxRange(RANGE_0);
+                cooldownStart = COOLDOWN_0;
+                ammo = CLIP_SIZE_0;
+                reloadTime = RELOAD_TIME_0;
+                clipSize = CLIP_SIZE_0;
+                particleSystem.startSize = 0.75f;
+                particleSystem.startLifetime = 1.0f;
+                return level;
+
+            case 1:
+                cooldown = COOLDOWN_1;
+                SetMaxRange(RANGE_1);
+                cooldownStart = COOLDOWN_1;
+                ammo = CLIP_SIZE_1;
+                reloadTime = RELOAD_TIME_1;
+                clipSize = CLIP_SIZE_1;
+                particleSystem.startSize = 2.0f;
+                particleSystem.startLifetime = 2.0f;
+                return level;
+
+            case 2:
+                cooldown = COOLDOWN_2;
+                SetMaxRange(RANGE_2);
+                cooldownStart = COOLDOWN_2;
+                ammo = CLIP_SIZE_2;
+                reloadTime = RELOAD_TIME_2;
+                clipSize = CLIP_SIZE_2;
+                particleSystem.startSize = 6.5f;
+                particleSystem.startLifetime = 3.0f;
+
+                return level;
+
+            default:
+                return -1;
+        }
     }
 }
