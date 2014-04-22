@@ -7,8 +7,7 @@
 /// Defaults to Kinematic Rigidbody Trigger Collider.
 /// Changes to Rigidbody Trigger Collider if flagged as physics projectile (e.g. arrow)
 ///
-/// NOTES: Projectiles collide with colliders tagged "Hitbox", but only affect
-/// objects with CompetitorModules (any child of CompetitivePlayerBaseScript)
+/// NOTES: Projectiles collide with colliders tagged "Hitbox"
 /// </summary>
 abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
 {
@@ -20,9 +19,9 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
 
     [Range(1.0f, 500.0f)]
     public float projectileSpeed;
+
     public float inheritSpeed;
     protected Vector3 direction;
-    public bool collideWithProjectiles;
     public bool collideWithEnvironment;
     public bool homingProjectile;
     public bool aimedProjectile;
@@ -42,7 +41,7 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
     {
         base.Start();
         gameObject.tag = "Projectile";
-        
+
         if (explosionPrefab != null)
         {
             ObjectPool.CreatePool(explosionPrefab);
@@ -67,7 +66,7 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
         transform.Translate(Vector3.forward * (projectileSpeed + inheritSpeed) * Time.deltaTime);
     }
 
-    void OnDrawGizmos()
+    private void OnDrawGizmos()
     {
         if (targetPosition != null)
         {
@@ -97,7 +96,6 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
             {
                 if (victimPlayer.Team != Team && victimPlayer.health > 0 && victimPlayer.invulnerabilityTime <= 0)
                 {
-
                     if (victimPlayer.photonView.isMine && owner != null)
                     {
                         int victimHealth = o.TakeDamage(damage);
@@ -110,7 +108,7 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
                     }
                     else if (owner != null)
                     {
-                        owner.ConfirmHitToOthers(victimPlayer.networkPlayer, damage);
+                        //owner.ConfirmHitToOthers(victimPlayer.networkPlayer, damage);
                         DoOnHit();
                     }
                 }
@@ -123,14 +121,17 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
                 DoOnHit();
             }
         }
+    }
 
-        if (collideWithProjectiles)
+    public override void DoOnHit()
+    {
+        if (explosionPrefab != null)
         {
-            if (other.gameObject.CompareTag("Projectile"))
-            {
-                DoOnHit();
-            }
+            AreaOfEffectDamageScript a = ObjectPool.Spawn(explosionPrefab, transform.position);
+            a.owner = owner;
+            a.Init();
         }
+        base.DoOnHit();
     }
 
     public void setLifetimeForMaxRange(int maxRange)

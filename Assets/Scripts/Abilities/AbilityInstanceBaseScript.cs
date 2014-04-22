@@ -76,7 +76,7 @@ abstract public class AbilityInstanceBaseScript : MonoBehaviour
     }
 
     public virtual void DoOnHit()
-    {
+    {   
         Reset();
     }
 

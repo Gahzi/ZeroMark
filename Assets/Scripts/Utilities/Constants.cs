@@ -13,6 +13,7 @@ namespace KBConstants
         public static readonly float pointPercentDropOnDeath = 1.0f;
         public static readonly int levelOneThreshold = 4;
         public static readonly int levelTwoThreshold = 50;
+        public static readonly int decalLifetime = 5;
     }
 
     public class AbilityConstants

@@ -151,6 +151,8 @@ public class KBPlayer : KBControllableGameObject
 
     public GameObject ammoHud;
 
+    public Chaff chaff;
+
     public void SetStats()
     {
         stats = new PlayerStats();
@@ -237,6 +239,9 @@ public class KBPlayer : KBControllableGameObject
         FindTeamSpawnpoints();
         RespawnToPrespawn();
 
+        //Chaff c = Resources.Load("elements/chaff", typeof(Chaff)) as Chaff;
+        ObjectPool.CreatePool(chaff);
+            
         #endregion Spawning
     }
 
@@ -500,7 +505,7 @@ public class KBPlayer : KBControllableGameObject
 
     private new void OnTriggerEnter(Collider other)
     {
-        base.OnTriggerEnter(other);
+        //base.OnTriggerEnter(other);
         if (other.gameObject.CompareTag("BankZone"))
         {
             if (killTokens > 0)
@@ -706,6 +711,34 @@ public class KBPlayer : KBControllableGameObject
             respawnTimer = timer.StartTimer(respawnTime);
             waitingForRespawn = true;
             audio.PlayOneShot(deadSound);
+
+            upperBody.SetActive(false);
+            lowerBody.SetActive(false);
+            ammoHud.SetActive(false);
+
+            particleSystem.Emit(5000);
+
+            int n = 5;
+            Chaff c = null;
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    for (int h = 0; h < n; h++)
+                    {
+                        c = ObjectPool.Spawn(chaff,
+                            new Vector3(
+                                transform.position.x - (n / 2.0f * chaff.transform.localScale.x) + (n * chaff.transform.localScale.x * i),
+                                transform.position.y - (n / 2.0f * chaff.transform.localScale.x) + (n * chaff.transform.localScale.x * i),
+                                transform.position.z - (n / 2.0f * chaff.transform.localScale.x) + (n * chaff.transform.localScale.x * i)
+                                ),
+                                Quaternion.identity
+                                );
+                        c.Init();
+                    }
+                }
+            }
+            //c.gameObject.rigidbody.AddExplosionForce(1.0f, transform.position, 1.0f);
         }
         else if (waitingForRespawn && photonView.isMine)
         {
@@ -779,6 +812,7 @@ public class KBPlayer : KBControllableGameObject
     {
         KBPlayer killerPlayer = killerObject.GetComponent<KBPlayer>();
         killerPlayer.photonView.RPC("NotifyKill", PhotonTargets.Others, killerPlayer.networkPlayer);
+
     }
 
     [RPC]
@@ -811,27 +845,34 @@ public class KBPlayer : KBControllableGameObject
 
         ammoHud.SetActive(false);
 
-        GameObject newTag = null;
-        if (team == Team.Blue)
-        {
-            newTag = GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagBlue, transform.position, Quaternion.identity, (int)team);
-        }
-        else if (team == Team.Red)
-        {
-            newTag = GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagRed, transform.position, Quaternion.identity, (int)team);
-        }
-        int points = Mathf.FloorToInt(killTokens * GameConstants.pointPercentDropOnDeath);
-        if (points == 0)
-        {
-            points = 1;
-        }
-        newTag.GetPhotonView().RPC("SetPointValue", PhotonTargets.AllBuffered, points);
-        killTokens = 0;
-
-
         Camera.main.GetComponent<ScreenShake>().StopShake();
+        Vector3 deathPosition = transform.position;
         transform.position = GameObject.FindGameObjectWithTag("Prespawn").transform.position;
         health = coreBaseHealth;
+
+        int pointsToDrop = Mathf.FloorToInt(killTokens * GameConstants.pointPercentDropOnDeath);
+        if (pointsToDrop == 0)
+        {
+            pointsToDrop = 1;
+        }
+
+        while (pointsToDrop > 0)
+        {
+            GameObject newTag = null;
+            if (team == Team.Blue)
+            {
+                newTag = GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagBlue, deathPosition, Quaternion.identity, (int)team);
+            }
+            else if (team == Team.Red)
+            {
+                newTag = GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagRed, deathPosition, Quaternion.identity, (int)team);
+            }
+            newTag.transform.localScale *= 1.0f + (pointsToDrop / 100.0f);
+            newTag.GetPhotonView().RPC("SetPointValue", PhotonTargets.AllBuffered, pointsToDrop);
+            pointsToDrop -= pointsToDrop;
+        }
+
+        killTokens = 0;
     }
 
     /// <summary>
@@ -840,7 +881,7 @@ public class KBPlayer : KBControllableGameObject
     private IEnumerator Spawn(string tag)
     {
         audio.PlayOneShot(respawnSound);
-        spawnAnimator.GetComponent<FlyUpAndReturn>().Activate();
+        spawnAnimator.GetComponent<SpawnAnimation>().Activate();
         acceptingInputs = false;
         yield return new WaitForSeconds(spawnDelay);
         if (teamSpawnpoints.Count > 0 && photonView.isMine)
@@ -858,7 +899,7 @@ public class KBPlayer : KBControllableGameObject
 
             Camera.main.GetComponent<ScreenShake>().StopShake();
         }
-        spawnAnimator.GetComponent<FlyUpAndReturn>().Reset();
+        spawnAnimator.GetComponent<SpawnAnimation>().Reset();
     }
 
     private void SetupAbilities()
