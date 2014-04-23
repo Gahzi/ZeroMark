@@ -93,6 +93,9 @@ public class KBPlayer : KBControllableGameObject
     public AudioClip itemPickupClip;
     public GameObject upperBody;
     public GameObject lowerBody;
+    public PlayerGibModel mechGibBody;
+    public PlayerGibModel droneGibBody;
+    public PlayerGibModel tankGibBody;
 
     //public GameObject hitbox;
     public GameObject hitboxDrone;
@@ -241,6 +244,7 @@ public class KBPlayer : KBControllableGameObject
 
         //Chaff c = Resources.Load("elements/chaff", typeof(Chaff)) as Chaff;
         ObjectPool.CreatePool(chaff);
+        ObjectPool.CreatePool(mechGibBody);
             
         #endregion Spawning
     }
@@ -711,6 +715,26 @@ public class KBPlayer : KBControllableGameObject
             respawnTimer = timer.StartTimer(respawnTime);
             waitingForRespawn = true;
             audio.PlayOneShot(deadSound);
+
+            PlayerGibModel gib = null;
+            switch (type)
+            {
+                case PlayerType.mech:
+                    gib = mechGibBody;
+                    break;
+                case PlayerType.drone:
+                    gib = droneGibBody;
+                    break;
+                case PlayerType.tank:
+                    gib = tankGibBody;
+                    break;
+                case PlayerType.core:
+                    break;
+                default:
+                    break;
+            }
+            PlayerGibModel g = ObjectPool.Spawn(gib, transform.position + Vector3.up, transform.rotation);
+            g.Init();
 
             upperBody.SetActive(false);
             lowerBody.SetActive(false);

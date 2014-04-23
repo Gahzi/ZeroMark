@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &100018
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 400018}
+  - 95: {fileID: 9500000}
+  - 114: {fileID: 11400000}
+  m_Layer: 0
+  m_Name: mechGibBody
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &400018
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100018}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -2.38667631, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+--- !u!95 &9500000
+Animator:
+  serializedVersion: 2
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100018}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 343fe87e4d2b03a4186b661d6a1ed535, type: 3}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_ApplyRootMotion: 1
+  m_AnimatePhysics: 0
+  m_HasTransformHierarchy: 1
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1147c77cf71ea6418daca4c76d76653, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  part:
+  - {fileID: 11400000, guid: b9f72b761a8f77642b6be65b611da644, type: 2}
+  - {fileID: 11400000, guid: 2177b55fba5b49041a64c30955b37b6a, type: 2}
+  - {fileID: 11400000, guid: 0530be042a4526f418e1d872218a6e3c, type: 2}
+  - {fileID: 11400000, guid: dfa857d56c6b2de408c829b6e832125d, type: 2}
+  - {fileID: 11400000, guid: ed34248a632dcc64888741e923d25b9f, type: 2}
+  - {fileID: 11400000, guid: 8d40e1b3f73946d479a18c09fce3b07a, type: 2}
+  - {fileID: 11400000, guid: 74e52c627fbb6514eab889272aa82a23, type: 2}
+  - {fileID: 11400000, guid: c75b880098fb9ec4f9f8d715443d6180, type: 2}
+  - {fileID: 11400000, guid: e6cb98b60ada7fb45849c9770c2a6662, type: 2}
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 100018}
+  m_IsPrefabParent: 1
+  m_IsExploded: 1
