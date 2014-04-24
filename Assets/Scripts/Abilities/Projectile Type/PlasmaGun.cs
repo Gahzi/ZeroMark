@@ -1,14 +1,13 @@
-﻿using UnityEngine;
-using System.Collections;
-using KBConstants;
+﻿using KBConstants;
+using UnityEngine;
 
 /// <summary>
 /// PlasmaGuns are a ProjectileAbility that shoots PlasmaBullet prefabs
 /// </summary>
 public class PlasmaGun : ProjectileAbilityBaseScript
 {
-
     #region CONSTANTS
+
     public static float COOLDOWN_0 = 0.25f;
     public static int RANGE_0 = 100;
     public static float RELOAD_TIME_0 = 3.0f;
@@ -24,7 +23,7 @@ public class PlasmaGun : ProjectileAbilityBaseScript
     public static int BURST_SIZE_1 = 4;
     public static float BURST_DELAY_1 = 0.00f;
     public static float SPREADMIN_1 = 1.5f;
-    public static float SPREADMAX_1= 3.0f;
+    public static float SPREADMAX_1 = 3.0f;
 
     public static float COOLDOWN_2 = 0.15f;
     public static int RANGE_2 = 100;
@@ -33,8 +32,9 @@ public class PlasmaGun : ProjectileAbilityBaseScript
     public static int BURST_SIZE_2 = 6;
     public static float BURST_DELAY_2 = 0.00f;
     public static float SPREADMIN_2 = 1.0f;
-    public static float SPREADMAX_2 = 3.0f;
-    #endregion
+    public static float SPREADMAX_2 = 4.0f;
+
+    #endregion CONSTANTS
 
     public override void Start()
     {
@@ -48,8 +48,11 @@ public class PlasmaGun : ProjectileAbilityBaseScript
         {
             ObjectPool.CreatePool(projectileType[i]);
         }
-        sound = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.PlasmaGunFire01]);
-        audio.clip = sound;
+        sound = new AudioClip[2]
+        {
+            Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.PlasmaGunFire01]),
+            Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.PlasmaGunFire02]),
+        };
         reloadClip = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.PlasmaReload01]);
         SetLevel(0);
         base.Start();

@@ -7,18 +7,27 @@ public class HeavyCannon : ProjectileAbilityBaseScript
 
     public static float COOLDOWN_0 = 0.100f;
     public static int RANGE_0 = 100;
-    public static float RELOAD_TIME_0 = 2.3f;
+    public static float RELOAD_TIME_0 = 2.300f;
     public static int CLIP_SIZE_0 = 30;
+    public static int BURST_SIZE_0 = 2;
+    public static float BURST_DELAY_0 = 0.00f;
+    public static float SPREAD_0 = 1.000f;
 
     public static float COOLDOWN_1 = 0.0750f;
     public static int RANGE_1 = 100;
-    public static float RELOAD_TIME_1 = 2.0f;
+    public static float RELOAD_TIME_1 = 2.000f;
     public static int CLIP_SIZE_1 = 45;
+    public static int BURST_SIZE_1 = 2;
+    public static float BURST_DELAY_1 = 0.000f;
+    public static float SPREAD_1 = 1.000f;
 
-    public static float COOLDOWN_2 = 0.050f;
+    public static float COOLDOWN_2 = 0.100f;
     public static int RANGE_2 = 100;
-    public static float RELOAD_TIME_2 = 1.8f;
+    public static float RELOAD_TIME_2 = 1.800f;
     public static int CLIP_SIZE_2 = 60;
+    public static int BURST_SIZE_2 = 3;
+    public static float BURST_DELAY_2 = 0.000f;
+    public static float SPREAD_2 = 1.000f;
 
     #endregion CONSTANTS
 
@@ -34,13 +43,25 @@ public class HeavyCannon : ProjectileAbilityBaseScript
         {
             ObjectPool.CreatePool(projectileType[i]);
         }
-        sound = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.CannonFire01]);
+        sound = new AudioClip[5]
+        {
+            Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.CannonFire01]),
+                        Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.CannonFire02]),
+            Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.CannonFire03]),
+            Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.CannonFire04]),
+            Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.CannonFire05]),
+
+        };
         reloadClip = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.MachineGunReload02]);
-        audio.clip = sound;
+        //audio.clip = sound;
         SetLevel(0);
-        minimumSpreadAngle = 0.1f;
-        maximumSpreadAngle = 2.5f;
-        burstSize = 1;
+        burstFireWeapon = true;
+
+        casing = Resources.Load<ShellCasing>(KBConstants.ObjectConstants.PREFAB_NAMES[KBConstants.ObjectConstants.type.HCannonShellCasing]);
+        if (casing != null)
+        {
+            ObjectPool.CreatePool(casing);
+        }
     }
 
     public override int SetLevel(int level)
@@ -54,6 +75,9 @@ public class HeavyCannon : ProjectileAbilityBaseScript
                 ammo = CLIP_SIZE_0;
                 reloadTime = RELOAD_TIME_0;
                 clipSize = CLIP_SIZE_0;
+                burstSize = BURST_SIZE_0;
+                burstDelay = BURST_DELAY_0;
+                maximumSpreadAngle = SPREAD_0;
                 particleSystem.startSize = 0.75f;
                 particleSystem.startLifetime = 1.0f;
                 return level;
@@ -65,6 +89,9 @@ public class HeavyCannon : ProjectileAbilityBaseScript
                 ammo = CLIP_SIZE_1;
                 reloadTime = RELOAD_TIME_1;
                 clipSize = CLIP_SIZE_1;
+                burstSize = BURST_SIZE_1;
+                burstDelay = BURST_DELAY_1;
+                maximumSpreadAngle = SPREAD_1;
                 particleSystem.startSize = 2.0f;
                 particleSystem.startLifetime = 2.0f;
                 return level;
@@ -76,6 +103,9 @@ public class HeavyCannon : ProjectileAbilityBaseScript
                 ammo = CLIP_SIZE_2;
                 reloadTime = RELOAD_TIME_2;
                 clipSize = CLIP_SIZE_2;
+                burstSize = BURST_SIZE_2;
+                burstDelay = BURST_DELAY_2;
+                maximumSpreadAngle = SPREAD_2;
                 particleSystem.startSize = 6.5f;
                 particleSystem.startLifetime = 3.0f;
 

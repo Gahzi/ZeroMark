@@ -37,9 +37,11 @@ public class Shotgun : ProjectileAbilityBaseScript
         {
             ObjectPool.CreatePool(projectileType[i]);
         }
-        sound = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.CannonFire01]);
+        sound = new AudioClip[1]
+        {
+            Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.CannonFire01])
+        };
         reloadClip = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.MachineGunReload02]);
-        audio.clip = sound;
 
         SetLevel(0);
 
