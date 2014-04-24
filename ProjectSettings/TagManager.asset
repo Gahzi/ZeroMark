@@ -16,13 +16,13 @@ TagManager:
   - 
   - GUI
   - BankZone
-  - SpawnDrone
-  - SpawnMech
-  - SpawnTank
+  - SpawnRedDrone
+  - SpawnRedMech
+  - SpawnRedTank
+  - SpawnBlueDrone
+  - SpawnBlueMech
+  - SpawnBlueTank
   - Prespawn
-  - 
-  - 
-  - 
   - Projectile
   - 
   - 

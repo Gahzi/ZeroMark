@@ -201,6 +201,7 @@ public class KBPlayer : KBControllableGameObject
     public override void Start()
     {
         base.Start();
+
         camera = Camera.main.GetComponent<KBCamera>();
 
         #region Resource & reference loading
@@ -209,10 +210,13 @@ public class KBPlayer : KBControllableGameObject
         charController = GetComponent<CharacterController>();
         itemPickupClip = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.ItemPickup01]);
         hitConfirm = Resources.Load<AudioClip>(KBConstants.AudioConstants.CLIP_NAMES[KBConstants.AudioConstants.clip.HitConfirm]);
-        hitboxDrone.GetComponent<HitboxBaseScript>().Team = team;
-        hitboxMech.GetComponent<HitboxBaseScript>().Team = team;
-        hitboxTank.GetComponent<HitboxBaseScript>().Team = team;
+        //hitboxDrone.GetComponent<HitboxBaseScript>().Team = team;
+        //hitboxMech.GetComponent<HitboxBaseScript>().Team = team;
+        //hitboxTank.GetComponent<HitboxBaseScript>().Team = team;
         //GetComponentInChildren<HitboxBaseScript>().Team = team;
+
+        teamSpawnpoints = new List<PlayerSpawnPoint>();
+        SetTeam(team);
 
         #endregion Resource & reference loading
 
@@ -220,14 +224,7 @@ public class KBPlayer : KBControllableGameObject
         onUpdatePos = transform.position;
 
         InitializeForRespawn();
-
-        #region Spawning
-
-        teamSpawnpoints = new List<PlayerSpawnPoint>();
-        FindTeamSpawnpoints();
         RespawnToPrespawn();
-
-        #endregion Spawning
     }
 
     private void InitializeForRespawn()
@@ -509,11 +506,19 @@ public class KBPlayer : KBControllableGameObject
             }
         }
 
-        if (other.gameObject.CompareTag("SpawnDrone") || other.gameObject.CompareTag("SpawnMech") || other.gameObject.CompareTag("SpawnTank"))
+        if (other.gameObject.CompareTag("SpawnRedDrone") || other.gameObject.CompareTag("SpawnRedMech") || other.gameObject.CompareTag("SpawnRedTank"))
         {
+            SetTeam(Team.Red);
             photonView.RPC("SwitchType", PhotonTargets.AllBuffered, other.gameObject.tag.ToString());
             Spawn();
         }
+        else if (other.gameObject.CompareTag("SpawnBlueDrone") || other.gameObject.CompareTag("SpawnBlueMech") || other.gameObject.CompareTag("SpawnBlueTank"))
+        {
+            SetTeam(Team.Blue);
+            photonView.RPC("SwitchType", PhotonTargets.AllBuffered, other.gameObject.tag.ToString());
+            Spawn();
+        }
+
     }
 
     private void ControlKBAM()
@@ -707,7 +712,8 @@ public class KBPlayer : KBControllableGameObject
     {
         if (team == Team.None)
         {
-            Debug.LogWarning("Warning: Attempting to find spawnpoint on player with team none");
+            Debug.Log("No Team, no team spawnpoints found");
+            //Debug.LogWarning("Warning: Attempting to find spawnpoint on player with team none");
         }
         else
         {
@@ -849,6 +855,27 @@ public class KBPlayer : KBControllableGameObject
         }
     }
 
+    private void SetTeam(Team newTeam)
+    {
+        team = newTeam;
+        FindTeamSpawnpoints();
+        hitboxDrone.GetComponent<HitboxBaseScript>().Team = team;
+        hitboxMech.GetComponent<HitboxBaseScript>().Team = team;
+        hitboxTank.GetComponent<HitboxBaseScript>().Team = team;
+
+        if (newTeam == KBConstants.Team.Blue)
+        {
+            SetActiveIfFound(this.transform, "BlueBody", true);
+            SetActiveIfFound(this.transform, "RedBody", false);
+        }
+        else if (newTeam == KBConstants.Team.Red)
+        {
+            SetActiveIfFound(this.transform, "BlueBody", false);
+            SetActiveIfFound(this.transform, "RedBody", true);
+        }
+    }
+
+
     [RPC]
     private void SwitchType(string typeTrigger, PhotonMessageInfo info)
     {
@@ -859,55 +886,47 @@ public class KBPlayer : KBControllableGameObject
                 allBodies[i].SetActive(false);
             }
 
-            switch (typeTrigger)
+            if (typeTrigger.Equals("SpawnRedDrone") || typeTrigger.Equals("SpawnBlueDrone"))
             {
-                case "SpawnDrone":
-
-                    upperBody = upperBodyDrone;
-                    lowerBody = lowerBodyDrone;
-                    type = PlayerType.drone;
-
-                    break;
-
-                case "SpawnMech":
-
-                    upperBody = upperBodyMech;
-                    lowerBody = lowerBodyMech;
-                    type = PlayerType.mech;
-
-                    break;
-
-                case "SpawnTank":
-
-                    upperBody = upperBodyTank;
-                    lowerBody = lowerBodyTank;
-                    type = PlayerType.tank;
-
-                    break;
-
-                case "SpawnCore":
-
-                    upperBody = upperBodyCore;
-                    lowerBody = lowerBodyCore;
-                    type = PlayerType.core;
-                    break;
-
-                default:
-                    break;
+                upperBody = upperBodyDrone;
+                lowerBody = lowerBodyDrone;
+                type = PlayerType.drone;
             }
+
+            else if(typeTrigger.Equals("SpawnRedMech") || typeTrigger.Equals("SpawnBlueMech"))
+            {
+                upperBody = upperBodyMech;
+                lowerBody = lowerBodyMech;
+                type = PlayerType.mech;
+            }
+
+            else if(typeTrigger.Equals("SpawnRedTank") || typeTrigger.Equals("SpawnBlueTank"))
+            {
+                upperBody = upperBodyTank;
+                lowerBody = lowerBodyTank;
+                type = PlayerType.tank;
+            }
+
+            else if(typeTrigger.Equals("SpawnCore"))
+            {
+                upperBody = upperBodyCore;
+                lowerBody = lowerBodyCore;
+                type = PlayerType.core;
+            }
+
             upperBody.SetActive(true);
             lowerBody.SetActive(true);
 
-            if (team == KBConstants.Team.Blue)
-            {
-                SetActiveIfFound(this.transform, "BlueBody", true);
-                SetActiveIfFound(this.transform, "RedBody", false);
-            }
-            else
-            {
-                SetActiveIfFound(this.transform, "BlueBody", false);
-                SetActiveIfFound(this.transform, "RedBody", true);
-            }
+            //if (team == KBConstants.Team.Blue)
+            //{
+            //    SetActiveIfFound(this.transform, "BlueBody", true);
+            //    SetActiveIfFound(this.transform, "RedBody", false);
+            //}
+            //else if (team == KBConstants.Team.Red)
+            //{
+            //    SetActiveIfFound(this.transform, "BlueBody", false);
+            //    SetActiveIfFound(this.transform, "RedBody", true);
+            //}
 
             //Switch Stats
             SetStats();

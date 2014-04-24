@@ -96,12 +96,6 @@ public class GameManager : Photon.MonoBehaviour
         BankZone[] loadedBankZones = FindObjectsOfType<BankZone>();
         PlayerSpawnPoint[] loadedPSpawns = FindObjectsOfType<PlayerSpawnPoint>();
 
-        //TODO:Remove 6 value and replace with constant representing max player size;
-        //players = new List<KBPlayer>();
-        //killTags = new List<KillTag>(loadedKillTags.Length);
-        //captureZones = new List<CaptureZone>(loadedCaptureZones.Length);
-        //playerSpawnZones = new List<PlayerSpawnPoint>(loadedPSpawns.Length);
-
         foreach (BankZone b in loadedBankZones)
         {
             bankZones.Add(b);
@@ -168,22 +162,6 @@ public class GameManager : Photon.MonoBehaviour
                     state = GameState.EndGame;
 
                     break;
-
-                //case GameState.EndGame:
-                //    // check winners here;
-                //    if (redTeamScore > blueTeamScore)
-                //    {
-                //        state = GameState.RedWins;
-                //    }
-                //    else if (blueTeamScore > redTeamScore)
-                //    {
-                //        state = GameState.BlueWins;
-                //    }
-                //    else
-                //    {
-                //        state = GameState.Tie;
-                //    }
-                //    break;
 
                 default:
                     break;
@@ -321,24 +299,6 @@ public class GameManager : Photon.MonoBehaviour
 
         return spawnpoints;
     }
-
-    //private void RunGui()
-    //{
-    //    foreach (var c in captureZones)
-    //    {
-    //        if ((localPlayer.team == Team.Blue && c.state != CaptureZone.ZoneState.Blue && c.blueUnlocked) || (localPlayer.team == Team.Red && c.state != CaptureZone.ZoneState.Red && c.redUnlocked))
-    //        {
-    //            c.rGui.enabled = true;
-    //            Vector3 sPos = Camera.main.WorldToScreenPoint(c.transform.position);
-    //            c.rGui.relativePosition = new Vector2(sPos.x, -sPos.y);
-    //            c.rGui.size = new Vector2((Mathf.Sin(Time.time * 4) + 1) * 32 + 64, (Mathf.Sin(Time.time * 4) + 1) * 32 + 64);
-    //        }
-    //        else
-    //        {
-    //            c.rGui.enabled = false;
-    //        }
-    //    }
-    //}
 
     public GameObject CreateObject(int type, Vector3 position, Quaternion rotation, int newTeam)
     {
