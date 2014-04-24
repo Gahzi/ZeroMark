@@ -45,7 +45,7 @@ public class ObjectPoolEffect : MonoBehaviour
     {
         if (fadeOut && renderer != null)
         {
-            renderer.material.color = Color.Lerp(renderer.material.color, Color.clear, 1.0f * Time.deltaTime);
+            renderer.material.color = Color.Lerp(renderer.material.color, Color.clear, 0.750f * Time.deltaTime);
         }
     }
 }

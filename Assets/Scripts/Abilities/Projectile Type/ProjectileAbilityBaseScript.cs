@@ -193,22 +193,15 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
             {
                 if (burstDelay > 0.0f)
                 {
-                    ShellCasing c = ObjectPool.Spawn(casing, transform.position);
-                    // this needs to be relative
-                    Vector3 pushDir = -direction + Vector3.down;
-                    c.rigidbody.AddExplosionForce(35.0f, transform.position + pushDir, 55.0f);
-                    c.Init();
+                    SpawnShellCasing(100.0f);
                 }
                 else
                 {
                     if (i == 0)
                     {
-                        ShellCasing c = ObjectPool.Spawn(casing, transform.position);
-                        c.rigidbody.AddExplosionForce(45.0f, transform.position + Vector3.left + Vector3.down + Vector3.back, 55.0f);
-                        c.Init();
+                        SpawnShellCasing(130.0f);
                     }
                 }
-
             }
 
             ProjectileBaseScript projectile = null;
@@ -217,17 +210,6 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
             {
                 modifiedDirection.y = (direction.y - maximumSpreadAngle) + (i * 2.0f * maximumSpreadAngle / burstSize);
             }
-            //else
-            //{
-            //    if (Random.Range(0, 2) == 0) // Adjust angle by spread value
-            //    {
-            //        direction.y += minimumSpreadAngle + Random.Range(0, maximumSpreadAngle - minimumSpreadAngle);
-            //    }
-            //    else
-            //    {
-            //        direction.y -= minimumSpreadAngle + Random.Range(0, maximumSpreadAngle - minimumSpreadAngle);
-            //    }
-            //}
 
             // Spawn projectile
             projectile = ObjectPool.Spawn(projectileType[level], transform.position, Quaternion.Euler(modifiedDirection));
@@ -279,4 +261,12 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
     /// <param name="level"></param>
     /// <returns></returns>
     public abstract int SetLevel(int level);
+
+    private ShellCasing SpawnShellCasing(float force)
+    {
+        ShellCasing c = ObjectPool.Spawn(casing, transform.position);
+        c.rigidbody.AddExplosionForce(force, owner.transform.position + owner.transform.right * 2, 10.0f);
+        c.Init();
+        return c;
+    }
 }

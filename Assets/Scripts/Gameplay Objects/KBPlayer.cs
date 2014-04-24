@@ -73,6 +73,7 @@ public class KBPlayer : KBControllableGameObject
     public float teleportationRecharge = 5.0f;
     public GameObject spawnAnimator;
     public float spawnDelay = 2.50f;
+    public GameObject invulnerabilityShield;
 
     public TimerScript timer;
     private float movespeed;
@@ -294,10 +295,15 @@ public class KBPlayer : KBControllableGameObject
 
         if (invulnerabilityTime > 0)
         {
+            if (!invulnerabilityShield.activeInHierarchy)
+            {
+                invulnerabilityShield.SetActive(true);
+            }
             invulnerabilityTime -= Time.deltaTime;
             if (invulnerabilityTime <= 0)
             {
                 invulnerabilityTime = 0;
+                invulnerabilityShield.SetActive(false);
             }
             // activate visual indication of invulnerability
         }
@@ -503,9 +509,11 @@ public class KBPlayer : KBControllableGameObject
             {
 
                 totalTokensBanked += killTokens;
-                BankZone b = other.gameObject.GetComponent<BankZone>();
-                b.photonView.RPC("AddPoints", PhotonTargets.AllBuffered, killTokens, (int)team);
-                //b.AddPoints(killTokens, team);
+                //BankZone b = other.gameObject.GetComponent<BankZone>();
+                for (int i = 0; i < GameManager.Instance.bankZones.Count; i++)
+                {
+                    GameManager.Instance.bankZones[i].photonView.RPC("AddPoints", PhotonTargets.AllBuffered, killTokens, (int)team);
+                }
                 killTokens = 0;
             }
         }
