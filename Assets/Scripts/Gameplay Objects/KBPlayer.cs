@@ -971,6 +971,7 @@ public class KBPlayer : KBControllableGameObject
             guns[i].owner = this;
             guns[i].Team = team;
             guns[i].ammo = guns[i].clipSize;
+            guns[i].reloading = false;
         }
     }
 
