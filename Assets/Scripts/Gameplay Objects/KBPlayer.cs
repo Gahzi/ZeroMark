@@ -733,7 +733,7 @@ public class KBPlayer : KBControllableGameObject
                 default:
                     break;
             }
-            PlayerGibModel g = ObjectPool.Spawn(gib, transform.position + Vector3.up, transform.rotation);
+            PlayerGibModel g = ObjectPool.Spawn(gib, transform.position + Vector3.up * 3, transform.rotation);
             g.Init();
 
             upperBody.SetActive(false);
