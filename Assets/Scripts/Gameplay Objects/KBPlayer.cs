@@ -754,8 +754,6 @@ public class KBPlayer : KBControllableGameObject
             respawnTimer = timer.StartTimer(respawnTime);
             waitingForRespawn = true;
             audio.PlayOneShot(deadSound);
-
-
         }
         else if (waitingForRespawn && photonView.isMine)
         {
@@ -787,7 +785,7 @@ public class KBPlayer : KBControllableGameObject
             default:
                 break;
         }
-        PlayerGibModel g = ObjectPool.Spawn(gib, player.gameObject.transform.position + Vector3.up * 3, transform.rotation);
+        PlayerGibModel g = ObjectPool.Spawn(gib, player.gameObject.transform.position + Vector3.up * 3, player.gameObject.transform.rotation);
         g.Init();
 
         player.upperBody.SetActive(false);
@@ -806,9 +804,9 @@ public class KBPlayer : KBControllableGameObject
                 {
                     c = ObjectPool.Spawn(chaff,
                         new Vector3(
-                            transform.position.x - (n / 2.0f * chaff.transform.localScale.x) + (n * chaff.transform.localScale.x * i),
-                            transform.position.y - (n / 2.0f * chaff.transform.localScale.x) + (n * chaff.transform.localScale.x * i),
-                            transform.position.z - (n / 2.0f * chaff.transform.localScale.x) + (n * chaff.transform.localScale.x * i)
+                            player.gameObject.transform.position.x - (n / 2.0f * chaff.transform.localScale.x) + (n * chaff.transform.localScale.x * i),
+                            player.gameObject.transform.position.y - (n / 2.0f * chaff.transform.localScale.x) + (n * chaff.transform.localScale.x * i),
+                            player.gameObject.transform.position.z - (n / 2.0f * chaff.transform.localScale.x) + (n * chaff.transform.localScale.x * i)
                             ),
                             Quaternion.identity
                             );
@@ -877,7 +875,7 @@ public class KBPlayer : KBControllableGameObject
     public void Die(GameObject killerObject)
     {
         KBPlayer killerPlayer = killerObject.GetComponent<KBPlayer>();
-        killerPlayer.photonView.RPC("NotifyKill", PhotonTargets.Others, killerPlayer.networkPlayer, this.networkPlayer);
+        killerPlayer.photonView.RPC("NotifyKill", PhotonTargets.All, killerPlayer.networkPlayer, this.networkPlayer);
     }
 
     [RPC]
