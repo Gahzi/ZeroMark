@@ -9,6 +9,7 @@ public class HomingMiniRocket : ProjectileBaseScript
 
     public float rocketInitSpeed;
     public int accel;
+    public float trackingStrength;
 
     #endregion CONSTANTS
 
@@ -58,7 +59,7 @@ public class HomingMiniRocket : ProjectileBaseScript
 
     protected override void DoHomingBehavior()
     {
-        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetPlayer.transform.position - owner.transform.position), 5.0f * Time.deltaTime);
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetPlayer.transform.position - owner.transform.position), trackingStrength * Time.deltaTime);
     }
 
 }

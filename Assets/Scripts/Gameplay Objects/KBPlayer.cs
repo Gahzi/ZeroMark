@@ -27,7 +27,7 @@ public class KBPlayer : KBControllableGameObject
 
     private static readonly int mechLowerRotationSpeed = 10;
     private static readonly int mechUpperRotationSpeed = 50;
-    private static readonly int mechMovementSpeed = 20;
+    private static readonly int mechMovementSpeed = 25;
     private static readonly int mechBaseHealth = 450;
     private static readonly float mechRegenRate = 1.0f;
 

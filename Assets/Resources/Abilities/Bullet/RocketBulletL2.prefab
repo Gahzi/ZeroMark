@@ -165,7 +165,6 @@ MonoBehaviour:
   damageLevel: 
   projectileSpeed: 120
   inheritSpeed: 0
-  collideWithProjectiles: 0
   collideWithEnvironment: 1
   homingProjectile: 0
   aimedProjectile: 0
@@ -174,6 +173,7 @@ MonoBehaviour:
   targetPosition: {x: 0, y: 0, z: 0}
   rocketInitSpeed: 0
   accel: 20
+  targetSpeed: 0
 --- !u!135 &13500000
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -184,8 +184,8 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 2.5
-  m_Center: {x: 0, y: 0, z: -.75}
+  m_Radius: 4
+  m_Center: {x: 0, y: 0, z: -0}
 --- !u!198 &19800000
 ParticleSystem:
   m_ObjectHideFlags: 1
