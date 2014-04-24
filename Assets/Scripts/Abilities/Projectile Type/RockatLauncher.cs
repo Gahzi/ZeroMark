@@ -1,7 +1,7 @@
 ﻿using KBConstants;
 using UnityEngine;
 
-public class RocketLauncher : ProjectileAbilityBaseScript
+public class RockatLauncher : ProjectileAbilityBaseScript
 {
     #region CONSTANTS
 
