@@ -557,7 +557,7 @@ public class KBPlayer : KBControllableGameObject
             SetTeam(Team.Red);
             StartCoroutine(Spawn(other.gameObject.tag.ToString()));
         }
-		else if (other.gameObject.CompareTag("SpawnBlueDrone") || other.gameObject.CompareTag("SpawnBlueMech") || other.gameObject.CompareTag("SpawnBlueTank"))
+        else if (other.gameObject.CompareTag("SpawnBlueDrone") || other.gameObject.CompareTag("SpawnBlueMech") || other.gameObject.CompareTag("SpawnBlueTank"))
         {
             SetTeam(Team.Blue);
             StartCoroutine(Spawn(other.gameObject.tag.ToString()));
@@ -576,8 +576,8 @@ public class KBPlayer : KBControllableGameObject
             inBankZone = false;
             timeInBankZone = 0.0f;
             bankIndicator.SetActive(false);
-        }    
-	}
+        }
+    }
 
     private void ControlKBAM()
     {
@@ -755,53 +755,7 @@ public class KBPlayer : KBControllableGameObject
             waitingForRespawn = true;
             audio.PlayOneShot(deadSound);
 
-            PlayerGibModel gib = null;
-            switch (type)
-            {
-                case PlayerType.mech:
-                    gib = mechGibBody;
-                    break;
-                case PlayerType.drone:
-                    gib = droneGibBody;
-                    break;
-                case PlayerType.tank:
-                    gib = tankGibBody;
-                    break;
-                case PlayerType.core:
-                    break;
-                default:
-                    break;
-            }
-            PlayerGibModel g = ObjectPool.Spawn(gib, transform.position + Vector3.up * 3, transform.rotation);
-            g.Init();
 
-            upperBody.SetActive(false);
-            lowerBody.SetActive(false);
-            ammoHud.SetActive(false);
-
-            particleSystem.Emit(5000);
-
-            int n = 5;
-            Chaff c = null;
-            for (int i = 0; i < n; i++)
-            {
-                for (int j = 0; j < n; j++)
-                {
-                    for (int h = 0; h < n; h++)
-                    {
-                        c = ObjectPool.Spawn(chaff,
-                            new Vector3(
-                                transform.position.x - (n / 2.0f * chaff.transform.localScale.x) + (n * chaff.transform.localScale.x * i),
-                                transform.position.y - (n / 2.0f * chaff.transform.localScale.x) + (n * chaff.transform.localScale.x * i),
-                                transform.position.z - (n / 2.0f * chaff.transform.localScale.x) + (n * chaff.transform.localScale.x * i)
-                                ),
-                                Quaternion.identity
-                                );
-                        c.Init();
-                    }
-                }
-            }
-            //c.gameObject.rigidbody.AddExplosionForce(1.0f, transform.position, 1.0f);
         }
         else if (waitingForRespawn && photonView.isMine)
         {
@@ -812,6 +766,57 @@ public class KBPlayer : KBControllableGameObject
                 RespawnToPrespawn();
             }
         }
+    }
+
+    private void DoExplosionAnimation(KBPlayer player)
+    {
+        PlayerGibModel gib = null;
+        switch (player.type)
+        {
+            case PlayerType.mech:
+                gib = mechGibBody;
+                break;
+            case PlayerType.drone:
+                gib = droneGibBody;
+                break;
+            case PlayerType.tank:
+                gib = tankGibBody;
+                break;
+            case PlayerType.core:
+                break;
+            default:
+                break;
+        }
+        PlayerGibModel g = ObjectPool.Spawn(gib, player.gameObject.transform.position + Vector3.up * 3, transform.rotation);
+        g.Init();
+
+        player.upperBody.SetActive(false);
+        player.lowerBody.SetActive(false);
+        player.ammoHud.SetActive(false);
+
+        player.particleSystem.Emit(5000);
+
+        int n = 5;
+        Chaff c = null;
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                for (int h = 0; h < n; h++)
+                {
+                    c = ObjectPool.Spawn(chaff,
+                        new Vector3(
+                            transform.position.x - (n / 2.0f * chaff.transform.localScale.x) + (n * chaff.transform.localScale.x * i),
+                            transform.position.y - (n / 2.0f * chaff.transform.localScale.x) + (n * chaff.transform.localScale.x * i),
+                            transform.position.z - (n / 2.0f * chaff.transform.localScale.x) + (n * chaff.transform.localScale.x * i)
+                            ),
+                            Quaternion.identity
+                            );
+                    c.Init();
+                }
+            }
+        }
+        //c.gameObject.rigidbody.AddExplosionForce(1.0f, transform.position, 1.0f);
     }
 
     private void FindTeamSpawnpoints()
@@ -872,18 +877,26 @@ public class KBPlayer : KBControllableGameObject
     public void Die(GameObject killerObject)
     {
         KBPlayer killerPlayer = killerObject.GetComponent<KBPlayer>();
-        killerPlayer.photonView.RPC("NotifyKill", PhotonTargets.Others, killerPlayer.networkPlayer);
-
+        killerPlayer.photonView.RPC("NotifyKill", PhotonTargets.Others, killerPlayer.networkPlayer, this.networkPlayer);
     }
 
     [RPC]
-    public void NotifyKill(PhotonPlayer killerPlayer)
+    public void NotifyKill(PhotonPlayer killerPlayer, PhotonPlayer victimPlayer)
     {
         if (killerPlayer.isLocal && networkPlayer == PhotonNetwork.player)
         {
             killCount++;
             totalTokensGained++;
             killTokens++;
+        }
+        List<KBPlayer> currentPlayers = GameManager.Instance.players;
+
+        for (int i = 0; i < currentPlayers.Count; i++)
+        {
+            if (currentPlayers[i].networkPlayer == victimPlayer)
+            {
+                DoExplosionAnimation(currentPlayers[i]);
+            }
         }
     }
 
@@ -971,6 +984,7 @@ public class KBPlayer : KBControllableGameObject
             guns[i].owner = this;
             guns[i].Team = team;
             guns[i].ammo = guns[i].clipSize;
+            guns[i].reloading = false;
         }
     }
 
@@ -1012,21 +1026,21 @@ public class KBPlayer : KBControllableGameObject
                 type = PlayerType.drone;
             }
 
-            else if(typeTrigger.Equals("SpawnRedMech") || typeTrigger.Equals("SpawnBlueMech"))
+            else if (typeTrigger.Equals("SpawnRedMech") || typeTrigger.Equals("SpawnBlueMech"))
             {
                 upperBody = upperBodyMech;
                 lowerBody = lowerBodyMech;
                 type = PlayerType.mech;
             }
 
-            else if(typeTrigger.Equals("SpawnRedTank") || typeTrigger.Equals("SpawnBlueTank"))
+            else if (typeTrigger.Equals("SpawnRedTank") || typeTrigger.Equals("SpawnBlueTank"))
             {
                 upperBody = upperBodyTank;
                 lowerBody = lowerBodyTank;
                 type = PlayerType.tank;
             }
 
-            else if(typeTrigger.Equals("SpawnCore"))
+            else if (typeTrigger.Equals("SpawnCore"))
             {
                 upperBody = upperBodyCore;
                 lowerBody = lowerBodyCore;
