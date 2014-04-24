@@ -74,6 +74,9 @@ public class KBPlayer : KBControllableGameObject
     public GameObject spawnAnimator;
     public float spawnDelay = 2.50f;
     public GameObject invulnerabilityShield;
+    private float timeInBankZone;
+    private bool inBankZone;
+    public GameObject bankIndicator;
 
     public TimerScript timer;
     private float movespeed;
@@ -241,7 +244,7 @@ public class KBPlayer : KBControllableGameObject
         //Chaff c = Resources.Load("elements/chaff", typeof(Chaff)) as Chaff;
         ObjectPool.CreatePool(chaff);
         ObjectPool.CreatePool(mechGibBody);
-            
+
     }
 
     private void InitializeForRespawn()
@@ -279,14 +282,43 @@ public class KBPlayer : KBControllableGameObject
         Debug.DrawRay(upperBody.transform.position, upperBody.transform.TransformDirection(new Vector3(0, 0, 5.0f)), new Color(255, 0, 0, 255), 0.0f);
     }
 
-    private new void FixedUpdate()
+    private void FixedUpdate()
     {
+        if (inBankZone)
+        {
+            timeInBankZone += Time.deltaTime;
+        }
+        if (timeInBankZone > 3.0f && killTokens > 0 && inBankZone)
+        {
+            int tokensToBank = 0;
+            if (killTokens > GameConstants.levelTwoThreshold)
+            {
+                tokensToBank = killTokens - GameConstants.levelTwoThreshold;
+            }
+            else if (killTokens > GameConstants.levelOneThreshold)
+            {
+                tokensToBank = killTokens - GameConstants.levelOneThreshold;
+            }
+            else
+            {
+                tokensToBank = killTokens;
+            }
+
+            for (int i = 0; i < GameManager.Instance.bankZones.Count; i++)
+            {
+                GameManager.Instance.bankZones[i].photonView.RPC("AddPoints", PhotonTargets.AllBuffered, tokensToBank, (int)team);
+            }
+            killTokens -= tokensToBank;
+            totalTokensBanked += tokensToBank;
+            timeInBankZone = 0.0f;
+        }
+
+
         if (Time.time > lastDamageTime + regenDelay)
         {
             float floatHealth = Mathf.MoveTowards(health, stats.health, stats.regerationRate);
             health = Mathf.FloorToInt(floatHealth);
         }
-
 
         if (teleportationRecharge > 0)
         {
@@ -502,20 +534,11 @@ public class KBPlayer : KBControllableGameObject
 
     private new void OnTriggerEnter(Collider other)
     {
-        //base.OnTriggerEnter(other);
         if (other.gameObject.CompareTag("BankZone"))
         {
-            if (killTokens > 0)
-            {
 
-                totalTokensBanked += killTokens;
-                //BankZone b = other.gameObject.GetComponent<BankZone>();
-                for (int i = 0; i < GameManager.Instance.bankZones.Count; i++)
-                {
-                    GameManager.Instance.bankZones[i].photonView.RPC("AddPoints", PhotonTargets.AllBuffered, killTokens, (int)team);
-                }
-                killTokens = 0;
-            }
+            inBankZone = true;
+            bankIndicator.SetActive(true);
         }
 
         if (other.gameObject.CompareTag("Teleporter"))
@@ -534,13 +557,27 @@ public class KBPlayer : KBControllableGameObject
             SetTeam(Team.Red);
             StartCoroutine(Spawn(other.gameObject.tag.ToString()));
         }
-        else if (other.gameObject.CompareTag("SpawnBlueDrone") || other.gameObject.CompareTag("SpawnBlueMech") || other.gameObject.CompareTag("SpawnBlueTank"))
+		else if (other.gameObject.CompareTag("SpawnBlueDrone") || other.gameObject.CompareTag("SpawnBlueMech") || other.gameObject.CompareTag("SpawnBlueTank"))
         {
             SetTeam(Team.Blue);
             StartCoroutine(Spawn(other.gameObject.tag.ToString()));
         }
+    }
+
+    void OnTriggerStay(Collider other)
+    {
 
     }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("BankZone"))
+        {
+            inBankZone = false;
+            timeInBankZone = 0.0f;
+            bankIndicator.SetActive(false);
+        }    
+	}
 
     private void ControlKBAM()
     {
