@@ -629,15 +629,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad0944704e8a9424b95450aef99abbf9, type: 3}
+  m_Script: {fileID: 11500000, guid: 66002e7df9751a445a55825c72eeb351, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sound: {fileID: 0}
+  sound: []
   owner: {fileID: 0}
   available: 0
-  halfwayCooled: 0
+  clipSize: 0
+  projectileType:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  level: 0
   ammo: 0
   reloading: 0
+  burstSize: 0
+  casing: {fileID: 0}
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -672,12 +679,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ab69c35764e9c347b08090f4d4ead9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sound: {fileID: 0}
+  sound:
+  - {fileID: 0}
   owner: {fileID: 0}
   available: 0
-  halfwayCooled: 0
+  clipSize: 0
+  projectileType:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  level: 0
   ammo: 0
   reloading: 0
+  burstSize: 0
+  casing: {fileID: 0}
 --- !u!114 &11400006
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -712,12 +727,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ab69c35764e9c347b08090f4d4ead9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sound: {fileID: 0}
+  sound:
+  - {fileID: 0}
   owner: {fileID: 0}
   available: 0
-  halfwayCooled: 0
+  clipSize: 0
+  projectileType:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  level: 0
   ammo: 0
   reloading: 0
+  burstSize: 0
+  casing: {fileID: 0}
 --- !u!114 &11400010
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -752,12 +775,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ff6463610309c24ebb82444321916a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sound: {fileID: 0}
+  sound:
+  - {fileID: 0}
   owner: {fileID: 0}
   available: 0
-  halfwayCooled: 0
+  clipSize: 0
+  projectileType:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  level: 0
   ammo: 0
   reloading: 0
+  burstSize: 0
+  casing: {fileID: 0}
 --- !u!114 &11400014
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -792,12 +823,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ff6463610309c24ebb82444321916a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sound: {fileID: 0}
+  sound:
+  - {fileID: 0}
   owner: {fileID: 0}
   available: 0
-  halfwayCooled: 0
+  clipSize: 0
+  projectileType:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  level: 0
   ammo: 0
   reloading: 0
+  burstSize: 0
+  casing: {fileID: 0}
 --- !u!114 &11400018
 MonoBehaviour:
   m_ObjectHideFlags: 1
