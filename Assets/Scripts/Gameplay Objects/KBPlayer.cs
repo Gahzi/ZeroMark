@@ -348,14 +348,14 @@ public class KBPlayer : KBControllableGameObject
         {
             if (acceptingInputs)
             {
-                if (Input.GetAxis("Mouse ScrollWheel") > 0 && camera.zoomTarget > 0.75f)
-                {
-                    camera.zoomTarget *= 1.0f / 1.05f;
-                }
-                else if (Input.GetAxis("Mouse ScrollWheel") < 0 && camera.zoomTarget < 2.0f)
-                {
-                    camera.zoomTarget *= 1.05f;
-                }
+                //if (Input.GetAxis("Mouse ScrollWheel") > 0 && camera.zoomTarget > 0.75f)
+                //{
+                //    camera.zoomTarget *= 1.0f / 1.05f;
+                //}
+                //else if (Input.GetAxis("Mouse ScrollWheel") < 0 && camera.zoomTarget < 2.0f)
+                //{
+                //    camera.zoomTarget *= 1.05f;
+                //}
                 playerPositionOnScreen = Camera.main.WorldToScreenPoint(transform.position);
                 mousePlayerDiff = playerPositionOnScreen - mousePos;
                 ControlKBAM();
