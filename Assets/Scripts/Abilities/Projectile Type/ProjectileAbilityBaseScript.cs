@@ -1,6 +1,7 @@
 ﻿using KBConstants;
 using System.Collections;
 using UnityEngine;
+using System.Collections.Generic;
 
 /// <summary>
 /// Basic projectile ability class. Fires attached ammo type @ firerate
@@ -170,23 +171,26 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
 
         for (int i = 0; i < burstSize; i++)
         {
-            switch (level)
+            if (owner.networkPlayer.isLocal)
             {
-                case 0:
-                    Camera.main.GetComponent<ScreenShake>().StartShake(0.1000f, 0.5000f);
-                    break;
+                switch (level)
+                {
+                    case 0:
+                        Camera.main.GetComponent<ScreenShake>().StartShake(0.1000f, 0.5000f);
+                        break;
 
-                case 1:
-                    Camera.main.GetComponent<ScreenShake>().StartShake(0.1000f, 1.0000f);
-                    break;
+                    case 1:
+                        Camera.main.GetComponent<ScreenShake>().StartShake(0.1000f, 1.0000f);
+                        break;
 
-                case 2:
-                    Camera.main.GetComponent<ScreenShake>().StartShake(0.1000f, 2.0000f);
-                    break;
+                    case 2:
+                        Camera.main.GetComponent<ScreenShake>().StartShake(0.1000f, 2.0000f);
+                        break;
 
-                default:
-                    Camera.main.GetComponent<ScreenShake>().StartShake(0.0500f, 0.500f);
-                    break;
+                    default:
+                        Camera.main.GetComponent<ScreenShake>().StartShake(0.0500f, 0.500f);
+                        break;
+                }
             }
 
             if (casing != null)
