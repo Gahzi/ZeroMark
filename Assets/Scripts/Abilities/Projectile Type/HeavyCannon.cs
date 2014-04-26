@@ -17,7 +17,7 @@ public class HeavyCannon : ProjectileAbilityBaseScript
     public static int RANGE_1 = 100;
     public static float RELOAD_TIME_1 = 2.000f;
     public static int CLIP_SIZE_1 = 45;
-    public static int BURST_SIZE_1 = 2;
+    public static int BURST_SIZE_1 = 3;
     public static float BURST_DELAY_1 = 0.000f;
     public static float SPREAD_1 = 1.000f;
 
@@ -25,7 +25,7 @@ public class HeavyCannon : ProjectileAbilityBaseScript
     public static int RANGE_2 = 100;
     public static float RELOAD_TIME_2 = 1.800f;
     public static int CLIP_SIZE_2 = 60;
-    public static int BURST_SIZE_2 = 3;
+    public static int BURST_SIZE_2 = 4;
     public static float BURST_DELAY_2 = 0.000f;
     public static float SPREAD_2 = 1.000f;
 

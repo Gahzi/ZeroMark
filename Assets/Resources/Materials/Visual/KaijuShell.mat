@@ -47,11 +47,11 @@ Material:
       data:
         first:
           name: _Color
-        second: {r: .882352948, g: .823961914, b: .875909805, a: .160784319}
+        second: {r: 1, g: 0, b: 0, a: .160784319}
       data:
         first:
           name: _SpecColor
-        second: {r: .740816236, g: .448475361, b: .772058845, a: 0}
+        second: {r: 1, g: 0, b: 0, a: 0}
       data:
         first:
           name: _OutlineColor

@@ -17,15 +17,4 @@ public class LightAutoLaserBullet : ProjectileBaseScript
         base.Awake();
         damageLevel = new int[3] { damageL0, damageL1, damageL2 };
     }
-
-    public override void Start()
-    {
-        base.Start();
-        collideWithProjectiles = false;
-    }
-
-    protected override void Update()
-    {
-        base.Update();
-    }
 }

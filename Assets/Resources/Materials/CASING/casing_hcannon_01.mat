@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: casing_hcannon_01
-  m_Shader: {fileID: 6, guid: 0000000000000000f000000000000000, type: 0}
+  m_Shader: {fileID: 34, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: []
   m_CustomRenderQueue: -1
   m_SavedProperties:
@@ -41,7 +41,7 @@ Material:
       data:
         first:
           name: _Emission
-        second: {r: .776470602, g: .268806666, b: .127889261, a: 0}
+        second: {r: .776470602, g: .268806666, b: .127889261, a: 1}
       data:
         first:
           name: _LinesColor

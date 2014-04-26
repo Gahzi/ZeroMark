@@ -1,6 +1,7 @@
 ﻿using KBConstants;
 using System.Collections;
 using UnityEngine;
+using System.Collections.Generic;
 
 /// <summary>
 /// Basic projectile ability class. Fires attached ammo type @ firerate
@@ -170,45 +171,41 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
 
         for (int i = 0; i < burstSize; i++)
         {
-            switch (level)
+            if (owner.networkPlayer.isLocal)
             {
-                case 0:
-                    Camera.main.GetComponent<ScreenShake>().StartShake(0.1000f, 0.5000f);
-                    break;
+                switch (level)
+                {
+                    case 0:
+                        Camera.main.GetComponent<ScreenShake>().StartShake(0.1000f, 0.5000f);
+                        break;
 
-                case 1:
-                    Camera.main.GetComponent<ScreenShake>().StartShake(0.1000f, 1.0000f);
-                    break;
+                    case 1:
+                        Camera.main.GetComponent<ScreenShake>().StartShake(0.1000f, 1.0000f);
+                        break;
 
-                case 2:
-                    Camera.main.GetComponent<ScreenShake>().StartShake(0.1000f, 2.0000f);
-                    break;
+                    case 2:
+                        Camera.main.GetComponent<ScreenShake>().StartShake(0.1000f, 2.0000f);
+                        break;
 
-                default:
-                    Camera.main.GetComponent<ScreenShake>().StartShake(0.0500f, 0.500f);
-                    break;
+                    default:
+                        Camera.main.GetComponent<ScreenShake>().StartShake(0.0500f, 0.500f);
+                        break;
+                }
             }
 
             if (casing != null)
             {
                 if (burstDelay > 0.0f)
                 {
-                    ShellCasing c = ObjectPool.Spawn(casing, transform.position);
-                    c.spawnTime = Time.time;
-                    // this needs to be relative
-                    Vector3 pushDir = -direction + Vector3.down;
-                    c.rigidbody.AddExplosionForce(35.0f, transform.position + pushDir, 55.0f);
+                    SpawnShellCasing(100.0f);
                 }
                 else
                 {
                     if (i == 0)
                     {
-                        ShellCasing c = ObjectPool.Spawn(casing, transform.position);
-                        c.spawnTime = Time.time;
-                        c.rigidbody.AddExplosionForce(45.0f, transform.position + Vector3.left + Vector3.down + Vector3.back, 55.0f);
+                        SpawnShellCasing(130.0f);
                     }
                 }
-
             }
 
             ProjectileBaseScript projectile = null;
@@ -217,17 +214,6 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
             {
                 modifiedDirection.y = (direction.y - maximumSpreadAngle) + (i * 2.0f * maximumSpreadAngle / burstSize);
             }
-            //else
-            //{
-            //    if (Random.Range(0, 2) == 0) // Adjust angle by spread value
-            //    {
-            //        direction.y += minimumSpreadAngle + Random.Range(0, maximumSpreadAngle - minimumSpreadAngle);
-            //    }
-            //    else
-            //    {
-            //        direction.y -= minimumSpreadAngle + Random.Range(0, maximumSpreadAngle - minimumSpreadAngle);
-            //    }
-            //}
 
             // Spawn projectile
             projectile = ObjectPool.Spawn(projectileType[level], transform.position, Quaternion.Euler(modifiedDirection));
@@ -279,4 +265,12 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
     /// <param name="level"></param>
     /// <returns></returns>
     public abstract int SetLevel(int level);
+
+    private ShellCasing SpawnShellCasing(float force)
+    {
+        ShellCasing c = ObjectPool.Spawn(casing, transform.position);
+        c.rigidbody.AddExplosionForce(force, owner.transform.position + owner.transform.right * 2, 10.0f);
+        c.Init();
+        return c;
+    }
 }

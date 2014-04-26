@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: casing_mgun_01
-  m_Shader: {fileID: 6, guid: 0000000000000000f000000000000000, type: 0}
+  m_Shader: {fileID: 34, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: []
   m_CustomRenderQueue: -1
   m_SavedProperties:
@@ -29,7 +29,7 @@ Material:
       data:
         first:
           name: _Color
-        second: {r: .259515554, g: .882352948, b: .573082089, a: 0}
+        second: {r: .259515554, g: .882352948, b: .573082089, a: 1}
       data:
         first:
           name: _SpecColor

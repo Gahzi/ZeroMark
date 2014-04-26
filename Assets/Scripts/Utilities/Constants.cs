@@ -13,6 +13,7 @@ namespace KBConstants
         public static readonly float pointPercentDropOnDeath = 1.0f;
         public static readonly int levelOneThreshold = 4;
         public static readonly int levelTwoThreshold = 50;
+        public static readonly int decalLifetime = 5;
     }
 
     public class AbilityConstants
@@ -31,13 +32,13 @@ namespace KBConstants
 
         private static readonly IDictionary<type, int> damageValues = new Dictionary<type, int>
         {
-            {type.MachinegunLevel0, 60},
-            {type.MachinegunLevel1, 80},
+            {type.MachinegunLevel0, 80},
+            {type.MachinegunLevel1, 100},
             {type.MachinegunLevel2, 120},
 
             {type.HeavyCannonLevel0, 50},
-            {type.HeavyCannonLevel1, 60},
-            {type.HeavyCannonLevel2, 75},
+            {type.HeavyCannonLevel1, 50},
+            {type.HeavyCannonLevel2, 60},
 
             {type.ShotgunLevel0, 30},
             {type.ShotgunLevel1, 50},
@@ -55,7 +56,7 @@ namespace KBConstants
             {type.LightCannonLevel1, 30},
             {type.LightCannonLevel2, 45},
 
-            {type.HomingRocketLevel0, 100},
+            {type.HomingRocketLevel0, 75},
             {type.HomingRocketLevel1, 150},
             {type.HomingRocketLevel2, 200},
         };
