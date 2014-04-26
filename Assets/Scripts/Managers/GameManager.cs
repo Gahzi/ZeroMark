@@ -113,7 +113,7 @@ public class GameManager : Photon.MonoBehaviour
 
         if (PhotonNetwork.connected)
         {
-            Team nextTeam = (Team)(PhotonNetwork.otherPlayers.Length % 2);
+            Team nextTeam = Team.None;
             GameManager.Instance.CreateObject((int)ObjectConstants.type.Player, Vector3.zero, Quaternion.identity, (int)nextTeam);
         }
     }
@@ -320,7 +320,6 @@ public class GameManager : Photon.MonoBehaviour
                     GameObject newKillTagBlueObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.KillTagBlue], position, Quaternion.Euler(33.3f, 330.0f, 48.36f), 0);
                     KillTag newKillTagBlue = newKillTagBlueObject.GetComponent<KillTag>();
                     newKillTagBlue.team = (Team)newTeam;
-                    killTags.Add(newKillTagBlue);
                     return newKillTagBlueObject;
                 }
 
@@ -329,7 +328,6 @@ public class GameManager : Photon.MonoBehaviour
                     GameObject newKillTagRedObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.KillTagRed], position, Quaternion.Euler(33.3f, 330.0f, 48.36f), 0);
                     KillTag newKillTagRed = newKillTagRedObject.GetComponent<KillTag>();
                     newKillTagRed.team = (Team)newTeam;
-                    killTags.Add(newKillTagRed);
                     return newKillTagRedObject;
                 }
             default:

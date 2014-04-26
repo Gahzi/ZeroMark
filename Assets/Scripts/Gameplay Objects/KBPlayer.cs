@@ -922,26 +922,30 @@ public class KBPlayer : KBControllableGameObject
         transform.position = GameObject.FindGameObjectWithTag("Prespawn").transform.position;
         health = coreBaseHealth;
 
-        int pointsToDrop = Mathf.FloorToInt(killTokens * GameConstants.pointPercentDropOnDeath);
-        if (pointsToDrop == 0)
-        {
-            pointsToDrop = 1;
-        }
 
-        while (pointsToDrop > 0)
+        if (team != Team.None)
         {
-            GameObject newTag = null;
-            if (team == Team.Blue)
+            int pointsToDrop = Mathf.FloorToInt(killTokens * GameConstants.pointPercentDropOnDeath);
+            if (pointsToDrop == 0)
             {
-                newTag = GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagBlue, deathPosition, Quaternion.identity, (int)team);
+                pointsToDrop = 1;
             }
-            else if (team == Team.Red)
+
+            while (pointsToDrop > 0)
             {
-                newTag = GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagRed, deathPosition, Quaternion.identity, (int)team);
+                GameObject newTag = null;
+                if (team == Team.Blue)
+                {
+                    newTag = GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagBlue, deathPosition, Quaternion.identity, (int)team);
+                }
+                else if (team == Team.Red)
+                {
+                    newTag = GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagRed, deathPosition, Quaternion.identity, (int)team);
+                }
+                newTag.transform.localScale *= 1.0f + (pointsToDrop / 100.0f);
+                newTag.GetPhotonView().RPC("SetPointValue", PhotonTargets.AllBuffered, pointsToDrop);
+                pointsToDrop -= pointsToDrop;
             }
-            newTag.transform.localScale *= 1.0f + (pointsToDrop / 100.0f);
-            newTag.GetPhotonView().RPC("SetPointValue", PhotonTargets.AllBuffered, pointsToDrop);
-            pointsToDrop -= pointsToDrop;
         }
 
         killTokens = 0;

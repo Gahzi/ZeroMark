@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using KBConstants;
+using UnityEngine;
 using System.Collections;
 public class KillTag : KBGameObject
 {
@@ -15,7 +16,7 @@ public class KillTag : KBGameObject
     private new void OnTriggerEnter(Collider other)
     {
         KBPlayer player = other.gameObject.GetComponent<KBPlayer>();
-        if(player != null)
+        if(player != null && player.team != Team.None)
         {
             if (player.team != team && PhotonNetwork.player.Equals(player.networkPlayer))
             {
@@ -30,6 +31,15 @@ public class KillTag : KBGameObject
             }
             else if (player.team == team && PhotonNetwork.player.Equals(player.networkPlayer))
             {
+                if (player.health > 0 && player.type != PlayerType.core)
+                {
+                    GameManager.Instance.photonView.RPC("DestroyObject", PhotonTargets.All, photonView.viewID);
+                    player.audio.PlayOneShot(player.itemPickupClip);
+                    collider.enabled = false;
+                    renderer.enabled = false;
+                }
+                
+
                 //player.totalTokensGained += player.killTokens;
                 //player.killTokens += Mathf.FloorToInt(pointValue / 2);
 
