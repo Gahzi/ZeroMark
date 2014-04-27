@@ -699,19 +699,13 @@ public class KBPlayer : KBControllableGameObject
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (Input.GetKey(KeyCode.Tab))
         {
-            if (GUIManager.Instance.state.Equals(GUIManager.GUIManagerState.Hidden))
-            {
-                GUIManager.Instance.state = GUIManager.GUIManagerState.ShowingStatTab;
-            }
+            GUIManager.Instance.state = GUIManager.GUIManagerState.ShowingStatTab;
         }
-        else if (Input.GetKeyUp(KeyCode.Tab))
+        else
         {
-            if (GUIManager.Instance.state.Equals(GUIManager.GUIManagerState.ShowingStatTab))
-            {
-                GUIManager.Instance.state = GUIManager.GUIManagerState.Hidden;
-            }
+            GUIManager.Instance.state = GUIManager.GUIManagerState.Hidden;
         }
 
         #endregion Weapons
