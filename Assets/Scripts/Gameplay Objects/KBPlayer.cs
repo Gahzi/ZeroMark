@@ -815,7 +815,7 @@ public class KBPlayer : KBControllableGameObject
 
     private void FindTeamSpawnpoints()
     {
-        if (team == Team.None)
+        if (team == Team.None && type != PlayerType.core)
         {
             Debug.Log("No Team, no team spawnpoints found");
             //Debug.LogWarning("Warning: Attempting to find spawnpoint on player with team none");
