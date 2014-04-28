@@ -39890,7 +39890,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   menu: {fileID: 2070671104}
   callMethod: 1
-  MenuMethodToCall: OpenServerBrowser
+  MenuMethodToCall: OpenEnterNameBrowser
   moveCamera: 1
   cameraTarget: {fileID: 1996765817}
   fovTarget: 90

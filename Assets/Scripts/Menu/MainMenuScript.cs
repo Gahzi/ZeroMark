@@ -4,14 +4,14 @@ using System.Collections.Generic;
 
 public class MainMenuScript : Photon.MonoBehaviour
 {
-    //GUI vars
 
-    private string currentGUIMethod = "join";
+    private string currentGUIMethod = "entername";
     private string currentGUIWindow = "none";
 
     private Vector2 JoinScrollPosition;
 
     private string joinRoomName;
+    private string playerName;
 
     private string failConnectMesage = "";
     bool isConnectingToRoom = false;
@@ -26,6 +26,7 @@ public class MainMenuScript : Photon.MonoBehaviour
     {
         //Default join values
         joinRoomName = "";
+        playerName = "";
 
         //Default host values
         hostTitle = PlayerPrefs.GetString("hostTitle", "Guests server");
@@ -68,10 +69,37 @@ public class MainMenuScript : Photon.MonoBehaviour
                 }
             }
         }
+        else if (currentGUIWindow == "nameDialog")
+        {
+            GUILayout.Window(2, new Rect(Screen.width / 2 - 600 / 2, Screen.height / 2 - 550 / 2, 600, 550), NameMenu, "");
+        }
         else if (currentGUIWindow == "serverMenu")
         {
             GUILayout.Window(2, new Rect(Screen.width / 2 - 600 / 2, Screen.height / 2 - 550 / 2, 600, 550), ServerMenu, "");
         }
+    }
+
+    void NameMenu(int wID)
+    {
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("Name Menu", "menuText");
+        GUILayout.FlexibleSpace();
+        GUILayout.EndHorizontal();
+
+        GUILayout.BeginHorizontal();
+
+        GUILayout.Label("Please name your character", "menuText");
+        playerName = GUILayout.TextField(playerName);
+
+        GUILayout.EndHorizontal();
+        GUILayout.Space(25);
+
+        if (GUILayout.Button("Next"))
+        {
+            currentGUIMethod = "join";
+            PhotonNetwork.playerName = playerName;
+            OpenServerBrowser();
+        }   
     }
 
     void ServerMenu(int wID)
@@ -282,6 +310,11 @@ public class MainMenuScript : Photon.MonoBehaviour
     public void OpenServerBrowser()
     {
         currentGUIWindow = "serverMenu";
+    }
+
+    public void OpenEnterNameBrowser()
+    {
+        currentGUIWindow = "nameDialog";
     }
 
     public void QuitGame()

@@ -401,6 +401,8 @@ public class KBPlayer : KBControllableGameObject
             newPlayerCameraObject.transform.parent = transform;
             newPlayerCameraObject.GetComponent<KBCamera>().attachedPlayer = this;
             Camera.SetupCurrent(newPlayerCameraObject.GetComponent<Camera>());
+
+            name = PhotonNetwork.playerName;
         }
         else
         {
