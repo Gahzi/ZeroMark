@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using XInputDotNetPure;
 
 [RequireComponent(typeof(PhotonView))]
 [RequireComponent(typeof(CharacterController))]
@@ -62,6 +63,17 @@ public class KBPlayer : KBControllableGameObject
 
     #endregion CONSTANTS
 
+    #region GamepadParameters
+
+    public bool useController;
+    private bool playerIndexSet = false;
+    public PlayerIndex playerIndex;
+    public GamePadState gamepadState;
+    public GamePadState gamepadPrevState;
+    public float stickDeadzone;
+
+    #endregion GamepadParameters
+
     private bool tankStyleMove;
     public PlayerType type;
     public PlayerStats stats;
@@ -82,6 +94,7 @@ public class KBPlayer : KBControllableGameObject
     private float movespeed;
     private float lowerbodyRotateSpeed;
     private float upperbodyRotateSpeed;
+    private float collisionStopMod = 1.0f;
 
     private CharacterController charController;
 
@@ -226,10 +239,6 @@ public class KBPlayer : KBControllableGameObject
         charController = GetComponent<CharacterController>();
         itemPickupClip = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.ItemPickup01]);
         hitConfirm = Resources.Load<AudioClip>(KBConstants.AudioConstants.CLIP_NAMES[KBConstants.AudioConstants.clip.HitConfirm]);
-        //hitboxDrone.GetComponent<HitboxBaseScript>().Team = team;
-        //hitboxMech.GetComponent<HitboxBaseScript>().Team = team;
-        //hitboxTank.GetComponent<HitboxBaseScript>().Team = team;
-        //GetComponentInChildren<HitboxBaseScript>().Team = team;
 
         teamSpawnpoints = new List<PlayerSpawnPoint>();
         SetTeam(team);
@@ -241,10 +250,8 @@ public class KBPlayer : KBControllableGameObject
 
         InitializeForRespawn();
         RespawnToPrespawn();
-        //Chaff c = Resources.Load("elements/chaff", typeof(Chaff)) as Chaff;
         ObjectPool.CreatePool(chaff);
         ObjectPool.CreatePool(mechGibBody);
-
     }
 
     private void InitializeForRespawn()
@@ -313,7 +320,6 @@ public class KBPlayer : KBControllableGameObject
             timeInBankZone = 0.0f;
         }
 
-
         if (Time.time > lastDamageTime + regenDelay)
         {
             float floatHealth = Mathf.MoveTowards(health, stats.health, stats.regerationRate);
@@ -337,7 +343,6 @@ public class KBPlayer : KBControllableGameObject
                 invulnerabilityTime = 0;
                 invulnerabilityShield.SetActive(false);
             }
-            // activate visual indication of invulnerability
         }
 
         mousePos = Input.mousePosition;
@@ -358,7 +363,32 @@ public class KBPlayer : KBControllableGameObject
                 //}
                 playerPositionOnScreen = Camera.main.WorldToScreenPoint(transform.position);
                 mousePlayerDiff = playerPositionOnScreen - mousePos;
-                ControlKBAM();
+                if (useController)
+                {
+
+                    if (!playerIndexSet || !gamepadPrevState.IsConnected)
+                    {
+                        for (int i = 0; i < 4; ++i)
+                        {
+                            PlayerIndex testPlayerIndex = (PlayerIndex)i;
+                            GamePadState testState = GamePad.GetState(testPlayerIndex);
+                            if (testState.IsConnected)
+                            {
+                                Debug.Log(string.Format("GamePad found {0}", testPlayerIndex));
+                                playerIndex = testPlayerIndex;
+                                playerIndexSet = true;
+                            }
+                        }
+                    }
+
+                    gamepadPrevState = gamepadState;
+                    gamepadState = GamePad.GetState(playerIndex);
+                    ControlGamepad();
+                }
+                else
+                {
+                    ControlKBAM();
+                }
             }
         }
         else
@@ -367,6 +397,12 @@ public class KBPlayer : KBControllableGameObject
         }
 
         CheckHealth();
+
+        // DEBUG FUNCTIONS
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            TakeDamage(100);
+        }
     }
 
     private void OnGUI()
@@ -440,7 +476,6 @@ public class KBPlayer : KBControllableGameObject
             float invltime = invulnerabilityTime;
 
             int[] amms = new int[guns.Length];
-
 
             for (int i = 0; i < guns.Length; i++)
             {
@@ -526,17 +561,34 @@ public class KBPlayer : KBControllableGameObject
         }
     }
 
-    void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision collision)
     {
-        forwardAccel *= 0.00f;
+        if (collision.gameObject.CompareTag("Environment"))
+        {
+            collisionStopMod = 0.00f;
+        }
     }
 
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Environment"))
+        {
+            collisionStopMod = 1.0f;
+        }
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Environment"))
+        {
+            collisionStopMod = 0.0f;
+        }
+    }
 
     private new void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("BankZone"))
         {
-
             inBankZone = true;
             bankIndicator.SetActive(true);
         }
@@ -564,12 +616,11 @@ public class KBPlayer : KBControllableGameObject
         }
     }
 
-    void OnTriggerStay(Collider other)
+    private void OnTriggerStay(Collider other)
     {
-
     }
 
-    void OnTriggerExit(Collider other)
+    private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.CompareTag("BankZone"))
         {
@@ -577,6 +628,180 @@ public class KBPlayer : KBControllableGameObject
             timeInBankZone = 0.0f;
             bankIndicator.SetActive(false);
         }
+    }
+
+    private void ControlGamepad()
+    {
+        if (!Screen.lockCursor)
+        {
+            Screen.lockCursor = true;
+        }
+        if (Screen.showCursor)
+        {
+            Screen.showCursor = false;
+        }
+
+        #region Movement
+
+        float modifiedMoveSpeed = 0;
+        if (tankStyleMove)
+        {
+            float accel = 0;
+            float decel = 0;
+            float friction = 0;
+            float reverseSpeed = 0;
+            switch (type)
+            {
+                case PlayerType.drone:
+                    accel = droneAccel;
+                    decel = dronePowerDecel;
+                    friction = droneFriction;
+                    reverseSpeed = droneReverseSpeedFraction;
+                    break;
+
+                case PlayerType.tank:
+                    accel = tankAccel;
+                    decel = tankPowerDecel;
+                    friction = tankFriction;
+                    reverseSpeed = tankReverseSpeedFraction;
+                    break;
+
+                case PlayerType.core:
+                    accel = coreAccel;
+                    decel = corePowerDecel;
+                    friction = coreFriction;
+                    reverseSpeed = coreReverseSpeedFraction;
+                    break;
+            }
+
+            // Movement
+            if (gamepadState.ThumbSticks.Left.Y > stickDeadzone)
+            {
+                forwardAccel = Mathf.Lerp(forwardAccel, 1.0f, accel);
+            }
+            else if (gamepadState.ThumbSticks.Left.Y < stickDeadzone && gamepadState.ThumbSticks.Left.Y > -stickDeadzone)
+            {
+                forwardAccel = Mathf.Lerp(forwardAccel, 0.0f, friction);
+            }
+            else if (gamepadState.ThumbSticks.Left.Y < -stickDeadzone)
+            {
+                forwardAccel = Mathf.Lerp(forwardAccel, -reverseSpeed, decel);
+            }
+            modifiedMoveSpeed = movespeed * forwardAccel * collisionStopMod;
+            charController.SimpleMove(lowerBody.transform.forward * modifiedMoveSpeed);
+            if (collisionStopMod == 0)
+            {
+                forwardAccel = 0;
+            }
+
+            // Rotation
+            lowerBody.transform.Rotate(Vector3.up, gamepadState.ThumbSticks.Left.X * lowerbodyRotateSpeed * Time.deltaTime);
+            Quaternion newRot = Quaternion.LookRotation(new Vector3(gamepadState.ThumbSticks.Right.X, 0, gamepadState.ThumbSticks.Right.Y));
+            upperBody.transform.rotation = Quaternion.Lerp(upperBody.transform.rotation, newRot, upperbodyRotateSpeed * Time.deltaTime);
+        }
+        else
+        {
+            // Movement
+            Vector3 m = Vector3.zero;
+
+            float x, y;
+
+            if (gamepadState.ThumbSticks.Left.Y > stickDeadzone || gamepadState.ThumbSticks.Left.Y < -stickDeadzone)
+            {
+                y = gamepadState.ThumbSticks.Left.Y;
+            }
+            else 
+            {
+                y = 0;
+            }
+
+            if (gamepadState.ThumbSticks.Left.X > stickDeadzone || gamepadState.ThumbSticks.Left.X < -stickDeadzone)
+            {
+                x = gamepadState.ThumbSticks.Left.X;
+            }
+            else
+            {
+                x = 0;
+            }
+
+            m = new Vector3(x, 0, y);
+            modifiedMoveSpeed = movespeed;
+            charController.SimpleMove(m.normalized * modifiedMoveSpeed);
+
+            //Rotation
+            Quaternion newRot = Quaternion.LookRotation(new Vector3(gamepadState.ThumbSticks.Right.X, 0, gamepadState.ThumbSticks.Right.Y));
+            upperBody.transform.rotation = Quaternion.Lerp(upperBody.transform.rotation, newRot, upperbodyRotateSpeed * Time.deltaTime);
+            if (m.normalized != Vector3.zero)
+            {
+                Quaternion bottomRotation = Quaternion.LookRotation(m.normalized);
+                lowerBody.transform.rotation = Quaternion.Lerp(lowerBody.transform.rotation, bottomRotation, lowerbodyRotateSpeed * Time.deltaTime);
+            }
+        }
+
+        #endregion Movement
+
+        #region Weapons
+
+        if (guns.Length > 0)
+        {
+            if ((gamepadState.Triggers.Left != 0|| gamepadState.Triggers.Right != 0))
+            {
+                if (gamepadState.Triggers.Left > 0)
+                {
+                    if (guns[0].ammo <= 0)
+                    {
+                        int[] reloadingGuns = { 0 };
+                        photonView.RPC("Reload", PhotonTargets.All, reloadingGuns);
+                    }
+                    else
+                    {
+                        if (guns[0].available)
+                        {
+                            int[] shootingGuns = { 0 };
+                            float[] speeds = { modifiedMoveSpeed };
+                            photonView.RPC("Fire", PhotonTargets.All, shootingGuns, speeds);
+                        }
+                    }
+                }
+                if (gamepadState.Triggers.Right > 0)
+                {
+                    if (guns[1].ammo <= 0)
+                    {
+                        guns[1].ammo = 0;
+                        int[] reloadingGuns = { 1 };
+                        photonView.RPC("Reload", PhotonTargets.All, reloadingGuns);
+                    }
+                    else
+                    {
+                        if (guns[1].available)
+                        {
+                            int[] shootingGuns = { 1 };
+                            float[] speeds = { modifiedMoveSpeed };
+                            photonView.RPC("Fire", PhotonTargets.All, shootingGuns, speeds);
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+        if (gamepadState.Buttons.Start == ButtonState.Pressed)
+        {
+            if (GUIManager.Instance.state.Equals(GUIManager.GUIManagerState.Hidden))
+            {
+                GUIManager.Instance.state = GUIManager.GUIManagerState.ShowingStatTab;
+            }
+        }
+        else
+        {
+            if (GUIManager.Instance.state.Equals(GUIManager.GUIManagerState.ShowingStatTab))
+            {
+                GUIManager.Instance.state = GUIManager.GUIManagerState.Hidden;
+            }
+        }
+
+        #endregion Weapons
     }
 
     private void ControlKBAM()
@@ -627,8 +852,12 @@ public class KBPlayer : KBControllableGameObject
             {
                 forwardAccel = Mathf.Lerp(forwardAccel, -reverseSpeed, decel);
             }
-            modifiedMoveSpeed = movespeed * forwardAccel;
+            modifiedMoveSpeed = movespeed * forwardAccel * collisionStopMod;
             charController.SimpleMove(lowerBody.transform.forward * modifiedMoveSpeed);
+            if (collisionStopMod == 0)
+            {
+                forwardAccel = 0;
+            }
 
             // Rotation
             lowerBody.transform.Rotate(Vector3.up, Input.GetAxis("Horizontal") * lowerbodyRotateSpeed * Time.deltaTime);
@@ -715,12 +944,6 @@ public class KBPlayer : KBControllableGameObject
         }
 
         #endregion Weapons
-
-        // DEBUG FUNCTIONS
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            TakeDamage(100);
-        }
     }
 
     [RPC]
@@ -743,7 +966,6 @@ public class KBPlayer : KBControllableGameObject
             guns[currentGun].ammo = 0;
             guns[currentGun].PlayerTriggerReload();
         }
-
     }
 
     private void CheckHealth()
@@ -774,14 +996,18 @@ public class KBPlayer : KBControllableGameObject
             case PlayerType.mech:
                 gib = mechGibBody;
                 break;
+
             case PlayerType.drone:
                 gib = droneGibBody;
                 break;
+
             case PlayerType.tank:
                 gib = tankGibBody;
                 break;
+
             case PlayerType.core:
                 break;
+
             default:
                 break;
         }
@@ -1006,7 +1232,6 @@ public class KBPlayer : KBControllableGameObject
         }
     }
 
-
     [RPC]
     private void SwitchType(string typeTrigger, PhotonMessageInfo info)
     {
@@ -1109,5 +1334,19 @@ public class KBPlayer : KBControllableGameObject
         }
 
         return foundGameObjects;
+    }
+
+    public IEnumerator GamepadVibrateTriggers(float time)
+    {
+        GamePad.SetVibration(playerIndex, gamepadState.Triggers.Left, gamepadState.Triggers.Right);
+        yield return new WaitForSeconds(time);
+        GamePad.SetVibration(playerIndex, 0, 0);
+    }
+
+    public IEnumerator GamepadVibrateAll(float time, float magnitude)
+    {
+        GamePad.SetVibration(playerIndex, magnitude, magnitude);
+        yield return new WaitForSeconds(time);
+        GamePad.SetVibration(playerIndex, 0, 0);
     }
 }

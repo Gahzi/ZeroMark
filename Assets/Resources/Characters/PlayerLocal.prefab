@@ -1785,6 +1785,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
+--- !u!1 &100208
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 400208}
+  - 114: {fileID: 11400060}
+  m_Layer: 0
+  m_Name: GamepadInfoHandler
+  m_TagString: GamepadManager
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!4 &400000
 Transform:
   m_ObjectHideFlags: 1
@@ -1796,6 +1812,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400120}
+  - {fileID: 400208}
   - {fileID: 400094}
   - {fileID: 400090}
   - {fileID: 400044}
@@ -3030,6 +3047,17 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 8, y: 8, z: 8}
+  m_Children: []
+  m_Father: {fileID: 400000}
+--- !u!4 &400208
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100208}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400000}
 --- !u!23 &2300000
@@ -5872,6 +5900,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   team: 0
   health: 0
+  useController: 0
+  playerIndex: 0
+  stickDeadzone: .100000001
   type: 3
   acceptingInputs: 0
   waitingForRespawn: 0
@@ -6509,6 +6540,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 5
   trail: {fileID: 9600016}
+--- !u!114 &11400060
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfe45b44b2ce67f44b46a8359bc8707e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gamepadInfoPrefab: {fileID: 100000, guid: 2265e2a9a3490594487af5024b8a8d36, type: 2}
+  gamepads: []
+  managerCount: 1
 --- !u!114 &11400062
 MonoBehaviour:
   m_ObjectHideFlags: 1
