@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class MenuButton : MonoBehaviour
 {
 
@@ -10,14 +11,17 @@ public class MenuButton : MonoBehaviour
     public bool moveCamera;
     public Transform cameraTarget;
     public float fovTarget;
+    public AudioClip pressClip;
     
     private void OnMouseDown()
     {
         if (!clicked)
         {
+            audio.PlayOneShot(pressClip);
             if (callMethod)
             {
                 menu.SendMessage(MenuMethodToCall);
+
             }
             if (moveCamera)
             {
