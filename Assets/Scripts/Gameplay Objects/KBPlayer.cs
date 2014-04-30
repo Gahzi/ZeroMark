@@ -1148,7 +1148,13 @@ public class KBPlayer : KBControllableGameObject
         transform.position = GameObject.FindGameObjectWithTag("Prespawn").transform.position;
         health = coreBaseHealth;
 
-        int pointsToDrop = Mathf.FloorToInt(killTokens * GameConstants.pointPercentDropOnDeath);
+        GenerateKillTags(killTokens, deathPosition);
+
+    }
+
+    private void GenerateKillTags(int _points, Vector3 center)
+    {
+        int pointsToDrop = Mathf.FloorToInt(_points * GameConstants.pointPercentDropOnDeath);
         if (pointsToDrop == 0)
         {
             pointsToDrop = 1;
@@ -1156,18 +1162,37 @@ public class KBPlayer : KBControllableGameObject
 
         while (pointsToDrop > 0)
         {
+            int thisTagValue = 0;
+            if (pointsToDrop <= 8)
+            {
+                thisTagValue = 1;
+            }
+            else if (pointsToDrop > 8 && pointsToDrop <= 32)
+            {
+                thisTagValue = 8;
+            }
+            else if (pointsToDrop > 32 && pointsToDrop <= 128)
+            {
+                thisTagValue = 32;
+            }
+            else if (pointsToDrop > 128)
+            {
+                thisTagValue = 128;
+            }
+            
             GameObject newTag = null;
             if (team == Team.Blue)
             {
-                newTag = GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagBlue, deathPosition, Quaternion.identity, (int)team);
+                newTag = GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagBlue, center, Quaternion.identity, (int)team);
             }
             else if (team == Team.Red)
             {
-                newTag = GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagRed, deathPosition, Quaternion.identity, (int)team);
+                newTag = GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagRed, center, Quaternion.identity, (int)team);
             }
             newTag.transform.localScale *= 1.0f + (pointsToDrop / 100.0f);
-            newTag.GetPhotonView().RPC("SetPointValue", PhotonTargets.AllBuffered, pointsToDrop);
-            pointsToDrop -= pointsToDrop;
+            newTag.transform.Translate(new Vector3(Random.Range(-10.0f, 10.0f), 0, Random.Range(-10.0f, 10.0f)));
+            newTag.GetPhotonView().RPC("SetPointValue", PhotonTargets.AllBuffered, thisTagValue);
+            pointsToDrop -= thisTagValue;
         }
 
         killTokens = 0;
