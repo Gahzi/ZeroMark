@@ -710,7 +710,7 @@ public class KBPlayer : KBControllableGameObject
             {
                 y = gamepadState.ThumbSticks.Left.Y;
             }
-            else 
+            else
             {
                 y = 0;
             }
@@ -744,7 +744,7 @@ public class KBPlayer : KBControllableGameObject
 
         if (guns.Length > 0)
         {
-            if ((gamepadState.Triggers.Left != 0|| gamepadState.Triggers.Right != 0))
+            if ((gamepadState.Triggers.Left != 0 || gamepadState.Triggers.Right != 0))
             {
                 if (gamepadState.Triggers.Left > 0)
                 {
@@ -782,6 +782,19 @@ public class KBPlayer : KBControllableGameObject
                     }
                 }
             }
+
+            if (gamepadState.Buttons.LeftShoulder == ButtonState.Pressed)
+            {
+                int[] reloadingGuns = { 0 };
+                photonView.RPC("Reload", PhotonTargets.All, reloadingGuns);
+            }
+
+            if (gamepadState.Buttons.RightShoulder == ButtonState.Pressed)
+            {
+                int[] reloadingGuns = { 1 };
+                photonView.RPC("Reload", PhotonTargets.All, reloadingGuns);
+            }
+
         }
 
 
@@ -926,6 +939,19 @@ public class KBPlayer : KBControllableGameObject
                     }
                 }
             }
+
+            if (Input.GetButtonDown("ReloadPrimary"))
+            {
+                int[] reloadingGuns = { 0 };
+                photonView.RPC("Reload", PhotonTargets.All, reloadingGuns);
+            }
+
+            if (Input.GetButtonDown("ReloadSecondary"))
+            {
+                int[] reloadingGuns = { 1 };
+                photonView.RPC("Reload", PhotonTargets.All, reloadingGuns);
+            }
+
         }
 
         if (Input.GetKeyDown(KeyCode.Tab))
@@ -1179,7 +1205,7 @@ public class KBPlayer : KBControllableGameObject
             {
                 thisTagValue = 128;
             }
-            
+
             GameObject newTag = null;
             if (team == Team.Blue)
             {

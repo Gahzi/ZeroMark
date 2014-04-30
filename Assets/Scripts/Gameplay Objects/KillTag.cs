@@ -57,10 +57,7 @@ public class KillTag : KBGameObject
                 transform.localScale = Vector3.one * (1.0f + ((float)pointValue / 100.0f));
             }
         }
-
     }
-
-
 
     [RPC]
     private void SetPointValue(int _points)
