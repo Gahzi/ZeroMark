@@ -419,7 +419,7 @@ public class KBPlayer : KBControllableGameObject
     private void OnPhotonInstantiate(PhotonMessageInfo msg)
     {
         networkPlayer = msg.sender;
-        name += msg.sender.name;
+        name = msg.sender.name;
         SetStats();
         GameManager.Instance.players.Add(this);
     }
@@ -606,12 +606,12 @@ public class KBPlayer : KBControllableGameObject
             }
         }
 
-        if (other.gameObject.CompareTag("SpawnRedDrone") || other.gameObject.CompareTag("SpawnRedMech") || other.gameObject.CompareTag("SpawnRedTank"))
+        if ((other.gameObject.CompareTag("SpawnRedDrone") || other.gameObject.CompareTag("SpawnRedMech") || other.gameObject.CompareTag("SpawnRedTank")) && type == PlayerType.core)
         {
             SetTeam(Team.Red);
             StartCoroutine(Spawn(other.gameObject.tag.ToString()));
         }
-        else if (other.gameObject.CompareTag("SpawnBlueDrone") || other.gameObject.CompareTag("SpawnBlueMech") || other.gameObject.CompareTag("SpawnBlueTank"))
+        else if ((other.gameObject.CompareTag("SpawnBlueDrone") || other.gameObject.CompareTag("SpawnBlueMech") || other.gameObject.CompareTag("SpawnBlueTank")) && type == PlayerType.core)
         {
             SetTeam(Team.Blue);
             StartCoroutine(Spawn(other.gameObject.tag.ToString()));
