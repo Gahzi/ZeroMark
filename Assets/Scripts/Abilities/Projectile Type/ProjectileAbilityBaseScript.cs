@@ -14,6 +14,7 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
     #region CONSTANTS
 
     protected float reloadTime;
+    public float remainingReloadTime;
     public int clipSize;
 
     #endregion CONSTANTS
@@ -52,6 +53,11 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
     public override void FixedUpdate()
     {
         base.FixedUpdate();
+
+        if (remainingReloadTime > 0)
+        {
+            remainingReloadTime -= Time.deltaTime;
+        }
 
         if (reloading || ammo <= 0)
         {
@@ -131,6 +137,7 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
     protected IEnumerator Reload()
     {
         reloading = true;
+        remainingReloadTime = reloadTime;
         if (reloadClip != null)
         {
             audio.PlayOneShot(reloadClip);

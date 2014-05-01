@@ -5,7 +5,7 @@ public class WeaponAmmoGUI : MonoBehaviour
 
     public ProjectileAbilityBaseScript[] attachedAbility;
     public TextMesh[] text;
-    
+
     private void Start()
     {
         attachedAbility = transform.parent.GetComponentsInChildren<ProjectileAbilityBaseScript>();
@@ -17,8 +17,16 @@ public class WeaponAmmoGUI : MonoBehaviour
         {
             if (attachedAbility.Length > 0 && text.Length == attachedAbility.Length)
             {
-                int ammo = attachedAbility[i].ammo * attachedAbility[i].burstSize;
-                text[i].text = ammo.ToString();
+
+                if (attachedAbility[i].reloading)
+                {
+                    text[i].text = "RLD.(" + attachedAbility[i].remainingReloadTime.ToString("0.0") + ")";
+                }
+                else
+                {
+                    int ammo = attachedAbility[i].ammo * attachedAbility[i].burstSize;
+                    text[i].text = ammo.ToString();
+                }
             }
             else
             {
