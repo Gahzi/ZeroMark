@@ -6,8 +6,8 @@ public class KBCamera : MonoBehaviour
     private Quaternion targetCameraUpRotation;
     public KBPlayer attachedPlayer;
     public Camera gameCamera;
-    private float zoom = 1.8f;
-    public float zoomTarget = 1.8f;
+    private float zoom;
+    public float zoomTarget;
     public float rotation;
     public SpriteRenderer damageVignette;
     public TextMesh levelText;
@@ -23,7 +23,7 @@ public class KBCamera : MonoBehaviour
 
     private void Update()
     {
-        zoomTarget = 1.6f;
+        zoomTarget = 1.2f;
         if (attachedPlayer != null)
         {
             if (zoom < 1.0f)
@@ -56,10 +56,14 @@ public class KBCamera : MonoBehaviour
             }
 
             Vector3 lookDir = new Vector3(x, 0, y).normalized;
-            float moveMagnitude = 3.0f;
-            if (y > 0)
+            float moveMagnitude = 1.5f;
+            if (attachedPlayer.useController && y < 0)
             {
-                moveMagnitude = 7.0f;
+                moveMagnitude = 2.5f;
+            }
+            else if (y > 0)
+            {
+                moveMagnitude = 2.5f;
             }
             transform.position = Vector3.Lerp(transform.position, transform.position + lookDir * moveMagnitude, 5.0f * Time.deltaTime);
 
