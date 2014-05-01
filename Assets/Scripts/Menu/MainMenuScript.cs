@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 
+[RequireComponent(typeof(AudioSource))]
 public class MainMenuScript : Photon.MonoBehaviour
 {
 
@@ -14,15 +13,15 @@ public class MainMenuScript : Photon.MonoBehaviour
     private string playerName;
 
     private string failConnectMesage = "";
-    bool isConnectingToRoom = false;
+    private bool isConnectingToRoom = false;
 
     public Font menuFont;
     public GUISkin skin;
 
     public GameObject playButton;
+    public AudioClip pressClip;
 
-
-    void Awake()
+    private void Awake()
     {
         //Default join values
         joinRoomName = "";
@@ -35,25 +34,26 @@ public class MainMenuScript : Photon.MonoBehaviour
         if (!PhotonNetwork.connected)
             PhotonNetwork.ConnectUsingSettings("1.0");
     }
-    
-    void OnConnectedToPhoton()
+
+    private void OnConnectedToPhoton()
     {
         Debug.Log("This client has connected to a server");
         failConnectMesage = "";
     }
-    void OnDisconnectedFromPhoton()
+
+    private void OnDisconnectedFromPhoton()
     {
         Debug.Log("This client has disconnected from the server");
         failConnectMesage = "Disconnected from Photon";
     }
 
-    void OnFailedToConnectToPhoton(ExitGames.Client.Photon.StatusCode status)
+    private void OnFailedToConnectToPhoton(ExitGames.Client.Photon.StatusCode status)
     {
         Debug.Log("Failed to connect to Photon: " + status);
         failConnectMesage = "Failed to connect to Photon: " + status;
     }
 
-    void OnGUI()
+    private void OnGUI()
     {
         GUI.skin = skin;
         if (!PhotonNetwork.connected)
@@ -66,6 +66,7 @@ public class MainMenuScript : Photon.MonoBehaviour
                 {
                     failConnectMesage = "";
                     PhotonNetwork.ConnectUsingSettings("1.0");
+                    audio.PlayOneShot(pressClip);
                 }
             }
         }
@@ -102,7 +103,7 @@ public class MainMenuScript : Photon.MonoBehaviour
         }   
     }
 
-    void ServerMenu(int wID)
+    private void ServerMenu(int wID)
     {
         GUILayout.BeginHorizontal();
         GUILayout.Label("Multiplayer menu", "menuText");
@@ -119,6 +120,7 @@ public class MainMenuScript : Photon.MonoBehaviour
             if (GUILayout.Button("Join"))
             {
                 currentGUIMethod = "join";
+                audio.PlayOneShot(pressClip);
             }
         }
         if (currentGUIMethod == "create")
@@ -130,6 +132,7 @@ public class MainMenuScript : Photon.MonoBehaviour
             if (GUILayout.Button("Create"))
             {
                 currentGUIMethod = "create";
+                audio.PlayOneShot(pressClip);
             }
         }
 
@@ -142,7 +145,7 @@ public class MainMenuScript : Photon.MonoBehaviour
             HostMenu();
     }
 
-    void JoinMenu()
+    private void JoinMenu()
     {
         if (isConnectingToRoom)
         {
@@ -155,6 +158,7 @@ public class MainMenuScript : Photon.MonoBehaviour
             if (GUILayout.Button("Cancel"))
             {
                 failConnectMesage = "";
+                audio.PlayOneShot(pressClip);
             }
         }
         else
@@ -168,6 +172,7 @@ public class MainMenuScript : Photon.MonoBehaviour
                 GUILayout.Button("Join random game"))
             {
                 PhotonNetwork.JoinRandomRoom();
+                audio.PlayOneShot(pressClip);
             }
             GUILayout.EndHorizontal();
 
@@ -188,6 +193,7 @@ public class MainMenuScript : Photon.MonoBehaviour
                     GUILayout.Button("" + room.name, GUILayout.Width(200)))
                 {
                     PhotonNetwork.JoinRoom(room.name);
+                    audio.PlayOneShot(pressClip);
                 }
                 GUILayout.Label(room.playerCount + "/" + room.maxPlayers, GUILayout.Width(55));
 
@@ -213,6 +219,7 @@ public class MainMenuScript : Photon.MonoBehaviour
             if (GUILayout.Button("Connect"))
             {
                 PhotonNetwork.JoinRoom(joinRoomName);
+                audio.PlayOneShot(pressClip);
             }
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
@@ -220,25 +227,25 @@ public class MainMenuScript : Photon.MonoBehaviour
         }
     }
 
-    void OnPhotonCreateRoomFailed()
+    private void OnPhotonCreateRoomFailed()
     {
         Debug.Log("A CreateRoom call failed, most likely the room name is already in use.");
         failConnectMesage = "Could not create new room, the name is already in use.";
     }
 
-    void OnPhotonJoinRoomFailed()
+    private void OnPhotonJoinRoomFailed()
     {
         Debug.Log("A JoinRoom call failed, most likely the room name does not exist or is full.");
         failConnectMesage = "Could not connect to the desired room, this room does no longer exist or all slots are full.";
     }
 
-    void OnPhotonRandomJoinFailed()
+    private void OnPhotonRandomJoinFailed()
     {
         Debug.Log("A JoinRandom room call failed, most likely there are no rooms available.");
         failConnectMesage = "Could not connect to random room; no rooms were available.";
     }
 
-    void OnJoinedRoom()
+    private void OnJoinedRoom()
     {
         //Stop communication until in the game
         PhotonNetwork.isMessageQueueRunning = false;
@@ -246,10 +253,11 @@ public class MainMenuScript : Photon.MonoBehaviour
     }
 
     private string hostTitle;
+
     //private string hostDescription;
     private int hostMaxPlayers;
 
-    void HostMenu()
+    private void HostMenu()
     {
         GUILayout.BeginHorizontal();
         GUILayout.Label("Host a new game:");
@@ -281,16 +289,17 @@ public class MainMenuScript : Photon.MonoBehaviour
         if (GUILayout.Button("Start server", GUILayout.Width(150)))
         {
             StartHostingGame(hostTitle, hostMaxPlayers);
+            audio.PlayOneShot(pressClip);
         }
         GUILayout.EndHorizontal();
     }
 
-    void CheckHostVars()
+    private void CheckHostVars()
     {
         hostMaxPlayers = Mathf.Clamp(hostMaxPlayers, 1, 64);
     }
 
-    void StartHostingGame(string hostSettingTitle, int hostPlayers)
+    private void StartHostingGame(string hostSettingTitle, int hostPlayers)
     {
         if (hostSettingTitle == "")
         {

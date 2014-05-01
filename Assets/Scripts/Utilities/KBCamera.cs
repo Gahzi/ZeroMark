@@ -34,18 +34,39 @@ public class KBCamera : MonoBehaviour
             {
                 rotation = 80.0f;
             }
+
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(new Vector3(rotation, 0, 0)), 1.0f * Time.deltaTime);
             zoom = Mathf.Lerp(zoom, zoomTarget, 1.0f * Time.deltaTime);
             //CAMERA_FOLLOW_DISTANCE = new Vector3(0, 22 * zoom, -12 * zoom); old
-            Vector3 lookDir = new Vector3(-attachedPlayer.mousePlayerDiff.x, 0, -attachedPlayer.mousePlayerDiff.y).normalized;
             CAMERA_FOLLOW_DISTANCE = new Vector3(0, 22 * zoom, -2 * zoom);
             transform.localPosition = Vector3.Lerp(transform.localPosition, CAMERA_FOLLOW_DISTANCE, 5.0f * Time.deltaTime);
+
+            #region CameraShiftingTowardLookDirection
+
+            float x, y;
+            if (attachedPlayer.useController)
+            {
+                x = attachedPlayer.gamepadState.ThumbSticks.Right.X;
+                y = attachedPlayer.gamepadState.ThumbSticks.Right.Y;
+            }
+            else
+            {
+                x = -attachedPlayer.mousePlayerDiff.x;
+                y = -attachedPlayer.mousePlayerDiff.y;
+            }
+
+            Vector3 lookDir = new Vector3(x, 0, y).normalized;
             float moveMagnitude = 3.0f;
-            if (attachedPlayer.mousePlayerDiff.y > 0)
+            if (y > 0)
             {
                 moveMagnitude = 7.0f;
             }
             transform.position = Vector3.Lerp(transform.position, transform.position + lookDir * moveMagnitude, 5.0f * Time.deltaTime);
+
+            #endregion CameraShiftingTowardLookDirection
+
+            #region temporary level text
+
             if (attachedPlayer.guns.Length > 0)
             {
                 if (attachedPlayer.guns[0] != null)
@@ -58,12 +79,16 @@ public class KBCamera : MonoBehaviour
                 }
             }
 
+            #endregion temporary level text
         }
+
+        #region DamageSplashVignette
+
         Color c = Color.white;
         float percentHealth = (float)attachedPlayer.health / (float)attachedPlayer.stats.health;
         c.a = 1.0f - percentHealth;
         damageVignette.color = c;
 
-
+        #endregion DamageSplashVignette
     }
 }

@@ -12,7 +12,7 @@ PlayerSettings:
   accelerometerFrequency: 60
   companyName: Team Cordata
   productName: zero.mark
-  defaultCursor: {fileID: 2800000, guid: 71bc954d2d8febd4b8eb6b27dcef9cc8, type: 3}
+  defaultCursor: {fileID: 2800000, guid: 58fb0d916926ccf499fdd9e0355e73af, type: 3}
   cursorHotspot: {x: 16, y: 16}
   defaultScreenWidth: 1024
   defaultScreenHeight: 768

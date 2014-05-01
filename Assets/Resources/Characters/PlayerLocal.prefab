@@ -5901,6 +5901,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   team: 0
   health: 0
+  useController: 0
+  playerIndex: 0
+  stickDeadzone: .100000001
   type: 3
   acceptingInputs: 0
   waitingForRespawn: 0

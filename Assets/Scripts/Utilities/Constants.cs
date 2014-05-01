@@ -32,31 +32,31 @@ namespace KBConstants
 
         private static readonly IDictionary<type, int> damageValues = new Dictionary<type, int>
         {
-            {type.MachinegunLevel0, 80},
-            {type.MachinegunLevel1, 100},
-            {type.MachinegunLevel2, 120},
+            {type.MachinegunLevel0, 40},
+            {type.MachinegunLevel1, 50},
+            {type.MachinegunLevel2, 60},
 
-            {type.HeavyCannonLevel0, 50},
-            {type.HeavyCannonLevel1, 50},
-            {type.HeavyCannonLevel2, 60},
+            {type.HeavyCannonLevel0, 25},
+            {type.HeavyCannonLevel1, 25},
+            {type.HeavyCannonLevel2, 30},
 
-            {type.ShotgunLevel0, 30},
-            {type.ShotgunLevel1, 50},
-            {type.ShotgunLevel2, 70},
+            {type.ShotgunLevel0, 15},
+            {type.ShotgunLevel1, 25},
+            {type.ShotgunLevel2, 35},
 
-            {type.PlasmaLevel0, 100},
-            {type.PlasmaLevel1, 50},
-            {type.PlasmaLevel2, 50},
+            {type.PlasmaLevel0, 50},
+            {type.PlasmaLevel1, 25},
+            {type.PlasmaLevel2, 25},
 
-            {type.RocketLevel0, 75},
-            {type.RocketLevel1, 100},
-            {type.RocketLevel2, 300},
+            {type.RocketLevel0, 35},
+            {type.RocketLevel1, 50},
+            {type.RocketLevel2, 150},
 
-            {type.LightCannonLevel0, 15},
-            {type.LightCannonLevel1, 30},
-            {type.LightCannonLevel2, 45},
+            {type.LightCannonLevel0, 10},
+            {type.LightCannonLevel1, 15},
+            {type.LightCannonLevel2, 20},
 
-            {type.HomingRocketLevel0, 75},
+            {type.HomingRocketLevel0, 35},
             {type.HomingRocketLevel1, 150},
             {type.HomingRocketLevel2, 200},
         };

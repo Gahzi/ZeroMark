@@ -15,7 +15,7 @@ public class MachineGun : ProjectileAbilityBaseScript
 
     public static float COOLDOWN_1 = 0.5235f;
     public static int RANGE_1 = 100;
-    public static float RELOAD_TIME_1 = 1.1f;
+    public static float RELOAD_TIME_1 = 1.100f;
     public static int CLIP_SIZE_1 = 12;
     public static int BURST_SIZE_1 = 3;
     public static float BURST_DELAY_1 = 0.090f;
