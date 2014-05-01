@@ -403,6 +403,11 @@ public class KBPlayer : KBControllableGameObject
         {
             TakeDamage(100);
         }
+
+        if (Input.GetButtonDown("ToggleController"))
+        {
+            useController = !useController;
+        }
     }
 
     private void OnGUI()
@@ -419,7 +424,7 @@ public class KBPlayer : KBControllableGameObject
     private void OnPhotonInstantiate(PhotonMessageInfo msg)
     {
         networkPlayer = msg.sender;
-        name = msg.sender.name;
+        name += msg.sender.name;
         SetStats();
         GameManager.Instance.players.Add(this);
     }
@@ -606,12 +611,12 @@ public class KBPlayer : KBControllableGameObject
             }
         }
 
-        if ((other.gameObject.CompareTag("SpawnRedDrone") || other.gameObject.CompareTag("SpawnRedMech") || other.gameObject.CompareTag("SpawnRedTank")) && type == PlayerType.core)
+        if (other.gameObject.CompareTag("SpawnRedDrone") || other.gameObject.CompareTag("SpawnRedMech") || other.gameObject.CompareTag("SpawnRedTank"))
         {
             SetTeam(Team.Red);
             StartCoroutine(Spawn(other.gameObject.tag.ToString()));
         }
-        else if ((other.gameObject.CompareTag("SpawnBlueDrone") || other.gameObject.CompareTag("SpawnBlueMech") || other.gameObject.CompareTag("SpawnBlueTank")) && type == PlayerType.core)
+        else if (other.gameObject.CompareTag("SpawnBlueDrone") || other.gameObject.CompareTag("SpawnBlueMech") || other.gameObject.CompareTag("SpawnBlueTank"))
         {
             SetTeam(Team.Blue);
             StartCoroutine(Spawn(other.gameObject.tag.ToString()));
@@ -821,6 +826,15 @@ public class KBPlayer : KBControllableGameObject
 
     private void ControlKBAM()
     {
+        if (Screen.lockCursor)
+        {
+            Screen.lockCursor = false;
+        }
+        if (!Screen.showCursor)
+        {
+            Screen.showCursor = true;
+        }
+
         #region Movement
 
         float modifiedMoveSpeed = 0;
