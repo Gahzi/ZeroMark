@@ -12,7 +12,7 @@ PlayerSettings:
   accelerometerFrequency: 60
   companyName: Team Cordata
   productName: zero.mark
-  defaultCursor: {fileID: 2800000, guid: 08e65bd7f22e6124c81aa927e8c8dd64, type: 3}
+  defaultCursor: {fileID: 2800000, guid: 58fb0d916926ccf499fdd9e0355e73af, type: 3}
   cursorHotspot: {x: 16, y: 16}
   defaultScreenWidth: 1024
   defaultScreenHeight: 768
@@ -74,6 +74,8 @@ PlayerSettings:
     16:9: 1
     Others: 0
   iPhoneBundleIdentifier: com.Company.ProductName
+  metroEnableIndependentInputSource: 0
+  metroEnableLowLatencyPresentationAPI: 0
   productGUID: dd10d0b3524fd4896bf2427bd057d551
   iPhoneBundleVersion: 1.0
   AndroidBundleVersionCode: 1
@@ -192,6 +194,7 @@ PlayerSettings:
     SharedUserCertificates: 0
     VideosLibrary: 0
     WebCam: 0
+  metroUnprocessedPlugins: []
   metroCompilationOverrides: 1
   blackberryDeviceAddress: 
   blackberryDevicePassword: 

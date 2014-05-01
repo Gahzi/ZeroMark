@@ -7,7 +7,7 @@ public class LightBlink : MonoBehaviour
     public float lightMaxIntensity;
     [Range(0, 1.0f)]
     public float lightMinIntensity;
-    private Light light;
+    private new Light light;
     public float speed;
 
     private void Start()

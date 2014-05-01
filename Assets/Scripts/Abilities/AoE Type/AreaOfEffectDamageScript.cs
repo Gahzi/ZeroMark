@@ -12,7 +12,6 @@ public class AreaOfEffectDamageScript : ProjectileBaseScript
     public override void Start()
     {
         base.Start();
-        collideWithProjectiles = false;
         initScale = transform.localScale;
         transparentColor = new Color(originalMaterial.color.r, originalMaterial.color.g, originalMaterial.color.b, 0);
     }

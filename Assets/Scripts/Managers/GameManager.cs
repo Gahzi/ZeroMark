@@ -96,12 +96,6 @@ public class GameManager : Photon.MonoBehaviour
         BankZone[] loadedBankZones = FindObjectsOfType<BankZone>();
         PlayerSpawnPoint[] loadedPSpawns = FindObjectsOfType<PlayerSpawnPoint>();
 
-        //TODO:Remove 6 value and replace with constant representing max player size;
-        //players = new List<KBPlayer>();
-        //killTags = new List<KillTag>(loadedKillTags.Length);
-        //captureZones = new List<CaptureZone>(loadedCaptureZones.Length);
-        //playerSpawnZones = new List<PlayerSpawnPoint>(loadedPSpawns.Length);
-
         foreach (BankZone b in loadedBankZones)
         {
             bankZones.Add(b);
@@ -119,7 +113,7 @@ public class GameManager : Photon.MonoBehaviour
 
         if (PhotonNetwork.connected)
         {
-            Team nextTeam = (Team)(PhotonNetwork.otherPlayers.Length % 2);
+            Team nextTeam = Team.None;
             GameManager.Instance.CreateObject((int)ObjectConstants.type.Player, Vector3.zero, Quaternion.identity, (int)nextTeam);
         }
     }
@@ -168,22 +162,6 @@ public class GameManager : Photon.MonoBehaviour
                     state = GameState.EndGame;
 
                     break;
-
-                //case GameState.EndGame:
-                //    // check winners here;
-                //    if (redTeamScore > blueTeamScore)
-                //    {
-                //        state = GameState.RedWins;
-                //    }
-                //    else if (blueTeamScore > redTeamScore)
-                //    {
-                //        state = GameState.BlueWins;
-                //    }
-                //    else
-                //    {
-                //        state = GameState.Tie;
-                //    }
-                //    break;
 
                 default:
                     break;
@@ -322,24 +300,6 @@ public class GameManager : Photon.MonoBehaviour
         return spawnpoints;
     }
 
-    //private void RunGui()
-    //{
-    //    foreach (var c in captureZones)
-    //    {
-    //        if ((localPlayer.team == Team.Blue && c.state != CaptureZone.ZoneState.Blue && c.blueUnlocked) || (localPlayer.team == Team.Red && c.state != CaptureZone.ZoneState.Red && c.redUnlocked))
-    //        {
-    //            c.rGui.enabled = true;
-    //            Vector3 sPos = Camera.main.WorldToScreenPoint(c.transform.position);
-    //            c.rGui.relativePosition = new Vector2(sPos.x, -sPos.y);
-    //            c.rGui.size = new Vector2((Mathf.Sin(Time.time * 4) + 1) * 32 + 64, (Mathf.Sin(Time.time * 4) + 1) * 32 + 64);
-    //        }
-    //        else
-    //        {
-    //            c.rGui.enabled = false;
-    //        }
-    //    }
-    //}
-
     public GameObject CreateObject(int type, Vector3 position, Quaternion rotation, int newTeam)
     {
         KBConstants.ObjectConstants.type newType = (KBConstants.ObjectConstants.type)type;
@@ -360,7 +320,6 @@ public class GameManager : Photon.MonoBehaviour
                     GameObject newKillTagBlueObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.KillTagBlue], position, Quaternion.Euler(33.3f, 330.0f, 48.36f), 0);
                     KillTag newKillTagBlue = newKillTagBlueObject.GetComponent<KillTag>();
                     newKillTagBlue.team = (Team)newTeam;
-                    killTags.Add(newKillTagBlue);
                     return newKillTagBlueObject;
                 }
 
@@ -369,7 +328,6 @@ public class GameManager : Photon.MonoBehaviour
                     GameObject newKillTagRedObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.KillTagRed], position, Quaternion.Euler(33.3f, 330.0f, 48.36f), 0);
                     KillTag newKillTagRed = newKillTagRedObject.GetComponent<KillTag>();
                     newKillTagRed.team = (Team)newTeam;
-                    killTags.Add(newKillTagRed);
                     return newKillTagRedObject;
                 }
             default:

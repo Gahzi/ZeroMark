@@ -34,7 +34,6 @@ public class LightAutoLaser : ProjectileAbilityBaseScript
             ObjectPool.CreatePool(projectileType[i]);
         }
         //sound = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.PlasmaGunFire]);
-        audio.clip = sound;
         SetLevel(0);
         base.Start();
     }

@@ -1,0 +1,116 @@
+fileFormatVersion: 2
+guid: 22b316786c98e7f478ab28a332988f12
+ModelImporter:
+  serializedVersion: 15
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: zm_MESH_bottom_tank
+    100004: zm_MESH_gun_tank
+    100006: zm_MESH_gunL_tank
+    100008: zm_MESH_gunR_tank
+    100010: zm_MESH_legBackL_tank
+    100012: zm_MESH_legBackR_tank
+    100014: zm_MESH_legFrontL_tank
+    100016: zm_MESH_legFrontR_tank
+    100018: zm_MESH_top_tank
+    100020: zm_MESH_wingL_tank
+    100022: zm_MESH_wingR_tank
+    400000: //RootNode
+    400002: zm_MESH_bottom_tank
+    400004: zm_MESH_gun_tank
+    400006: zm_MESH_gunL_tank
+    400008: zm_MESH_gunR_tank
+    400010: zm_MESH_legBackL_tank
+    400012: zm_MESH_legBackR_tank
+    400014: zm_MESH_legFrontL_tank
+    400016: zm_MESH_legFrontR_tank
+    400018: zm_MESH_top_tank
+    400020: zm_MESH_wingL_tank
+    400022: zm_MESH_wingR_tank
+    2300000: zm_MESH_bottom_tank
+    2300002: zm_MESH_gun_tank
+    2300004: zm_MESH_gunL_tank
+    2300006: zm_MESH_gunR_tank
+    2300008: zm_MESH_legBackL_tank
+    2300010: zm_MESH_legBackR_tank
+    2300012: zm_MESH_legFrontL_tank
+    2300014: zm_MESH_legFrontR_tank
+    2300016: zm_MESH_top_tank
+    2300018: zm_MESH_wingL_tank
+    2300020: zm_MESH_wingR_tank
+    3300000: zm_MESH_bottom_tank
+    3300002: zm_MESH_gun_tank
+    3300004: zm_MESH_gunL_tank
+    3300006: zm_MESH_gunR_tank
+    3300008: zm_MESH_legBackL_tank
+    3300010: zm_MESH_legBackR_tank
+    3300012: zm_MESH_legFrontL_tank
+    3300014: zm_MESH_legFrontR_tank
+    3300016: zm_MESH_top_tank
+    3300018: zm_MESH_wingL_tank
+    3300020: zm_MESH_wingR_tank
+    4300000: zm_MESH_legFrontL_tank
+    4300002: zm_MESH_legBackL_tank
+    4300004: zm_MESH_legBackR_tank
+    4300006: zm_MESH_bottom_tank
+    4300008: zm_MESH_gun_tank
+    4300010: zm_MESH_wingL_tank
+    4300012: zm_MESH_wingR_tank
+    4300014: zm_MESH_gunL_tank
+    4300016: zm_MESH_gunR_tank
+    4300018: zm_MESH_legFrontR_tank
+    4300020: zm_MESH_top_tank
+    7400000: Default Take
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  userData: 

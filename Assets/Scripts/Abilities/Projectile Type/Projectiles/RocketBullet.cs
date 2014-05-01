@@ -28,7 +28,6 @@ public class RocketBullet : ProjectileBaseScript
     {
         base.Start();
         projectileSpeed = rocketInitSpeed;
-        
     }
 
     protected override void Update()
@@ -38,14 +37,6 @@ public class RocketBullet : ProjectileBaseScript
             projectileSpeed = Mathf.Lerp(rocketInitSpeed, targetSpeed, accel * Time.deltaTime);
         }
         base.Update();
-    }
-
-    public override void DoOnHit()
-    {
-        AreaOfEffectDamageScript a = ObjectPool.Spawn(explosionPrefab, transform.position);
-        a.owner = owner;
-        a.Init();
-        base.DoOnHit();
     }
 
     public override void Reset()

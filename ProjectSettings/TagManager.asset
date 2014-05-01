@@ -16,13 +16,13 @@ TagManager:
   - 
   - GUI
   - BankZone
-  - SpawnDrone
-  - SpawnMech
-  - SpawnTank
+  - SpawnRedDrone
+  - SpawnRedMech
+  - SpawnRedTank
+  - SpawnBlueDrone
+  - SpawnBlueMech
+  - SpawnBlueTank
   - Prespawn
-  - 
-  - 
-  - 
   - Projectile
   - 
   - 
@@ -39,7 +39,7 @@ TagManager:
   Builtin Layer 7: 
   User Layer 8: Items
   User Layer 9: Structures
-  User Layer 10: 
+  User Layer 10: Player
   User Layer 11: HitboxLayer
   User Layer 12: ProjectileLayer
   User Layer 13: Tower
@@ -48,7 +48,7 @@ TagManager:
   User Layer 16: GUI
   User Layer 17: CitySigns
   User Layer 18: CityBuildings
-  User Layer 19: 
+  User Layer 19: NoCollidePlayer
   User Layer 20: 
   User Layer 21: 
   User Layer 22: 

@@ -127,25 +127,25 @@ TrailRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_SortingLayerID: 0
-  m_Time: .075000003
+  m_Time: .25
   m_StartWidth: .200000003
   m_EndWidth: .00499999989
   m_Colors:
     m_Color[0]:
       serializedVersion: 2
-      rgba: 4278255369
+      rgba: 4292346111
     m_Color[1]:
       serializedVersion: 2
-      rgba: 4278255183
+      rgba: 4292280574
     m_Color[2]:
       serializedVersion: 2
-      rgba: 4278254982
+      rgba: 4292215037
     m_Color[3]:
       serializedVersion: 2
-      rgba: 4278254764
+      rgba: 4292149500
     m_Color[4]:
       serializedVersion: 2
-      rgba: 4278254553
+      rgba: 4292083963
   m_MinVertexDistance: .100000001
   m_Autodestruct: 0
 --- !u!114 &11400000
@@ -1495,7 +1495,7 @@ ParticleSystem:
     m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
     randomDirection: 0
   EmissionModule:
-    enabled: 1
+    enabled: 0
     m_Type: 0
     rate:
       scalar: 200

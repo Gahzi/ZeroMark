@@ -59,7 +59,7 @@ Transform:
   m_GameObject: {fileID: 100002}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 87.0682602, y: -42.0591278, z: 165.749023}
-  m_LocalScale: {x: .100000001, y: .100000001, z: .100000001}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400000}
   m_Father: {fileID: 0}
@@ -165,7 +165,6 @@ MonoBehaviour:
   damageLevel: 
   projectileSpeed: 80
   inheritSpeed: 0
-  collideWithProjectiles: 0
   collideWithEnvironment: 1
   homingProjectile: 0
   aimedProjectile: 0
@@ -182,7 +181,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1.29999995
+  m_Radius: .699999988
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!198 &19800000
 ParticleSystem:
@@ -1495,7 +1494,7 @@ ParticleSystem:
     m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
     randomDirection: 0
   EmissionModule:
-    enabled: 1
+    enabled: 0
     m_Type: 0
     rate:
       scalar: 100
