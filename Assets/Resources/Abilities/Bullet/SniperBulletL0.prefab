@@ -134,19 +134,19 @@ TrailRenderer:
   m_Colors:
     m_Color[0]:
       serializedVersion: 2
-      rgba: 4294956288
+      rgba: 4278190335
     m_Color[1]:
       serializedVersion: 2
-      rgba: 4291493455
+      rgba: 4278190334
     m_Color[2]:
       serializedVersion: 2
-      rgba: 4288315014
+      rgba: 4278190333
     m_Color[3]:
       serializedVersion: 2
-      rgba: 4289810348
+      rgba: 4278190332
     m_Color[4]:
       serializedVersion: 2
-      rgba: 4294901977
+      rgba: 4278190331
   m_MinVertexDistance: .100000001
   m_Autodestruct: 0
 --- !u!108 &10800000
@@ -199,7 +199,7 @@ MonoBehaviour:
   damage: 1
   owner: {fileID: 0}
   damageLevel: 
-  projectileSpeed: 100
+  projectileSpeed: 200
   inheritSpeed: 0
   collideWithEnvironment: 1
   homingProjectile: 0
@@ -1514,7 +1514,7 @@ ParticleSystem:
         m_PostInfinity: 2
       minMaxState: 0
     gravityModifier: 0
-    inheritVelocity: -.379999995
+    inheritVelocity: 0
     maxNumParticles: 1000
   ShapeModule:
     serializedVersion: 2
@@ -1533,7 +1533,7 @@ ParticleSystem:
     enabled: 1
     m_Type: 0
     rate:
-      scalar: 200
+      scalar: 500
       maxCurve:
         serializedVersion: 2
         m_Curve:
