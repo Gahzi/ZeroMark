@@ -170,6 +170,8 @@ public class KBPlayer : KBControllableGameObject
 
     public Chaff chaff;
 
+    public bool hasSwitchedSinceDeath;
+
     public void SetStats()
     {
         stats = new PlayerStats();
@@ -252,6 +254,8 @@ public class KBPlayer : KBControllableGameObject
         RespawnToPrespawn();
         ObjectPool.CreatePool(chaff);
         ObjectPool.CreatePool(mechGibBody);
+
+        hasSwitchedSinceDeath = false;
     }
 
     private void InitializeForRespawn()
@@ -353,14 +357,6 @@ public class KBPlayer : KBControllableGameObject
         {
             if (acceptingInputs)
             {
-                //if (Input.GetAxis("Mouse ScrollWheel") > 0 && camera.zoomTarget > 0.75f)
-                //{
-                //    camera.zoomTarget *= 1.0f / 1.05f;
-                //}
-                //else if (Input.GetAxis("Mouse ScrollWheel") < 0 && camera.zoomTarget < 2.0f)
-                //{
-                //    camera.zoomTarget *= 1.05f;
-                //}
                 playerPositionOnScreen = Camera.main.WorldToScreenPoint(transform.position);
                 mousePlayerDiff = playerPositionOnScreen - mousePos;
                 if (useController)
@@ -606,12 +602,20 @@ public class KBPlayer : KBControllableGameObject
             }
         }
 
+<<<<<<< Updated upstream
         if ((other.gameObject.CompareTag("SpawnRedDrone") || other.gameObject.CompareTag("SpawnRedMech") || other.gameObject.CompareTag("SpawnRedTank")) && type == PlayerType.core)
+=======
+        if ((other.gameObject.CompareTag("SpawnRedDrone") || other.gameObject.CompareTag("SpawnRedMech") || other.gameObject.CompareTag("SpawnRedTank")) && hasSwitchedSinceDeath == false)
+>>>>>>> Stashed changes
         {
             SetTeam(Team.Red);
             StartCoroutine(Spawn(other.gameObject.tag.ToString()));
         }
+<<<<<<< Updated upstream
         else if ((other.gameObject.CompareTag("SpawnBlueDrone") || other.gameObject.CompareTag("SpawnBlueMech") || other.gameObject.CompareTag("SpawnBlueTank")) && type == PlayerType.core)
+=======
+        else if ((other.gameObject.CompareTag("SpawnBlueDrone") || other.gameObject.CompareTag("SpawnBlueMech") || other.gameObject.CompareTag("SpawnBlueTank")) && hasSwitchedSinceDeath == false)
+>>>>>>> Stashed changes
         {
             SetTeam(Team.Blue);
             StartCoroutine(Spawn(other.gameObject.tag.ToString()));
@@ -1005,6 +1009,7 @@ public class KBPlayer : KBControllableGameObject
             if (!timer.IsTimerActive(respawnTimer))
             {
                 Debug.Log("Respawning!");
+                hasSwitchedSinceDeath = false;
                 RespawnToPrespawn();
             }
         }
@@ -1338,6 +1343,7 @@ public class KBPlayer : KBControllableGameObject
             InitializeForRespawn();
             SetupAbilities();
             ammoHud.SetActive(true);
+            hasSwitchedSinceDeath = true;
 
             if (photonView.isMine)
             {
