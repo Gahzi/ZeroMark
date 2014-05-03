@@ -365,7 +365,6 @@ public class KBPlayer : KBControllableGameObject
                 mousePlayerDiff = playerPositionOnScreen - mousePos;
                 if (useController)
                 {
-
                     if (!playerIndexSet || !gamepadPrevState.IsConnected)
                     {
                         for (int i = 0; i < 4; ++i)
@@ -611,15 +610,27 @@ public class KBPlayer : KBControllableGameObject
             }
         }
 
-        if (other.gameObject.CompareTag("SpawnRedDrone") || other.gameObject.CompareTag("SpawnRedMech") || other.gameObject.CompareTag("SpawnRedTank"))
+        if (other.gameObject.tag.StartsWith("Spawn"))
         {
-            SetTeam(Team.Red);
-            StartCoroutine(Spawn(other.gameObject.tag.ToString()));
-        }
-        else if (other.gameObject.CompareTag("SpawnBlueDrone") || other.gameObject.CompareTag("SpawnBlueMech") || other.gameObject.CompareTag("SpawnBlueTank"))
-        {
-            SetTeam(Team.Blue);
-            StartCoroutine(Spawn(other.gameObject.tag.ToString()));
+            int loadout = 0;
+            if (other.gameObject.tag.EndsWith("1"))
+            {
+                loadout = 1;
+            }
+            else if (other.gameObject.tag.EndsWith("2"))
+            {
+                loadout = 2;
+            }
+
+            if (other.gameObject.tag.StartsWith("SpawnDroneRed") || other.gameObject.tag.StartsWith("SpawnMechRed") || other.gameObject.tag.StartsWith("SpawnTankRed"))
+            {
+                SetTeam(Team.Red);
+            }
+            else if (other.gameObject.tag.StartsWith("SpawnDroneBlue") || other.gameObject.tag.StartsWith("SpawnMechBlue") || other.gameObject.tag.StartsWith("SpawnTankBlue"))
+            {
+                SetTeam(Team.Blue);
+            }
+            StartCoroutine(Spawn(other.gameObject.tag.ToString(), loadout));
         }
     }
 
@@ -770,7 +781,7 @@ public class KBPlayer : KBControllableGameObject
                         }
                     }
                 }
-                if (gamepadState.Triggers.Right > 0)
+                if (gamepadState.Triggers.Right > 0 && guns.Length > 1)
                 {
                     if (guns[1].ammo <= 0)
                     {
@@ -801,10 +812,7 @@ public class KBPlayer : KBControllableGameObject
                 int[] reloadingGuns = { 1 };
                 photonView.RPC("Reload", PhotonTargets.All, reloadingGuns);
             }
-
         }
-
-
 
         if (gamepadState.Buttons.Start == ButtonState.Pressed)
         {
@@ -936,7 +944,7 @@ public class KBPlayer : KBControllableGameObject
                         }
                     }
                 }
-                if (Input.GetMouseButton(1))
+                if (Input.GetMouseButton(1) && guns.Length > 1)
                 {
                     if (guns[1].ammo <= 0)
                     {
@@ -967,7 +975,6 @@ public class KBPlayer : KBControllableGameObject
                 int[] reloadingGuns = { 1 };
                 photonView.RPC("Reload", PhotonTargets.All, reloadingGuns);
             }
-
         }
 
         if (Input.GetKey(KeyCode.Tab))
@@ -1123,7 +1130,7 @@ public class KBPlayer : KBControllableGameObject
                 HitFX fx = ObjectPool.Spawn(hitExplosion, transform.position, Quaternion.identity);
                 fx.DoEffect(amount);
                 Camera.main.GetComponent<ScreenShake>().StartShake(0.125f, 10.0f * (amount / 100));
-                audio.PlayOneShot(gotHitSFX[Random.Range(0, gotHitSFX.Length)]);
+                audio.PlayOneShot(gotHitSFX[UnityEngine.Random.Range(0, gotHitSFX.Length)]);
                 lastDamageTime = Time.time;
             }
             return health;
@@ -1166,7 +1173,7 @@ public class KBPlayer : KBControllableGameObject
     private void RespawnToPrespawn()
     {
         //Spawn as Core
-        photonView.RPC("SwitchType", PhotonTargets.AllBuffered, "SpawnCore");
+        photonView.RPC("SwitchType", PhotonTargets.AllBuffered, "SpawnCore", 0);
 
         totalTokensLost += killTokens;
         waitingForRespawn = false;
@@ -1184,10 +1191,10 @@ public class KBPlayer : KBControllableGameObject
         transform.position = GameObject.FindGameObjectWithTag("Prespawn").transform.position;
         health = coreBaseHealth;
 
-		if(team != Team.None)
-		{
-			GenerateKillTags(killTokens, deathPosition);	
-		}
+        if (team != Team.None)
+        {
+            GenerateKillTags(killTokens, deathPosition);
+        }
     }
 
     private void GenerateKillTags(int _points, Vector3 center)
@@ -1228,7 +1235,7 @@ public class KBPlayer : KBControllableGameObject
                 newTag = GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagRed, center, Quaternion.identity, (int)team);
             }
             newTag.transform.localScale *= 1.0f + (pointsToDrop / 100.0f);
-            newTag.transform.Translate(new Vector3(Random.Range(-10.0f, 10.0f), 0, Random.Range(-10.0f, 10.0f)));
+            newTag.transform.Translate(new Vector3(UnityEngine.Random.Range(-10.0f, 10.0f), 0, UnityEngine.Random.Range(-10.0f, 10.0f)));
             newTag.GetPhotonView().RPC("SetPointValue", PhotonTargets.AllBuffered, thisTagValue);
             pointsToDrop -= thisTagValue;
         }
@@ -1239,7 +1246,7 @@ public class KBPlayer : KBControllableGameObject
     /// <summary>
     /// Spawns the player in the combat area.
     /// </summary>
-    private IEnumerator Spawn(string tag)
+    private IEnumerator Spawn(string tag, int loadout)
     {
         audio.PlayOneShot(respawnSound);
         spawnAnimator.GetComponent<SpawnAnimation>().Activate();
@@ -1247,8 +1254,8 @@ public class KBPlayer : KBControllableGameObject
         yield return new WaitForSeconds(spawnDelay);
         if (teamSpawnpoints.Count > 0 && photonView.isMine)
         {
-            photonView.RPC("SwitchType", PhotonTargets.AllBuffered, tag);
-            int spawnPointIndex = Random.Range(0, teamSpawnpoints.Count - 1);
+            photonView.RPC("SwitchType", PhotonTargets.AllBuffered, tag, loadout);
+            int spawnPointIndex = UnityEngine.Random.Range(0, teamSpawnpoints.Count - 1);
             transform.position = teamSpawnpoints[spawnPointIndex].transform.position;
             waitingForRespawn = false;
             acceptingInputs = true;
@@ -1296,7 +1303,7 @@ public class KBPlayer : KBControllableGameObject
     }
 
     [RPC]
-    private void SwitchType(string typeTrigger, PhotonMessageInfo info)
+    private void SwitchType(string typeTrigger, int loadout, PhotonMessageInfo info)
     {
         if (networkPlayer == info.sender)
         {
@@ -1305,27 +1312,89 @@ public class KBPlayer : KBControllableGameObject
                 allBodies[i].SetActive(false);
             }
 
-            if (typeTrigger.Equals("SpawnRedDrone") || typeTrigger.Equals("SpawnBlueDrone"))
+            if (typeTrigger.StartsWith("SpawnDrone"))
             {
                 upperBody = upperBodyDrone;
                 lowerBody = lowerBodyDrone;
                 type = PlayerType.drone;
-            }
+                switch (loadout)
+                {
+                    case 0: // Shotgun
+                        SetActiveIfFound(transform, "Shotgun", true);
+                        SetActiveIfFound(transform, "LightCannon", false);
+                        SetActiveIfFound(transform, "PlasmaGun", false);
+                        break;
 
-            else if (typeTrigger.Equals("SpawnRedMech") || typeTrigger.Equals("SpawnBlueMech"))
+                    case 1: // Needler (LCannon)
+                        SetActiveIfFound(transform, "Shotgun", false);
+                        SetActiveIfFound(transform, "LightCannon", true);
+                        SetActiveIfFound(transform, "PlasmaGun", false);
+                        break;
+
+                    case 2: // Plasma
+                        SetActiveIfFound(transform, "Shotgun", false);
+                        SetActiveIfFound(transform, "LightCannon", false);
+                        SetActiveIfFound(transform, "PlasmaGun", true);
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+            else if (typeTrigger.StartsWith("SpawnMech"))
             {
                 upperBody = upperBodyMech;
                 lowerBody = lowerBodyMech;
                 type = PlayerType.mech;
-            }
+                switch (loadout)
+                {
+                    case 0:
+                        SetActiveIfFound(transform, "MachineGun", true);
+                        SetActiveIfFound(transform, "PlasmaGun", false);
+                        SetActiveIfFound(transform, "LightCannon", false);
+                        break;
 
-            else if (typeTrigger.Equals("SpawnRedTank") || typeTrigger.Equals("SpawnBlueTank"))
+                    case 1:
+                        SetActiveIfFound(transform, "MachineGun", false);
+                        SetActiveIfFound(transform, "PlasmaGun", true);
+                        SetActiveIfFound(transform, "LightCannon", false);
+                        break;
+
+                    case 2:
+                        SetActiveIfFound(transform, "MachineGun", false);
+                        SetActiveIfFound(transform, "PlasmaGun", false);
+                        SetActiveIfFound(transform, "LightCannon", true);
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+            else if (typeTrigger.StartsWith("SpawnTank"))
             {
                 upperBody = upperBodyTank;
                 lowerBody = lowerBodyTank;
                 type = PlayerType.tank;
-            }
 
+                switch (loadout)
+                {
+                    case 0:
+                        SetActiveIfFound(transform, "HeavyCannon", true);
+                        //SetActiveIfFound(transform, "", false);
+                        break;
+
+                    case 1:
+                        SetActiveIfFound(transform, "HeavyCannon", true);
+                        //SetActiveIfFound(transform, "PlasmaGun", true);
+                        break;
+
+                    case 2:
+                        break;
+
+                    default:
+                        break;
+                }
+            }
             else if (typeTrigger.Equals("SpawnCore"))
             {
                 upperBody = upperBodyCore;
