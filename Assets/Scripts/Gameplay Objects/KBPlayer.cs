@@ -1352,18 +1352,21 @@ public class KBPlayer : KBControllableGameObject
                         SetActiveIfFound(transform, "MachineGun", true);
                         SetActiveIfFound(transform, "PlasmaGun", false);
                         SetActiveIfFound(transform, "LightCannon", false);
+                        SetActiveIfFound(transform, "SniperRifle", false);
                         break;
 
                     case 1:
                         SetActiveIfFound(transform, "MachineGun", false);
                         SetActiveIfFound(transform, "PlasmaGun", true);
                         SetActiveIfFound(transform, "LightCannon", false);
+                        SetActiveIfFound(transform, "SniperRifle", false);
                         break;
 
                     case 2:
                         SetActiveIfFound(transform, "MachineGun", false);
                         SetActiveIfFound(transform, "PlasmaGun", false);
-                        SetActiveIfFound(transform, "LightCannon", true);
+                        SetActiveIfFound(transform, "SniperRifle", true);
+                        SetActiveIfFound(transform, "LightCannon", false);
                         break;
 
                     default:

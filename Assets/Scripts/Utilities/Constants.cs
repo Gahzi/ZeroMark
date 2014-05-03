@@ -27,7 +27,8 @@ namespace KBConstants
             HeavyCannonLevel0, HeavyCannonLevel1, HeavyCannonLevel2,
             LightCannonLevel0, LightCannonLevel1, LightCannonLevel2,
             HomingRocketLevel0, HomingRocketLevel1, HomingRocketLevel2,
-            ShotgunLevel0, ShotgunLevel1, ShotgunLevel2
+            ShotgunLevel0, ShotgunLevel1, ShotgunLevel2,
+            SniperLevel0, SniperLevel1, SniperLevel2
         };
 
         private static readonly IDictionary<type, int> damageValues = new Dictionary<type, int>
@@ -59,6 +60,10 @@ namespace KBConstants
             {type.HomingRocketLevel0, 35},
             {type.HomingRocketLevel1, 150},
             {type.HomingRocketLevel2, 200},
+
+            {type.SniperLevel0, 450},
+            {type.SniperLevel1, 450},
+            {type.SniperLevel2, 450}
         };
 
         public static IDictionary<type, int> DAMAGE_VALUES { get { return damageValues; } }
@@ -85,6 +90,7 @@ namespace KBConstants
             HeavyCannonBulletLevel0, HeavyCannonBulletLevel1, HeavyCannonBulletLevel2,
             LightCannonBulletLevel0, LightCannonBulletLevel1, LightCannonBulletLevel2,
             ShotgunLevel0, ShotgunLevel1, ShotgunLevel2,
+            SniperBulletLevel0, SniperBulletLevel1, SniperBulletLevel2,
             HomingRocketL0,
             KillTagBlue, KillTagRed,
             PlasmaExplosionL0, PlasmaExplosionL1, PlasmaExplosionL2,
@@ -131,7 +137,10 @@ namespace KBConstants
             {type.ShotgunLevel2, "abilities/bullet/shotgunbulletl2"},
             {type.HomingRocketL0, "abilities/bullet/homingrocketbulletl0"},
             {type.MachineGunShellCasing, "abilities/machinegunshellcasing"},
-            {type.HCannonShellCasing, "abilities/HCannonShellCasing"}
+            {type.HCannonShellCasing, "abilities/HCannonShellCasing"},
+            {type.SniperBulletLevel0, "abilities/bullet/sniperbulletl0"},
+            {type.SniperBulletLevel1, "abilities/bullet/sniperbulletl1"},
+            {type.SniperBulletLevel2, "abilities/bullet/sniperbulletl2"},
         };
 
         public static IDictionary<type, string> PREFAB_NAMES { get { return prefabNames; } }
