@@ -23,7 +23,7 @@ public class KBCamera : MonoBehaviour
 
     private void Update()
     {
-        zoomTarget = 1.4f;
+        zoomTarget = 1.8f;
         if (attachedPlayer != null)
         {
             if (zoom < 1.0f)
