@@ -1,38 +1,36 @@
-﻿using KBConstants;
+﻿using System.Collections;
 using UnityEngine;
+using KBConstants;
 
-/// <summary>
-/// PlasmaGuns are a ProjectileAbility that shoots PlasmaBullet prefabs
-/// </summary>
-public class PlasmaGun : ProjectileAbilityBaseScript
+public class SniperRifle : ProjectileAbilityBaseScript
 {
     #region CONSTANTS
 
-    public static float COOLDOWN_0 = 0.25f;
-    public static int RANGE_0 = 50;
-    public static float RELOAD_TIME_0 = 2.0f;
-    public static int CLIP_SIZE_0 = 6;
+    public static float COOLDOWN_0 = 1.00f;
+    public static int RANGE_0 = 100;
+    public static float RELOAD_TIME_0 = 3.0f;
+    public static int CLIP_SIZE_0 = 2;
     public static int BURST_SIZE_0 = 1;
     public static float BURST_DELAY_0 = 0.00f;
     public static float SPREADMAX_0 = 0.0f;
 
-    public static float COOLDOWN_1 = 0.185f;
-    public static int RANGE_1 = 50;
-    public static float RELOAD_TIME_1 = 2.0f;
-    public static int CLIP_SIZE_1 = 8;
-    public static int BURST_SIZE_1 = 4;
+    public static float COOLDOWN_1 = 0.95f;
+    public static int RANGE_1 = 100;
+    public static float RELOAD_TIME_1 = 2.9f;
+    public static int CLIP_SIZE_1 = 3;
+    public static int BURST_SIZE_1 = 1;
     public static float BURST_DELAY_1 = 0.00f;
-    public static float SPREADMIN_1 = 1.5f;
-    public static float SPREADMAX_1 = 3.0f;
+    public static float SPREADMIN_1 = 0.0f;
+    public static float SPREADMAX_1 = 0.0f;
 
-    public static float COOLDOWN_2 = 0.15f;
-    public static int RANGE_2 = 50;
-    public static float RELOAD_TIME_2 = 1.8f;
-    public static int CLIP_SIZE_2 = 10;
-    public static int BURST_SIZE_2 = 6;
+    public static float COOLDOWN_2 = 0.90f;
+    public static int RANGE_2 = 100;
+    public static float RELOAD_TIME_2 = 2.8f;
+    public static int CLIP_SIZE_2 = 3;
+    public static int BURST_SIZE_2 = 1;
     public static float BURST_DELAY_2 = 0.00f;
-    public static float SPREADMIN_2 = 1.0f;
-    public static float SPREADMAX_2 = 4.0f;
+    public static float SPREADMIN_2 = 0.0f;
+    public static float SPREADMAX_2 = 0.0f;
 
     #endregion CONSTANTS
 
@@ -40,9 +38,9 @@ public class PlasmaGun : ProjectileAbilityBaseScript
     {
         projectileType = new ProjectileBaseScript[3]
         {
-            (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.PlasmaBulletLevel0], typeof(ProjectileBaseScript)),
-            (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.PlasmaBulletLevel1], typeof(ProjectileBaseScript)),
-            (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.PlasmaBulletLevel2], typeof(ProjectileBaseScript))
+            (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.SniperBulletLevel0], typeof(ProjectileBaseScript)),
+            (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.SniperBulletLevel1], typeof(ProjectileBaseScript)),
+            (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.SniperBulletLevel2], typeof(ProjectileBaseScript))
         };
         for (int i = 0; i < projectileType.Length; i++)
         {

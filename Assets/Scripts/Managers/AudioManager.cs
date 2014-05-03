@@ -8,8 +8,8 @@ public class AudioManager : MonoBehaviour
 
     void Start()
     {
-        audio.clip = bgm;
-        audio.playOnAwake = true;
+        //audio.clip = bgm;
+        //audio.playOnAwake = true;
         //audio.volume = 0.35f;
     }
 

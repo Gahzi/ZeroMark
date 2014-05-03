@@ -311,7 +311,7 @@ public class GameManager : Photon.MonoBehaviour
                     GameObject newPlayerObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Player], position, rotation, 0);
                     KBPlayer newPlayer = newPlayerObject.GetComponent<KBPlayer>();
                     newPlayer.photonView.RPC("Setup", PhotonTargets.AllBuffered, PhotonNetwork.player, (int)newTeam);
-                    newPlayer.photonView.RPC("SwitchType", PhotonTargets.AllBuffered, "SpawnCore");
+                    newPlayer.photonView.RPC("SwitchType", PhotonTargets.AllBuffered, "SpawnCore", 0);
                     return newPlayerObject;
                 }
 
