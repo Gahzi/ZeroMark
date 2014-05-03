@@ -602,20 +602,12 @@ public class KBPlayer : KBControllableGameObject
             }
         }
 
-<<<<<<< Updated upstream
-        if ((other.gameObject.CompareTag("SpawnRedDrone") || other.gameObject.CompareTag("SpawnRedMech") || other.gameObject.CompareTag("SpawnRedTank")) && type == PlayerType.core)
-=======
         if ((other.gameObject.CompareTag("SpawnRedDrone") || other.gameObject.CompareTag("SpawnRedMech") || other.gameObject.CompareTag("SpawnRedTank")) && hasSwitchedSinceDeath == false)
->>>>>>> Stashed changes
         {
             SetTeam(Team.Red);
             StartCoroutine(Spawn(other.gameObject.tag.ToString()));
         }
-<<<<<<< Updated upstream
-        else if ((other.gameObject.CompareTag("SpawnBlueDrone") || other.gameObject.CompareTag("SpawnBlueMech") || other.gameObject.CompareTag("SpawnBlueTank")) && type == PlayerType.core)
-=======
         else if ((other.gameObject.CompareTag("SpawnBlueDrone") || other.gameObject.CompareTag("SpawnBlueMech") || other.gameObject.CompareTag("SpawnBlueTank")) && hasSwitchedSinceDeath == false)
->>>>>>> Stashed changes
         {
             SetTeam(Team.Blue);
             StartCoroutine(Spawn(other.gameObject.tag.ToString()));
