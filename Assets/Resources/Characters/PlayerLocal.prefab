@@ -124,13 +124,13 @@ GameObject:
   m_Component:
   - 4: {fileID: 400012}
   - 33: {fileID: 3300012}
-  - 136: {fileID: 13600004}
   - 23: {fileID: 2300012}
   - 114: {fileID: 11400020}
   - 82: {fileID: 8200006}
   - 114: {fileID: 11400018}
   - 199: {fileID: 19900008}
   - 198: {fileID: 19800008}
+  - 136: {fileID: 13600004}
   m_Layer: 0
   m_Name: RocketLauncher
   m_TagString: Untagged
@@ -165,13 +165,13 @@ GameObject:
   m_Component:
   - 4: {fileID: 400016}
   - 33: {fileID: 3300020}
-  - 136: {fileID: 13600000}
   - 23: {fileID: 2300020}
   - 114: {fileID: 11400036}
   - 82: {fileID: 8200004}
   - 114: {fileID: 11400034}
   - 199: {fileID: 19900002}
   - 198: {fileID: 19800002}
+  - 136: {fileID: 13600000}
   m_Layer: 0
   m_Name: MachineGun
   m_TagString: Untagged
@@ -188,13 +188,13 @@ GameObject:
   m_Component:
   - 4: {fileID: 400018}
   - 33: {fileID: 3300016}
-  - 136: {fileID: 13600008}
   - 23: {fileID: 2300016}
   - 114: {fileID: 11400028}
   - 82: {fileID: 8200010}
   - 114: {fileID: 11400026}
   - 199: {fileID: 19900004}
   - 198: {fileID: 19800004}
+  - 136: {fileID: 13600008}
   m_Layer: 0
   m_Name: Cannon
   m_TagString: Untagged
@@ -308,13 +308,13 @@ GameObject:
   m_Component:
   - 4: {fileID: 400032}
   - 33: {fileID: 3300026}
-  - 136: {fileID: 13600014}
   - 23: {fileID: 2300026}
   - 114: {fileID: 11400040}
   - 82: {fileID: 8200016}
   - 114: {fileID: 11400038}
   - 199: {fileID: 19900012}
   - 198: {fileID: 19800012}
+  - 136: {fileID: 13600014}
   m_Layer: 0
   m_Name: PlasmaGun
   m_TagString: Untagged
@@ -331,13 +331,13 @@ GameObject:
   m_Component:
   - 4: {fileID: 400034}
   - 33: {fileID: 3300028}
-  - 136: {fileID: 13600002}
   - 23: {fileID: 2300028}
   - 114: {fileID: 11400044}
   - 82: {fileID: 8200008}
   - 114: {fileID: 11400042}
   - 199: {fileID: 19900006}
   - 198: {fileID: 19800006}
+  - 136: {fileID: 13600002}
   m_Layer: 0
   m_Name: SniperRifle
   m_TagString: Untagged
@@ -354,13 +354,13 @@ GameObject:
   m_Component:
   - 4: {fileID: 400036}
   - 33: {fileID: 3300030}
-  - 136: {fileID: 13600018}
   - 23: {fileID: 2300030}
   - 114: {fileID: 11400048}
   - 82: {fileID: 8200020}
   - 114: {fileID: 11400046}
   - 199: {fileID: 19900016}
   - 198: {fileID: 19800016}
+  - 136: {fileID: 13600018}
   m_Layer: 0
   m_Name: MachineGun
   m_TagString: Untagged
@@ -458,11 +458,11 @@ GameObject:
   m_Component:
   - 4: {fileID: 400048}
   - 33: {fileID: 3300036}
-  - 136: {fileID: 13600020}
   - 23: {fileID: 2300036}
   - 114: {fileID: 11400052}
   - 82: {fileID: 8200022}
   - 114: {fileID: 11400050}
+  - 136: {fileID: 13600020}
   m_Layer: 0
   m_Name: Shotgun
   m_TagString: Untagged
@@ -479,11 +479,11 @@ GameObject:
   m_Component:
   - 4: {fileID: 400050}
   - 33: {fileID: 3300038}
-  - 136: {fileID: 13600022}
   - 23: {fileID: 2300038}
   - 114: {fileID: 11400054}
   - 82: {fileID: 8200024}
   - 114: {fileID: 11400056}
+  - 136: {fileID: 13600022}
   m_Layer: 0
   m_Name: PlasmaGun
   m_TagString: Untagged
@@ -1811,13 +1811,13 @@ GameObject:
   m_Component:
   - 4: {fileID: 400210}
   - 33: {fileID: 3300102}
-  - 136: {fileID: 13600006}
   - 23: {fileID: 2300112}
   - 114: {fileID: 11400066}
   - 82: {fileID: 8200012}
   - 114: {fileID: 11400064}
   - 199: {fileID: 19900010}
   - 198: {fileID: 19800010}
+  - 136: {fileID: 13600006}
   m_Layer: 0
   m_Name: LightCannon
   m_TagString: Untagged
@@ -1834,13 +1834,13 @@ GameObject:
   m_Component:
   - 4: {fileID: 400212}
   - 33: {fileID: 3300104}
-  - 136: {fileID: 13600010}
   - 23: {fileID: 2300114}
   - 114: {fileID: 11400070}
   - 82: {fileID: 8200014}
   - 114: {fileID: 11400068}
   - 199: {fileID: 19900014}
   - 198: {fileID: 19800014}
+  - 136: {fileID: 13600010}
   m_Layer: 0
   m_Name: LightCannon
   m_TagString: Untagged
@@ -6152,7 +6152,6 @@ MonoBehaviour:
   invulnerabilityTime: 0
   spawnProtectionTime: 1.5
   bankLockoutTime: 3
-  teleportationRecharge: 5
   spawnAnimator: {fileID: 100042}
   spawnDelay: 1.5
   invulnerabilityShield: {fileID: 100206}
@@ -6217,10 +6216,10 @@ MonoBehaviour:
   dropSound: {fileID: 8300000, guid: daa2d4eddf7b26c498bec6ee65d38b0d, type: 3}
   killCount: 0
   deathCount: 0
-  killTokens: 0
-  totalTokensGained: 0
-  totalTokensLost: 0
-  totalTokensBanked: 0
+  currentPoints: 0
+  totalPointsGained: 0
+  totalPointsLost: 0
+  totalPointsBanked: 0
   guns: []
   ammoHud: {fileID: 100120}
   chaff: {fileID: 11400000, guid: b830426be8527df478628dc3a5fe0bae, type: 2}
@@ -6255,6 +6254,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51267dcc7954d2344b80d9c9dc860c13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  owner: {fileID: 100000}
 --- !u!114 &11400006
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -6290,6 +6290,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51267dcc7954d2344b80d9c9dc860c13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  owner: {fileID: 100000}
 --- !u!114 &11400012
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -6966,6 +6967,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51267dcc7954d2344b80d9c9dc860c13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  owner: {fileID: 100000}
 --- !u!135 &13500000
 SphereCollider:
   m_ObjectHideFlags: 1

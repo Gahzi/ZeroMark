@@ -85,6 +85,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b654576b54201624c8551cd4b2f37439, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefab: {fileID: 11400000}
 --- !u!136 &13600000
 CapsuleCollider:
   m_ObjectHideFlags: 1
