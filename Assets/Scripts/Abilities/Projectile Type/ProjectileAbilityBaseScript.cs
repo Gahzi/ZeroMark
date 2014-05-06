@@ -230,10 +230,10 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
             projectile.Init(firedBy);
             projectile.damage = projectile.damageLevel[level];
 
-            Collider[] collider = transform.parent.GetComponentsInChildren<Collider>();
+            Collider[] collider = owner.GetComponentsInChildren<Collider>();
             foreach (Collider c in collider)
             {
-                if (c.enabled)
+                if (c.enabled && projectile.collider.enabled)
                 {
                     Physics.IgnoreCollision(c, projectile.collider, true);
                 }

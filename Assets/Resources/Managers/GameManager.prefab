@@ -47,7 +47,7 @@ MonoBehaviour:
   synchronization: 1
   onSerializeTransformOption: 3
   onSerializeRigidBodyOption: 2
-  instantiationId: 0
+  instantiationId: -1
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -59,23 +59,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b96e275ea8ab474a84585b087bd01d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameType: 0
   localPlayer: {fileID: 0}
   players:
   - {fileID: 0}
   killTags: []
-  captureZones: []
+  bankZones: []
   redTeamScore: 0
   blueTeamScore: 0
-  lastTick: 0
-  secondsPerTick: 5
-  ticksPerGame: 50
-  tick: 0
   redCaptures: 0
   blueCaptures: 0
-  redBonus: 0
-  blueBonus: 0
   gameTime: 0
   gameTimeMax: 750
+  dataPulsePeriod: 60
+  dataPulseEffect: {fileID: 11400000, guid: fcd05607c152b69459e1652e41117afc, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

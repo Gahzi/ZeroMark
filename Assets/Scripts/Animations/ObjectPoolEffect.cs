@@ -18,7 +18,10 @@ public class ObjectPoolEffect : MonoBehaviour
         {
             originalColor = renderer.material.color;
         }
-        ObjectPool.CreatePool(prefab);
+        if (prefab != null)
+        {
+            ObjectPool.CreatePool(prefab);
+        }
 
     }
 

@@ -37,7 +37,7 @@ public class GameManager : Photon.MonoBehaviour
     public float gameTimeMax;
     public int dataPulsePeriod = 60;
     private float lastDataPulse;
-    public ObjectPoolEffect dataPulseEffect;
+    public HitFX dataPulseEffect;
 
     private static GameManager instance;
 
@@ -260,8 +260,8 @@ public class GameManager : Photon.MonoBehaviour
         photonView.RPC("AddPointsToScore", PhotonTargets.All, localPlayer.team, localPlayer.currentPoints);
         localPlayer.ScorePoints(localPlayer.currentPoints);
         lastDataPulse = Time.time;
-        ObjectPoolEffect o = ObjectPool.Spawn(dataPulseEffect);
-        o.Init(20);
+        HitFX o = ObjectPool.Spawn(dataPulseEffect);
+        o.Init();
     }
 
     [RPC]
