@@ -82,7 +82,6 @@ public class KBPlayer : KBControllableGameObject
     public float invulnerabilityTime;
     public float spawnProtectionTime;
     public float bankLockoutTime;
-    public float teleportationRecharge = 5.0f;
     public GameObject spawnAnimator;
     public float spawnDelay = 2.50f;
     public GameObject invulnerabilityShield;
@@ -155,10 +154,10 @@ public class KBPlayer : KBControllableGameObject
 
     public int killCount;
     public int deathCount;
-    public int killTokens;
-    public int totalTokensGained;
-    public int totalTokensLost;
-    public int totalTokensBanked;
+    public int currentPoints;
+    public int totalPointsGained;
+    public int totalPointsLost;
+    public int totalPointsBanked;
 
     public ProjectileAbilityBaseScript[] guns;
 
@@ -291,33 +290,48 @@ public class KBPlayer : KBControllableGameObject
 
     private void FixedUpdate()
     {
-        if (inBankZone)
+        switch (GameManager.Instance.gameType)
         {
-            timeInBankZone += Time.deltaTime;
-        }
-        if (timeInBankZone > 3.0f && killTokens > 0 && inBankZone)
-        {
-            int tokensToBank = 0;
-            if (killTokens > GameConstants.levelTwoThreshold)
-            {
-                tokensToBank = killTokens - GameConstants.levelTwoThreshold;
-            }
-            else if (killTokens > GameConstants.levelOneThreshold)
-            {
-                tokensToBank = killTokens - GameConstants.levelOneThreshold;
-            }
-            else
-            {
-                tokensToBank = killTokens;
-            }
+            case GameManager.GameType.CapturePoint:
+                if (inBankZone)
+                {
+                    timeInBankZone += Time.deltaTime;
+                }
+                if (timeInBankZone > 3.0f && currentPoints > 0 && inBankZone)
+                {
+                    int tokensToBank = 0;
+                    if (currentPoints > GameConstants.levelTwoThreshold)
+                    {
+                        tokensToBank = currentPoints - GameConstants.levelTwoThreshold;
+                    }
+                    else if (currentPoints > GameConstants.levelOneThreshold)
+                    {
+                        tokensToBank = currentPoints - GameConstants.levelOneThreshold;
+                    }
+                    else
+                    {
+                        tokensToBank = currentPoints;
+                    }
 
-            for (int i = 0; i < GameManager.Instance.bankZones.Count; i++)
-            {
-                GameManager.Instance.bankZones[i].photonView.RPC("AddPoints", PhotonTargets.AllBuffered, tokensToBank, (int)team);
-            }
-            killTokens -= tokensToBank;
-            totalTokensBanked += tokensToBank;
-            timeInBankZone = 0.0f;
+                    for (int i = 0; i < GameManager.Instance.bankZones.Count; i++)
+                    {
+                        GameManager.Instance.bankZones[i].photonView.RPC("AddPoints", PhotonTargets.All, tokensToBank, (int)team);
+                    }
+
+                    currentPoints -= tokensToBank;
+                    totalPointsBanked += tokensToBank;
+                    timeInBankZone = 0.0f;
+                }
+                break;
+
+            case GameManager.GameType.DataPulse:
+                break;
+
+            case GameManager.GameType.Deathmatch:
+                break;
+
+            default:
+                break;
         }
 
         if (Time.time > lastDamageTime + regenDelay)
@@ -326,10 +340,6 @@ public class KBPlayer : KBControllableGameObject
             health = Mathf.FloorToInt(floatHealth);
         }
 
-        if (teleportationRecharge > 0)
-        {
-            teleportationRecharge -= Time.deltaTime;
-        }
 
         if (invulnerabilityTime > 0)
         {
@@ -409,6 +419,12 @@ public class KBPlayer : KBControllableGameObject
         }
     }
 
+    public void ScorePoints(int value)
+    {
+        currentPoints -= value;
+        totalPointsBanked += value;
+    }
+
     private void OnGUI()
     {
         //if (networkPlayer.isLocal)
@@ -469,12 +485,12 @@ public class KBPlayer : KBControllableGameObject
         {
             Vector3 pos = transform.localPosition;
             Quaternion rot = upperBody.transform.rotation;
-            int kt = killTokens;
+            int kt = currentPoints;
             int kc = killCount;
             int dc = deathCount;
-            int ttg = totalTokensGained;
-            int ttl = totalTokensLost;
-            int ttb = totalTokensBanked;
+            int ttg = totalPointsGained;
+            int ttl = totalPointsLost;
+            int ttb = totalPointsBanked;
             int hlth = health;
             int mxhlth = stats.health;
             bool wtngFrRspwn = waitingForRespawn;
@@ -549,12 +565,12 @@ public class KBPlayer : KBControllableGameObject
             fraction = 0;                           // reset the fraction we alreay moved. see Update()
 
             upperBody.transform.rotation = rot;          // this sample doesn't smooth rotation
-            killTokens = kt;
+            currentPoints = kt;
             killCount = kc;
             deathCount = dc;
-            totalTokensGained = ttg;
-            totalTokensLost = ttl;
-            totalTokensBanked = ttb;
+            totalPointsGained = ttg;
+            totalPointsLost = ttl;
+            totalPointsBanked = ttb;
             health = hlth;
             waitingForRespawn = wtngFrRspwn;
             team = (Team)tm;
@@ -599,16 +615,16 @@ public class KBPlayer : KBControllableGameObject
             bankIndicator.SetActive(true);
         }
 
-        if (other.gameObject.CompareTag("Teleporter"))
-        {
-            Teleporter t = other.gameObject.GetComponent<Teleporter>();
-            if (t != null && t.linkedTeleporter != null && teleportationRecharge <= 0)
-            {
-                Vector3 newPos = t.linkedTeleporter.transform.position;
-                transform.position = new Vector3(newPos.x, newPos.y, newPos.z);
-                teleportationRecharge = 5.0f;
-            }
-        }
+        //if (other.gameObject.CompareTag("Teleporter"))
+        //{
+        //    Teleporter t = other.gameObject.GetComponent<Teleporter>();
+        //    if (t != null && t.linkedTeleporter != null && teleportationRecharge <= 0)
+        //    {
+        //        Vector3 newPos = t.linkedTeleporter.transform.position;
+        //        transform.position = new Vector3(newPos.x, newPos.y, newPos.z);
+        //        teleportationRecharge = 5.0f;
+        //    }
+        //}
 
         if (other.gameObject.tag.StartsWith("Spawn"))
         {
@@ -1153,8 +1169,8 @@ public class KBPlayer : KBControllableGameObject
         if (killerPlayer.isLocal && networkPlayer == PhotonNetwork.player)
         {
             killCount++;
-            totalTokensGained++;
-            killTokens++;
+            totalPointsGained++;
+            currentPoints++;
         }
         List<KBPlayer> currentPlayers = GameManager.Instance.players;
 
@@ -1175,7 +1191,7 @@ public class KBPlayer : KBControllableGameObject
         //Spawn as Core
         photonView.RPC("SwitchType", PhotonTargets.AllBuffered, "SpawnCore", 0);
 
-        totalTokensLost += killTokens;
+        totalPointsLost += currentPoints;
         waitingForRespawn = false;
         acceptingInputs = true;
 
@@ -1193,7 +1209,7 @@ public class KBPlayer : KBControllableGameObject
 
         if (team != Team.None)
         {
-            GenerateKillTags(killTokens, deathPosition);
+            GenerateKillTags(currentPoints, deathPosition);
         }
     }
 
@@ -1240,7 +1256,7 @@ public class KBPlayer : KBControllableGameObject
             pointsToDrop -= thisTagValue;
         }
 
-        killTokens = 0;
+        currentPoints = 0;
     }
 
     /// <summary>

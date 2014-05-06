@@ -23,8 +23,8 @@ public class KillTag : KBGameObject
         {
             if (player.team != team && PhotonNetwork.player.Equals(player.networkPlayer))
             {
-                player.totalTokensGained += player.killTokens;
-                player.killTokens += pointValue;
+                player.totalPointsGained += player.currentPoints;
+                player.currentPoints += pointValue;
 
                 GameManager.Instance.photonView.RPC("DestroyObject", PhotonTargets.All, photonView.viewID);
                 player.audio.PlayOneShot(player.itemPickupClip);

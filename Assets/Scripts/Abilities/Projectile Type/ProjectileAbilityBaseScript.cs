@@ -64,15 +64,15 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
             available = false;
         }
 
-        if (owner.killTokens < GameConstants.levelOneThreshold)
+        if (owner.currentPoints < GameConstants.levelOneThreshold)
         {
             level = 0;
         }
-        else if (owner.killTokens >= GameConstants.levelOneThreshold && owner.killTokens <= GameConstants.levelTwoThreshold)
+        else if (owner.currentPoints >= GameConstants.levelOneThreshold && owner.currentPoints <= GameConstants.levelTwoThreshold)
         {
             level = 1;
         }
-        else if (owner.killTokens > GameConstants.levelTwoThreshold)
+        else if (owner.currentPoints > GameConstants.levelTwoThreshold)
         {
             level = 2;
         }

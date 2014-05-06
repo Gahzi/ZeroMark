@@ -14,6 +14,6 @@ public class PlayerKillGUI : MonoBehaviour
     private void Update()
     {
         //transform.rotation = player.upperBody.transform.rotation;
-        kills.text = player.killTokens.ToString();
+        kills.text = player.currentPoints.ToString();
     }
 }

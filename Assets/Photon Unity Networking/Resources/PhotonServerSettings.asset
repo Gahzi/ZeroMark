@@ -39,4 +39,5 @@ MonoBehaviour:
   - Reload
   - AddPoints
   - SetPointValue
+  - AddPointsToScore
   DisableAutoOpenWizard: 0

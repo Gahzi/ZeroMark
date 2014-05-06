@@ -23,7 +23,7 @@ public class KBCamera : MonoBehaviour
 
     private void Update()
     {
-        zoomTarget = 1.8f;
+        zoomTarget = 2.0f;
         if (attachedPlayer != null)
         {
             if (zoom < 1.0f)
@@ -75,7 +75,7 @@ public class KBCamera : MonoBehaviour
             {
                 if (attachedPlayer.guns[0] != null)
                 {
-                    levelText.text = "(" + attachedPlayer.killTokens.ToString() + "pts.)" + "Lvl." + attachedPlayer.guns[0].level.ToString();
+                    levelText.text = "(" + attachedPlayer.currentPoints.ToString() + "pts.)" + "Lvl." + attachedPlayer.guns[0].level.ToString();
                 }
                 else
                 {
