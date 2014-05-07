@@ -249,6 +249,11 @@ public class KBPlayer : KBControllableGameObject
         latestCorrectPos = transform.position;
         onUpdatePos = transform.position;
 
+        if (!photonView.isMine)
+        {
+            GetComponent<AudioListener>().enabled = false;
+        }
+
         InitializeForRespawn();
         RespawnToPrespawn();
         ObjectPool.CreatePool(chaff);
