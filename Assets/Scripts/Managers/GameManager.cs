@@ -84,6 +84,7 @@ public class GameManager : Photon.MonoBehaviour
         killTags = new List<KillTag>();
         bankZones = new List<BankZone>();
         playerSpawnZones = new List<PlayerSpawnPoint>();
+
     }
 
     private void Start()
@@ -118,6 +119,8 @@ public class GameManager : Photon.MonoBehaviour
             Team nextTeam = Team.None;
             GameManager.Instance.CreateObject((int)ObjectConstants.type.Player, Vector3.zero, Quaternion.identity, (int)nextTeam);
         }
+        
+        gameType = (GameType)PhotonNetwork.room.customProperties["GameType"];
     }
 
     /// <summary>

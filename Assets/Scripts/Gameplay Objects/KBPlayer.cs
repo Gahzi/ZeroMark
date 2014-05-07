@@ -634,11 +634,11 @@ public class KBPlayer : KBControllableGameObject
                 loadout = 2;
             }
 
-        if ((other.gameObject.CompareTag("SpawnRedDrone") || other.gameObject.CompareTag("SpawnRedMech") || other.gameObject.CompareTag("SpawnRedTank")) && hasSwitchedSinceDeath == false)
+            if (other.gameObject.tag.StartsWith("SpawnDroneRed") || other.gameObject.tag.StartsWith("SpawnMechRed") || other.gameObject.tag.StartsWith("SpawnTankRed"))
             {
                 SetTeam(Team.Red);
             }
-        else if ((other.gameObject.CompareTag("SpawnBlueDrone") || other.gameObject.CompareTag("SpawnBlueMech") || other.gameObject.CompareTag("SpawnBlueTank")) && hasSwitchedSinceDeath == false)
+            else if (other.gameObject.tag.StartsWith("SpawnDroneBlue") || other.gameObject.tag.StartsWith("SpawnMechBlue") || other.gameObject.tag.StartsWith("SpawnTankBlue"))
             {
                 SetTeam(Team.Blue);
             }

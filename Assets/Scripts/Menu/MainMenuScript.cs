@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 [RequireComponent(typeof(AudioSource))]
 public class MainMenuScript : Photon.MonoBehaviour
@@ -22,7 +23,7 @@ public class MainMenuScript : Photon.MonoBehaviour
     public AudioClip pressClip;
 
     private int gameTypeInt = 0;
-	private string[] gameTypeStrings = {"Toolbar1", "Toolbar2", "Toolbar3"};
+	private string[] gameTypeStrings = {"CapturePoint", "DataPulse", "Deathmatch"};
 
 
 
@@ -287,18 +288,19 @@ public class MainMenuScript : Photon.MonoBehaviour
         hostMaxPlayers = int.Parse(GUILayout.TextField(hostMaxPlayers + "", GUILayout.Width(50)) + "");
         GUILayout.EndHorizontal();
 
-       
-
-	void OnGUI () {
-		toolbarInt = GUI.Toolbar (new Rect (25, 25, 250, 30), toolbarInt, toolbarStrings);
-
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("Game Type: ");
+        GUILayout.FlexibleSpace();
+        gameTypeInt = GUILayout.Toolbar(gameTypeInt,gameTypeStrings);
+        GUILayout.EndHorizontal();
+        
         CheckHostVars();
 
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
         if (GUILayout.Button("Start server", GUILayout.Width(150)))
         {
-            StartHostingGame(hostTitle, hostMaxPlayers);
+            StartHostingGame(hostTitle, hostMaxPlayers,gameTypeInt);
             audio.PlayOneShot(pressClip);
         }
         GUILayout.EndHorizontal();
@@ -309,7 +311,7 @@ public class MainMenuScript : Photon.MonoBehaviour
         hostMaxPlayers = Mathf.Clamp(hostMaxPlayers, 1, 64);
     }
 
-    private void StartHostingGame(string hostSettingTitle, int hostPlayers)
+    private void StartHostingGame(string hostSettingTitle, int hostPlayers, int gameType)
     {
         if (hostSettingTitle == "")
         {
@@ -318,7 +320,9 @@ public class MainMenuScript : Photon.MonoBehaviour
 
         hostPlayers = Mathf.Clamp(hostPlayers, 0, 64);
 
-        PhotonNetwork.CreateRoom(hostSettingTitle, true, true, hostPlayers);
+        string[] roomPropsInLobby = { "GameType"};
+        Hashtable customRoomProperties = new Hashtable() { { "GameType", gameType } };
+        PhotonNetwork.CreateRoom(hostSettingTitle, true, true, hostPlayers, customRoomProperties, roomPropsInLobby);
     }
 
     public void CloseAllWindows()
