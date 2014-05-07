@@ -188,6 +188,7 @@ public class MainMenuScript : Photon.MonoBehaviour
 
             GUILayout.Label("Title", GUILayout.Width(200));
             GUILayout.Label("Players", GUILayout.Width(55));
+            GUILayout.Label("Game Type", GUILayout.Width(110));
             GUILayout.EndHorizontal();
 
             JoinScrollPosition = GUILayout.BeginScrollView(JoinScrollPosition);
@@ -202,6 +203,8 @@ public class MainMenuScript : Photon.MonoBehaviour
                     audio.PlayOneShot(pressClip);
                 }
                 GUILayout.Label(room.playerCount + "/" + room.maxPlayers, GUILayout.Width(55));
+
+                GUILayout.Label(gameTypeStrings[(int)room.customProperties["GameType"]], GUILayout.Width(110));
 
                 GUILayout.EndHorizontal();
             }
