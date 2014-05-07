@@ -77,8 +77,8 @@ public class HeavyCannon : ProjectileAbilityBaseScript
                 burstSize = BURST_SIZE_0;
                 burstDelay = BURST_DELAY_0;
                 maximumSpreadAngle = SPREAD_0;
-                particleSystem.startSize = 0.75f;
-                particleSystem.startLifetime = 1.0f;
+                particleSystem.startSize = 1.25f;
+                particleSystem.startLifetime = 1.250f;
                 return level;
 
             case 1:

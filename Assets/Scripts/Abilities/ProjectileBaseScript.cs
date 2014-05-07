@@ -48,9 +48,9 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
         }
     }
 
-    protected override void Update()
+    protected override void FixedUpdate()
     {
-        base.Update();
+        base.FixedUpdate();
         if (aimedProjectile && homingProjectile)
         {
             Debug.LogWarning("Projectile cannot be both aimed & homing");

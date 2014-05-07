@@ -67,7 +67,7 @@ abstract public class AbilityInstanceBaseScript : MonoBehaviour
         Init(null);
     }
 
-    protected virtual void Update()
+    protected virtual void FixedUpdate()
     {
         if (Time.time - spawnTime > lifetime)
         {
