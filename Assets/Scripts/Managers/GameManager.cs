@@ -260,7 +260,7 @@ public class GameManager : Photon.MonoBehaviour
 
     private void RunDataPulse()
     {
-        photonView.RPC("AddPointsToScore", PhotonTargets.All, localPlayer.team, localPlayer.currentPoints);
+        photonView.RPC("AddPointsToScore", PhotonTargets.All, (int)localPlayer.team, localPlayer.currentPoints);
         localPlayer.ScorePoints(localPlayer.currentPoints);
         lastDataPulse = Time.time;
         HitFX o = ObjectPool.Spawn(dataPulseEffect);
@@ -268,8 +268,24 @@ public class GameManager : Photon.MonoBehaviour
     }
 
     [RPC]
-    public int AddPointsToScore(Team team, int points)
+    public int AddPointsToScore(int _team, int points)
     {
+        Team team = Team.None;
+        switch (_team)
+        {
+            case 0:
+                team = Team.Red;
+                break;
+            case 1:
+                team = Team.Blue;
+                break;
+            case 2:
+                team = Team.None;
+                break;
+            default:
+                break;
+        }
+        
         switch (team)
         {
             case Team.Red:
