@@ -28,7 +28,9 @@ namespace KBConstants
             LightCannonLevel0, LightCannonLevel1, LightCannonLevel2,
             HomingRocketLevel0, HomingRocketLevel1, HomingRocketLevel2,
             ShotgunLevel0, ShotgunLevel1, ShotgunLevel2,
-            SniperLevel0, SniperLevel1, SniperLevel2
+            SniperLevel0, SniperLevel1, SniperLevel2,
+            MineLevel0, MineLevel1, MineLevel2,
+            RailgunLevel0, RailgunLevel1, RailgunLevel2
         };
 
         private static readonly IDictionary<type, int> damageValues = new Dictionary<type, int>
@@ -63,7 +65,15 @@ namespace KBConstants
 
             {type.SniperLevel0, 450},
             {type.SniperLevel1, 450},
-            {type.SniperLevel2, 450}
+            {type.SniperLevel2, 450},
+            
+            {type.MineLevel0, 200},
+            {type.MineLevel1, 200},
+            {type.MineLevel2, 200},
+
+            {type.RailgunLevel0, 200},
+            {type.RailgunLevel1, 200},
+            {type.RailgunLevel2, 200}
         };
 
         public static IDictionary<type, int> DAMAGE_VALUES { get { return damageValues; } }
@@ -91,6 +101,8 @@ namespace KBConstants
             LightCannonBulletLevel0, LightCannonBulletLevel1, LightCannonBulletLevel2,
             ShotgunLevel0, ShotgunLevel1, ShotgunLevel2,
             SniperBulletLevel0, SniperBulletLevel1, SniperBulletLevel2,
+            RailgunBulletLevel0, RailgunBulletLevel1, RailgunBulletLevel2,
+            MineLevel0, MineLevel1, MineLevel2,
             HomingRocketL0,
             KillTagBlue, KillTagRed,
             PlasmaExplosionL0, PlasmaExplosionL1, PlasmaExplosionL2,
@@ -142,6 +154,12 @@ namespace KBConstants
             {type.SniperBulletLevel0, "abilities/bullet/sniperbulletl0"},
             {type.SniperBulletLevel1, "abilities/bullet/sniperbulletl1"},
             {type.SniperBulletLevel2, "abilities/bullet/sniperbulletl2"},
+            {type.RailgunBulletLevel0, "abilities/bullet/railgunbulletl0"},
+            {type.RailgunBulletLevel1, "abilities/bullet/railgunbulletl1"},
+            {type.RailgunBulletLevel2, "abilities/bullet/railgunbulletl2"},
+            {type.MineLevel0, "abilities/bullet/minebulletl0"},
+            {type.MineLevel1, "abilities/bullet/minebulletl1"},
+            {type.MineLevel2, "abilities/bullet/minebulletl2"},
         };
 
         public static IDictionary<type, string> PREFAB_NAMES { get { return prefabNames; } }

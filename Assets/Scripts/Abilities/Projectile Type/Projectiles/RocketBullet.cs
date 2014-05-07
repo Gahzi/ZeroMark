@@ -30,7 +30,7 @@ public class RocketBullet : ProjectileBaseScript
         projectileSpeed = rocketInitSpeed;
     }
 
-    protected override void Update()
+    protected override void FixedUpdate()
     {
         if (Time.time - spawnTime > 0.5f)
         {
@@ -40,7 +40,7 @@ public class RocketBullet : ProjectileBaseScript
         {
             lifetime = 30;
         }
-        base.Update();
+        base.FixedUpdate();
     }
 
     public override void Reset()

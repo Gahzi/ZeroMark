@@ -283,7 +283,8 @@ public class GameManager : Photon.MonoBehaviour
             default:
                 break;
         }
-        Debug.Log("Banked {1} points");
+        string s = string.Format("Banked {0} points for team {1}", points, Enum.GetName(typeof(Team), team));
+        Debug.Log(s);
         return 0;
     }
 

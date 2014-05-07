@@ -75,7 +75,8 @@ public class KBCamera : MonoBehaviour
             {
                 if (attachedPlayer.guns[0] != null)
                 {
-                    levelText.text = "(" + attachedPlayer.currentPoints.ToString() + "pts.)" + "Lvl." + attachedPlayer.guns[0].level.ToString();
+                    int l = attachedPlayer.guns[0].level + 1;   
+                    levelText.text = "(" + attachedPlayer.currentPoints.ToString() + "pts.)" + "Lvl." + l.ToString();
                 }
                 else
                 {

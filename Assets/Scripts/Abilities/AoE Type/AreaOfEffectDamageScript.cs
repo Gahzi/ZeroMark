@@ -16,9 +16,9 @@ public class AreaOfEffectDamageScript : ProjectileBaseScript
         transparentColor = new Color(originalMaterial.color.r, originalMaterial.color.g, originalMaterial.color.b, 0);
     }
 
-    protected override void Update()
+    protected override void FixedUpdate()
     {
-        base.Update();
+        base.FixedUpdate();
         gameObject.transform.localScale = Vector3.Lerp(transform.localScale, targetScale, growSpeed * Time.deltaTime);
         gameObject.renderer.material.color = Color.Lerp(renderer.material.color, transparentColor, fadeSpeed * Time.deltaTime);
 
