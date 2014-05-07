@@ -12,7 +12,7 @@ InputManager:
     positiveButton: right
     altNegativeButton: a
     altPositiveButton: d
-    gravity: 3
+    gravity: 3000
     dead: .00100000005
     sensitivity: 3
     snap: 1
@@ -28,7 +28,7 @@ InputManager:
     positiveButton: up
     altNegativeButton: s
     altPositiveButton: w
-    gravity: 3
+    gravity: 100000
     dead: .00100000005
     sensitivity: 3
     snap: 1
@@ -149,50 +149,66 @@ InputManager:
     axis: 2
     joyNum: 0
   - serializedVersion: 3
-    m_Name: ReloadPrimary
+    m_Name: Screenshot
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: 
-    positiveButton: e
+    positiveButton: 
     altNegativeButton: 
-    altPositiveButton: 
-    gravity: 1000
-    dead: .00100000005
-    sensitivity: 1000
+    altPositiveButton: print screen
+    gravity: 0
+    dead: 0
+    sensitivity: .100000001
     snap: 0
     invert: 0
     type: 0
-    axis: 0
+    axis: 2
     joyNum: 0
   - serializedVersion: 3
-    m_Name: ReloadSecondary
+    m_Name: ReloadPrimary
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: 
     positiveButton: r
     altNegativeButton: 
     altPositiveButton: 
-    gravity: 1000
-    dead: .00100000005
-    sensitivity: 1000
+    gravity: 0
+    dead: 0
+    sensitivity: .100000001
     snap: 0
     invert: 0
     type: 0
-    axis: 0
+    axis: 2
     joyNum: 0
   - serializedVersion: 3
-    m_Name: Screenshot
+    m_Name: ReloadSecondary
+    descriptiveName: 
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: e
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 0
+    dead: 0
+    sensitivity: .100000001
+    snap: 0
+    invert: 0
+    type: 0
+    axis: 2
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: ToggleController
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: 
     positiveButton: p
     altNegativeButton: 
     altPositiveButton: 
-    gravity: 1000
-    dead: .00100000005
-    sensitivity: 1000
+    gravity: 0
+    dead: 0
+    sensitivity: .100000001
     snap: 0
     invert: 0
-    type: 1
+    type: 0
     axis: 2
     joyNum: 0

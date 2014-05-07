@@ -14,6 +14,7 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
     #region CONSTANTS
 
     protected float reloadTime;
+    public float remainingReloadTime;
     public int clipSize;
 
     #endregion CONSTANTS
@@ -53,20 +54,25 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
     {
         base.FixedUpdate();
 
+        if (remainingReloadTime > 0)
+        {
+            remainingReloadTime -= Time.deltaTime;
+        }
+
         if (reloading || ammo <= 0)
         {
             available = false;
         }
 
-        if (owner.killTokens < GameConstants.levelOneThreshold)
+        if (owner.currentPoints < GameConstants.levelOneThreshold)
         {
             level = 0;
         }
-        else if (owner.killTokens >= GameConstants.levelOneThreshold && owner.killTokens <= GameConstants.levelTwoThreshold)
+        else if (owner.currentPoints >= GameConstants.levelOneThreshold && owner.currentPoints <= GameConstants.levelTwoThreshold)
         {
             level = 1;
         }
-        else if (owner.killTokens > GameConstants.levelTwoThreshold)
+        else if (owner.currentPoints > GameConstants.levelTwoThreshold)
         {
             level = 2;
         }
@@ -131,6 +137,7 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
     protected IEnumerator Reload()
     {
         reloading = true;
+        remainingReloadTime = reloadTime;
         if (reloadClip != null)
         {
             audio.PlayOneShot(reloadClip);
@@ -223,10 +230,10 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
             projectile.Init(firedBy);
             projectile.damage = projectile.damageLevel[level];
 
-            Collider[] collider = transform.parent.GetComponentsInChildren<Collider>();
+            Collider[] collider = owner.GetComponentsInChildren<Collider>();
             foreach (Collider c in collider)
             {
-                if (c.enabled)
+                if (c.enabled && projectile.collider.enabled)
                 {
                     Physics.IgnoreCollision(c, projectile.collider, true);
                 }

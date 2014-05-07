@@ -33,6 +33,7 @@ GameObject:
   - 198: {fileID: 19800002}
   - 199: {fileID: 19900002}
   - 96: {fileID: 9600000}
+  - 65: {fileID: 6500000}
   m_Layer: 12
   m_Name: RocketBulletL1
   m_TagString: Projectile
@@ -106,6 +107,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 8
   m_CollisionDetection: 0
+--- !u!65 &6500000
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100002}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.00000012, y: 1, z: 16.2999992}
+  m_Center: {x: 5.96046448e-08, y: 0, z: -3.24000001}
 --- !u!96 &9600000
 TrailRenderer:
   m_ObjectHideFlags: 1
@@ -163,7 +176,7 @@ MonoBehaviour:
   damage: 100
   owner: {fileID: 0}
   damageLevel: 
-  projectileSpeed: 120
+  projectileSpeed: 1
   inheritSpeed: 0
   collideWithEnvironment: 1
   homingProjectile: 0
@@ -172,8 +185,8 @@ MonoBehaviour:
   targetPlayer: {fileID: 0}
   targetPosition: {x: 0, y: 0, z: 0}
   rocketInitSpeed: 0
-  accel: 20
-  targetSpeed: 80
+  accel: 10
+  targetSpeed: 300
 --- !u!135 &13500000
 SphereCollider:
   m_ObjectHideFlags: 1

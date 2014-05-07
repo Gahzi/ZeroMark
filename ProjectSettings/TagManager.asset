@@ -9,25 +9,47 @@ TagManager:
   - Hitbox
   - Item
   - KillTag
-  - CaptureZone
-  - Teleporter
-  - ItemZone
-  - 
-  - 
-  - GUI
   - BankZone
-  - SpawnRedDrone
-  - SpawnRedMech
-  - SpawnRedTank
-  - SpawnBlueDrone
-  - SpawnBlueMech
-  - SpawnBlueTank
-  - Prespawn
+  - Teleporter
+  - GUI
   - Projectile
+  - Prespawn
+  - SpawnDroneRed0
+  - SpawnDroneRed1
+  - SpawnDroneRed2
+  - SpawnDroneBlue0
+  - SpawnDroneBlue1
+  - SpawnDroneBlue2
+  - SpawnMechRed0
+  - SpawnMechRed1
+  - SpawnMechRed2
+  - SpawnMechBlue0
+  - SpawnMechBlue1
+  - SpawnMechBlue2
+  - SpawnTankRed0
+  - SpawnTankRed1
+  - SpawnTankRed2
+  - SpawnTankBlue0
+  - SpawnTankBlue1
+  - SpawnTankBlue2
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
   - 
   - 
   - 
   - GoalZone
+  - ItemZone
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
   - 
   Builtin Layer 0: Default
   Builtin Layer 1: TransparentFX

@@ -40,7 +40,8 @@ abstract public class AbilityInstanceBaseScript : MonoBehaviour
         rigidbody.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY;
         rigidbody.isKinematic = true;
         collider.isTrigger = true;
-        damage = 0;
+        //damage = 0;
+        //lifetime = 10;
         trailRenderer = GetComponent<TrailRenderer>();
         if (trailRenderer != null)
         {
@@ -71,7 +72,7 @@ abstract public class AbilityInstanceBaseScript : MonoBehaviour
         if (Time.time - spawnTime > lifetime)
         {
             //DoOnHit(); // Uncomment this line to have projecticles "hit" on timeout
-            ObjectPool.Recycle(this);
+            Reset();
         }
     }
 

@@ -10,6 +10,7 @@ public class ObjectPoolEffect : MonoBehaviour
     bool fadeOut;
     Color originalColor;
     protected int lifetime;
+    public ObjectPoolEffect prefab;
 
     private void Start()
     {
@@ -17,6 +18,11 @@ public class ObjectPoolEffect : MonoBehaviour
         {
             originalColor = renderer.material.color;
         }
+        if (prefab != null)
+        {
+            ObjectPool.CreatePool(prefab);
+        }
+
     }
 
     public virtual void Init(int _lifetime)

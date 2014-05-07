@@ -10,7 +10,7 @@ public class PlasmaGun : ProjectileAbilityBaseScript
 
     public static float COOLDOWN_0 = 0.25f;
     public static int RANGE_0 = 50;
-    public static float RELOAD_TIME_0 = 3.0f;
+    public static float RELOAD_TIME_0 = 2.0f;
     public static int CLIP_SIZE_0 = 6;
     public static int BURST_SIZE_0 = 1;
     public static float BURST_DELAY_0 = 0.00f;
@@ -18,7 +18,7 @@ public class PlasmaGun : ProjectileAbilityBaseScript
 
     public static float COOLDOWN_1 = 0.185f;
     public static int RANGE_1 = 50;
-    public static float RELOAD_TIME_1 = 3.0f;
+    public static float RELOAD_TIME_1 = 2.0f;
     public static int CLIP_SIZE_1 = 8;
     public static int BURST_SIZE_1 = 4;
     public static float BURST_DELAY_1 = 0.00f;
@@ -27,7 +27,7 @@ public class PlasmaGun : ProjectileAbilityBaseScript
 
     public static float COOLDOWN_2 = 0.15f;
     public static int RANGE_2 = 50;
-    public static float RELOAD_TIME_2 = 2.5f;
+    public static float RELOAD_TIME_2 = 1.8f;
     public static int CLIP_SIZE_2 = 10;
     public static int BURST_SIZE_2 = 6;
     public static float BURST_DELAY_2 = 0.00f;

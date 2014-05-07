@@ -82,7 +82,6 @@ public class KBPlayer : KBControllableGameObject
     public float invulnerabilityTime;
     public float spawnProtectionTime;
     public float bankLockoutTime;
-    public float teleportationRecharge = 5.0f;
     public GameObject spawnAnimator;
     public float spawnDelay = 2.50f;
     public GameObject invulnerabilityShield;
@@ -155,10 +154,10 @@ public class KBPlayer : KBControllableGameObject
 
     public int killCount;
     public int deathCount;
-    public int killTokens;
-    public int totalTokensGained;
-    public int totalTokensLost;
-    public int totalTokensBanked;
+    public int currentPoints;
+    public int totalPointsGained;
+    public int totalPointsLost;
+    public int totalPointsBanked;
 
     public ProjectileAbilityBaseScript[] guns;
 
@@ -295,33 +294,48 @@ public class KBPlayer : KBControllableGameObject
 
     private void FixedUpdate()
     {
-        if (inBankZone)
+        switch (GameManager.Instance.gameType)
         {
-            timeInBankZone += Time.deltaTime;
-        }
-        if (timeInBankZone > 3.0f && killTokens > 0 && inBankZone)
-        {
-            int tokensToBank = 0;
-            if (killTokens > GameConstants.levelTwoThreshold)
-            {
-                tokensToBank = killTokens - GameConstants.levelTwoThreshold;
-            }
-            else if (killTokens > GameConstants.levelOneThreshold)
-            {
-                tokensToBank = killTokens - GameConstants.levelOneThreshold;
-            }
-            else
-            {
-                tokensToBank = killTokens;
-            }
+            case GameManager.GameType.CapturePoint:
+                if (inBankZone)
+                {
+                    timeInBankZone += Time.deltaTime;
+                }
+                if (timeInBankZone > 3.0f && currentPoints > 0 && inBankZone)
+                {
+                    int tokensToBank = 0;
+                    if (currentPoints > GameConstants.levelTwoThreshold)
+                    {
+                        tokensToBank = currentPoints - GameConstants.levelTwoThreshold;
+                    }
+                    else if (currentPoints > GameConstants.levelOneThreshold)
+                    {
+                        tokensToBank = currentPoints - GameConstants.levelOneThreshold;
+                    }
+                    else
+                    {
+                        tokensToBank = currentPoints;
+                    }
 
-            for (int i = 0; i < GameManager.Instance.bankZones.Count; i++)
-            {
-                GameManager.Instance.bankZones[i].photonView.RPC("AddPoints", PhotonTargets.AllBuffered, tokensToBank, (int)team);
-            }
-            killTokens -= tokensToBank;
-            totalTokensBanked += tokensToBank;
-            timeInBankZone = 0.0f;
+                    for (int i = 0; i < GameManager.Instance.bankZones.Count; i++)
+                    {
+                        GameManager.Instance.bankZones[i].photonView.RPC("AddPoints", PhotonTargets.All, tokensToBank, (int)team);
+                    }
+
+                    currentPoints -= tokensToBank;
+                    totalPointsBanked += tokensToBank;
+                    timeInBankZone = 0.0f;
+                }
+                break;
+
+            case GameManager.GameType.DataPulse:
+                break;
+
+            case GameManager.GameType.Deathmatch:
+                break;
+
+            default:
+                break;
         }
 
         if (Time.time > lastDamageTime + regenDelay)
@@ -330,10 +344,6 @@ public class KBPlayer : KBControllableGameObject
             health = Mathf.FloorToInt(floatHealth);
         }
 
-        if (teleportationRecharge > 0)
-        {
-            teleportationRecharge -= Time.deltaTime;
-        }
 
         if (invulnerabilityTime > 0)
         {
@@ -361,7 +371,6 @@ public class KBPlayer : KBControllableGameObject
                 mousePlayerDiff = playerPositionOnScreen - mousePos;
                 if (useController)
                 {
-
                     if (!playerIndexSet || !gamepadPrevState.IsConnected)
                     {
                         for (int i = 0; i < 4; ++i)
@@ -399,6 +408,17 @@ public class KBPlayer : KBControllableGameObject
         {
             TakeDamage(100);
         }
+
+        if (Input.GetButtonDown("ToggleController"))
+        {
+            useController = !useController;
+        }
+    }
+
+    public void ScorePoints(int value)
+    {
+        currentPoints -= value;
+        totalPointsBanked += value;
     }
 
     private void OnGUI()
@@ -415,7 +435,7 @@ public class KBPlayer : KBControllableGameObject
     private void OnPhotonInstantiate(PhotonMessageInfo msg)
     {
         networkPlayer = msg.sender;
-        name = msg.sender.name;
+        name += msg.sender.name;
         SetStats();
         GameManager.Instance.players.Add(this);
     }
@@ -461,12 +481,12 @@ public class KBPlayer : KBControllableGameObject
         {
             Vector3 pos = transform.localPosition;
             Quaternion rot = upperBody.transform.rotation;
-            int kt = killTokens;
+            int kt = currentPoints;
             int kc = killCount;
             int dc = deathCount;
-            int ttg = totalTokensGained;
-            int ttl = totalTokensLost;
-            int ttb = totalTokensBanked;
+            int ttg = totalPointsGained;
+            int ttl = totalPointsLost;
+            int ttb = totalPointsBanked;
             int hlth = health;
             int mxhlth = stats.health;
             bool wtngFrRspwn = waitingForRespawn;
@@ -541,12 +561,12 @@ public class KBPlayer : KBControllableGameObject
             fraction = 0;                           // reset the fraction we alreay moved. see Update()
 
             upperBody.transform.rotation = rot;          // this sample doesn't smooth rotation
-            killTokens = kt;
+            currentPoints = kt;
             killCount = kc;
             deathCount = dc;
-            totalTokensGained = ttg;
-            totalTokensLost = ttl;
-            totalTokensBanked = ttb;
+            totalPointsGained = ttg;
+            totalPointsLost = ttl;
+            totalPointsBanked = ttb;
             health = hlth;
             waitingForRespawn = wtngFrRspwn;
             team = (Team)tm;
@@ -591,26 +611,38 @@ public class KBPlayer : KBControllableGameObject
             bankIndicator.SetActive(true);
         }
 
-        if (other.gameObject.CompareTag("Teleporter"))
+        //if (other.gameObject.CompareTag("Teleporter"))
+        //{
+        //    Teleporter t = other.gameObject.GetComponent<Teleporter>();
+        //    if (t != null && t.linkedTeleporter != null && teleportationRecharge <= 0)
+        //    {
+        //        Vector3 newPos = t.linkedTeleporter.transform.position;
+        //        transform.position = new Vector3(newPos.x, newPos.y, newPos.z);
+        //        teleportationRecharge = 5.0f;
+        //    }
+        //}
+
+        if (other.gameObject.tag.StartsWith("Spawn"))
         {
-            Teleporter t = other.gameObject.GetComponent<Teleporter>();
-            if (t != null && t.linkedTeleporter != null && teleportationRecharge <= 0)
+            int loadout = 0;
+            if (other.gameObject.tag.EndsWith("1"))
             {
-                Vector3 newPos = t.linkedTeleporter.transform.position;
-                transform.position = new Vector3(newPos.x, newPos.y, newPos.z);
-                teleportationRecharge = 5.0f;
+                loadout = 1;
             }
-        }
+            else if (other.gameObject.tag.EndsWith("2"))
+            {
+                loadout = 2;
+            }
 
         if ((other.gameObject.CompareTag("SpawnRedDrone") || other.gameObject.CompareTag("SpawnRedMech") || other.gameObject.CompareTag("SpawnRedTank")) && hasSwitchedSinceDeath == false)
-        {
-            SetTeam(Team.Red);
-            StartCoroutine(Spawn(other.gameObject.tag.ToString()));
-        }
+            {
+                SetTeam(Team.Red);
+            }
         else if ((other.gameObject.CompareTag("SpawnBlueDrone") || other.gameObject.CompareTag("SpawnBlueMech") || other.gameObject.CompareTag("SpawnBlueTank")) && hasSwitchedSinceDeath == false)
-        {
-            SetTeam(Team.Blue);
-            StartCoroutine(Spawn(other.gameObject.tag.ToString()));
+            {
+                SetTeam(Team.Blue);
+            }
+            StartCoroutine(Spawn(other.gameObject.tag.ToString(), loadout));
         }
     }
 
@@ -761,7 +793,7 @@ public class KBPlayer : KBControllableGameObject
                         }
                     }
                 }
-                if (gamepadState.Triggers.Right > 0)
+                if (gamepadState.Triggers.Right > 0 && guns.Length > 1)
                 {
                     if (guns[1].ammo <= 0)
                     {
@@ -792,10 +824,7 @@ public class KBPlayer : KBControllableGameObject
                 int[] reloadingGuns = { 1 };
                 photonView.RPC("Reload", PhotonTargets.All, reloadingGuns);
             }
-
         }
-
-
 
         if (gamepadState.Buttons.Start == ButtonState.Pressed)
         {
@@ -817,6 +846,15 @@ public class KBPlayer : KBControllableGameObject
 
     private void ControlKBAM()
     {
+        if (Screen.lockCursor)
+        {
+            Screen.lockCursor = false;
+        }
+        if (!Screen.showCursor)
+        {
+            Screen.showCursor = true;
+        }
+
         #region Movement
 
         float modifiedMoveSpeed = 0;
@@ -918,7 +956,7 @@ public class KBPlayer : KBControllableGameObject
                         }
                     }
                 }
-                if (Input.GetMouseButton(1))
+                if (Input.GetMouseButton(1) && guns.Length > 1)
                 {
                     if (guns[1].ammo <= 0)
                     {
@@ -949,7 +987,6 @@ public class KBPlayer : KBControllableGameObject
                 int[] reloadingGuns = { 1 };
                 photonView.RPC("Reload", PhotonTargets.All, reloadingGuns);
             }
-
         }
 
         if (Input.GetKey(KeyCode.Tab))
@@ -1106,7 +1143,7 @@ public class KBPlayer : KBControllableGameObject
                 HitFX fx = ObjectPool.Spawn(hitExplosion, transform.position, Quaternion.identity);
                 fx.DoEffect(amount);
                 Camera.main.GetComponent<ScreenShake>().StartShake(0.125f, 10.0f * (amount / 100));
-                audio.PlayOneShot(gotHitSFX[Random.Range(0, gotHitSFX.Length)]);
+                audio.PlayOneShot(gotHitSFX[UnityEngine.Random.Range(0, gotHitSFX.Length)]);
                 lastDamageTime = Time.time;
             }
             return health;
@@ -1129,8 +1166,8 @@ public class KBPlayer : KBControllableGameObject
         if (killerPlayer.isLocal && networkPlayer == PhotonNetwork.player)
         {
             killCount++;
-            totalTokensGained++;
-            killTokens++;
+            totalPointsGained++;
+            currentPoints++;
         }
         List<KBPlayer> currentPlayers = GameManager.Instance.players;
 
@@ -1149,9 +1186,9 @@ public class KBPlayer : KBControllableGameObject
     private void RespawnToPrespawn()
     {
         //Spawn as Core
-        photonView.RPC("SwitchType", PhotonTargets.AllBuffered, "SpawnCore");
+        photonView.RPC("SwitchType", PhotonTargets.AllBuffered, "SpawnCore", 0);
 
-        totalTokensLost += killTokens;
+        totalPointsLost += currentPoints;
         waitingForRespawn = false;
         acceptingInputs = true;
 
@@ -1167,10 +1204,10 @@ public class KBPlayer : KBControllableGameObject
         transform.position = GameObject.FindGameObjectWithTag("Prespawn").transform.position;
         health = coreBaseHealth;
 
-		if(team != Team.None)
-		{
-			GenerateKillTags(killTokens, deathPosition);	
-		}
+        if (team != Team.None)
+        {
+            GenerateKillTags(currentPoints, deathPosition);
+        }
     }
 
     private void GenerateKillTags(int _points, Vector3 center)
@@ -1211,18 +1248,18 @@ public class KBPlayer : KBControllableGameObject
                 newTag = GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagRed, center, Quaternion.identity, (int)team);
             }
             newTag.transform.localScale *= 1.0f + (pointsToDrop / 100.0f);
-            newTag.transform.Translate(new Vector3(Random.Range(-10.0f, 10.0f), 0, Random.Range(-10.0f, 10.0f)));
+            newTag.transform.Translate(new Vector3(UnityEngine.Random.Range(-10.0f, 10.0f), 0, UnityEngine.Random.Range(-10.0f, 10.0f)));
             newTag.GetPhotonView().RPC("SetPointValue", PhotonTargets.AllBuffered, thisTagValue);
             pointsToDrop -= thisTagValue;
         }
 
-        killTokens = 0;
+        currentPoints = 0;
     }
 
     /// <summary>
     /// Spawns the player in the combat area.
     /// </summary>
-    private IEnumerator Spawn(string tag)
+    private IEnumerator Spawn(string tag, int loadout)
     {
         audio.PlayOneShot(respawnSound);
         spawnAnimator.GetComponent<SpawnAnimation>().Activate();
@@ -1230,8 +1267,8 @@ public class KBPlayer : KBControllableGameObject
         yield return new WaitForSeconds(spawnDelay);
         if (teamSpawnpoints.Count > 0 && photonView.isMine)
         {
-            photonView.RPC("SwitchType", PhotonTargets.AllBuffered, tag);
-            int spawnPointIndex = Random.Range(0, teamSpawnpoints.Count - 1);
+            photonView.RPC("SwitchType", PhotonTargets.AllBuffered, tag, loadout);
+            int spawnPointIndex = UnityEngine.Random.Range(0, teamSpawnpoints.Count - 1);
             transform.position = teamSpawnpoints[spawnPointIndex].transform.position;
             waitingForRespawn = false;
             acceptingInputs = true;
@@ -1279,7 +1316,7 @@ public class KBPlayer : KBControllableGameObject
     }
 
     [RPC]
-    private void SwitchType(string typeTrigger, PhotonMessageInfo info)
+    private void SwitchType(string typeTrigger, int loadout, PhotonMessageInfo info)
     {
         if (networkPlayer == info.sender)
         {
@@ -1288,27 +1325,95 @@ public class KBPlayer : KBControllableGameObject
                 allBodies[i].SetActive(false);
             }
 
-            if (typeTrigger.Equals("SpawnRedDrone") || typeTrigger.Equals("SpawnBlueDrone"))
+            if (typeTrigger.StartsWith("SpawnDrone"))
             {
                 upperBody = upperBodyDrone;
                 lowerBody = lowerBodyDrone;
                 type = PlayerType.drone;
-            }
+                switch (loadout)
+                {
+                    case 0: // Shotgun
+                        SetActiveIfFound(transform, "Shotgun", true);
+                        SetActiveIfFound(transform, "LightCannon", false);
+                        SetActiveIfFound(transform, "PlasmaGun", false);
+                        break;
 
-            else if (typeTrigger.Equals("SpawnRedMech") || typeTrigger.Equals("SpawnBlueMech"))
+                    case 1: // Needler (LCannon)
+                        SetActiveIfFound(transform, "Shotgun", false);
+                        SetActiveIfFound(transform, "LightCannon", true);
+                        SetActiveIfFound(transform, "PlasmaGun", false);
+                        break;
+
+                    case 2: // Plasma
+                        SetActiveIfFound(transform, "Shotgun", false);
+                        SetActiveIfFound(transform, "LightCannon", false);
+                        SetActiveIfFound(transform, "PlasmaGun", true);
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+            else if (typeTrigger.StartsWith("SpawnMech"))
             {
                 upperBody = upperBodyMech;
                 lowerBody = lowerBodyMech;
                 type = PlayerType.mech;
-            }
+                switch (loadout)
+                {
+                    case 0:
+                        SetActiveIfFound(transform, "MachineGun", true);
+                        SetActiveIfFound(transform, "PlasmaGun", false);
+                        SetActiveIfFound(transform, "LightCannon", false);
+                        SetActiveIfFound(transform, "SniperRifle", false);
+                        break;
 
-            else if (typeTrigger.Equals("SpawnRedTank") || typeTrigger.Equals("SpawnBlueTank"))
+                    case 1:
+                        SetActiveIfFound(transform, "MachineGun", false);
+                        SetActiveIfFound(transform, "PlasmaGun", true);
+                        SetActiveIfFound(transform, "LightCannon", false);
+                        SetActiveIfFound(transform, "SniperRifle", false);
+                        break;
+
+                    case 2:
+                        SetActiveIfFound(transform, "MachineGun", false);
+                        SetActiveIfFound(transform, "PlasmaGun", false);
+                        SetActiveIfFound(transform, "SniperRifle", true);
+                        SetActiveIfFound(transform, "LightCannon", false);
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+            else if (typeTrigger.StartsWith("SpawnTank"))
             {
                 upperBody = upperBodyTank;
                 lowerBody = lowerBodyTank;
                 type = PlayerType.tank;
-            }
 
+                switch (loadout)
+                {
+                    case 0:
+                        SetActiveIfFound(transform, "HeavyCannon", true);
+                        SetActiveIfFound(transform, "Rockets", true);
+                        break;
+
+                    case 1:
+                        SetActiveIfFound(transform, "HeavyCannon", true);
+                        SetActiveIfFound(transform, "Mines", false);
+                        break;
+
+                    case 2:
+                        SetActiveIfFound(transform, "HeavyCannon", true);
+                        SetActiveIfFound(transform, "Mines", true);
+
+                        break;
+
+                    default:
+                        break;
+                }
+            }
             else if (typeTrigger.Equals("SpawnCore"))
             {
                 upperBody = upperBodyCore;

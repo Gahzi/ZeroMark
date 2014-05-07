@@ -36,6 +36,10 @@ public class RocketBullet : ProjectileBaseScript
         {
             projectileSpeed = Mathf.Lerp(rocketInitSpeed, targetSpeed, accel * Time.deltaTime);
         }
+        if (lifetime > 30)
+        {
+            lifetime = 30;
+        }
         base.Update();
     }
 
