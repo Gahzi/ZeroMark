@@ -21,6 +21,11 @@ public class MainMenuScript : Photon.MonoBehaviour
     public GameObject playButton;
     public AudioClip pressClip;
 
+    private int gameTypeInt = 0;
+	private string[] gameTypeStrings = {"Toolbar1", "Toolbar2", "Toolbar3"};
+
+
+
     private void Awake()
     {
         //Default join values
@@ -282,6 +287,11 @@ public class MainMenuScript : Photon.MonoBehaviour
         hostMaxPlayers = int.Parse(GUILayout.TextField(hostMaxPlayers + "", GUILayout.Width(50)) + "");
         GUILayout.EndHorizontal();
 
+       
+
+	void OnGUI () {
+		toolbarInt = GUI.Toolbar (new Rect (25, 25, 250, 30), toolbarInt, toolbarStrings);
+
         CheckHostVars();
 
         GUILayout.BeginHorizontal();
@@ -330,59 +340,4 @@ public class MainMenuScript : Photon.MonoBehaviour
     {
         Application.Quit();
     }
-
-    //
-    // CUSTOM HOST LIST
-    //
-    // You could use this to implement custom sorting, or adding custom fields.
-    //
-
-    /*
-    private List<MyRoomData> hostDataList = new List<MyRoomData>();
-
-    void OnReceivedRoomList()
-    {
-        Debug.Log("We received a new room list, total rooms: " + PhotonNetwork.GetRoomList().Length);
-        ReloadHostList();
-    }
-
-    void OnReceivedRoomListUpdate()
-    {
-        Debug.Log("We received a room list update, total rooms now: " + PhotonNetwork.GetRoomList().Length);
-        ReloadHostList();
-    }
-
-    void ReloadHostList()
-    {
-        hostDataList =new List<MyRoomData>();
-        foreach(Room room in PhotonNetwork.GetRoomList())
-        {
-            MyRoomData cHost= new MyRoomData();
-            cHost.room = room;
-
-            hostDataList.Add(cHost);
-        }
-    }
-
-    public class MyRoomData
-    {
-        public Room room;
-
-        public string title
-        {
-            get { return room.name; }
-        }
-        public int connectedPlayers
-        {
-            get { return room.playerCount; }
-        }
-        public int maxPlayers
-        {
-            get { return room.maxPlayers; }
-        }
-
-        //Example custom fields
-        public int gameVersion; // You could
-    }
-     */
 }
