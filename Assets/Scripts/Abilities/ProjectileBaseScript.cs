@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 [RequireComponent(typeof(Rigidbody))]
 
@@ -30,6 +31,8 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
 
     public KBPlayer targetPlayer;
     public Vector3 targetPosition;
+    private BoxCollider boxCollider;
+    private Vector3 boxColliderSize;
 
     public override void Awake()
     {
@@ -41,6 +44,11 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
     {
         base.Start();
         gameObject.tag = "Projectile";
+        if (GetComponent<BoxCollider>() != null)
+        {
+            boxCollider = GetComponent<BoxCollider>();
+            boxColliderSize = boxCollider.size;
+        }
 
         if (explosionPrefab != null)
         {
@@ -51,6 +59,10 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
     protected override void FixedUpdate()
     {
         base.FixedUpdate();
+        if (boxCollider != null)
+        {
+            boxCollider.size = Vector3.Lerp(boxCollider.size, boxColliderSize, 5.0f * Time.deltaTime);
+        }
         if (aimedProjectile && homingProjectile)
         {
             Debug.LogWarning("Projectile cannot be both aimed & homing");
@@ -129,6 +141,10 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
             a.owner = owner;
             a.Init();
         }
+        if (boxCollider != null)
+        {
+            boxCollider.size = Vector3.one;
+        }
         base.DoOnHit();
     }
 
@@ -146,4 +162,5 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
     {
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetPosition - owner.transform.position), 5.0f * Time.deltaTime);
     }
+
 }
