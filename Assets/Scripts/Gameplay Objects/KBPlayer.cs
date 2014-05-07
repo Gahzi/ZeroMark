@@ -1395,21 +1395,21 @@ public class KBPlayer : KBControllableGameObject
                 switch (loadout)
                 {
                     case 0:
-                        SetActiveIfFound(transform, "HeavyCannon", true);
+                        SetActiveIfFound(transform, "Cannon", true);
                         SetActiveIfFound(transform, "Rockets", true);
                         SetActiveIfFound(transform, "Railgun", false);
                         SetActiveIfFound(transform, "Mines", false);
                         break;
 
                     case 1:
-                        SetActiveIfFound(transform, "HeavyCannon", true);
+                        SetActiveIfFound(transform, "Cannon", true);
                         SetActiveIfFound(transform, "Rockets", false);
                         SetActiveIfFound(transform, "Railgun", true);
                         SetActiveIfFound(transform, "Mines", false);
                         break;
 
                     case 2:
-                        SetActiveIfFound(transform, "HeavyCannon", true);
+                        SetActiveIfFound(transform, "Cannon", true);
                         SetActiveIfFound(transform, "Rockets", false);
                         SetActiveIfFound(transform, "Railgun", false);
                         SetActiveIfFound(transform, "Mines", true);
