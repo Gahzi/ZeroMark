@@ -1399,15 +1399,18 @@ public class KBPlayer : KBControllableGameObject
                 {
                     case 0:
                         SetActiveIfFound(transform, "HeavyCannon", true);
-                        //SetActiveIfFound(transform, "", false);
+                        SetActiveIfFound(transform, "Rockets", true);
                         break;
 
                     case 1:
                         SetActiveIfFound(transform, "HeavyCannon", true);
-                        //SetActiveIfFound(transform, "PlasmaGun", true);
+                        SetActiveIfFound(transform, "Mines", false);
                         break;
 
                     case 2:
+                        SetActiveIfFound(transform, "HeavyCannon", true);
+                        SetActiveIfFound(transform, "Mines", true);
+
                         break;
 
                     default:

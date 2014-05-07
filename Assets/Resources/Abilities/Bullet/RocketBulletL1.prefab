@@ -185,8 +185,8 @@ MonoBehaviour:
   targetPlayer: {fileID: 0}
   targetPosition: {x: 0, y: 0, z: 0}
   rocketInitSpeed: 0
-  accel: 20
-  targetSpeed: 80
+  accel: 10
+  targetSpeed: 300
 --- !u!135 &13500000
 SphereCollider:
   m_ObjectHideFlags: 1

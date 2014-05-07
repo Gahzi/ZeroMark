@@ -9,7 +9,7 @@ public class RockatLauncher : ProjectileAbilityBaseScript
     public static int RANGE_0 = 100;
     public static float RELOAD_TIME_0 = 3.5f;
     public static int CLIP_SIZE_0 = 1;
-    public static int BURST_SIZE_0 = 8;
+    public static int BURST_SIZE_0 = 5;
     public static float BURST_DELAY_0 = 0.1f;
     public static float SPREAD_0 = 5.0f;
 
@@ -17,7 +17,7 @@ public class RockatLauncher : ProjectileAbilityBaseScript
     public static int RANGE_1 = 100;
     public static float RELOAD_TIME_1 = 3.5f;
     public static int CLIP_SIZE_1 = 1;
-    public static int BURST_SIZE_1 = 12;
+    public static int BURST_SIZE_1 = 8;
     public static float BURST_DELAY_1 = 0.075f;
     public static float SPREAD_1 = 5.0f;
 
@@ -25,7 +25,7 @@ public class RockatLauncher : ProjectileAbilityBaseScript
     public static int RANGE_2 = 100;
     public static float RELOAD_TIME_2 = 2.5f;
     public static int CLIP_SIZE_2 = 3;
-    public static int BURST_SIZE_2 = 3;
+    public static int BURST_SIZE_2 = 12;
     public static float BURST_DELAY_2 = 0.20f;
     public static float SPREAD_2 = 0.0f;
 
