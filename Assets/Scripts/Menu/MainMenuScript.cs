@@ -25,6 +25,10 @@ public class MainMenuScript : Photon.MonoBehaviour
     private int gameTypeInt = 0;
 	private string[] gameTypeStrings = {"CapturePoint", "DataPulse", "Deathmatch"};
 
+    GUIContent[] mapComboBoxList;
+    private ComboBoxGUI mapComboBoxControl;// = new ComboBox();
+    private GUIStyle listStyle = new GUIStyle();
+
 
 
     private void Awake()
@@ -39,6 +43,26 @@ public class MainMenuScript : Photon.MonoBehaviour
 
         if (!PhotonNetwork.connected)
             PhotonNetwork.ConnectUsingSettings("1.0");
+    }
+
+    private void Start()
+    {
+        mapComboBoxList = new GUIContent[5];
+        mapComboBoxList[0] = new GUIContent("Floating City 3");
+        mapComboBoxList[1] = new GUIContent("Floating City 4");
+        mapComboBoxList[2] = new GUIContent("Floating City 5");
+        mapComboBoxList[3] = new GUIContent("Floating City 6");
+        mapComboBoxList[4] = new GUIContent("Floating City 7");
+
+        listStyle.normal.textColor = Color.white;
+        listStyle.onHover.background =
+        listStyle.hover.background = new Texture2D(2, 2);
+        listStyle.padding.left =
+        listStyle.padding.right =
+        listStyle.padding.top =
+        listStyle.padding.bottom = 4;
+
+        mapComboBoxControl = new ComboBoxGUI(new Rect(50, 100, 100, 20), mapComboBoxList[0], mapComboBoxList, "button", "box", listStyle);
     }
 
     private void OnConnectedToPhoton()
@@ -103,9 +127,12 @@ public class MainMenuScript : Photon.MonoBehaviour
 
         if (GUILayout.Button("Next"))
         {
-            currentGUIMethod = "join";
-            PhotonNetwork.playerName = playerName;
-            OpenServerBrowser();
+            if (!playerName.Trim().Equals(""))
+            {
+                currentGUIMethod = "join";
+                PhotonNetwork.playerName = playerName;
+                OpenServerBrowser();
+            }
         }   
     }
 
@@ -189,6 +216,8 @@ public class MainMenuScript : Photon.MonoBehaviour
             GUILayout.Label("Title", GUILayout.Width(200));
             GUILayout.Label("Players", GUILayout.Width(55));
             GUILayout.Label("Game Type", GUILayout.Width(110));
+            GUILayout.FlexibleSpace();
+            GUILayout.Label("Map", GUILayout.Width(200));
             GUILayout.EndHorizontal();
 
             JoinScrollPosition = GUILayout.BeginScrollView(JoinScrollPosition);
@@ -204,7 +233,10 @@ public class MainMenuScript : Photon.MonoBehaviour
                 }
                 GUILayout.Label(room.playerCount + "/" + room.maxPlayers, GUILayout.Width(55));
 
+                
                 GUILayout.Label(gameTypeStrings[(int)room.customProperties["GameType"]], GUILayout.Width(110));
+                GUILayout.FlexibleSpace();
+                GUILayout.Label(mapComboBoxList[(int)room.customProperties["Map"]].ToString(), GUILayout.Width(200));
 
                 GUILayout.EndHorizontal();
             }
@@ -258,7 +290,7 @@ public class MainMenuScript : Photon.MonoBehaviour
     {
         //Stop communication until in the game
         PhotonNetwork.isMessageQueueRunning = false;
-        Application.LoadLevel(Application.loadedLevel + 1);
+        Application.LoadLevel(mapComboBoxControl.SelectedItemIndex+1);
     }
 
     private string hostTitle;
@@ -300,12 +332,24 @@ public class MainMenuScript : Photon.MonoBehaviour
         CheckHostVars();
 
         GUILayout.BeginHorizontal();
+        GUILayout.Label("Map: ");
+        GUILayout.FlexibleSpace();
+        Rect comboBoxRect = GUILayoutUtility.GetRect(200, 20);
+        mapComboBoxControl.rect = comboBoxRect;
+        mapComboBoxControl.Show();
+        GUILayout.EndHorizontal();
+        
+
+        GUILayout.BeginHorizontal();
+        GUILayout.FlexibleSpace();
+        GUILayout.BeginVertical();
         GUILayout.FlexibleSpace();
         if (GUILayout.Button("Start server", GUILayout.Width(150)))
         {
             StartHostingGame(hostTitle, hostMaxPlayers,gameTypeInt);
             audio.PlayOneShot(pressClip);
         }
+        GUILayout.EndVertical();
         GUILayout.EndHorizontal();
     }
 
@@ -323,8 +367,8 @@ public class MainMenuScript : Photon.MonoBehaviour
 
         hostPlayers = Mathf.Clamp(hostPlayers, 0, 64);
 
-        string[] roomPropsInLobby = { "GameType"};
-        Hashtable customRoomProperties = new Hashtable() { { "GameType", gameType } };
+        string[] roomPropsInLobby = { "GameType","Map"};
+        Hashtable customRoomProperties = new Hashtable() { { "GameType", gameType }, { "Map",mapComboBoxControl.SelectedItemIndex} };
         PhotonNetwork.CreateRoom(hostSettingTitle, true, true, hostPlayers, customRoomProperties, roomPropsInLobby);
     }
 

@@ -73,6 +73,11 @@ public class GUIManager : MonoBehaviour
         }
     }
 
+    private void ShowPlayerGUI()
+    {
+
+    }
+
     private void ShowStatTab()
     {
         float statX = Screen.width * 0.25f;

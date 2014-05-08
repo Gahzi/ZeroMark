@@ -394,13 +394,13 @@ public class GameManager : Photon.MonoBehaviour
             case GameType.Deathmatch:
 
                 // Add primary check for score limit here
-                if (IsGameTimeOver())
+                if (redTeamScore >= 30 || blueTeamScore >= 30)
                 {
-                    if (redTeamScore > blueTeamScore)
+                    if (redTeamScore >= 30)
                     {
                         state = GameState.RedWins;
                     }
-                    else if (blueTeamScore > redTeamScore)
+                    else if (blueTeamScore >= 30)
                     {
                         state = GameState.BlueWins;
                     }
