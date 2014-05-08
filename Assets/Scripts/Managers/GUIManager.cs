@@ -23,6 +23,7 @@ public class GUIManager : MonoBehaviour
 
     public TextMesh redScore;
     public TextMesh blueScore;
+    public TextMesh time;
 
     private static GUIManager instance;
 
@@ -51,6 +52,8 @@ public class GUIManager : MonoBehaviour
     {
         redScore = GameManager.Instance.localPlayer.gameObject.GetComponentInChildren<KBCamera>().redScore;
         blueScore = GameManager.Instance.localPlayer.gameObject.GetComponentInChildren<KBCamera>().blueScore;
+        time = GameManager.Instance.localPlayer.gameObject.GetComponentInChildren<KBCamera>().time;
+
         redScore.text = "00";
         redScore.text = "00";
     }
@@ -80,7 +83,6 @@ public class GUIManager : MonoBehaviour
 
     private void ShowPlayerGUI()
     {
-
     }
 
     private void ShowStatTab()
@@ -300,21 +302,29 @@ public class GUIManager : MonoBehaviour
 
     private void Update()
     {
+        float remainingGameTime = 0f;
+        
         switch (GameManager.Instance.gameType)
         {
             case GameManager.GameType.CapturePoint:
                 redScore.text = GameManager.Instance.redTeamScore.ToString("00");
                 blueScore.text = GameManager.Instance.blueTeamScore.ToString("00");
+                remainingGameTime = GameManager.Instance.gameTimeMax - GameManager.Instance.gameTime;
+                time.text = remainingGameTime.ToString("00");
                 break;
 
             case GameManager.GameType.DataPulse:
                 redScore.text = GameManager.Instance.redTeamScore.ToString("00");
                 blueScore.text = GameManager.Instance.blueTeamScore.ToString("00");
+                remainingGameTime = GameManager.Instance.gameTimeMax - GameManager.Instance.gameTime;
+                time.text = remainingGameTime.ToString("00");
                 break;
 
             case GameManager.GameType.Deathmatch:
                 redScore.text = GameManager.Instance.redTeamScore.ToString("00");
                 blueScore.text = GameManager.Instance.blueTeamScore.ToString("00");
+                remainingGameTime = GameManager.Instance.gameTimeMax - GameManager.Instance.gameTime;
+                time.text = remainingGameTime.ToString("00");
                 break;
 
             default:

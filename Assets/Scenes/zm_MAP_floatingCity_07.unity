@@ -5123,7 +5123,7 @@ TextMesh:
     type: 2}
   m_PrefabInternal: {fileID: 834780415}
   m_GameObject: {fileID: 91635873}
-  m_Text: SCV.Gr(a)
+  m_Text: HTR.Brst
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
@@ -15493,7 +15493,7 @@ TextMesh:
     type: 2}
   m_PrefabInternal: {fileID: 834780415}
   m_GameObject: {fileID: 261466712}
-  m_Text: TTN.Mk(b)
+  m_Text: TNK.Drvr
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
@@ -20393,7 +20393,7 @@ TextMesh:
     type: 2}
   m_PrefabInternal: {fileID: 834780415}
   m_GameObject: {fileID: 339426490}
-  m_Text: STG.Mech(c)
+  m_Text: MCH.Snpr
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
@@ -36907,7 +36907,7 @@ TextMesh:
     type: 2}
   m_PrefabInternal: {fileID: 834780415}
   m_GameObject: {fileID: 634580958}
-  m_Text: SCV.Gr(b)
+  m_Text: HTR.Rpd
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
@@ -43092,7 +43092,7 @@ TextMesh:
     type: 2}
   m_PrefabInternal: {fileID: 834780415}
   m_GameObject: {fileID: 747638526}
-  m_Text: SCV.Gr(a)
+  m_Text: HTR.Brst
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
@@ -51459,7 +51459,7 @@ TextMesh:
     type: 2}
   m_PrefabInternal: {fileID: 834780415}
   m_GameObject: {fileID: 891820219}
-  m_Text: STG.Mech(c)
+  m_Text: MCH.Snpr
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
@@ -61673,7 +61673,7 @@ TextMesh:
     type: 2}
   m_PrefabInternal: {fileID: 834780415}
   m_GameObject: {fileID: 1065124171}
-  m_Text: STG.Mech(b)
+  m_Text: MCH.Plsr
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
@@ -63548,7 +63548,7 @@ TextMesh:
     type: 2}
   m_PrefabInternal: {fileID: 834780415}
   m_GameObject: {fileID: 1091141717}
-  m_Text: SCV.Gr(c)
+  m_Text: HTR.Plsr
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
@@ -69508,7 +69508,7 @@ TextMesh:
     type: 2}
   m_PrefabInternal: {fileID: 834780415}
   m_GameObject: {fileID: 1193738527}
-  m_Text: TTN.Mk(c)
+  m_Text: TNK.Trp
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
@@ -70390,7 +70390,7 @@ TextMesh:
     type: 2}
   m_PrefabInternal: {fileID: 834780415}
   m_GameObject: {fileID: 1212497994}
-  m_Text: SCV.Gr(c)
+  m_Text: HTR.Plsr
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
@@ -70490,7 +70490,7 @@ TextMesh:
     type: 2}
   m_PrefabInternal: {fileID: 834780415}
   m_GameObject: {fileID: 1217616717}
-  m_Text: STG.Mech(a)
+  m_Text: MCH.Aslt
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
@@ -75218,7 +75218,7 @@ TextMesh:
     type: 2}
   m_PrefabInternal: {fileID: 834780415}
   m_GameObject: {fileID: 1306133323}
-  m_Text: STG.Mech(b)
+  m_Text: MCH.Plsr
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
@@ -80629,7 +80629,7 @@ TextMesh:
     type: 2}
   m_PrefabInternal: {fileID: 834780415}
   m_GameObject: {fileID: 1398576301}
-  m_Text: STG.Mech(a)
+  m_Text: MCH.Aslt
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
@@ -84024,7 +84024,7 @@ TextMesh:
     type: 2}
   m_PrefabInternal: {fileID: 834780415}
   m_GameObject: {fileID: 1447482732}
-  m_Text: SCV.Gr(b)
+  m_Text: HTR.Rpd
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
@@ -92552,7 +92552,7 @@ TextMesh:
     type: 2}
   m_PrefabInternal: {fileID: 834780415}
   m_GameObject: {fileID: 1599267642}
-  m_Text: TTN.Mk(c)
+  m_Text: TNK.Trp
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
@@ -104444,8 +104444,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1805803555}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1229.82324, z: 31.3166656}
-  m_LocalScale: {x: 700, y: 700, z: 700}
+  m_LocalPosition: {x: 0, y: -2120.31934, z: 260.946045}
+  m_LocalScale: {x: 1500, y: 1500, z: 1500}
   m_Children: []
   m_Father: {fileID: 293063996}
 --- !u!23 &1805803557
@@ -104480,7 +104480,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ff219ef9b5686f418436d177c73ac24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotateSpeed: {x: 1, y: 1, z: 1}
+  rotateSpeed: {x: .200000003, y: .200000003, z: .200000003}
 --- !u!33 &1805803559
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -112308,7 +112308,7 @@ TextMesh:
     type: 2}
   m_PrefabInternal: {fileID: 834780415}
   m_GameObject: {fileID: 1950617280}
-  m_Text: TTN.Mk(a)
+  m_Text: TNK.Rkt
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
@@ -118789,7 +118789,7 @@ TextMesh:
     type: 2}
   m_PrefabInternal: {fileID: 834780415}
   m_GameObject: {fileID: 2068950917}
-  m_Text: TTN.Mk(a)
+  m_Text: TNK.Rkt
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
@@ -121741,7 +121741,7 @@ TextMesh:
     type: 2}
   m_PrefabInternal: {fileID: 834780415}
   m_GameObject: {fileID: 2126558321}
-  m_Text: TTN.Mk(b)
+  m_Text: TNK.Drvr
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
