@@ -78,11 +78,6 @@ public class GUIManager : MonoBehaviour
         }
     }
 
-    private void ShowPlayerGUI()
-    {
-
-    }
-
     private void ShowStatTab()
     {
         float statX = Screen.width * 0.25f;
@@ -141,7 +136,7 @@ public class GUIManager : MonoBehaviour
             }
 
             GUIContent cPlayerNameContent = new GUIContent(currentPlayer.name);
-            Rect cPlayerNameRect = new Rect(statWidth * 0.1f, statHeight * 0.125f + (playerPadding * (i)), GUI.skin.label.CalcSize(cPlayerNameContent).x, GUI.skin.label.CalcSize(cPlayerNameContent).y);
+            Rect cPlayerNameRect = new Rect(statWidth * 0.1f, statHeight * 0.125f + (playerPadding * (i+1)), GUI.skin.label.CalcSize(cPlayerNameContent).x, GUI.skin.label.CalcSize(cPlayerNameContent).y);
             GUI.Label(cPlayerNameRect, cPlayerNameContent);
 
             GUIContent cPlayerKillCountContent = new GUIContent(currentPlayer.killCount.ToString());

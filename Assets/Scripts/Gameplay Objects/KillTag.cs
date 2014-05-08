@@ -23,7 +23,7 @@ public class KillTag : KBGameObject
         {
             if (player.team != team && PhotonNetwork.player.Equals(player.networkPlayer))
             {
-                player.totalPointsGained += player.currentPoints;
+                player.totalPointsGained += pointValue;
                 player.currentPoints += pointValue;
 
                 GameManager.Instance.photonView.RPC("DestroyObject", PhotonTargets.All, photonView.viewID);

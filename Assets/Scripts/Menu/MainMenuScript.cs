@@ -236,7 +236,7 @@ public class MainMenuScript : Photon.MonoBehaviour
                 
                 GUILayout.Label(gameTypeStrings[(int)room.customProperties["GameType"]], GUILayout.Width(110));
                 GUILayout.FlexibleSpace();
-                GUILayout.Label(mapComboBoxList[(int)room.customProperties["Map"]].ToString(), GUILayout.Width(200));
+                GUILayout.Label(mapComboBoxList[(int)room.customProperties["Map"]].text, GUILayout.Width(200));
 
                 GUILayout.EndHorizontal();
             }
