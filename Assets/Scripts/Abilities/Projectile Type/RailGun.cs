@@ -17,7 +17,7 @@ public class RailGun : ProjectileAbilityBaseScript
     public static int RANGE_1 = 100;
     public static float RELOAD_TIME_1 = 1.8f;
     public static int CLIP_SIZE_1 = 8;
-    public static int BURST_SIZE_1 = 4;
+    public static int BURST_SIZE_1 = 2;
     public static float BURST_DELAY_1 = 0.00f;
     public static float SPREADMIN_1 = 0.0f;
     public static float SPREADMAX_1 = 0.0f;
@@ -26,7 +26,7 @@ public class RailGun : ProjectileAbilityBaseScript
     public static int RANGE_2 = 100;
     public static float RELOAD_TIME_2 = 1.6f;
     public static int CLIP_SIZE_2 = 10;
-    public static int BURST_SIZE_2 = 6;
+    public static int BURST_SIZE_2 = 3;
     public static float BURST_DELAY_2 = 0.00f;
     public static float SPREADMIN_2 = 0.0f;
     public static float SPREADMAX_2 = 0.0f;

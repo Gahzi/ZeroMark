@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 
 public class KBCamera : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class KBCamera : MonoBehaviour
     public TextMesh redScore;
     public TextMesh blueScore;
     public TextMesh time;
+    public TextMesh gameType;
 
     private void Start()
     {
@@ -26,6 +28,8 @@ public class KBCamera : MonoBehaviour
 
     private void Update()
     {
+        gameType.text = Enum.GetName(typeof(GameManager.GameType), GameManager.Instance.gameType);
+        
         zoomTarget = 2.0f;
         if (attachedPlayer != null)
         {

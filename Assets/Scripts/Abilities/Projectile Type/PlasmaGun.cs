@@ -12,7 +12,7 @@ public class PlasmaGun : ProjectileAbilityBaseScript
     public static int RANGE_0 = 50;
     public static float RELOAD_TIME_0 = 2.0f;
     public static int CLIP_SIZE_0 = 6;
-    public static int BURST_SIZE_0 = 1;
+    public static int BURST_SIZE_0 = 2;
     public static float BURST_DELAY_0 = 0.00f;
     public static float SPREADMAX_0 = 0.0f;
 

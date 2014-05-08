@@ -39,12 +39,12 @@ public class KBPlayer : KBControllableGameObject
     private static readonly int tankLowerRotationSpeed = 200;
     private static readonly int tankUpperRotationSpeed = 45;
     private static readonly int tankMovementSpeed = 15;
-    private static readonly int tankBaseHealth = 1600;
+    private static readonly int tankBaseHealth = 1400;
     private static readonly float tankAccel = 0.060f;
     private static readonly float tankPowerDecel = 0.150f;
     private static readonly float tankFriction = 0.010f;
     private static readonly float tankReverseSpeedFraction = 0.00f;
-    private static readonly float tankRegenRate = 4.0f;
+    private static readonly float tankRegenRate = 1.0f;
 
     #endregion TANK
 
