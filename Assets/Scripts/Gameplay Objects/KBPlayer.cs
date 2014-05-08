@@ -1174,19 +1174,34 @@ public class KBPlayer : KBControllableGameObject
     {
         if (killerPlayer.isLocal && networkPlayer == PhotonNetwork.player)
         {
-            killCount++;
-            totalPointsGained++;
-            currentPoints++;
-        }
-        List<KBPlayer> currentPlayers = GameManager.Instance.players;
-
-        for (int i = 0; i < currentPlayers.Count; i++)
-        {
-            if (currentPlayers[i].networkPlayer == victimPlayer)
+            switch (GameManager.Instance.gameType)
             {
-                DoExplosionAnimation(currentPlayers[i]);
+                case GameManager.GameType.CapturePoint:
+                    {
+                        totalPointsGained++;
+                        currentPoints++;
+                        break;
+                    }
+
+                case GameManager.GameType.DataPulse:
+                    {
+                    totalPointsGained++;
+                    currentPoints++;
+                    break;
+                        }
+
+                case GameManager.GameType.Deathmatch:
+                    {
+                        GameManager.Instance.photonView.RPC("AddPointsToScore", PhotonTargets.All, (int)team, (int)1);
+                        break;
+                    }
+                    
+
+                default:
+                    break;
             }
-        }
+
+            killCount++;
     }
 
     /// <summary>
