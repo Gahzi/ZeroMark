@@ -11,6 +11,8 @@ public class KBCamera : MonoBehaviour
     public float rotation;
     public SpriteRenderer damageVignette;
     public TextMesh levelText;
+    public TextMesh redScore;
+    public TextMesh blueScore;
 
     private void Start()
     {

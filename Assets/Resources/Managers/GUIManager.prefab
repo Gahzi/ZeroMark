@@ -393,6 +393,8 @@ MonoBehaviour:
     m_FixedHeight: 0
     m_StretchWidth: 1
     m_StretchHeight: 0
+  redScore: {fileID: 10200000, guid: 3bb7a3f1c3bc4e945a3b632e3c59bec8, type: 2}
+  blueScore: {fileID: 10200002, guid: 3bb7a3f1c3bc4e945a3b632e3c59bec8, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

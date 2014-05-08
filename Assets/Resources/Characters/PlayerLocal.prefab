@@ -4046,7 +4046,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: ea4d0ea3657d7441db360e8d805b9b57, type: 2}
   - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
@@ -4982,7 +4982,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 200
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -6153,7 +6153,7 @@ TrailRenderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: e667992b28845df99060a8f876d1d11b, type: 2}
+  - {fileID: 2100000, guid: 380c10da59ab23347b8faae63e605701, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -6162,9 +6162,9 @@ TrailRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_SortingLayerID: 0
-  m_Time: .5
-  m_StartWidth: .5
-  m_EndWidth: .100000001
+  m_Time: .150000006
+  m_StartWidth: .300000012
+  m_EndWidth: .00999999978
   m_Colors:
     m_Color[0]:
       serializedVersion: 2
@@ -6195,7 +6195,7 @@ TrailRenderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: e667992b28845df99060a8f876d1d11b, type: 2}
+  - {fileID: 2100000, guid: 380c10da59ab23347b8faae63e605701, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -6204,9 +6204,9 @@ TrailRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_SortingLayerID: 0
-  m_Time: .5
-  m_StartWidth: .5
-  m_EndWidth: .100000001
+  m_Time: .150000006
+  m_StartWidth: .300000012
+  m_EndWidth: .00999999978
   m_Colors:
     m_Color[0]:
       serializedVersion: 2
@@ -6465,6 +6465,7 @@ MonoBehaviour:
   guns: []
   ammoHud: {fileID: 100120}
   chaff: {fileID: 11400000, guid: b830426be8527df478628dc3a5fe0bae, type: 2}
+  hasSwitchedSinceDeath: 0
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
