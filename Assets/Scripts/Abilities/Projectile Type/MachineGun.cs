@@ -8,26 +8,26 @@ public class MachineGun : ProjectileAbilityBaseScript
     public static float COOLDOWN_0 = 0.550f;
     public static int RANGE_0 = 100;
     public static float RELOAD_TIME_0 = 1.900f;
-    public static int CLIP_SIZE_0 = 12;
-    public static int BURST_SIZE_0 = 2;
+    public static int CLIP_SIZE_0 = 15;
+    public static int BURST_SIZE_0 = 3;
     public static float BURST_DELAY_0 = 0.050f;
     public static float SPREAD_0 = 0.500f;
 
     public static float COOLDOWN_1 = 0.5235f;
     public static int RANGE_1 = 100;
     public static float RELOAD_TIME_1 = 0.900f;
-    public static int CLIP_SIZE_1 = 12;
-    public static int BURST_SIZE_1 = 3;
+    public static int CLIP_SIZE_1 = 15;
+    public static int BURST_SIZE_1 = 5;
     public static float BURST_DELAY_1 = 0.0450f;
-    public static float SPREAD_1 = 0.600f;
+    public static float SPREAD_1 = 0.550f;
 
     public static float COOLDOWN_2 = 0.520f;
     public static int RANGE_2 = 100;
     public static float RELOAD_TIME_2 = 0.800f;
-    public static int CLIP_SIZE_2 = 12;
-    public static int BURST_SIZE_2 = 3;
+    public static int CLIP_SIZE_2 = 15;
+    public static int BURST_SIZE_2 = 5;
     public static float BURST_DELAY_2 = 0.0350f;
-    public static float SPREAD_2 = 0.700f;
+    public static float SPREAD_2 = 0.600f;
 
     #endregion CONSTANTS
 
