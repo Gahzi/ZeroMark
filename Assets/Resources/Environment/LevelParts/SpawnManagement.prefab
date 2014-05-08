@@ -854,7 +854,7 @@ GameObject:
   - 23: {fileID: 2300084}
   m_Layer: 0
   m_Name: SpawnAsBlueMech1
-  m_TagString: Untagged
+  m_TagString: SpawnMechBlue1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1301,7 +1301,7 @@ GameObject:
   - 23: {fileID: 2300122}
   m_Layer: 0
   m_Name: SpawnAsBlueMech0
-  m_TagString: Untagged
+  m_TagString: SpawnMechBlue0
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

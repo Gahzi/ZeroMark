@@ -74,6 +74,8 @@ public class KBPlayer : KBControllableGameObject
 
     #endregion GamepadParameters
 
+    #region TempRegion
+
     private bool tankStyleMove;
     public PlayerType type;
     public PlayerStats stats;
@@ -170,6 +172,8 @@ public class KBPlayer : KBControllableGameObject
     public Chaff chaff;
 
     public bool hasSwitchedSinceDeath;
+
+    #endregion
 
     public void SetStats()
     {
