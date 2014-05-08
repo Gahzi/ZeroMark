@@ -1185,23 +1185,24 @@ public class KBPlayer : KBControllableGameObject
 
                 case GameManager.GameType.DataPulse:
                     {
-                    totalPointsGained++;
-                    currentPoints++;
-                    break;
-                        }
+                        totalPointsGained++;
+                        currentPoints++;
+                        break;
+                    }
 
                 case GameManager.GameType.Deathmatch:
                     {
                         GameManager.Instance.photonView.RPC("AddPointsToScore", PhotonTargets.All, (int)team, (int)1);
                         break;
                     }
-                    
+
 
                 default:
                     break;
             }
 
             killCount++;
+        }
     }
 
     /// <summary>
