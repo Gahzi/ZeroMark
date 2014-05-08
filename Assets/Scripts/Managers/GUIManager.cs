@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 
 public class GUIManager : MonoBehaviour
 {
     public enum GUIManagerState { Hidden, ShowingStatTab, ShowingEndGameTab }
+
     public GUIManagerState state = GUIManagerState.Hidden;
 
     private GUIContent killsColumnContent = new GUIContent("Kills");
-    private GUIContent deathsColumnContent= new GUIContent("Deaths");
+    private GUIContent deathsColumnContent = new GUIContent("Deaths");
     private GUIContent pointsGainedColumnContent = new GUIContent("Points Gained");
     private GUIContent pointsLostColumnContent = new GUIContent("Points Lost");
     private GUIContent pointsBankedColumnContent = new GUIContent("Points Banked");
@@ -20,6 +20,9 @@ public class GUIManager : MonoBehaviour
     public GUIStyle bluePlayerStyle;
     public GUIStyle nonePlayerStyle;
     public GUIStyle endGameStyle;
+
+    public TextMesh redScore;
+    public TextMesh blueScore;
 
     private static GUIManager instance;
 
@@ -44,32 +47,34 @@ public class GUIManager : MonoBehaviour
         instance = this;
     }
 
-
     private void Start()
     {
-
+        redScore = GameManager.Instance.localPlayer.gameObject.GetComponentInChildren<KBCamera>().redScore;
+        blueScore = GameManager.Instance.localPlayer.gameObject.GetComponentInChildren<KBCamera>().blueScore;
+        redScore.text = "00";
+        redScore.text = "00";
     }
-    
-    void OnGUI()
+
+    private void OnGUI()
     {
         switch (state)
         {
             case GUIManagerState.Hidden:
-            {
-                break;
-            }
+                {
+                    break;
+                }
 
             case GUIManagerState.ShowingStatTab:
-            {
-                ShowStatTab();
-                break;
-            }
+                {
+                    ShowStatTab();
+                    break;
+                }
 
             case GUIManagerState.ShowingEndGameTab:
-            {
-                ShowEndGameTab();
-                break;
-            }
+                {
+                    ShowEndGameTab();
+                    break;
+                }
         }
     }
 
@@ -84,15 +89,15 @@ public class GUIManager : MonoBehaviour
         float statY = Screen.height * 0.1f;
         float statWidth = Screen.width * 0.5f;
         float statHeight = Screen.height * 0.8f;
-        Rect statTabRect = new Rect(statX,statY,statWidth,statHeight);
+        Rect statTabRect = new Rect(statX, statY, statWidth, statHeight);
 
         GUI.BeginGroup(statTabRect);
-        GUI.Box(new Rect(0, 0, statWidth, statHeight),"");
+        GUI.Box(new Rect(0, 0, statWidth, statHeight), "");
         //room name
 
         GUI.skin.label = headerStyle;
         GUIContent roomNameContent = new GUIContent("Room Name");
-        Rect roomNameRect = new Rect(statWidth*0.5f,0,GUI.skin.label.CalcSize(roomNameContent).x,GUI.skin.label.CalcSize(roomNameContent).y);
+        Rect roomNameRect = new Rect(statWidth * 0.5f, 0, GUI.skin.label.CalcSize(roomNameContent).x, GUI.skin.label.CalcSize(roomNameContent).y);
         GUI.Label(roomNameRect, roomNameContent);
 
         //columns
@@ -114,10 +119,8 @@ public class GUIManager : MonoBehaviour
         Rect pointsBankedColumnRect = new Rect(pointsLostColumnRect.x + pointsLostColumnRect.width + columnPadding, killsColumnRect.y, GUI.skin.label.CalcSize(pointsBankedColumnContent).x, GUI.skin.label.CalcSize(pointsBankedColumnContent).y);
         GUI.Label(pointsBankedColumnRect, pointsBankedColumnContent);
 
-
         GameManager gm = GameManager.Instance;
         float playerPadding = statHeight * 0.05f;
-        
 
         //red players
         for (int i = 0; i < gm.players.Count; i++)
@@ -137,29 +140,28 @@ public class GUIManager : MonoBehaviour
                 GUI.skin.label = nonePlayerStyle;
             }
 
-
             GUIContent cPlayerNameContent = new GUIContent(currentPlayer.name);
             Rect cPlayerNameRect = new Rect(statWidth * 0.1f, statHeight * 0.125f + (playerPadding * (i)), GUI.skin.label.CalcSize(cPlayerNameContent).x, GUI.skin.label.CalcSize(cPlayerNameContent).y);
             GUI.Label(cPlayerNameRect, cPlayerNameContent);
 
             GUIContent cPlayerKillCountContent = new GUIContent(currentPlayer.killCount.ToString());
-            Rect cPlayerKillCountRect = new Rect(killsColumnRect.x, killsColumnRect.y + (playerPadding * (i+1)), GUI.skin.label.CalcSize(cPlayerKillCountContent).x, GUI.skin.label.CalcSize(cPlayerKillCountContent).y);
+            Rect cPlayerKillCountRect = new Rect(killsColumnRect.x, killsColumnRect.y + (playerPadding * (i + 1)), GUI.skin.label.CalcSize(cPlayerKillCountContent).x, GUI.skin.label.CalcSize(cPlayerKillCountContent).y);
             GUI.Label(cPlayerKillCountRect, cPlayerKillCountContent);
 
             GUIContent cPlayerDeathCountContent = new GUIContent(currentPlayer.deathCount.ToString());
-            Rect cPlayerDeathCountRect = new Rect(deathsColumnRect.x, deathsColumnRect.y + (playerPadding * (i+1)), GUI.skin.label.CalcSize(cPlayerDeathCountContent).x, GUI.skin.label.CalcSize(cPlayerDeathCountContent).y);
+            Rect cPlayerDeathCountRect = new Rect(deathsColumnRect.x, deathsColumnRect.y + (playerPadding * (i + 1)), GUI.skin.label.CalcSize(cPlayerDeathCountContent).x, GUI.skin.label.CalcSize(cPlayerDeathCountContent).y);
             GUI.Label(cPlayerDeathCountRect, cPlayerDeathCountContent);
 
             GUIContent cPlayerPointsGainedContent = new GUIContent(currentPlayer.totalPointsGained.ToString());
-            Rect cPlayerPointsGainedRect = new Rect(pointsGainedColumnRect.x, pointsGainedColumnRect.y + (playerPadding * (i+1)), GUI.skin.label.CalcSize(cPlayerPointsGainedContent).x, GUI.skin.label.CalcSize(cPlayerPointsGainedContent).y);
+            Rect cPlayerPointsGainedRect = new Rect(pointsGainedColumnRect.x, pointsGainedColumnRect.y + (playerPadding * (i + 1)), GUI.skin.label.CalcSize(cPlayerPointsGainedContent).x, GUI.skin.label.CalcSize(cPlayerPointsGainedContent).y);
             GUI.Label(cPlayerPointsGainedRect, cPlayerPointsGainedContent);
 
             GUIContent cPlayerPointsLostContent = new GUIContent(currentPlayer.totalPointsLost.ToString());
-            Rect cPlayerPointsLostRect = new Rect(pointsLostColumnRect.x, pointsLostColumnRect.y + (playerPadding * (i+1)), GUI.skin.label.CalcSize(cPlayerPointsLostContent).x, GUI.skin.label.CalcSize(cPlayerPointsLostContent).y);
+            Rect cPlayerPointsLostRect = new Rect(pointsLostColumnRect.x, pointsLostColumnRect.y + (playerPadding * (i + 1)), GUI.skin.label.CalcSize(cPlayerPointsLostContent).x, GUI.skin.label.CalcSize(cPlayerPointsLostContent).y);
             GUI.Label(cPlayerPointsLostRect, cPlayerPointsLostContent);
 
             GUIContent cPlayerPointsBankedContent = new GUIContent(currentPlayer.totalPointsBanked.ToString());
-            Rect cPlayerPointsBankedRect = new Rect(pointsBankedColumnRect.x, pointsBankedColumnRect.y + (playerPadding * (i+1)), GUI.skin.label.CalcSize(cPlayerPointsBankedContent).x, GUI.skin.label.CalcSize(cPlayerPointsBankedContent).y);
+            Rect cPlayerPointsBankedRect = new Rect(pointsBankedColumnRect.x, pointsBankedColumnRect.y + (playerPadding * (i + 1)), GUI.skin.label.CalcSize(cPlayerPointsBankedContent).x, GUI.skin.label.CalcSize(cPlayerPointsBankedContent).y);
             GUI.Label(cPlayerPointsBankedRect, cPlayerPointsBankedContent);
         }
 
@@ -234,7 +236,6 @@ public class GUIManager : MonoBehaviour
         Rect pointsBankedColumnRect = new Rect(pointsLostColumnRect.x + pointsLostColumnRect.width + columnPadding, killsColumnRect.y, GUI.skin.label.CalcSize(pointsBankedColumnContent).x, GUI.skin.label.CalcSize(pointsBankedColumnContent).y);
         GUI.Label(pointsBankedColumnRect, pointsBankedColumnContent);
 
-
         //red players
         GameManager gm = GameManager.Instance;
         float playerPadding = statHeight * 0.05f;
@@ -282,13 +283,12 @@ public class GUIManager : MonoBehaviour
                 Rect cPlayerPointsBankedRect = new Rect(pointsBankedColumnRect.x, pointsBankedColumnRect.y + (playerPadding * (i + 1)), GUI.skin.label.CalcSize(cPlayerPointsBankedContent).x, GUI.skin.label.CalcSize(cPlayerPointsBankedContent).y);
                 GUI.Label(cPlayerPointsBankedRect, cPlayerPointsBankedContent);
             }
-            
         }
-        
+
         //End Game Button
-        
+
         GUI.skin.label = endGameStyle;
-        Rect endGameRect = new Rect(statWidth * 0.5f, statHeight*0.95f, GUI.skin.label.CalcSize(endGameContent).x, GUI.skin.label.CalcSize(endGameContent).y);
+        Rect endGameRect = new Rect(statWidth * 0.5f, statHeight * 0.95f, GUI.skin.label.CalcSize(endGameContent).x, GUI.skin.label.CalcSize(endGameContent).y);
         if (GUI.Button(endGameRect, endGameContent))
         {
             PhotonNetwork.LeaveRoom();
@@ -300,5 +300,25 @@ public class GUIManager : MonoBehaviour
 
     private void Update()
     {
+        switch (GameManager.Instance.gameType)
+        {
+            case GameManager.GameType.CapturePoint:
+                redScore.text = GameManager.Instance.redTeamScore.ToString("00");
+                blueScore.text = GameManager.Instance.blueTeamScore.ToString("00");
+                break;
+
+            case GameManager.GameType.DataPulse:
+                redScore.text = GameManager.Instance.redTeamScore.ToString("00");
+                blueScore.text = GameManager.Instance.blueTeamScore.ToString("00");
+                break;
+
+            case GameManager.GameType.Deathmatch:
+                redScore.text = GameManager.Instance.redTeamScore.ToString("00");
+                blueScore.text = GameManager.Instance.blueTeamScore.ToString("00");
+                break;
+
+            default:
+                break;
+        }
     }
 }
