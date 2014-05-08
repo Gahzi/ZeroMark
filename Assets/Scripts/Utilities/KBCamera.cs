@@ -14,6 +14,7 @@ public class KBCamera : MonoBehaviour
     public TextMesh redScore;
     public TextMesh blueScore;
     public TextMesh time;
+    public TextMesh timeRemainingHeader;
 
     private void Start()
     {

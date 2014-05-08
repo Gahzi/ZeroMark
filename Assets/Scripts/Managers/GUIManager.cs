@@ -54,6 +54,30 @@ public class GUIManager : MonoBehaviour
         blueScore = GameManager.Instance.localPlayer.gameObject.GetComponentInChildren<KBCamera>().blueScore;
         time = GameManager.Instance.localPlayer.gameObject.GetComponentInChildren<KBCamera>().time;
 
+        switch (GameManager.Instance.gameType)
+        {
+            case GameManager.GameType.CapturePoint:
+            {
+                TextMesh timeRemainingHeader = GameManager.Instance.localPlayer.gameObject.GetComponentInChildren<KBCamera>().timeRemainingHeader;
+                timeRemainingHeader.text = "Time Remaining";
+                break;
+            }
+
+            case GameManager.GameType.DataPulse:
+            {
+                TextMesh timeRemainingHeader = GameManager.Instance.localPlayer.gameObject.GetComponentInChildren<KBCamera>().timeRemainingHeader;
+                timeRemainingHeader.text = "Time Remaining";
+                break;
+            }
+
+            case GameManager.GameType.Deathmatch:
+            {
+                TextMesh timeRemainingHeader = GameManager.Instance.localPlayer.gameObject.GetComponentInChildren<KBCamera>().timeRemainingHeader;
+                timeRemainingHeader.text = "Kills To Win";
+                break;
+            }
+        }
+
         redScore.text = "00";
         redScore.text = "00";
     }
@@ -319,8 +343,8 @@ public class GUIManager : MonoBehaviour
             case GameManager.GameType.Deathmatch:
                 redScore.text = GameManager.Instance.redTeamScore.ToString("00");
                 blueScore.text = GameManager.Instance.blueTeamScore.ToString("00");
-                remainingGameTime = GameManager.Instance.gameTimeMax - GameManager.Instance.gameTime;
-                time.text = remainingGameTime.ToString("00");
+                int totalToWin = 30;
+                time.text = totalToWin.ToString();
                 break;
 
             default:

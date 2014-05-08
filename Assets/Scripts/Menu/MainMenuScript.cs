@@ -290,7 +290,8 @@ public class MainMenuScript : Photon.MonoBehaviour
     {
         //Stop communication until in the game
         PhotonNetwork.isMessageQueueRunning = false;
-        Application.LoadLevel(mapComboBoxControl.SelectedItemIndex+1);
+        int selectedMap = (int)PhotonNetwork.room.customProperties["Map"];
+        Application.LoadLevel(selectedMap+1);
     }
 
     private string hostTitle;
