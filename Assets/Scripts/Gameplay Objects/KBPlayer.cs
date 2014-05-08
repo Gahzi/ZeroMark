@@ -44,7 +44,7 @@ public class KBPlayer : KBControllableGameObject
     private static readonly float tankPowerDecel = 0.150f;
     private static readonly float tankFriction = 0.010f;
     private static readonly float tankReverseSpeedFraction = 0.00f;
-    private static readonly float tankRegenRate = 1.0f;
+    private static readonly float tankRegenRate = 2.0f;
 
     #endregion TANK
 
@@ -1174,34 +1174,9 @@ public class KBPlayer : KBControllableGameObject
     {
         if (killerPlayer.isLocal && networkPlayer == PhotonNetwork.player)
         {
-            switch (GameManager.Instance.gameType)
-            {
-                case GameManager.GameType.CapturePoint:
-                    {
-                        totalPointsGained++;
-                        currentPoints++;
-                        break;
-                    }
-
-                case GameManager.GameType.DataPulse:
-                    {
-                    totalPointsGained++;
-                    currentPoints++;
-                    break;
-                        }
-
-                case GameManager.GameType.Deathmatch:
-                    {
-                        GameManager.Instance.photonView.RPC("AddPointsToScore", PhotonTargets.All, (int)team, (int)1);
-                        break;
-                    }
-                    
-
-                default:
-                    break;
-            }
-
             killCount++;
+            totalPointsGained++;
+            currentPoints++;
         }
         List<KBPlayer> currentPlayers = GameManager.Instance.players;
 
