@@ -1192,7 +1192,7 @@ public class KBPlayer : KBControllableGameObject
 
                 case GameManager.GameType.Deathmatch:
                     {
-                        photonView.RPC("AddPointsToScore", PhotonTargets.All, (int)team, 1);
+                        GameManager.Instance.photonView.RPC("AddPointsToScore", PhotonTargets.All, (int)team, (int)1);
                         break;
                     }
                     
