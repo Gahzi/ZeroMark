@@ -781,9 +781,9 @@ public class KBPlayer : KBControllableGameObject
         {
             if ((gamepadState.Triggers.Left != 0 || gamepadState.Triggers.Right != 0))
             {
-                if (gamepadState.Triggers.Left > 0)
+                if (gamepadState.Triggers.Right > 0)
                 {
-                    if (guns[0].ammo <= 0)
+                    if (guns[0].ammo <= 0 || gamepadState.Buttons.X == ButtonState.Pressed)
                     {
                         int[] reloadingGuns = { 0 };
                         photonView.RPC("Reload", PhotonTargets.All, reloadingGuns);
@@ -798,7 +798,7 @@ public class KBPlayer : KBControllableGameObject
                         }
                     }
                 }
-                if (gamepadState.Triggers.Right > 0 && guns.Length > 1)
+                if (gamepadState.Buttons.RightShoulder == ButtonState.Pressed && guns.Length > 1)
                 {
                     if (guns[1].ammo <= 0)
                     {
@@ -818,17 +818,17 @@ public class KBPlayer : KBControllableGameObject
                 }
             }
 
-            if (gamepadState.Buttons.LeftShoulder == ButtonState.Pressed)
-            {
-                int[] reloadingGuns = { 0 };
-                photonView.RPC("Reload", PhotonTargets.All, reloadingGuns);
-            }
+            //if (gamepadState.Buttons.LeftShoulder == ButtonState.Pressed)
+            //{
+            //    int[] reloadingGuns = { 0 };
+            //    photonView.RPC("Reload", PhotonTargets.All, reloadingGuns);
+            //}
 
-            if (gamepadState.Buttons.RightShoulder == ButtonState.Pressed)
-            {
-                int[] reloadingGuns = { 1 };
-                photonView.RPC("Reload", PhotonTargets.All, reloadingGuns);
-            }
+            //if (gamepadState.Buttons.RightShoulder == ButtonState.Pressed)
+            //{
+            //    int[] reloadingGuns = { 1 };
+            //    photonView.RPC("Reload", PhotonTargets.All, reloadingGuns);
+            //}
         }
 
         if (gamepadState.Buttons.Start == ButtonState.Pressed)
