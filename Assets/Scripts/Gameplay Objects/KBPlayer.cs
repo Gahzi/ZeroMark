@@ -173,7 +173,7 @@ public class KBPlayer : KBControllableGameObject
 
     public bool hasSwitchedSinceDeath;
 
-    #endregion
+    #endregion TempRegion
 
     public void SetStats()
     {
@@ -352,7 +352,6 @@ public class KBPlayer : KBControllableGameObject
             float floatHealth = Mathf.MoveTowards(health, stats.health, stats.regerationRate);
             health = Mathf.FloorToInt(floatHealth);
         }
-
 
         if (invulnerabilityTime > 0)
         {
@@ -1174,9 +1173,34 @@ public class KBPlayer : KBControllableGameObject
     {
         if (killerPlayer.isLocal && networkPlayer == PhotonNetwork.player)
         {
+            switch (GameManager.Instance.gameType)
+            {
+                case GameManager.GameType.CapturePoint:
+                    {
+                        totalPointsGained++;
+                        currentPoints++;
+                        break;
+                    }
+
+                case GameManager.GameType.DataPulse:
+                    {
+                        totalPointsGained++;
+                        currentPoints++;
+                        break;
+                    }
+
+                case GameManager.GameType.Deathmatch:
+                    {
+                        GameManager.Instance.photonView.RPC("AddPointsToScore", PhotonTargets.All, (int)team, (int)1);
+                        break;
+                    }
+
+
+                default:
+                    break;
+            }
+
             killCount++;
-            totalPointsGained++;
-            currentPoints++;
         }
         List<KBPlayer> currentPlayers = GameManager.Instance.players;
 
