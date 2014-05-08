@@ -1203,6 +1203,15 @@ public class KBPlayer : KBControllableGameObject
 
             killCount++;
         }
+        List<KBPlayer> currentPlayers = GameManager.Instance.players;
+
+        for (int i = 0; i < currentPlayers.Count; i++)
+        {
+            if (currentPlayers[i].networkPlayer == victimPlayer)
+            {
+                DoExplosionAnimation(currentPlayers[i]);
+            }
+        }
     }
 
     /// <summary>
