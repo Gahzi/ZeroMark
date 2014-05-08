@@ -1174,34 +1174,9 @@ public class KBPlayer : KBControllableGameObject
     {
         if (killerPlayer.isLocal && networkPlayer == PhotonNetwork.player)
         {
-            switch (GameManager.Instance.gameType)
-            {
-                case GameManager.GameType.CapturePoint:
-                    {
-                        totalPointsGained++;
-                        currentPoints++;
-                        break;
-                    }
-
-                case GameManager.GameType.DataPulse:
-                    {
-                        totalPointsGained++;
-                        currentPoints++;
-                        break;
-                    }
-
-                case GameManager.GameType.Deathmatch:
-                    {
-                        GameManager.Instance.photonView.RPC("AddPointsToScore", PhotonTargets.All, (int)team, (int)1);
-                        break;
-                    }
-
-
-                default:
-                    break;
-            }
-
             killCount++;
+            totalPointsGained++;
+            currentPoints++;
         }
         List<KBPlayer> currentPlayers = GameManager.Instance.players;
 
@@ -1326,6 +1301,7 @@ public class KBPlayer : KBControllableGameObject
             guns[i].Team = team;
             guns[i].ammo = guns[i].clipSize;
             guns[i].reloading = false;
+            guns[i].SetLevel(0);
         }
     }
 

@@ -55,7 +55,6 @@ public class PlasmaGun : ProjectileAbilityBaseScript
         };
         reloadClip = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.PlasmaReload01]);
         SetLevel(0);
-        base.Start();
         burstFireWeapon = true;
     }
 
