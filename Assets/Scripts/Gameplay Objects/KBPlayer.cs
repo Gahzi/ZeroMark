@@ -1078,6 +1078,7 @@ public class KBPlayer : KBControllableGameObject
         PlayerGibModel g = ObjectPool.Spawn(gib, player.gameObject.transform.position + Vector3.up * 3, player.gameObject.transform.rotation);
         g.Init();
 
+        player.gameObject.GetComponent<BoxCollider>().enabled = false;
         player.upperBody.SetActive(false);
         player.lowerBody.SetActive(false);
         player.ammoHud.SetActive(false);
@@ -1231,6 +1232,7 @@ public class KBPlayer : KBControllableGameObject
         }
 
         ammoHud.SetActive(false);
+        gameObject.GetComponent<BoxCollider>().enabled = true;
 
         Camera.main.GetComponent<ScreenShake>().StopShake();
         Vector3 deathPosition = transform.position;
@@ -1467,6 +1469,7 @@ public class KBPlayer : KBControllableGameObject
                 type = PlayerType.core;
             }
 
+            gameObject.GetComponent<BoxCollider>().enabled = true;
             upperBody.SetActive(true);
             lowerBody.SetActive(true);
 
