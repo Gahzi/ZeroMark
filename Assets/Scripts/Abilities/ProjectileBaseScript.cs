@@ -93,7 +93,7 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
 
     public override void Init(KBPlayer _owner)
     {
-        base.Init(owner);
+        base.Init(_owner);
         hitPlayer.Clear();
     }
 
