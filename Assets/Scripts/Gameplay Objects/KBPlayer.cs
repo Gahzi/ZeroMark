@@ -53,7 +53,7 @@ public class KBPlayer : KBControllableGameObject
     private static readonly int coreLowerRotationSpeed = 140;
     private static readonly int coreUpperRotationSpeed = 140;
     private static readonly int coreMovementSpeed = 40;
-    private static readonly int coreBaseHealth = 10000;
+    private static readonly int coreBaseHealth = 100;
     private static readonly float coreAccel = 0.25f;
     private static readonly float corePowerDecel = 0.15f;
     private static readonly float coreFriction = 0.8f;

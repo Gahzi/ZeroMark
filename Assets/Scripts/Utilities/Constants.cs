@@ -51,9 +51,9 @@ namespace KBConstants
             {type.PlasmaLevel1, 50},
             {type.PlasmaLevel2, 40},
 
-            {type.RocketLevel0, 35},
-            {type.RocketLevel1, 50},
-            {type.RocketLevel2, 150},
+            {type.RocketLevel0, 200},
+            {type.RocketLevel1, 200},
+            {type.RocketLevel2, 200},
 
             {type.LightCannonLevel0, 40},
             {type.LightCannonLevel1, 40},

@@ -138,8 +138,7 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
         if (explosionPrefab != null)
         {
             AreaOfEffectDamageScript a = ObjectPool.Spawn(explosionPrefab, transform.position);
-            a.owner = owner;
-            a.Init();
+            a.Init(owner);
         }
         if (boxCollider != null)
         {

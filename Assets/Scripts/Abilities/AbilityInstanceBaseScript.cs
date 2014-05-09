@@ -59,6 +59,7 @@ abstract public class AbilityInstanceBaseScript : MonoBehaviour
         {
             Invoke("ResetTrail", 0.01f);
         }
+        team = _owner.team;
         owner = _owner;
     }
 
