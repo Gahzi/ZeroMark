@@ -47,7 +47,7 @@ public class HomingMiniRocket : ProjectileBaseScript
     public override void DoOnHit()
     {
         AreaOfEffectDamageScript a = ObjectPool.Spawn(explosionPrefab, transform.position);
-        a.Init();
+        a.Init(owner);
         base.DoOnHit();
     }
 

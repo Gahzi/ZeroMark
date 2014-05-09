@@ -8,16 +8,16 @@ public class SniperRifle : ProjectileAbilityBaseScript
 
     public static float COOLDOWN_0 = 1.20f;
     public static int RANGE_0 = 100;
-    public static float RELOAD_TIME_0 = 5.0f;
-    public static int CLIP_SIZE_0 = 5;
+    public static float RELOAD_TIME_0 = 1.7f;
+    public static int CLIP_SIZE_0 = 1;
     public static int BURST_SIZE_0 = 1;
     public static float BURST_DELAY_0 = 0.00f;
     public static float SPREADMAX_0 = 0.0f;
 
     public static float COOLDOWN_1 = 1.10f;
     public static int RANGE_1 = 100;
-    public static float RELOAD_TIME_1 = 4.5f;
-    public static int CLIP_SIZE_1 = 5;
+    public static float RELOAD_TIME_1 = 1.5f;
+    public static int CLIP_SIZE_1 = 1;
     public static int BURST_SIZE_1 = 1;
     public static float BURST_DELAY_1 = 0.00f;
     public static float SPREADMIN_1 = 0.0f;
@@ -25,8 +25,8 @@ public class SniperRifle : ProjectileAbilityBaseScript
 
     public static float COOLDOWN_2 = 0.90f;
     public static int RANGE_2 = 100;
-    public static float RELOAD_TIME_2 = 4.2f;
-    public static int CLIP_SIZE_2 = 5;
+    public static float RELOAD_TIME_2 = 1.3f;
+    public static int CLIP_SIZE_2 = 1;
     public static int BURST_SIZE_2 = 1;
     public static float BURST_DELAY_2 = 0.00f;
     public static float SPREADMIN_2 = 0.0f;

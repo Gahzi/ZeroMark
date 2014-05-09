@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(Rigidbody))]
 
@@ -26,6 +27,7 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
     public bool collideWithEnvironment;
     public bool homingProjectile;
     public bool aimedProjectile;
+    private List<GameObject> hitPlayer;
 
     public AreaOfEffectDamageScript explosionPrefab;
 
@@ -43,6 +45,7 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
     public override void Start()
     {
         base.Start();
+        hitPlayer = new List<GameObject>();
         gameObject.tag = "Projectile";
         if (GetComponent<BoxCollider>() != null)
         {
@@ -88,9 +91,10 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
         }
     }
 
-    public override void Init()
+    public override void Init(KBPlayer _owner)
     {
-        base.Init();
+        base.Init(owner);
+        hitPlayer.Clear();
     }
 
     public override void OnTriggerEnter(Collider other)
@@ -102,13 +106,14 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
             KBGameObject o = other.gameObject.transform.parent.transform.parent.GetComponent<KBGameObject>();
             KBPlayer victimPlayer = other.gameObject.transform.parent.transform.parent.GetComponent<KBPlayer>();
 
-            if (victimPlayer != null)
+            if (victimPlayer != null && !hitPlayer.Contains(victimPlayer.gameObject))
             {
                 if (victimPlayer.Team != Team && victimPlayer.health > 0 && victimPlayer.invulnerabilityTime <= 0)
                 {
                     if (victimPlayer.photonView.isMine && owner != null)
                     {
                         int victimHealth = o.TakeDamage(damage);
+                        hitPlayer.Add(victimPlayer.gameObject);
                         if (victimHealth <= 0)
                         {
                             o.gameObject.GetComponent<KBPlayer>().Die(owner.gameObject);
