@@ -33,6 +33,7 @@ public class MachineGun : ProjectileAbilityBaseScript
 
     public override void Start()
     {
+        base.Start();
         projectileType = new ProjectileBaseScript[3]
         {
             (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.MachinegunBulletLevel0], typeof(ProjectileBaseScript)),
@@ -50,9 +51,7 @@ public class MachineGun : ProjectileAbilityBaseScript
         reloadClip = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.MachineGunReload01]);
 
         SetLevel(0);
-
         burstFireWeapon = true;
-
         casing = Resources.Load<ShellCasing>(KBConstants.ObjectConstants.PREFAB_NAMES[KBConstants.ObjectConstants.type.MachineGunShellCasing]);
         if (casing != null)
         {

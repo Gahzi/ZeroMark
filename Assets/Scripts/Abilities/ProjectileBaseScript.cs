@@ -45,7 +45,7 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
     public override void Start()
     {
         base.Start();
-        hitPlayer = new List<GameObject>();
+        //hitPlayer = new List<GameObject>();
         gameObject.tag = "Projectile";
         if (GetComponent<BoxCollider>() != null)
         {
@@ -84,7 +84,7 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(targetPosition, 1.0f);
-        
+
         if (targetPlayer != null)
         {
             Gizmos.DrawWireSphere(targetPlayer.transform.position, 1.0f);
@@ -94,7 +94,14 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
     public override void Init(KBPlayer _owner)
     {
         base.Init(_owner);
-        hitPlayer.Clear();
+        if (hitPlayer == null)
+        {
+            hitPlayer = new List<GameObject>();
+        }
+        else
+        {
+            hitPlayer.Clear();
+        }
     }
 
     public override void OnTriggerEnter(Collider other)

@@ -38,15 +38,15 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
     public override void Start()
     {
         base.Start();
-        for (int i = 0; i < projectileType.Length; i++)
-        {
-            ObjectPool.CreatePool(projectileType[i]);
-        }
-        level = 0;
-        minimumSpreadAngle = 0.0f;
-        maximumSpreadAngle = 0.0f;
-        burstSize = 1;
-        burstDelay = 0;
+        //for (int i = 0; i < projectileType.Length; i++)
+        //{
+        //    ObjectPool.CreatePool(projectileType[i]);
+        //}
+        //level = 0;
+        //minimumSpreadAngle = 0.0f;
+        //maximumSpreadAngle = 0.0f;
+        //burstSize = 1;
+        //burstDelay = 0;
         angleModifierArray = new float[0];
     }
 

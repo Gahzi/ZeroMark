@@ -27,6 +27,7 @@ public class Shotgun : ProjectileAbilityBaseScript
 
     public override void Start()
     {
+        base.Start();
         projectileType = new ProjectileBaseScript[3]
         {
             (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.ShotgunLevel0], typeof(ProjectileBaseScript)),

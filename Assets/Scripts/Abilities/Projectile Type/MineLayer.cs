@@ -35,6 +35,7 @@ public class MineLayer : ProjectileAbilityBaseScript
 
     public override void Start()
     {
+        base.Start();
         projectileType = new ProjectileBaseScript[3]
         {
             (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.MineLevel0], typeof(ProjectileBaseScript)),
@@ -52,7 +53,6 @@ public class MineLayer : ProjectileAbilityBaseScript
         };
         reloadClip = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.PlasmaReload01]);
         SetLevel(0);
-        base.Start();
         burstFireWeapon = true;
     }
 

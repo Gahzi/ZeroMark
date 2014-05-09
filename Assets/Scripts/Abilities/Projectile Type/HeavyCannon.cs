@@ -33,6 +33,7 @@ public class HeavyCannon : ProjectileAbilityBaseScript
 
     public override void Start()
     {
+        base.Start();
         projectileType = new ProjectileBaseScript[3]
         {
             (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.HeavyCannonBulletLevel0], typeof(ProjectileBaseScript)),
