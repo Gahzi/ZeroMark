@@ -642,13 +642,29 @@ public class KBPlayer : KBControllableGameObject
 
             if (other.gameObject.tag.StartsWith("SpawnDroneRed") || other.gameObject.tag.StartsWith("SpawnMechRed") || other.gameObject.tag.StartsWith("SpawnTankRed"))
             {
-                SetTeam(Team.Red);
+                if (GameManager.Instance.IsAbleToSpawnOnTeam(team,KBConstants.Team.Red))
+                {
+                    SetTeam(Team.Red);
+                    StartCoroutine(Spawn(other.gameObject.tag.ToString(), loadout));
+                }
+                else
+                {
+                    //Can't Spawn as Red Team Member
+                }
             }
             else if (other.gameObject.tag.StartsWith("SpawnDroneBlue") || other.gameObject.tag.StartsWith("SpawnMechBlue") || other.gameObject.tag.StartsWith("SpawnTankBlue"))
             {
-                SetTeam(Team.Blue);
+                if (GameManager.Instance.IsAbleToSpawnOnTeam(team,KBConstants.Team.Blue))
+                {
+                    SetTeam(Team.Blue);
+                    StartCoroutine(Spawn(other.gameObject.tag.ToString(), loadout));
+                }
+                else
+                {
+                    //Can't Spawn as Blue Team Member
+                }
             }
-            StartCoroutine(Spawn(other.gameObject.tag.ToString(), loadout));
+            
         }
     }
 

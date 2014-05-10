@@ -327,6 +327,83 @@ public class GameManager : Photon.MonoBehaviour
         return 0;
     }
 
+    public bool IsAbleToSpawnOnTeam(Team currentTeam,Team newTeam)
+    {
+        if (currentTeam == newTeam)
+        {
+            return true;
+        }
+        else
+        {
+            int redTeamCount = 0;
+            int blueTeamCount = 0;
+
+            //get the total team counts
+            for (int i = 0; i < players.Count; i++)
+            {
+                KBPlayer cPlayer = players[i];
+                switch (cPlayer.team)
+                {
+                    case Team.Red:
+                        {
+                            redTeamCount++;
+                            break;
+                        }
+
+                    case Team.Blue:
+                        {
+                            blueTeamCount++;
+                            break;
+                        }
+                }
+            }
+
+            //subtract the current player's team from the total teams
+            switch (currentTeam)
+            {
+                case Team.Red:
+                    {
+                        redTeamCount--;
+                        break;
+                    }
+
+                case Team.Blue:
+                    {
+                        blueTeamCount--;
+                        break;
+                    }
+            }
+
+            //check if possible based on heuristic
+            switch (newTeam)
+            {
+                case Team.Red:
+                    {
+                        if (redTeamCount <= blueTeamCount)
+                        {
+                            return true;
+                        }
+                        break;
+                    }
+
+                case Team.Blue:
+                    {
+                        if (blueTeamCount <= redTeamCount)
+                        {
+                            return true;
+                        }
+                        break;
+                    }
+
+                case Team.None:
+                    {
+                        return true;
+                    }
+            }
+            return false;
+        }
+    }
+
     /// <summary>
     /// Checks if time spent in InGame state is greater than max alloted game time. True if time is up.
     /// </summary>
