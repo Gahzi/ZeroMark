@@ -28,6 +28,7 @@ abstract public class AbilityInstanceBaseScript : MonoBehaviour
     public KBPlayer owner;
     private TrailRenderer trailRenderer;
     private float originalTrailTime;
+    public bool canHitMultiplePlayers;
 
     public virtual void Awake()
     {
@@ -40,7 +41,8 @@ abstract public class AbilityInstanceBaseScript : MonoBehaviour
         rigidbody.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY;
         rigidbody.isKinematic = true;
         collider.isTrigger = true;
-        damage = 0;
+        //damage = 0;
+        //lifetime = 10;
         trailRenderer = GetComponent<TrailRenderer>();
         if (trailRenderer != null)
         {
@@ -58,25 +60,26 @@ abstract public class AbilityInstanceBaseScript : MonoBehaviour
         {
             Invoke("ResetTrail", 0.01f);
         }
+        team = _owner.team;
         owner = _owner;
     }
 
-    public virtual void Init()
-    {
-        Init(null);
-    }
+    //public virtual void Init()
+    //{
+    //    Init(null);
+    //}
 
-    protected virtual void Update()
+    protected virtual void FixedUpdate()
     {
         if (Time.time - spawnTime > lifetime)
         {
             //DoOnHit(); // Uncomment this line to have projecticles "hit" on timeout
-            ObjectPool.Recycle(this);
+            Reset();
         }
     }
 
     public virtual void DoOnHit()
-    {   
+    {
         Reset();
     }
 
@@ -91,7 +94,15 @@ abstract public class AbilityInstanceBaseScript : MonoBehaviour
         {
             trailRenderer.time = -1;
         }
-        ObjectPool.Recycle(this);
+        if (canHitMultiplePlayers && Time.time - spawnTime > lifetime)
+        {
+            ObjectPool.Recycle(this);
+
+        }
+        else
+        {
+            ObjectPool.Recycle(this);
+        }
         if (gameObject.particleSystem != null)
         {
             gameObject.particleSystem.Clear();

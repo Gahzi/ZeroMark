@@ -86,13 +86,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifetime: 10
-  damage: 50
+  damage: 300
   owner: {fileID: 0}
+  canHitMultiplePlayers: 1
+  damageLevel: 
   projectileSpeed: 0
   inheritSpeed: 0
-  collideWithProjectiles: 0
   collideWithEnvironment: 0
+  homingProjectile: 0
+  aimedProjectile: 0
   explosionPrefab: {fileID: 0}
+  targetPlayer: {fileID: 0}
+  targetPosition: {x: 0, y: 0, z: 0}
   targetScale: {x: 35, y: 35, z: 35}
   growSpeed: 10
   fadeSpeed: 1

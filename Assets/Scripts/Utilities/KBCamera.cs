@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 
 public class KBCamera : MonoBehaviour
 {
@@ -11,6 +12,13 @@ public class KBCamera : MonoBehaviour
     public float rotation;
     public SpriteRenderer damageVignette;
     public TextMesh levelText;
+    public TextMesh redScoreText;
+    public TextMesh blueScoreText;
+    public TextMesh timeRemainingNumberText;
+    public TextMesh timeRemainingHeaderText;
+    public TextMesh gameTypeText;
+    public TextMesh redHeldPointTotalText;
+    public TextMesh blueHeldPointTotalText;
 
     private void Start()
     {
@@ -23,7 +31,9 @@ public class KBCamera : MonoBehaviour
 
     private void Update()
     {
-        zoomTarget = 1.8f;
+        gameTypeText.text = Enum.GetName(typeof(GameManager.GameType), GameManager.Instance.gameType);
+        
+        zoomTarget = 2.0f;
         if (attachedPlayer != null)
         {
             if (zoom < 1.0f)
@@ -75,7 +85,8 @@ public class KBCamera : MonoBehaviour
             {
                 if (attachedPlayer.guns[0] != null)
                 {
-                    levelText.text = "(" + attachedPlayer.killTokens.ToString() + "pts.)" + "Lvl." + attachedPlayer.guns[0].level.ToString();
+                    int l = attachedPlayer.guns[0].level + 1;   
+                    levelText.text = "(" + attachedPlayer.currentPoints.ToString() + "pts.)" + "Lvl." + l.ToString();
                 }
                 else
                 {

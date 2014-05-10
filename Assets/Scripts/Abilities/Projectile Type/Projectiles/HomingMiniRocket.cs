@@ -35,19 +35,19 @@ public class HomingMiniRocket : ProjectileBaseScript
         
     }
 
-    protected override void Update()
+    protected override void FixedUpdate()
     {
         if (Time.time - spawnTime > 0.5f)
         {
             projectileSpeed = Mathf.Lerp(rocketInitSpeed, targetSpeed, accel * Time.deltaTime);
         }
-        base.Update();
+        base.FixedUpdate();
     }
 
     public override void DoOnHit()
     {
         AreaOfEffectDamageScript a = ObjectPool.Spawn(explosionPrefab, transform.position);
-        a.Init();
+        a.Init(owner);
         base.DoOnHit();
     }
 

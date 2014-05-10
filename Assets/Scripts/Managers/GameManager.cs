@@ -7,6 +7,10 @@ public class GameManager : Photon.MonoBehaviour
 {
     public enum GameState { PreGame, InGame, RedWins, BlueWins, Tie, EndGame };
 
+    public enum GameType { CapturePoint, DataPulse, Deathmatch };
+
+    public GameType gameType;
+
     public KBPlayer localPlayer;
     public List<KBPlayer> players;
     public List<KillTag> killTags;
@@ -25,18 +29,16 @@ public class GameManager : Photon.MonoBehaviour
 
     public int redTeamScore;
     public int blueTeamScore;
-    public float lastTick;
-    public int secondsPerTick;
-    public int ticksPerGame;
-    public int tick = 0;
     public int redCaptures = 0;
     public int blueCaptures = 0;
-    public int redBonus = 0;
-    public int blueBonus = 0;
+    public int redHeldPointTotal;
+    public int blueHeldPointTotal;
     private List<List<String>> playerStatData;
     private float startTime;
     public float gameTime;
-    public float gameTimeMax;
+    private float gameTimeMax;
+    private float lastDataPulse;
+    public HitFX dataPulseEffect;
 
     private static GameManager instance;
 
@@ -89,12 +91,13 @@ public class GameManager : Photon.MonoBehaviour
     {
         PhotonNetwork.isMessageQueueRunning = true;
         startTime = Time.time;
-        lastTick = Time.time;
         state = GameState.PreGame;
+        gameType = GameType.DataPulse;
 
         KillTag[] loadedKillTags = FindObjectsOfType<KillTag>();
         BankZone[] loadedBankZones = FindObjectsOfType<BankZone>();
         PlayerSpawnPoint[] loadedPSpawns = FindObjectsOfType<PlayerSpawnPoint>();
+        ObjectPool.CreatePool(dataPulseEffect);
 
         foreach (BankZone b in loadedBankZones)
         {
@@ -116,21 +119,69 @@ public class GameManager : Photon.MonoBehaviour
             Team nextTeam = Team.None;
             GameManager.Instance.CreateObject((int)ObjectConstants.type.Player, Vector3.zero, Quaternion.identity, (int)nextTeam);
         }
+
+        gameType = (GameType)PhotonNetwork.room.customProperties["GameType"];
+    }
+
+    /// <summary>
+    /// Returns the spawnpoints of the specific team.
+    /// </summary>
+    /// <param name="team">The team of your desired spawnpoints</param>
+    public List<PlayerSpawnPoint> GetSpawnPointsWithTeam(Team tm)
+    {
+        List<PlayerSpawnPoint> spawnpoints = new List<PlayerSpawnPoint>();
+
+        foreach (PlayerSpawnPoint zone in playerSpawnZones)
+        {
+            if (zone.team == tm)
+            {
+                spawnpoints.Add(zone);
+            }
+        }
+
+        return spawnpoints;
+    }
+
+    //<summary>
+    //While script is observed (in a PhotonView), this is called by PUN with a stream to write or read.
+    //</summary>
+    //<remarks>
+    //The property stream.isWriting is true for the owner of a PhotonView. This is the only client that
+    //should write into the stream. Others will receive the content written by the owner and can read it.
+    private void StartGame()
+    {
+        state = GameState.InGame;
+    }
+
+    private void OnGUI()
+    {
     }
 
     private void FixedUpdate()
     {
-        if (Time.time > lastTick + secondsPerTick)
-        {
-            NextTick();
-        }
-
         if (localPlayer != null)
         {
             switch (state)
             {
                 case GameState.PreGame:
-                    gameTimeMax = 250.0f;
+                    switch (gameType)
+                    {
+                        case GameType.CapturePoint:
+                            gameTimeMax = GameConstants.maxGameTimeCapturePoint;
+                            break;
+
+                        case GameType.DataPulse:
+                            gameTimeMax = GameConstants.maxGameTimeDataPulse;
+                            break;
+
+                        case GameType.Deathmatch:
+                            gameTimeMax = GameConstants.maxGameTimeDeathmatch;
+                            break;
+
+                        default:
+                            break;
+                    }
+                    lastDataPulse = Time.time;
                     state = GameState.InGame;
                     break;
 
@@ -138,6 +189,28 @@ public class GameManager : Photon.MonoBehaviour
                     gameTime += Time.deltaTime;
 
                     CheckGameOver();
+
+                    redHeldPointTotal = 0;
+                    blueHeldPointTotal = 0;
+                    for (int i = 0; i < players.Count; i++)
+                    {
+                        switch (players[i].team)
+                        {
+                            case Team.Red:
+                                redHeldPointTotal += players[i].currentPoints;
+                                break;
+
+                            case Team.Blue:
+                                blueHeldPointTotal += players[i].currentPoints;
+                                break;
+
+                            case Team.None:
+                                break;
+
+                            default:
+                                break;
+                        }
+                    }
 
                     //CheckPlayerUpgradePoints();
                     //RunGui();
@@ -174,132 +247,6 @@ public class GameManager : Photon.MonoBehaviour
         }
     }
 
-    public static void TakeScreenshot(int res)
-    {
-        string path = Application.persistentDataPath + "/" + System.DateTime.Now.Year.ToString() +
-            System.DateTime.Now.Month.ToString() + System.DateTime.Now.Day.ToString() + "_" +
-            System.DateTime.Now.Hour.ToString() + System.DateTime.Now.Minute.ToString() +
-            System.DateTime.Now.Second.ToString() + "_zm_scr.png";
-
-        Application.CaptureScreenshot(path, res);
-        path = Application.persistentDataPath + "/" + path;
-        Debug.Log(path);
-    }
-
-    private void OnGUI()
-    {
-        //GUI.Box(new Rect(Screen.width / 2 - 50, 0, 100, 40), "Blue" + System.Environment.NewLine +  blueTeamScore.ToString());
-        //GUI.Box(new Rect(Screen.width / 2 + 50, 0, 100, 40), "Red" + System.Environment.NewLine + redTeamScore.ToString());
-    }
-
-    //<summary>
-    //While script is observed (in a PhotonView), this is called by PUN with a stream to write or read.
-    //</summary>
-    //<remarks>
-    //The property stream.isWriting is true for the owner of a PhotonView. This is the only client that
-    //should write into the stream. Others will receive the content written by the owner and can read it.
-
-    //Note: Send only what you actually want to consume/use, too!
-    //Note: If the owner doesn't write something into the stream, PUN won't send anything.
-    //</remarks>
-    //<param name="stream">Read or write stream to pass state of this GameObject (or whatever else).</param>
-    //<param name="info">Some info about the sender of this stream, who is the owner of this PhotonView (and GameObject).</param>
-    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    {
-        if (stream.isWriting)
-        {
-            int gmState = (int)state;
-            int rdTmScre = redTeamScore;
-            int blTmScre = blueTeamScore;
-            float lstTick = lastTick;
-            int tk = tick;
-            int rdCptrs = redCaptures;
-            int blCptrs = blueCaptures;
-            float strtTime = startTime;
-            float gmTime = gameTime;
-            float gmTimeMax = gameTimeMax;
-
-            stream.Serialize(ref gmState);
-            stream.Serialize(ref rdTmScre);
-            stream.Serialize(ref blTmScre);
-            stream.Serialize(ref lstTick);
-            stream.Serialize(ref tk);
-            stream.Serialize(ref rdCptrs);
-            stream.Serialize(ref blCptrs);
-            stream.Serialize(ref strtTime);
-            stream.Serialize(ref gmTime);
-            stream.Serialize(ref gmTimeMax);
-        }
-        else
-        {
-            // Receive latest state information
-            int gmState = (int)state;
-            int rdTmScre = redTeamScore;
-            int blTmScre = blueTeamScore;
-            float lstTick = lastTick;
-            int tk = tick;
-            int rdCptrs = redCaptures;
-            int blCptrs = blueCaptures;
-            float strtTime = startTime;
-            float gmTime = gameTime;
-            float gmTimeMax = gameTimeMax;
-
-            stream.Serialize(ref gmState);
-            stream.Serialize(ref rdTmScre);
-            stream.Serialize(ref blTmScre);
-            stream.Serialize(ref lstTick);
-            stream.Serialize(ref tk);
-            stream.Serialize(ref rdCptrs);
-            stream.Serialize(ref blCptrs);
-            stream.Serialize(ref strtTime);
-            stream.Serialize(ref gmTime);
-            stream.Serialize(ref gmTimeMax);
-
-            state = (GameState)gmState;
-            redTeamScore = rdTmScre;
-            blueTeamScore = blTmScre;
-            lastTick = lstTick;
-            tick = tk;
-            redCaptures = rdCptrs;
-            blueCaptures = blCptrs;
-            startTime = strtTime;
-            gameTime = gmTime;
-            gameTimeMax = gmTimeMax;
-        }
-    }
-
-    private void StartGame()
-    {
-        state = GameState.InGame;
-    }
-
-    private void NextTick()
-    {
-        lastTick = Time.time;
-        tick++;
-        redTeamScore += redCaptures;
-        blueTeamScore += blueCaptures;
-    }
-
-    /// <summary>
-    /// Returns the spawnpoints of the specific team.
-    /// </summary>
-    /// <param name="team">The team of your desired spawnpoints</param>
-    public List<PlayerSpawnPoint> GetSpawnPointsWithTeam(Team tm)
-    {
-        List<PlayerSpawnPoint> spawnpoints = new List<PlayerSpawnPoint>();
-
-        foreach (PlayerSpawnPoint zone in playerSpawnZones)
-        {
-            if (zone.team == tm)
-            {
-                spawnpoints.Add(zone);
-            }
-        }
-
-        return spawnpoints;
-    }
-
     public GameObject CreateObject(int type, Vector3 position, Quaternion rotation, int newTeam)
     {
         KBConstants.ObjectConstants.type newType = (KBConstants.ObjectConstants.type)type;
@@ -320,6 +267,7 @@ public class GameManager : Photon.MonoBehaviour
                     GameObject newKillTagBlueObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.KillTagBlue], position, Quaternion.Euler(33.3f, 330.0f, 48.36f), 0);
                     KillTag newKillTagBlue = newKillTagBlueObject.GetComponent<KillTag>();
                     newKillTagBlue.team = (Team)newTeam;
+                    //newKillTagBlueObject.transform.Translate(new Vector3(UnityEngine.Random.Range(-10.0f, 10.0f), 0, UnityEngine.Random.Range(-10.0f, 10.0f)));
                     return newKillTagBlueObject;
                 }
 
@@ -328,6 +276,7 @@ public class GameManager : Photon.MonoBehaviour
                     GameObject newKillTagRedObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.KillTagRed], position, Quaternion.Euler(33.3f, 330.0f, 48.36f), 0);
                     KillTag newKillTagRed = newKillTagRedObject.GetComponent<KillTag>();
                     newKillTagRed.team = (Team)newTeam;
+                    //newKillTagRedObject.transform.Translate(new Vector3(UnityEngine.Random.Range(-10.0f, 10.0f), 0, UnityEngine.Random.Range(-10.0f, 10.0f)));
                     return newKillTagRedObject;
                 }
             default:
@@ -347,14 +296,19 @@ public class GameManager : Photon.MonoBehaviour
         }
     }
 
-    private void SendGlobalMessageToPlayers(string msg)
+    private void RunDataPulse()
     {
-        // TODO
+        photonView.RPC("AddPointsToScore", PhotonTargets.All, (int)localPlayer.team, localPlayer.currentPoints);
+        localPlayer.ScorePoints(localPlayer.currentPoints);
+        lastDataPulse = Time.time;
+        HitFX o = ObjectPool.Spawn(dataPulseEffect);
+        o.Init();
     }
 
-    public int AddPointsToScore(Team team, int points)
+    [RPC]
+    public int AddPointsToScore(int _team, int points)
     {
-        switch (team)
+        switch ((Team)_team)
         {
             case Team.Red:
                 redTeamScore += points;
@@ -370,7 +324,86 @@ public class GameManager : Photon.MonoBehaviour
             default:
                 break;
         }
+        string s = string.Format("Banked {0} points for team {1}", points, Enum.GetName(typeof(Team), (Team)_team));
+        Debug.Log(s);
         return 0;
+    }
+
+    public bool IsAbleToSpawnOnTeam(Team currentTeam,Team newTeam)
+    {
+        if (currentTeam == newTeam)
+        {
+            return true;
+        }
+        else
+        {
+            int redTeamCount = 0;
+            int blueTeamCount = 0;
+
+            //get the total team counts
+            for (int i = 0; i < players.Count; i++)
+            {
+                KBPlayer cPlayer = players[i];
+                switch (cPlayer.team)
+                {
+                    case Team.Red:
+                        {
+                            redTeamCount++;
+                            break;
+                        }
+
+                    case Team.Blue:
+                        {
+                            blueTeamCount++;
+                            break;
+                        }
+                }
+            }
+
+            //subtract the current player's team from the total teams
+            switch (currentTeam)
+            {
+                case Team.Red:
+                    {
+                        redTeamCount--;
+                        break;
+                    }
+
+                case Team.Blue:
+                    {
+                        blueTeamCount--;
+                        break;
+                    }
+            }
+
+            //check if possible based on heuristic
+            switch (newTeam)
+            {
+                case Team.Red:
+                    {
+                        if (redTeamCount <= blueTeamCount)
+                        {
+                            return true;
+                        }
+                        break;
+                    }
+
+                case Team.Blue:
+                    {
+                        if (blueTeamCount <= redTeamCount)
+                        {
+                            return true;
+                        }
+                        break;
+                    }
+
+                case Team.None:
+                    {
+                        return true;
+                    }
+            }
+            return false;
+        }
     }
 
     /// <summary>
@@ -387,6 +420,74 @@ public class GameManager : Photon.MonoBehaviour
         {
             return false;
         }
+    }
+
+    /// <summary>
+    /// Checks to see if the 2/3 capture points are taken.
+    /// </summary>
+    /// <returns>True if a team has more than 2/3rds of the capture points</returns>
+    private void CheckGameOver()
+    {
+        switch (gameType)
+        {
+            case GameType.CapturePoint:
+
+                if (redTeamScore >= 100)
+                {
+                    state = GameState.RedWins;
+                }
+                else if (blueTeamScore >= 100)
+                {
+                    state = GameState.BlueWins;
+                }
+                break;
+
+            case GameType.DataPulse:
+
+                if (Time.time > lastDataPulse + GameConstants.dataPulsePeriod)
+                {
+                    RunDataPulse();
+                }
+
+                if (IsGameTimeOver())
+                {
+                    if (redTeamScore > blueTeamScore)
+                    {
+                        state = GameState.RedWins;
+                    }
+                    else if (blueTeamScore > redTeamScore)
+                    {
+                        state = GameState.BlueWins;
+                    }
+                }
+
+                break;
+
+            case GameType.Deathmatch:
+
+                // Add primary check for score limit here
+                if (redTeamScore >= 30 || blueTeamScore >= 30)
+                {
+                    if (redTeamScore >= 30)
+                    {
+                        state = GameState.RedWins;
+                    }
+                    else if (blueTeamScore >= 30)
+                    {
+                        state = GameState.BlueWins;
+                    }
+                }
+
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    private void SendGlobalMessageToPlayers(string msg)
+    {
+        // TODO
     }
 
     public KBPlayer FindClosestPlayer(KBPlayer fromPlayer, float minimumDist, bool oppositeTeamOnly)
@@ -425,46 +526,76 @@ public class GameManager : Photon.MonoBehaviour
         return target;
     }
 
-    /// <summary>
-    /// Checks to see if the 2/3 capture points are taken.
-    /// </summary>
-    /// <returns>True if a team has more than 2/3rds of the capture points</returns>
-    private void CheckGameOver()
+    public static void TakeScreenshot(int res)
     {
-        int redCount = 0;
-        int blueCount = 0;
+        string path = Application.persistentDataPath + "/" + System.DateTime.Now.Year.ToString() +
+            System.DateTime.Now.Month.ToString() + System.DateTime.Now.Day.ToString() + "_" +
+            System.DateTime.Now.Hour.ToString() + System.DateTime.Now.Minute.ToString() +
+            System.DateTime.Now.Second.ToString() + "_zm_scr.png";
 
-        for (int i = 0; i < bankZones.Count; i++)
+        Application.CaptureScreenshot(path, res);
+        path = Application.persistentDataPath + "/" + path;
+        Debug.Log(path);
+    }
+
+    //Note: Send only what you actually want to consume/use, too!
+    //Note: If the owner doesn't write something into the stream, PUN won't send anything.
+    //</remarks>
+    //<param name="stream">Read or write stream to pass state of this GameObject (or whatever else).</param>
+    //<param name="info">Some info about the sender of this stream, who is the owner of this PhotonView (and GameObject).</param>
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.isWriting)
         {
-            BankZone bz = bankZones[i];
-            switch (bz.team)
-            {
-                case Team.Blue:
-                    {
-                        blueCount++;
-                        break;
-                    }
+            int gmState = (int)state;
+            int rdTmScre = redTeamScore;
+            int blTmScre = blueTeamScore;
+            int rdCptrs = redCaptures;
+            int blCptrs = blueCaptures;
+            float strtTime = startTime;
+            float gmTime = gameTime;
+            float gmTimeMax = gameTimeMax;
 
-                case Team.Red:
-                    {
-                        redCount++;
-                        break;
-                    }
-
-                case Team.None:
-                    {
-                        break;
-                    }
-            }
+            stream.Serialize(ref gmState);
+            stream.Serialize(ref rdTmScre);
+            stream.Serialize(ref blTmScre);
+            stream.Serialize(ref rdCptrs);
+            stream.Serialize(ref blCptrs);
+            stream.Serialize(ref strtTime);
+            stream.Serialize(ref gmTime);
+            stream.Serialize(ref gmTimeMax);
         }
+        else
+        {
+            // Receive latest state information
+            int gmState = (int)state;
+            int rdTmScre = redTeamScore;
+            int blTmScre = blueTeamScore;
 
-        if (redCount > bankZones.Count / 2)
-        {
-            state = GameState.RedWins;
-        }
-        else if (blueCount > bankZones.Count / 2)
-        {
-            state = GameState.BlueWins;
+            int rdCptrs = redCaptures;
+            int blCptrs = blueCaptures;
+            float strtTime = startTime;
+            float gmTime = gameTime;
+            float gmTimeMax = gameTimeMax;
+
+            stream.Serialize(ref gmState);
+            stream.Serialize(ref rdTmScre);
+            stream.Serialize(ref blTmScre);
+            stream.Serialize(ref rdCptrs);
+            stream.Serialize(ref blCptrs);
+            stream.Serialize(ref strtTime);
+            stream.Serialize(ref gmTime);
+            stream.Serialize(ref gmTimeMax);
+
+            state = (GameState)gmState;
+            redTeamScore = rdTmScre;
+            blueTeamScore = blTmScre;
+
+            redCaptures = rdCptrs;
+            blueCaptures = blCptrs;
+            startTime = strtTime;
+            gameTime = gmTime;
+            gameTimeMax = gmTimeMax;
         }
     }
 }

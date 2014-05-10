@@ -6,8 +6,6 @@ public class KillTag : KBGameObject
 
     public int pointValue;
     public TextMesh textMesh;
-    public int decayPercent = 10;
-    public int decayPeriod = 3;
     private float timer;
 
     public override void Start()
@@ -16,15 +14,15 @@ public class KillTag : KBGameObject
         //textMesh = GetComponentInChildren<TextMesh>();
     }
 
-    private new void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         KBPlayer player = other.gameObject.GetComponent<KBPlayer>();
         if(player != null && player.team != Team.None)
         {
             if (player.team != team && PhotonNetwork.player.Equals(player.networkPlayer))
             {
-                player.totalTokensGained += player.killTokens;
-                player.killTokens += pointValue;
+                player.totalPointsGained += pointValue;
+                player.currentPoints += pointValue;
 
                 GameManager.Instance.photonView.RPC("DestroyObject", PhotonTargets.All, photonView.viewID);
                 player.audio.PlayOneShot(player.itemPickupClip);
@@ -61,9 +59,9 @@ public class KillTag : KBGameObject
 
         if (pointValue > 1)
         {
-            if (Time.time > timer + decayPeriod)
+            if (Time.time > timer + GameConstants.pointObjectDecayPeriod)
             {
-                gameObject.GetPhotonView().RPC("SetPointValue", PhotonTargets.AllBuffered, Mathf.RoundToInt((float)pointValue * ((100.0f - (float)decayPercent) / 100.0f)));
+                gameObject.GetPhotonView().RPC("SetPointValue", PhotonTargets.All, Mathf.RoundToInt((float)pointValue * ((100.0f - (float)GameConstants.pointObjectDecayPercentPerPeriod) / 100.0f)));
                 transform.localScale = Vector3.one * (1.0f + ((float)pointValue / 100.0f));
             }
         }
@@ -80,4 +78,33 @@ public class KillTag : KBGameObject
     {
         GameManager.Instance.killTags.Add(this);
     }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.isWriting)
+        {
+            int _val = pointValue;
+            Vector3 _pos = transform.position;
+            Vector3 _scl = transform.localScale;
+
+            stream.Serialize(ref _val);
+            stream.Serialize(ref _pos);
+            stream.Serialize(ref _scl);
+        }
+        else
+        {
+            int _val = 0;
+            Vector3 _pos = Vector3.zero;
+            Vector3 _scl = Vector3.one;
+
+            stream.Serialize(ref _val);
+            stream.Serialize(ref _pos);
+            stream.Serialize(ref _scl);
+
+            pointValue = _val;
+            transform.position = _pos;
+            transform.localScale = _scl;
+        }
+    }
+
 }

@@ -60,7 +60,7 @@ Transform:
   m_GameObject: {fileID: 100002}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 87.1444702, y: -42.0591278, z: 165.749023}
-  m_LocalScale: {x: .5, y: .5, z: .5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400000}
   m_Father: {fileID: 0}
@@ -176,7 +176,7 @@ MonoBehaviour:
   damage: 100
   owner: {fileID: 0}
   damageLevel: 
-  projectileSpeed: 120
+  projectileSpeed: 1
   inheritSpeed: 0
   collideWithEnvironment: 1
   homingProjectile: 0
@@ -185,8 +185,8 @@ MonoBehaviour:
   targetPlayer: {fileID: 0}
   targetPosition: {x: 0, y: 0, z: 0}
   rocketInitSpeed: 0
-  accel: 20
-  targetSpeed: 0
+  accel: 10
+  targetSpeed: 200
 --- !u!135 &13500000
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -195,9 +195,9 @@ SphereCollider:
   m_GameObject: {fileID: 100002}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 4
+  m_Radius: 1.5
   m_Center: {x: 0, y: 0, z: -0}
 --- !u!198 &19800000
 ParticleSystem:
@@ -1428,7 +1428,7 @@ ParticleSystem:
         rgba: 4278473204
       minMaxState: 0
     startSize:
-      scalar: 5
+      scalar: 10
       maxCurve:
         serializedVersion: 2
         m_Curve:

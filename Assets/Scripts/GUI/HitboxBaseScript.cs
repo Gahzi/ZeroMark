@@ -5,6 +5,9 @@ using KBConstants;
 
 public class HitboxBaseScript : MonoBehaviour
 {
+
+    public GameObject owner;
+    
     private Team team;
     public Team Team
     {

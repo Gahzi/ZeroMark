@@ -6,27 +6,28 @@ public class Shotgun : ProjectileAbilityBaseScript
     #region CONSTANTS
 
     public static float COOLDOWN_0 = 0.40f;
-    public static int RANGE_0 = 25;
+    public static int RANGE_0 = 10;
     public static float RELOAD_TIME_0 = 2.0f;
     public static int CLIP_SIZE_0 = 5;
-    public static int BURST_SIZE_0 = 10;
+    public static int BURST_SIZE_0 = 15;
 
     public static float COOLDOWN_1 = 0.40f;
-    public static int RANGE_1 = 25;
+    public static int RANGE_1 = 10;
     public static float RELOAD_TIME_1 = 1.9f;
     public static int CLIP_SIZE_1 = 6;
-    public static int BURST_SIZE_1 = 10;
+    public static int BURST_SIZE_1 = 15;
 
     public static float COOLDOWN_2 = 0.30f;
-    public static int RANGE_2 = 25;
+    public static int RANGE_2 = 10;
     public static float RELOAD_TIME_2 = 1.8f;
     public static int CLIP_SIZE_2 = 7;
-    public static int BURST_SIZE_2 = 10;
+    public static int BURST_SIZE_2 = 15;
 
     #endregion CONSTANTS
 
     public override void Start()
     {
+        base.Start();
         projectileType = new ProjectileBaseScript[3]
         {
             (ProjectileBaseScript)Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.ShotgunLevel0], typeof(ProjectileBaseScript)),

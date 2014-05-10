@@ -9,6 +9,17 @@ public class AreaOfEffectDamageScript : ProjectileBaseScript
     public float fadeSpeed;
     public Material originalMaterial;
 
+    public override void Awake()
+    {
+        base.Awake();
+        damageLevel = new int[3]
+        { 
+            KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.RocketLevel0],
+            KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.RocketLevel1],
+            KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.RocketLevel2]
+        };
+    }
+
     public override void Start()
     {
         base.Start();
@@ -16,9 +27,9 @@ public class AreaOfEffectDamageScript : ProjectileBaseScript
         transparentColor = new Color(originalMaterial.color.r, originalMaterial.color.g, originalMaterial.color.b, 0);
     }
 
-    protected override void Update()
+    protected override void FixedUpdate()
     {
-        base.Update();
+        base.FixedUpdate();
         gameObject.transform.localScale = Vector3.Lerp(transform.localScale, targetScale, growSpeed * Time.deltaTime);
         gameObject.renderer.material.color = Color.Lerp(renderer.material.color, transparentColor, fadeSpeed * Time.deltaTime);
 
@@ -28,9 +39,9 @@ public class AreaOfEffectDamageScript : ProjectileBaseScript
         }
     }
 
-    public override void Init()
+    public override void Init(KBPlayer _owner)
     {
-        base.Init();
+        base.Init(_owner);
         lifetime = 10;
         transform.localScale = initScale;
         renderer.material.color = originalMaterial.color;

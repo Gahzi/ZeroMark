@@ -22,4 +22,9 @@ public class PlayerSpawnPoint : KBGameObject
     //            break;
     //    }
     //}
+
+    public void OnGui()
+    {
+
+    }
 }

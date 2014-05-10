@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 
 public class GUIManager : MonoBehaviour
 {
     public enum GUIManagerState { Hidden, ShowingStatTab, ShowingEndGameTab }
+
     public GUIManagerState state = GUIManagerState.Hidden;
 
     private GUIContent killsColumnContent = new GUIContent("Kills");
-    private GUIContent deathsColumnContent= new GUIContent("Deaths");
+    private GUIContent deathsColumnContent = new GUIContent("Deaths");
     private GUIContent pointsGainedColumnContent = new GUIContent("Points Gained");
     private GUIContent pointsLostColumnContent = new GUIContent("Points Lost");
     private GUIContent pointsBankedColumnContent = new GUIContent("Points Banked");
@@ -44,32 +44,57 @@ public class GUIManager : MonoBehaviour
         instance = this;
     }
 
-
     private void Start()
     {
 
+        switch (GameManager.Instance.gameType)
+        {
+            case GameManager.GameType.CapturePoint:
+                {
+                    TextMesh timeRemainingHeader = GameManager.Instance.localPlayer.gameObject.GetComponentInChildren<KBCamera>().timeRemainingHeaderText;
+                    timeRemainingHeader.text = "Time Remaining";
+                    break;
+                }
+
+            case GameManager.GameType.DataPulse:
+                {
+                    TextMesh timeRemainingHeader = GameManager.Instance.localPlayer.gameObject.GetComponentInChildren<KBCamera>().timeRemainingHeaderText;
+                    timeRemainingHeader.text = "Time Remaining";
+                    break;
+                }
+
+            case GameManager.GameType.Deathmatch:
+                {
+                    TextMesh timeRemainingHeader = GameManager.Instance.localPlayer.gameObject.GetComponentInChildren<KBCamera>().timeRemainingHeaderText;
+                    timeRemainingHeader.text = "Kills To Win";
+                    break;
+                }
+        }
+
+        GameManager.Instance.localPlayer.playerCamera.redScoreText.text = "00";
+        GameManager.Instance.localPlayer.playerCamera.blueScoreText.text = "00";
     }
-    
-    void OnGUI()
+
+    private void OnGUI()
     {
         switch (state)
         {
             case GUIManagerState.Hidden:
-            {
-                break;
-            }
+                {
+                    break;
+                }
 
             case GUIManagerState.ShowingStatTab:
-            {
-                ShowStatTab();
-                break;
-            }
+                {
+                    ShowStatTab();
+                    break;
+                }
 
             case GUIManagerState.ShowingEndGameTab:
-            {
-                ShowEndGameTab();
-                break;
-            }
+                {
+                    ShowEndGameTab();
+                    break;
+                }
         }
     }
 
@@ -79,15 +104,15 @@ public class GUIManager : MonoBehaviour
         float statY = Screen.height * 0.1f;
         float statWidth = Screen.width * 0.5f;
         float statHeight = Screen.height * 0.8f;
-        Rect statTabRect = new Rect(statX,statY,statWidth,statHeight);
+        Rect statTabRect = new Rect(statX, statY, statWidth, statHeight);
 
         GUI.BeginGroup(statTabRect);
-        GUI.Box(new Rect(0, 0, statWidth, statHeight),"");
+        GUI.Box(new Rect(0, 0, statWidth, statHeight), "");
         //room name
 
         GUI.skin.label = headerStyle;
         GUIContent roomNameContent = new GUIContent("Room Name");
-        Rect roomNameRect = new Rect(statWidth*0.5f,0,GUI.skin.label.CalcSize(roomNameContent).x,GUI.skin.label.CalcSize(roomNameContent).y);
+        Rect roomNameRect = new Rect(statWidth * 0.5f, 0, GUI.skin.label.CalcSize(roomNameContent).x, GUI.skin.label.CalcSize(roomNameContent).y);
         GUI.Label(roomNameRect, roomNameContent);
 
         //columns
@@ -109,10 +134,8 @@ public class GUIManager : MonoBehaviour
         Rect pointsBankedColumnRect = new Rect(pointsLostColumnRect.x + pointsLostColumnRect.width + columnPadding, killsColumnRect.y, GUI.skin.label.CalcSize(pointsBankedColumnContent).x, GUI.skin.label.CalcSize(pointsBankedColumnContent).y);
         GUI.Label(pointsBankedColumnRect, pointsBankedColumnContent);
 
-
         GameManager gm = GameManager.Instance;
         float playerPadding = statHeight * 0.05f;
-        
 
         //red players
         for (int i = 0; i < gm.players.Count; i++)
@@ -132,63 +155,30 @@ public class GUIManager : MonoBehaviour
                 GUI.skin.label = nonePlayerStyle;
             }
 
-
             GUIContent cPlayerNameContent = new GUIContent(currentPlayer.name);
             Rect cPlayerNameRect = new Rect(statWidth * 0.1f, statHeight * 0.125f + (playerPadding * (i)), GUI.skin.label.CalcSize(cPlayerNameContent).x, GUI.skin.label.CalcSize(cPlayerNameContent).y);
             GUI.Label(cPlayerNameRect, cPlayerNameContent);
 
             GUIContent cPlayerKillCountContent = new GUIContent(currentPlayer.killCount.ToString());
-            Rect cPlayerKillCountRect = new Rect(killsColumnRect.x, killsColumnRect.y + (playerPadding * (i+1)), GUI.skin.label.CalcSize(cPlayerKillCountContent).x, GUI.skin.label.CalcSize(cPlayerKillCountContent).y);
+            Rect cPlayerKillCountRect = new Rect(killsColumnRect.x, killsColumnRect.y + (playerPadding * (i + 1)), GUI.skin.label.CalcSize(cPlayerKillCountContent).x, GUI.skin.label.CalcSize(cPlayerKillCountContent).y);
             GUI.Label(cPlayerKillCountRect, cPlayerKillCountContent);
 
             GUIContent cPlayerDeathCountContent = new GUIContent(currentPlayer.deathCount.ToString());
-            Rect cPlayerDeathCountRect = new Rect(deathsColumnRect.x, deathsColumnRect.y + (playerPadding * (i+1)), GUI.skin.label.CalcSize(cPlayerDeathCountContent).x, GUI.skin.label.CalcSize(cPlayerDeathCountContent).y);
+            Rect cPlayerDeathCountRect = new Rect(deathsColumnRect.x, deathsColumnRect.y + (playerPadding * (i + 1)), GUI.skin.label.CalcSize(cPlayerDeathCountContent).x, GUI.skin.label.CalcSize(cPlayerDeathCountContent).y);
             GUI.Label(cPlayerDeathCountRect, cPlayerDeathCountContent);
 
-            GUIContent cPlayerPointsGainedContent = new GUIContent(currentPlayer.totalTokensGained.ToString());
-            Rect cPlayerPointsGainedRect = new Rect(pointsGainedColumnRect.x, pointsGainedColumnRect.y + (playerPadding * (i+1)), GUI.skin.label.CalcSize(cPlayerPointsGainedContent).x, GUI.skin.label.CalcSize(cPlayerPointsGainedContent).y);
+            GUIContent cPlayerPointsGainedContent = new GUIContent(currentPlayer.totalPointsGained.ToString());
+            Rect cPlayerPointsGainedRect = new Rect(pointsGainedColumnRect.x, pointsGainedColumnRect.y + (playerPadding * (i + 1)), GUI.skin.label.CalcSize(cPlayerPointsGainedContent).x, GUI.skin.label.CalcSize(cPlayerPointsGainedContent).y);
             GUI.Label(cPlayerPointsGainedRect, cPlayerPointsGainedContent);
 
-            GUIContent cPlayerPointsLostContent = new GUIContent(currentPlayer.totalTokensLost.ToString());
-            Rect cPlayerPointsLostRect = new Rect(pointsLostColumnRect.x, pointsLostColumnRect.y + (playerPadding * (i+1)), GUI.skin.label.CalcSize(cPlayerPointsLostContent).x, GUI.skin.label.CalcSize(cPlayerPointsLostContent).y);
+            GUIContent cPlayerPointsLostContent = new GUIContent(currentPlayer.totalPointsLost.ToString());
+            Rect cPlayerPointsLostRect = new Rect(pointsLostColumnRect.x, pointsLostColumnRect.y + (playerPadding * (i + 1)), GUI.skin.label.CalcSize(cPlayerPointsLostContent).x, GUI.skin.label.CalcSize(cPlayerPointsLostContent).y);
             GUI.Label(cPlayerPointsLostRect, cPlayerPointsLostContent);
 
-            GUIContent cPlayerPointsBankedContent = new GUIContent(currentPlayer.totalTokensBanked.ToString());
-            Rect cPlayerPointsBankedRect = new Rect(pointsBankedColumnRect.x, pointsBankedColumnRect.y + (playerPadding * (i+1)), GUI.skin.label.CalcSize(cPlayerPointsBankedContent).x, GUI.skin.label.CalcSize(cPlayerPointsBankedContent).y);
+            GUIContent cPlayerPointsBankedContent = new GUIContent(currentPlayer.totalPointsBanked.ToString());
+            Rect cPlayerPointsBankedRect = new Rect(pointsBankedColumnRect.x, pointsBankedColumnRect.y + (playerPadding * (i + 1)), GUI.skin.label.CalcSize(cPlayerPointsBankedContent).x, GUI.skin.label.CalcSize(cPlayerPointsBankedContent).y);
             GUI.Label(cPlayerPointsBankedRect, cPlayerPointsBankedContent);
         }
-
-        //middle
-
-        ////blue players
-        //for (int i = 0; i < gm.players.Count; i++)
-        //{
-        //    KBPlayer currentPlayer = gm.players[i];
-
-        //    GUIContent cPlayerNameContent = new GUIContent(currentPlayer.name);
-        //    Rect cPlayerNameRect = new Rect(statWidth * 0.1f, statHeight * 0.125f, GUI.skin.label.CalcSize(cPlayerNameContent).x, GUI.skin.label.CalcSize(cPlayerNameContent).y);
-        //    GUI.Label(cPlayerNameRect, cPlayerNameContent);
-
-        //    GUIContent cPlayerKillCountContent = new GUIContent(currentPlayer.killCount.ToString());
-        //    Rect cPlayerKillCountRect = new Rect(killsColumnRect.x, killsColumnRect.y + (playerPadding * (i + 1)), GUI.skin.label.CalcSize(cPlayerKillCountContent).x, GUI.skin.label.CalcSize(cPlayerKillCountContent).y);
-        //    GUI.Label(cPlayerKillCountRect, cPlayerKillCountContent);
-
-        //    GUIContent cPlayerDeathCountContent = new GUIContent(currentPlayer.deathCount.ToString());
-        //    Rect cPlayerDeathCountRect = new Rect(deathsColumnRect.x, deathsColumnRect.y + (playerPadding * (i + 1)), GUI.skin.label.CalcSize(cPlayerDeathCountContent).x, GUI.skin.label.CalcSize(cPlayerDeathCountContent).y);
-        //    GUI.Label(cPlayerDeathCountRect, cPlayerDeathCountContent);
-
-        //    GUIContent cPlayerPointsGainedContent = new GUIContent(currentPlayer.totalTokensGained.ToString());
-        //    Rect cPlayerPointsGainedRect = new Rect(pointsGainedColumnRect.x, pointsGainedColumnRect.y + (playerPadding * (i + 1)), GUI.skin.label.CalcSize(cPlayerPointsGainedContent).x, GUI.skin.label.CalcSize(cPlayerPointsGainedContent).y);
-        //    GUI.Label(cPlayerPointsGainedRect, cPlayerPointsGainedContent);
-
-        //    GUIContent cPlayerPointsLostContent = new GUIContent(currentPlayer.totalTokensLost.ToString());
-        //    Rect cPlayerPointsLostRect = new Rect(pointsLostColumnRect.x, pointsLostColumnRect.y + (playerPadding * (i + 1)), GUI.skin.label.CalcSize(cPlayerPointsLostContent).x, GUI.skin.label.CalcSize(cPlayerPointsLostContent).y);
-        //    GUI.Label(cPlayerPointsLostRect, cPlayerPointsLostContent);
-
-        //    GUIContent cPlayerPointsBankedContent = new GUIContent(currentPlayer.totalTokensBanked.ToString());
-        //    Rect cPlayerPointsBankedRect = new Rect(pointsBankedColumnRect.x, pointsBankedColumnRect.y + (playerPadding * (i + 1)), GUI.skin.label.CalcSize(cPlayerPointsBankedContent).x, GUI.skin.label.CalcSize(cPlayerPointsBankedContent).y);
-        //    GUI.Label(cPlayerPointsBankedRect, cPlayerPointsBankedContent);
-        //}
 
         GUI.EndGroup();
     }
@@ -229,7 +219,6 @@ public class GUIManager : MonoBehaviour
         Rect pointsBankedColumnRect = new Rect(pointsLostColumnRect.x + pointsLostColumnRect.width + columnPadding, killsColumnRect.y, GUI.skin.label.CalcSize(pointsBankedColumnContent).x, GUI.skin.label.CalcSize(pointsBankedColumnContent).y);
         GUI.Label(pointsBankedColumnRect, pointsBankedColumnContent);
 
-
         //red players
         GameManager gm = GameManager.Instance;
         float playerPadding = statHeight * 0.05f;
@@ -238,71 +227,51 @@ public class GUIManager : MonoBehaviour
         for (int i = 0; i < gm.players.Count; i++)
         {
             KBPlayer currentPlayer = gm.players[i];
+            if (currentPlayer != null)
+            {
+                if (currentPlayer.team == KBConstants.Team.Red)
+                {
+                    GUI.skin.label = redPlayerStyle;
+                }
+                else if (currentPlayer.team == KBConstants.Team.Blue)
+                {
+                    GUI.skin.label = bluePlayerStyle;
+                }
+                else
+                {
+                    GUI.skin.label = nonePlayerStyle;
+                }
 
-            GUIContent cPlayerNameContent = new GUIContent(currentPlayer.name);
-            Rect cPlayerNameRect = new Rect(statWidth * 0.1f, statHeight * 0.125f, GUI.skin.label.CalcSize(cPlayerNameContent).x, GUI.skin.label.CalcSize(cPlayerNameContent).y);
-            GUI.Label(cPlayerNameRect, cPlayerNameContent);
+                GUIContent cPlayerNameContent = new GUIContent(currentPlayer.name);
+                Rect cPlayerNameRect = new Rect(statWidth * 0.1f, statHeight * 0.125f + (playerPadding * (i)), GUI.skin.label.CalcSize(cPlayerNameContent).x, GUI.skin.label.CalcSize(cPlayerNameContent).y);
+                GUI.Label(cPlayerNameRect, cPlayerNameContent);
 
-            GUIContent cPlayerKillCountContent = new GUIContent(currentPlayer.killCount.ToString());
-            Rect cPlayerKillCountRect = new Rect(killsColumnRect.x, killsColumnRect.y + (playerPadding * (i + 1)), GUI.skin.label.CalcSize(cPlayerKillCountContent).x, GUI.skin.label.CalcSize(cPlayerKillCountContent).y);
-            GUI.Label(cPlayerKillCountRect, cPlayerKillCountContent);
+                GUIContent cPlayerKillCountContent = new GUIContent(currentPlayer.killCount.ToString());
+                Rect cPlayerKillCountRect = new Rect(killsColumnRect.x, killsColumnRect.y + (playerPadding * (i + 1)), GUI.skin.label.CalcSize(cPlayerKillCountContent).x, GUI.skin.label.CalcSize(cPlayerKillCountContent).y);
+                GUI.Label(cPlayerKillCountRect, cPlayerKillCountContent);
 
-            GUIContent cPlayerDeathCountContent = new GUIContent(currentPlayer.deathCount.ToString());
-            Rect cPlayerDeathCountRect = new Rect(deathsColumnRect.x, deathsColumnRect.y + (playerPadding * (i + 1)), GUI.skin.label.CalcSize(cPlayerDeathCountContent).x, GUI.skin.label.CalcSize(cPlayerDeathCountContent).y);
-            GUI.Label(cPlayerDeathCountRect, cPlayerDeathCountContent);
+                GUIContent cPlayerDeathCountContent = new GUIContent(currentPlayer.deathCount.ToString());
+                Rect cPlayerDeathCountRect = new Rect(deathsColumnRect.x, deathsColumnRect.y + (playerPadding * (i + 1)), GUI.skin.label.CalcSize(cPlayerDeathCountContent).x, GUI.skin.label.CalcSize(cPlayerDeathCountContent).y);
+                GUI.Label(cPlayerDeathCountRect, cPlayerDeathCountContent);
 
-            GUIContent cPlayerPointsGainedContent = new GUIContent(currentPlayer.totalTokensGained.ToString());
-            Rect cPlayerPointsGainedRect = new Rect(pointsGainedColumnRect.x, pointsGainedColumnRect.y + (playerPadding * (i + 1)), GUI.skin.label.CalcSize(cPlayerPointsGainedContent).x, GUI.skin.label.CalcSize(cPlayerPointsGainedContent).y);
-            GUI.Label(cPlayerPointsGainedRect, cPlayerPointsGainedContent);
+                GUIContent cPlayerPointsGainedContent = new GUIContent(currentPlayer.totalPointsGained.ToString());
+                Rect cPlayerPointsGainedRect = new Rect(pointsGainedColumnRect.x, pointsGainedColumnRect.y + (playerPadding * (i + 1)), GUI.skin.label.CalcSize(cPlayerPointsGainedContent).x, GUI.skin.label.CalcSize(cPlayerPointsGainedContent).y);
+                GUI.Label(cPlayerPointsGainedRect, cPlayerPointsGainedContent);
 
-            GUIContent cPlayerPointsLostContent = new GUIContent(currentPlayer.totalTokensLost.ToString());
-            Rect cPlayerPointsLostRect = new Rect(pointsLostColumnRect.x, pointsLostColumnRect.y + (playerPadding * (i + 1)), GUI.skin.label.CalcSize(cPlayerPointsLostContent).x, GUI.skin.label.CalcSize(cPlayerPointsLostContent).y);
-            GUI.Label(cPlayerPointsLostRect, cPlayerPointsLostContent);
+                GUIContent cPlayerPointsLostContent = new GUIContent(currentPlayer.totalPointsLost.ToString());
+                Rect cPlayerPointsLostRect = new Rect(pointsLostColumnRect.x, pointsLostColumnRect.y + (playerPadding * (i + 1)), GUI.skin.label.CalcSize(cPlayerPointsLostContent).x, GUI.skin.label.CalcSize(cPlayerPointsLostContent).y);
+                GUI.Label(cPlayerPointsLostRect, cPlayerPointsLostContent);
 
-            GUIContent cPlayerPointsBankedContent = new GUIContent(currentPlayer.totalTokensBanked.ToString());
-            Rect cPlayerPointsBankedRect = new Rect(pointsBankedColumnRect.x, pointsBankedColumnRect.y + (playerPadding * (i + 1)), GUI.skin.label.CalcSize(cPlayerPointsBankedContent).x, GUI.skin.label.CalcSize(cPlayerPointsBankedContent).y);
-            GUI.Label(cPlayerPointsBankedRect, cPlayerPointsBankedContent);
-        }
-        
-
-        //middle
-
-        //blue players
-        GUI.skin.label = bluePlayerStyle;
-
-        for (int i = 0; i < gm.players.Count; i++)
-        {
-            KBPlayer currentPlayer = gm.players[i];
-
-            GUIContent cPlayerNameContent = new GUIContent(currentPlayer.name);
-            Rect cPlayerNameRect = new Rect(statWidth * 0.1f, statHeight * 0.125f, GUI.skin.label.CalcSize(cPlayerNameContent).x, GUI.skin.label.CalcSize(cPlayerNameContent).y);
-            GUI.Label(cPlayerNameRect, cPlayerNameContent);
-
-            GUIContent cPlayerKillCountContent = new GUIContent(currentPlayer.killCount.ToString());
-            Rect cPlayerKillCountRect = new Rect(killsColumnRect.x, killsColumnRect.y + (playerPadding * (i + 1)), GUI.skin.label.CalcSize(cPlayerKillCountContent).x, GUI.skin.label.CalcSize(cPlayerKillCountContent).y);
-            GUI.Label(cPlayerKillCountRect, cPlayerKillCountContent);
-
-            GUIContent cPlayerDeathCountContent = new GUIContent(currentPlayer.deathCount.ToString());
-            Rect cPlayerDeathCountRect = new Rect(deathsColumnRect.x, deathsColumnRect.y + (playerPadding * (i + 1)), GUI.skin.label.CalcSize(cPlayerDeathCountContent).x, GUI.skin.label.CalcSize(cPlayerDeathCountContent).y);
-            GUI.Label(cPlayerDeathCountRect, cPlayerDeathCountContent);
-
-            GUIContent cPlayerPointsGainedContent = new GUIContent(currentPlayer.totalTokensGained.ToString());
-            Rect cPlayerPointsGainedRect = new Rect(pointsGainedColumnRect.x, pointsGainedColumnRect.y + (playerPadding * (i + 1)), GUI.skin.label.CalcSize(cPlayerPointsGainedContent).x, GUI.skin.label.CalcSize(cPlayerPointsGainedContent).y);
-            GUI.Label(cPlayerPointsGainedRect, cPlayerPointsGainedContent);
-
-            GUIContent cPlayerPointsLostContent = new GUIContent(currentPlayer.totalTokensLost.ToString());
-            Rect cPlayerPointsLostRect = new Rect(pointsLostColumnRect.x, pointsLostColumnRect.y + (playerPadding * (i + 1)), GUI.skin.label.CalcSize(cPlayerPointsLostContent).x, GUI.skin.label.CalcSize(cPlayerPointsLostContent).y);
-            GUI.Label(cPlayerPointsLostRect, cPlayerPointsLostContent);
-
-            GUIContent cPlayerPointsBankedContent = new GUIContent(currentPlayer.totalTokensBanked.ToString());
-            Rect cPlayerPointsBankedRect = new Rect(pointsBankedColumnRect.x, pointsBankedColumnRect.y + (playerPadding * (i + 1)), GUI.skin.label.CalcSize(cPlayerPointsBankedContent).x, GUI.skin.label.CalcSize(cPlayerPointsBankedContent).y);
-            GUI.Label(cPlayerPointsBankedRect, cPlayerPointsBankedContent);
+                GUIContent cPlayerPointsBankedContent = new GUIContent(currentPlayer.totalPointsBanked.ToString());
+                Rect cPlayerPointsBankedRect = new Rect(pointsBankedColumnRect.x, pointsBankedColumnRect.y + (playerPadding * (i + 1)), GUI.skin.label.CalcSize(cPlayerPointsBankedContent).x, GUI.skin.label.CalcSize(cPlayerPointsBankedContent).y);
+                GUI.Label(cPlayerPointsBankedRect, cPlayerPointsBankedContent);
+            }
         }
 
         //End Game Button
-        
+
         GUI.skin.label = endGameStyle;
-        Rect endGameRect = new Rect(statWidth * 0.5f, statHeight*0.95f, GUI.skin.label.CalcSize(endGameContent).x, GUI.skin.label.CalcSize(endGameContent).y);
+        Rect endGameRect = new Rect(statWidth * 0.5f, statHeight * 0.95f, GUI.skin.label.CalcSize(endGameContent).x, GUI.skin.label.CalcSize(endGameContent).y);
         if (GUI.Button(endGameRect, endGameContent))
         {
             PhotonNetwork.LeaveRoom();
@@ -314,5 +283,40 @@ public class GUIManager : MonoBehaviour
 
     private void Update()
     {
+        float remainingGameTime = 0f;
+
+        switch (GameManager.Instance.gameType)
+        {
+            case GameManager.GameType.CapturePoint:
+                GameManager.Instance.localPlayer.playerCamera.redScoreText.text = GameManager.Instance.redTeamScore.ToString("00");
+                GameManager.Instance.localPlayer.playerCamera.blueScoreText.text = GameManager.Instance.blueTeamScore.ToString("00");
+                remainingGameTime = KBConstants.GameConstants.maxGameTimeCapturePoint - GameManager.Instance.gameTime;
+                GameManager.Instance.localPlayer.playerCamera.timeRemainingNumberText.text = remainingGameTime.ToString("00");
+                GameManager.Instance.localPlayer.playerCamera.redHeldPointTotalText.text = GameManager.Instance.redHeldPointTotal.ToString("00");
+                GameManager.Instance.localPlayer.playerCamera.blueHeldPointTotalText.text = GameManager.Instance.blueHeldPointTotal.ToString("00");
+                break;
+
+            case GameManager.GameType.DataPulse:
+                GameManager.Instance.localPlayer.playerCamera.redScoreText.text = GameManager.Instance.redTeamScore.ToString("00");
+                GameManager.Instance.localPlayer.playerCamera.blueScoreText.text = GameManager.Instance.blueTeamScore.ToString("00");
+                GameManager.Instance.localPlayer.playerCamera.redHeldPointTotalText.text = GameManager.Instance.redHeldPointTotal.ToString("00");
+                GameManager.Instance.localPlayer.playerCamera.blueHeldPointTotalText.text = GameManager.Instance.blueHeldPointTotal.ToString("00");
+                remainingGameTime = KBConstants.GameConstants.maxGameTimeDataPulse - GameManager.Instance.gameTime;
+                GameManager.Instance.localPlayer.playerCamera.timeRemainingNumberText.text = remainingGameTime.ToString("00");
+                break;
+
+            case GameManager.GameType.Deathmatch:
+                GameManager.Instance.localPlayer.playerCamera.redScoreText.text = GameManager.Instance.redTeamScore.ToString("00");
+                GameManager.Instance.localPlayer.playerCamera.blueScoreText.text = GameManager.Instance.blueTeamScore.ToString("00");
+                int totalToWin = KBConstants.GameConstants.maxScoreDeathmatch;
+                GameManager.Instance.localPlayer.playerCamera.timeRemainingNumberText.text = totalToWin.ToString();
+                GameManager.Instance.localPlayer.playerCamera.redHeldPointTotalText.text = GameManager.Instance.redHeldPointTotal.ToString("00");
+                GameManager.Instance.localPlayer.playerCamera.blueHeldPointTotalText.text = GameManager.Instance.blueHeldPointTotal.ToString("00");
+
+                break;
+
+            default:
+                break;
+        }
     }
 }

@@ -15,12 +15,12 @@ public class KBPlayer : KBControllableGameObject
     private static readonly int droneLowerRotationSpeed = 5;
     private static readonly int droneUpperRotationSpeed = 100;
     private static readonly int droneMovementSpeed = 35;
-    private static readonly int droneBaseHealth = 150;
+    private static readonly int droneBaseHealth = 250;
     private static readonly float droneAccel = 0.04f;
     private static readonly float dronePowerDecel = 0.25f;
     private static readonly float droneFriction = 0.05f;
     private static readonly float droneReverseSpeedFraction = 1.0f;
-    private static readonly float droneRegenRate = 1.0f;
+    private static readonly float droneRegenRate = 2.0f;
 
     #endregion DRONE
 
@@ -36,15 +36,15 @@ public class KBPlayer : KBControllableGameObject
 
     #region TANK
 
-    private static readonly int tankLowerRotationSpeed = 200;
+    private static readonly int tankLowerRotationSpeed = 220;
     private static readonly int tankUpperRotationSpeed = 45;
     private static readonly int tankMovementSpeed = 15;
-    private static readonly int tankBaseHealth = 1600;
-    private static readonly float tankAccel = 0.060f;
+    private static readonly int tankBaseHealth = 1400;
+    private static readonly float tankAccel = 0.070f;
     private static readonly float tankPowerDecel = 0.150f;
-    private static readonly float tankFriction = 0.010f;
+    private static readonly float tankFriction = 0.0150f;
     private static readonly float tankReverseSpeedFraction = 0.00f;
-    private static readonly float tankRegenRate = 4.0f;
+    private static readonly float tankRegenRate = 2.0f;
 
     #endregion TANK
 
@@ -53,7 +53,7 @@ public class KBPlayer : KBControllableGameObject
     private static readonly int coreLowerRotationSpeed = 140;
     private static readonly int coreUpperRotationSpeed = 140;
     private static readonly int coreMovementSpeed = 40;
-    private static readonly int coreBaseHealth = 10000;
+    private static readonly int coreBaseHealth = 100;
     private static readonly float coreAccel = 0.25f;
     private static readonly float corePowerDecel = 0.15f;
     private static readonly float coreFriction = 0.8f;
@@ -74,6 +74,8 @@ public class KBPlayer : KBControllableGameObject
 
     #endregion GamepadParameters
 
+    #region TempRegion
+
     private bool tankStyleMove;
     public PlayerType type;
     public PlayerStats stats;
@@ -82,7 +84,6 @@ public class KBPlayer : KBControllableGameObject
     public float invulnerabilityTime;
     public float spawnProtectionTime;
     public float bankLockoutTime;
-    public float teleportationRecharge = 5.0f;
     public GameObject spawnAnimator;
     public float spawnDelay = 2.50f;
     public GameObject invulnerabilityShield;
@@ -155,20 +156,24 @@ public class KBPlayer : KBControllableGameObject
 
     public int killCount;
     public int deathCount;
-    public int killTokens;
-    public int totalTokensGained;
-    public int totalTokensLost;
-    public int totalTokensBanked;
+    public int currentPoints;
+    public int totalPointsGained;
+    public int totalPointsLost;
+    public int totalPointsBanked;
 
     public ProjectileAbilityBaseScript[] guns;
 
     private float forwardAccel;
 
-    private new KBCamera camera;
+    public KBCamera playerCamera;
 
     public GameObject ammoHud;
 
     public Chaff chaff;
+
+    public bool hasSwitchedSinceDeath;
+
+    #endregion TempRegion
 
     public void SetStats()
     {
@@ -231,7 +236,7 @@ public class KBPlayer : KBControllableGameObject
     {
         base.Start();
 
-        camera = Camera.main.GetComponent<KBCamera>();
+        playerCamera = Camera.main.GetComponent<KBCamera>();
 
         #region Resource & reference loading
 
@@ -248,10 +253,17 @@ public class KBPlayer : KBControllableGameObject
         latestCorrectPos = transform.position;
         onUpdatePos = transform.position;
 
+        if (!photonView.isMine)
+        {
+            GetComponent<AudioListener>().enabled = false;
+        }
+
         InitializeForRespawn();
         RespawnToPrespawn();
         ObjectPool.CreatePool(chaff);
         ObjectPool.CreatePool(mechGibBody);
+
+        hasSwitchedSinceDeath = false;
     }
 
     private void InitializeForRespawn()
@@ -289,46 +301,54 @@ public class KBPlayer : KBControllableGameObject
         Debug.DrawRay(upperBody.transform.position, upperBody.transform.TransformDirection(new Vector3(0, 0, 5.0f)), new Color(255, 0, 0, 255), 0.0f);
     }
 
-    private void FixedUpdate()
+    protected override void FixedUpdate()
     {
-        if (inBankZone)
+        base.FixedUpdate();
+        switch (GameManager.Instance.gameType)
         {
-            timeInBankZone += Time.deltaTime;
-        }
-        if (timeInBankZone > 3.0f && killTokens > 0 && inBankZone)
-        {
-            int tokensToBank = 0;
-            if (killTokens > GameConstants.levelTwoThreshold)
-            {
-                tokensToBank = killTokens - GameConstants.levelTwoThreshold;
-            }
-            else if (killTokens > GameConstants.levelOneThreshold)
-            {
-                tokensToBank = killTokens - GameConstants.levelOneThreshold;
-            }
-            else
-            {
-                tokensToBank = killTokens;
-            }
+            case GameManager.GameType.CapturePoint:
+                if (inBankZone)
+                {
+                    timeInBankZone += Time.deltaTime;
+                }
+                if (timeInBankZone > 3.0f && currentPoints > 0 && inBankZone)
+                {
+                    int tokensToBank = 0;
+                    if (currentPoints > GameConstants.levelTwoThreshold)
+                    {
+                        tokensToBank = currentPoints - GameConstants.levelTwoThreshold;
+                    }
+                    else if (currentPoints > GameConstants.levelOneThreshold)
+                    {
+                        tokensToBank = currentPoints - GameConstants.levelOneThreshold;
+                    }
+                    else
+                    {
+                        tokensToBank = currentPoints;
+                    }
 
-            for (int i = 0; i < GameManager.Instance.bankZones.Count; i++)
-            {
-                GameManager.Instance.bankZones[i].photonView.RPC("AddPoints", PhotonTargets.AllBuffered, tokensToBank, (int)team);
-            }
-            killTokens -= tokensToBank;
-            totalTokensBanked += tokensToBank;
-            timeInBankZone = 0.0f;
+                    GameManager.Instance.photonView.RPC("AddPointsToScore", PhotonTargets.All, (int)team, tokensToBank);
+
+                    currentPoints -= tokensToBank;
+                    totalPointsBanked += tokensToBank;
+                    timeInBankZone = 0.0f;
+                }
+                break;
+
+            case GameManager.GameType.DataPulse:
+                break;
+
+            case GameManager.GameType.Deathmatch:
+                break;
+
+            default:
+                break;
         }
 
         if (Time.time > lastDamageTime + regenDelay)
         {
             float floatHealth = Mathf.MoveTowards(health, stats.health, stats.regerationRate);
             health = Mathf.FloorToInt(floatHealth);
-        }
-
-        if (teleportationRecharge > 0)
-        {
-            teleportationRecharge -= Time.deltaTime;
         }
 
         if (invulnerabilityTime > 0)
@@ -353,14 +373,6 @@ public class KBPlayer : KBControllableGameObject
         {
             if (acceptingInputs)
             {
-                //if (Input.GetAxis("Mouse ScrollWheel") > 0 && camera.zoomTarget > 0.75f)
-                //{
-                //    camera.zoomTarget *= 1.0f / 1.05f;
-                //}
-                //else if (Input.GetAxis("Mouse ScrollWheel") < 0 && camera.zoomTarget < 2.0f)
-                //{
-                //    camera.zoomTarget *= 1.05f;
-                //}
                 playerPositionOnScreen = Camera.main.WorldToScreenPoint(transform.position);
                 mousePlayerDiff = playerPositionOnScreen - mousePos;
                 if (useController)
@@ -407,6 +419,12 @@ public class KBPlayer : KBControllableGameObject
         {
             useController = !useController;
         }
+    }
+
+    public void ScorePoints(int value)
+    {
+        currentPoints -= value;
+        totalPointsBanked += value;
     }
 
     private void OnGUI()
@@ -469,12 +487,12 @@ public class KBPlayer : KBControllableGameObject
         {
             Vector3 pos = transform.localPosition;
             Quaternion rot = upperBody.transform.rotation;
-            int kt = killTokens;
+            int kt = currentPoints;
             int kc = killCount;
             int dc = deathCount;
-            int ttg = totalTokensGained;
-            int ttl = totalTokensLost;
-            int ttb = totalTokensBanked;
+            int ttg = totalPointsGained;
+            int ttl = totalPointsLost;
+            int ttb = totalPointsBanked;
             int hlth = health;
             int mxhlth = stats.health;
             bool wtngFrRspwn = waitingForRespawn;
@@ -549,12 +567,12 @@ public class KBPlayer : KBControllableGameObject
             fraction = 0;                           // reset the fraction we alreay moved. see Update()
 
             upperBody.transform.rotation = rot;          // this sample doesn't smooth rotation
-            killTokens = kt;
+            currentPoints = kt;
             killCount = kc;
             deathCount = dc;
-            totalTokensGained = ttg;
-            totalTokensLost = ttl;
-            totalTokensBanked = ttb;
+            totalPointsGained = ttg;
+            totalPointsLost = ttl;
+            totalPointsBanked = ttb;
             health = hlth;
             waitingForRespawn = wtngFrRspwn;
             team = (Team)tm;
@@ -591,7 +609,7 @@ public class KBPlayer : KBControllableGameObject
         }
     }
 
-    private new void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("BankZone"))
         {
@@ -599,16 +617,16 @@ public class KBPlayer : KBControllableGameObject
             bankIndicator.SetActive(true);
         }
 
-        if (other.gameObject.CompareTag("Teleporter"))
-        {
-            Teleporter t = other.gameObject.GetComponent<Teleporter>();
-            if (t != null && t.linkedTeleporter != null && teleportationRecharge <= 0)
-            {
-                Vector3 newPos = t.linkedTeleporter.transform.position;
-                transform.position = new Vector3(newPos.x, newPos.y, newPos.z);
-                teleportationRecharge = 5.0f;
-            }
-        }
+        //if (other.gameObject.CompareTag("Teleporter"))
+        //{
+        //    Teleporter t = other.gameObject.GetComponent<Teleporter>();
+        //    if (t != null && t.linkedTeleporter != null && teleportationRecharge <= 0)
+        //    {
+        //        Vector3 newPos = t.linkedTeleporter.transform.position;
+        //        transform.position = new Vector3(newPos.x, newPos.y, newPos.z);
+        //        teleportationRecharge = 5.0f;
+        //    }
+        //}
 
         if (other.gameObject.tag.StartsWith("Spawn"))
         {
@@ -624,13 +642,29 @@ public class KBPlayer : KBControllableGameObject
 
             if (other.gameObject.tag.StartsWith("SpawnDroneRed") || other.gameObject.tag.StartsWith("SpawnMechRed") || other.gameObject.tag.StartsWith("SpawnTankRed"))
             {
-                SetTeam(Team.Red);
+                if (GameManager.Instance.IsAbleToSpawnOnTeam(team,KBConstants.Team.Red))
+                {
+                    SetTeam(Team.Red);
+                    StartCoroutine(Spawn(other.gameObject.tag.ToString(), loadout));
+                }
+                else
+                {
+                    //Can't Spawn as Red Team Member
+                }
             }
             else if (other.gameObject.tag.StartsWith("SpawnDroneBlue") || other.gameObject.tag.StartsWith("SpawnMechBlue") || other.gameObject.tag.StartsWith("SpawnTankBlue"))
             {
-                SetTeam(Team.Blue);
+                if (GameManager.Instance.IsAbleToSpawnOnTeam(team,KBConstants.Team.Blue))
+                {
+                    SetTeam(Team.Blue);
+                    StartCoroutine(Spawn(other.gameObject.tag.ToString(), loadout));
+                }
+                else
+                {
+                    //Can't Spawn as Blue Team Member
+                }
             }
-            StartCoroutine(Spawn(other.gameObject.tag.ToString(), loadout));
+            
         }
     }
 
@@ -764,9 +798,9 @@ public class KBPlayer : KBControllableGameObject
         {
             if ((gamepadState.Triggers.Left != 0 || gamepadState.Triggers.Right != 0))
             {
-                if (gamepadState.Triggers.Left > 0)
+                if (gamepadState.Triggers.Right > 0)
                 {
-                    if (guns[0].ammo <= 0)
+                    if (guns[0].ammo <= 0 || gamepadState.Buttons.X == ButtonState.Pressed)
                     {
                         int[] reloadingGuns = { 0 };
                         photonView.RPC("Reload", PhotonTargets.All, reloadingGuns);
@@ -781,7 +815,7 @@ public class KBPlayer : KBControllableGameObject
                         }
                     }
                 }
-                if (gamepadState.Triggers.Right > 0 && guns.Length > 1)
+                if (gamepadState.Buttons.RightShoulder == ButtonState.Pressed && guns.Length > 1)
                 {
                     if (guns[1].ammo <= 0)
                     {
@@ -801,17 +835,17 @@ public class KBPlayer : KBControllableGameObject
                 }
             }
 
-            if (gamepadState.Buttons.LeftShoulder == ButtonState.Pressed)
-            {
-                int[] reloadingGuns = { 0 };
-                photonView.RPC("Reload", PhotonTargets.All, reloadingGuns);
-            }
+            //if (gamepadState.Buttons.LeftShoulder == ButtonState.Pressed)
+            //{
+            //    int[] reloadingGuns = { 0 };
+            //    photonView.RPC("Reload", PhotonTargets.All, reloadingGuns);
+            //}
 
-            if (gamepadState.Buttons.RightShoulder == ButtonState.Pressed)
-            {
-                int[] reloadingGuns = { 1 };
-                photonView.RPC("Reload", PhotonTargets.All, reloadingGuns);
-            }
+            //if (gamepadState.Buttons.RightShoulder == ButtonState.Pressed)
+            //{
+            //    int[] reloadingGuns = { 1 };
+            //    photonView.RPC("Reload", PhotonTargets.All, reloadingGuns);
+            //}
         }
 
         if (gamepadState.Buttons.Start == ButtonState.Pressed)
@@ -1026,6 +1060,7 @@ public class KBPlayer : KBControllableGameObject
             if (!timer.IsTimerActive(respawnTimer))
             {
                 Debug.Log("Respawning!");
+                hasSwitchedSinceDeath = false;
                 RespawnToPrespawn();
             }
         }
@@ -1057,13 +1092,14 @@ public class KBPlayer : KBControllableGameObject
         PlayerGibModel g = ObjectPool.Spawn(gib, player.gameObject.transform.position + Vector3.up * 3, player.gameObject.transform.rotation);
         g.Init();
 
+        player.gameObject.GetComponent<BoxCollider>().enabled = false;
         player.upperBody.SetActive(false);
         player.lowerBody.SetActive(false);
         player.ammoHud.SetActive(false);
 
         player.particleSystem.Emit(5000);
 
-        int n = 5;
+        int n = GameConstants.explosionChaffAmount;
         Chaff c = null;
         for (int i = 0; i < n; i++)
         {
@@ -1152,9 +1188,34 @@ public class KBPlayer : KBControllableGameObject
     {
         if (killerPlayer.isLocal && networkPlayer == PhotonNetwork.player)
         {
+            switch (GameManager.Instance.gameType)
+            {
+                case GameManager.GameType.CapturePoint:
+                    {
+                        totalPointsGained++;
+                        currentPoints++;
+                        break;
+                    }
+
+                case GameManager.GameType.DataPulse:
+                    {
+                        totalPointsGained++;
+                        currentPoints++;
+                        break;
+                    }
+
+                case GameManager.GameType.Deathmatch:
+                    {
+                        GameManager.Instance.photonView.RPC("AddPointsToScore", PhotonTargets.All, (int)team, (int)1);
+                        break;
+                    }
+
+
+                default:
+                    break;
+            }
+
             killCount++;
-            totalTokensGained++;
-            killTokens++;
         }
         List<KBPlayer> currentPlayers = GameManager.Instance.players;
 
@@ -1175,7 +1236,7 @@ public class KBPlayer : KBControllableGameObject
         //Spawn as Core
         photonView.RPC("SwitchType", PhotonTargets.AllBuffered, "SpawnCore", 0);
 
-        totalTokensLost += killTokens;
+        totalPointsLost += currentPoints;
         waitingForRespawn = false;
         acceptingInputs = true;
 
@@ -1185,6 +1246,7 @@ public class KBPlayer : KBControllableGameObject
         }
 
         ammoHud.SetActive(false);
+        gameObject.GetComponent<BoxCollider>().enabled = true;
 
         Camera.main.GetComponent<ScreenShake>().StopShake();
         Vector3 deathPosition = transform.position;
@@ -1193,7 +1255,7 @@ public class KBPlayer : KBControllableGameObject
 
         if (team != Team.None)
         {
-            GenerateKillTags(killTokens, deathPosition);
+            GenerateKillTags(currentPoints, deathPosition);
         }
     }
 
@@ -1208,39 +1270,39 @@ public class KBPlayer : KBControllableGameObject
         while (pointsToDrop > 0)
         {
             int thisTagValue = 0;
-            if (pointsToDrop <= 8)
+            if (pointsToDrop <= 4)
             {
                 thisTagValue = 1;
             }
-            else if (pointsToDrop > 8 && pointsToDrop <= 32)
+            else if (pointsToDrop > 4 && pointsToDrop <= 8)
+            {
+                thisTagValue = 4;
+            }
+            else if (pointsToDrop > 8 && pointsToDrop <= 16)
             {
                 thisTagValue = 8;
             }
-            else if (pointsToDrop > 32 && pointsToDrop <= 128)
+            else if (pointsToDrop > 16)
             {
-                thisTagValue = 32;
-            }
-            else if (pointsToDrop > 128)
-            {
-                thisTagValue = 128;
+                thisTagValue = 16;
             }
 
             GameObject newTag = null;
             if (team == Team.Blue)
             {
-                newTag = GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagBlue, center, Quaternion.identity, (int)team);
+                newTag = GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagBlue, center + Vector3.up * 2, Quaternion.identity, (int)team);
             }
             else if (team == Team.Red)
             {
-                newTag = GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagRed, center, Quaternion.identity, (int)team);
+                newTag = GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagRed, center + Vector3.up * 2, Quaternion.identity, (int)team);
             }
+            newTag.transform.localScale = Vector3.one / 2;
             newTag.transform.localScale *= 1.0f + (pointsToDrop / 100.0f);
-            newTag.transform.Translate(new Vector3(UnityEngine.Random.Range(-10.0f, 10.0f), 0, UnityEngine.Random.Range(-10.0f, 10.0f)));
             newTag.GetPhotonView().RPC("SetPointValue", PhotonTargets.AllBuffered, thisTagValue);
             pointsToDrop -= thisTagValue;
         }
 
-        killTokens = 0;
+        currentPoints = 0;
     }
 
     /// <summary>
@@ -1279,6 +1341,7 @@ public class KBPlayer : KBControllableGameObject
             guns[i].Team = team;
             guns[i].ammo = guns[i].clipSize;
             guns[i].reloading = false;
+            guns[i].SetLevel(0);
         }
     }
 
@@ -1323,18 +1386,24 @@ public class KBPlayer : KBControllableGameObject
                         SetActiveIfFound(transform, "Shotgun", true);
                         SetActiveIfFound(transform, "LightCannon", false);
                         SetActiveIfFound(transform, "PlasmaGun", false);
+                        SetActiveIfFound(transform, "MachineGun", false);
+
                         break;
 
                     case 1: // Needler (LCannon)
                         SetActiveIfFound(transform, "Shotgun", false);
                         SetActiveIfFound(transform, "LightCannon", true);
                         SetActiveIfFound(transform, "PlasmaGun", false);
+                        SetActiveIfFound(transform, "MachineGun", false);
+
                         break;
 
                     case 2: // Plasma
                         SetActiveIfFound(transform, "Shotgun", false);
                         SetActiveIfFound(transform, "LightCannon", false);
                         SetActiveIfFound(transform, "PlasmaGun", true);
+                        SetActiveIfFound(transform, "MachineGun", false);
+
                         break;
 
                     default:
@@ -1382,16 +1451,25 @@ public class KBPlayer : KBControllableGameObject
                 switch (loadout)
                 {
                     case 0:
-                        SetActiveIfFound(transform, "HeavyCannon", true);
-                        //SetActiveIfFound(transform, "", false);
+                        SetActiveIfFound(transform, "Cannon", true);
+                        SetActiveIfFound(transform, "Rockets", true);
+                        SetActiveIfFound(transform, "Railgun", false);
+                        SetActiveIfFound(transform, "Mines", false);
                         break;
 
                     case 1:
-                        SetActiveIfFound(transform, "HeavyCannon", true);
-                        //SetActiveIfFound(transform, "PlasmaGun", true);
+                        SetActiveIfFound(transform, "Cannon", true);
+                        SetActiveIfFound(transform, "Rockets", false);
+                        SetActiveIfFound(transform, "Railgun", true);
+                        SetActiveIfFound(transform, "Mines", false);
                         break;
 
                     case 2:
+                        SetActiveIfFound(transform, "Cannon", true);
+                        SetActiveIfFound(transform, "Rockets", false);
+                        SetActiveIfFound(transform, "Railgun", false);
+                        SetActiveIfFound(transform, "Mines", true);
+
                         break;
 
                     default:
@@ -1405,6 +1483,7 @@ public class KBPlayer : KBControllableGameObject
                 type = PlayerType.core;
             }
 
+            gameObject.GetComponent<BoxCollider>().enabled = true;
             upperBody.SetActive(true);
             lowerBody.SetActive(true);
 
@@ -1424,6 +1503,7 @@ public class KBPlayer : KBControllableGameObject
             InitializeForRespawn();
             SetupAbilities();
             ammoHud.SetActive(true);
+            hasSwitchedSinceDeath = true;
 
             if (photonView.isMine)
             {

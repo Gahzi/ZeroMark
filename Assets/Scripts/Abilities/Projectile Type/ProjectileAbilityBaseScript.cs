@@ -38,15 +38,15 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
     public override void Start()
     {
         base.Start();
-        for (int i = 0; i < projectileType.Length; i++)
-        {
-            ObjectPool.CreatePool(projectileType[i]);
-        }
-        level = 0;
-        minimumSpreadAngle = 0.0f;
-        maximumSpreadAngle = 0.0f;
-        burstSize = 1;
-        burstDelay = 0;
+        //for (int i = 0; i < projectileType.Length; i++)
+        //{
+        //    ObjectPool.CreatePool(projectileType[i]);
+        //}
+        //level = 0;
+        //minimumSpreadAngle = 0.0f;
+        //maximumSpreadAngle = 0.0f;
+        //burstSize = 1;
+        //burstDelay = 0;
         angleModifierArray = new float[0];
     }
 
@@ -64,15 +64,15 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
             available = false;
         }
 
-        if (owner.killTokens < GameConstants.levelOneThreshold)
+        if (owner.currentPoints < GameConstants.levelOneThreshold)
         {
             level = 0;
         }
-        else if (owner.killTokens >= GameConstants.levelOneThreshold && owner.killTokens <= GameConstants.levelTwoThreshold)
+        else if (owner.currentPoints >= GameConstants.levelOneThreshold && owner.currentPoints <= GameConstants.levelTwoThreshold)
         {
             level = 1;
         }
-        else if (owner.killTokens > GameConstants.levelTwoThreshold)
+        else if (owner.currentPoints > GameConstants.levelTwoThreshold)
         {
             level = 2;
         }
@@ -184,11 +184,11 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
                 switch (level)
                 {
                     case 0:
-                        Camera.main.GetComponent<ScreenShake>().StartShake(0.1000f, 0.5000f);
+                        Camera.main.GetComponent<ScreenShake>().StartShake(0.1000f, 0.7500f);
                         break;
 
                     case 1:
-                        Camera.main.GetComponent<ScreenShake>().StartShake(0.1000f, 1.0000f);
+                        Camera.main.GetComponent<ScreenShake>().StartShake(0.1000f, 1.2000f);
                         break;
 
                     case 2:
@@ -230,10 +230,10 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
             projectile.Init(firedBy);
             projectile.damage = projectile.damageLevel[level];
 
-            Collider[] collider = transform.parent.GetComponentsInChildren<Collider>();
+            Collider[] collider = owner.GetComponentsInChildren<Collider>();
             foreach (Collider c in collider)
             {
-                if (c.enabled)
+                if (c.enabled && projectile.collider.enabled)
                 {
                     Physics.IgnoreCollision(c, projectile.collider, true);
                 }

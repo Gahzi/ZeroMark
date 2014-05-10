@@ -1,8 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public class SniperBullet : ProjectileBaseScript {
-
+﻿public class SniperBullet : ProjectileBaseScript
+{
     public override void Awake()
     {
         base.Awake();
@@ -13,5 +10,4 @@ public class SniperBullet : ProjectileBaseScript {
             KBConstants.AbilityConstants.DAMAGE_VALUES[KBConstants.AbilityConstants.type.SniperLevel2]
         };
     }
-
 }

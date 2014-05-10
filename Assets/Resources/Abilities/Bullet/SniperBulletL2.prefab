@@ -142,24 +142,24 @@ TrailRenderer:
   m_SortingOrder: 0
   m_SortingLayerID: 0
   m_Time: .100000001
-  m_StartWidth: .25
+  m_StartWidth: .600000024
   m_EndWidth: .00999999978
   m_Colors:
     m_Color[0]:
       serializedVersion: 2
-      rgba: 4278190335
+      rgba: 4294967295
     m_Color[1]:
       serializedVersion: 2
-      rgba: 4278190334
+      rgba: 4294967295
     m_Color[2]:
       serializedVersion: 2
-      rgba: 4278190333
+      rgba: 4294836163
     m_Color[3]:
       serializedVersion: 2
-      rgba: 4278190332
+      rgba: 4289810348
     m_Color[4]:
       serializedVersion: 2
-      rgba: 4278190331
+      rgba: 4294901977
   m_MinVertexDistance: .100000001
   m_Autodestruct: 0
 --- !u!108 &10800000
@@ -212,12 +212,12 @@ MonoBehaviour:
   damage: 1
   owner: {fileID: 0}
   damageLevel: 
-  projectileSpeed: 200
+  projectileSpeed: 400
   inheritSpeed: 0
   collideWithEnvironment: 1
   homingProjectile: 0
   aimedProjectile: 0
-  explosionPrefab: {fileID: 11400000, guid: d7a21b9d9777d1f478e202225426dd11, type: 2}
+  explosionPrefab: {fileID: 11400000, guid: 9b60ca0df7b31e84ab4a898904eceb43, type: 2}
   targetPlayer: {fileID: 0}
   targetPosition: {x: 0, y: 0, z: 0}
 --- !u!135 &13500000
@@ -228,9 +228,9 @@ SphereCollider:
   m_GameObject: {fileID: 100002}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 5
+  m_Radius: .5
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!198 &19800000
 ParticleSystem:
@@ -1461,7 +1461,7 @@ ParticleSystem:
         rgba: 4294967295
       minMaxState: 0
     startSize:
-      scalar: 5
+      scalar: 10
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -1528,7 +1528,7 @@ ParticleSystem:
       minMaxState: 0
     gravityModifier: 0
     inheritVelocity: -.379999995
-    maxNumParticles: 1000
+    maxNumParticles: 1200
   ShapeModule:
     serializedVersion: 2
     enabled: 1
@@ -1546,7 +1546,7 @@ ParticleSystem:
     enabled: 1
     m_Type: 0
     rate:
-      scalar: 200
+      scalar: 300
       maxCurve:
         serializedVersion: 2
         m_Curve:
