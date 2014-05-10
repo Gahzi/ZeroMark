@@ -13,12 +13,13 @@ namespace KBConstants
         public static readonly int maxScoreDeathmatch = 30;
         public static readonly int maxGameTimeDataPulse = 60 * 3;
         public static readonly int dataPulsePeriod = 60;
-        public static readonly int pointObjectDecayPeriod = 3;
-        public static readonly int pointObjectDecayPercentPerPeriod = 10;
+        public static readonly int pointObjectDecayPeriod = 5;
+        public static readonly int pointObjectDecayPercentPerPeriod = 0;
         public static readonly float pointPercentDropOnDeath = 1.0f;
         public static readonly int levelOneThreshold = 5;
         public static readonly int levelTwoThreshold = 30;
         public static readonly int decalLifetime = 5;
+        public static readonly int explosionChaffAmount = 3; // Amount of chaff is this value ^ 3
     }
 
     public class AbilityConstants

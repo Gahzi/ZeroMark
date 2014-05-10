@@ -42,7 +42,7 @@ abstract public class AbilitySlotBaseScript : MonoBehaviour
         {
             gameObject.AddComponent("TimerScript");
         }
-        audio.clip = sound[0];
+        //audio.clip = sound[0];
         cooldown = 0;
         //abilityActive = false;
 
