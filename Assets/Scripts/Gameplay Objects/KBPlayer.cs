@@ -327,10 +327,7 @@ public class KBPlayer : KBControllableGameObject
                         tokensToBank = currentPoints;
                     }
 
-                    for (int i = 0; i < GameManager.Instance.bankZones.Count; i++)
-                    {
-                        GameManager.Instance.bankZones[i].photonView.RPC("AddPoints", PhotonTargets.All, tokensToBank, (int)team);
-                    }
+                    GameManager.Instance.photonView.RPC("AddPointsToScore", PhotonTargets.All, (int)team, tokensToBank);
 
                     currentPoints -= tokensToBank;
                     totalPointsBanked += tokensToBank;

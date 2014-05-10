@@ -306,26 +306,7 @@ public class GameManager : Photon.MonoBehaviour
     [RPC]
     public int AddPointsToScore(int _team, int points)
     {
-        Team team = Team.None;
-        switch (_team)
-        {
-            case 0:
-                team = Team.Red;
-                break;
-
-            case 1:
-                team = Team.Blue;
-                break;
-
-            case 2:
-                team = Team.None;
-                break;
-
-            default:
-                break;
-        }
-
-        switch (team)
+        switch ((Team)_team)
         {
             case Team.Red:
                 redTeamScore += points;
@@ -341,7 +322,7 @@ public class GameManager : Photon.MonoBehaviour
             default:
                 break;
         }
-        string s = string.Format("Banked {0} points for team {1}", points, Enum.GetName(typeof(Team), team));
+        string s = string.Format("Banked {0} points for team {1}", points, Enum.GetName(typeof(Team), (Team)_team));
         Debug.Log(s);
         return 0;
     }
@@ -372,38 +353,11 @@ public class GameManager : Photon.MonoBehaviour
         {
             case GameType.CapturePoint:
 
-                int redBankCaptureCount = 0;
-                int blueBankCaptureCount = 0;
-
-                for (int i = 0; i < bankZones.Count; i++)
-                {
-                    BankZone bz = bankZones[i];
-                    switch (bz.team)
-                    {
-                        case Team.Blue:
-                            {
-                                blueBankCaptureCount++;
-                                break;
-                            }
-
-                        case Team.Red:
-                            {
-                                redBankCaptureCount++;
-                                break;
-                            }
-
-                        case Team.None:
-                            {
-                                break;
-                            }
-                    }
-                }
-
-                if (redBankCaptureCount > bankZones.Count / 2)
+                if (redTeamScore >= 100)
                 {
                     state = GameState.RedWins;
                 }
-                else if (blueBankCaptureCount > bankZones.Count / 2)
+                else if (blueTeamScore >= 100)
                 {
                     state = GameState.BlueWins;
                 }
