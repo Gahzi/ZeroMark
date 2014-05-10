@@ -12,11 +12,13 @@ public class KBCamera : MonoBehaviour
     public float rotation;
     public SpriteRenderer damageVignette;
     public TextMesh levelText;
-    public TextMesh redScore;
-    public TextMesh blueScore;
-    public TextMesh time;
-    public TextMesh timeRemainingHeader;
-    public TextMesh gameType;
+    public TextMesh redScoreText;
+    public TextMesh blueScoreText;
+    public TextMesh timeRemainingNumberText;
+    public TextMesh timeRemainingHeaderText;
+    public TextMesh gameTypeText;
+    public TextMesh redHeldPointTotalText;
+    public TextMesh blueHeldPointTotalText;
 
     private void Start()
     {
@@ -29,7 +31,7 @@ public class KBCamera : MonoBehaviour
 
     private void Update()
     {
-        gameType.text = Enum.GetName(typeof(GameManager.GameType), GameManager.Instance.gameType);
+        gameTypeText.text = Enum.GetName(typeof(GameManager.GameType), GameManager.Instance.gameType);
         
         zoomTarget = 2.0f;
         if (attachedPlayer != null)

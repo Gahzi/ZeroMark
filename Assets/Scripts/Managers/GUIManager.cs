@@ -21,10 +21,6 @@ public class GUIManager : MonoBehaviour
     public GUIStyle nonePlayerStyle;
     public GUIStyle endGameStyle;
 
-    public TextMesh redScore;
-    public TextMesh blueScore;
-    public TextMesh time;
-
     private static GUIManager instance;
 
     public static GUIManager Instance
@@ -50,36 +46,33 @@ public class GUIManager : MonoBehaviour
 
     private void Start()
     {
-        redScore = GameManager.Instance.localPlayer.gameObject.GetComponentInChildren<KBCamera>().redScore;
-        blueScore = GameManager.Instance.localPlayer.gameObject.GetComponentInChildren<KBCamera>().blueScore;
-        time = GameManager.Instance.localPlayer.gameObject.GetComponentInChildren<KBCamera>().time;
 
         switch (GameManager.Instance.gameType)
         {
             case GameManager.GameType.CapturePoint:
-            {
-                TextMesh timeRemainingHeader = GameManager.Instance.localPlayer.gameObject.GetComponentInChildren<KBCamera>().timeRemainingHeader;
-                timeRemainingHeader.text = "Time Remaining";
-                break;
-            }
+                {
+                    TextMesh timeRemainingHeader = GameManager.Instance.localPlayer.gameObject.GetComponentInChildren<KBCamera>().timeRemainingHeaderText;
+                    timeRemainingHeader.text = "Time Remaining";
+                    break;
+                }
 
             case GameManager.GameType.DataPulse:
-            {
-                TextMesh timeRemainingHeader = GameManager.Instance.localPlayer.gameObject.GetComponentInChildren<KBCamera>().timeRemainingHeader;
-                timeRemainingHeader.text = "Time Remaining";
-                break;
-            }
+                {
+                    TextMesh timeRemainingHeader = GameManager.Instance.localPlayer.gameObject.GetComponentInChildren<KBCamera>().timeRemainingHeaderText;
+                    timeRemainingHeader.text = "Time Remaining";
+                    break;
+                }
 
             case GameManager.GameType.Deathmatch:
-            {
-                TextMesh timeRemainingHeader = GameManager.Instance.localPlayer.gameObject.GetComponentInChildren<KBCamera>().timeRemainingHeader;
-                timeRemainingHeader.text = "Kills To Win";
-                break;
-            }
+                {
+                    TextMesh timeRemainingHeader = GameManager.Instance.localPlayer.gameObject.GetComponentInChildren<KBCamera>().timeRemainingHeaderText;
+                    timeRemainingHeader.text = "Kills To Win";
+                    break;
+                }
         }
 
-        redScore.text = "00";
-        redScore.text = "00";
+        GameManager.Instance.localPlayer.playerCamera.redScoreText.text = "00";
+        GameManager.Instance.localPlayer.playerCamera.blueScoreText.text = "00";
     }
 
     private void OnGUI()
@@ -291,28 +284,35 @@ public class GUIManager : MonoBehaviour
     private void Update()
     {
         float remainingGameTime = 0f;
-        
+
         switch (GameManager.Instance.gameType)
         {
             case GameManager.GameType.CapturePoint:
-                redScore.text = GameManager.Instance.redTeamScore.ToString("00");
-                blueScore.text = GameManager.Instance.blueTeamScore.ToString("00");
-                remainingGameTime = GameManager.Instance.gameTimeMax - GameManager.Instance.gameTime;
-                time.text = remainingGameTime.ToString("00");
+                GameManager.Instance.localPlayer.playerCamera.redScoreText.text = GameManager.Instance.redTeamScore.ToString("00");
+                GameManager.Instance.localPlayer.playerCamera.blueScoreText.text = GameManager.Instance.blueTeamScore.ToString("00");
+                remainingGameTime = KBConstants.GameConstants.maxGameTimeCapturePoint - GameManager.Instance.gameTime;
+                GameManager.Instance.localPlayer.playerCamera.timeRemainingNumberText.text = remainingGameTime.ToString("00");
+                GameManager.Instance.localPlayer.playerCamera.redHeldPointTotalText.text = GameManager.Instance.redHeldPointTotal.ToString("00");
+                GameManager.Instance.localPlayer.playerCamera.blueHeldPointTotalText.text = GameManager.Instance.blueHeldPointTotal.ToString("00");
                 break;
 
             case GameManager.GameType.DataPulse:
-                redScore.text = GameManager.Instance.redTeamScore.ToString("00");
-                blueScore.text = GameManager.Instance.blueTeamScore.ToString("00");
-                remainingGameTime = GameManager.Instance.gameTimeMax - GameManager.Instance.gameTime;
-                time.text = remainingGameTime.ToString("00");
+                GameManager.Instance.localPlayer.playerCamera.redScoreText.text = GameManager.Instance.redTeamScore.ToString("00");
+                GameManager.Instance.localPlayer.playerCamera.blueScoreText.text = GameManager.Instance.blueTeamScore.ToString("00");
+                GameManager.Instance.localPlayer.playerCamera.redHeldPointTotalText.text = GameManager.Instance.redHeldPointTotal.ToString("00");
+                GameManager.Instance.localPlayer.playerCamera.blueHeldPointTotalText.text = GameManager.Instance.blueHeldPointTotal.ToString("00");
+                remainingGameTime = KBConstants.GameConstants.maxGameTimeDataPulse - GameManager.Instance.gameTime;
+                GameManager.Instance.localPlayer.playerCamera.timeRemainingNumberText.text = remainingGameTime.ToString("00");
                 break;
 
             case GameManager.GameType.Deathmatch:
-                redScore.text = GameManager.Instance.redTeamScore.ToString("00");
-                blueScore.text = GameManager.Instance.blueTeamScore.ToString("00");
-                int totalToWin = 30;
-                time.text = totalToWin.ToString();
+                GameManager.Instance.localPlayer.playerCamera.redScoreText.text = GameManager.Instance.redTeamScore.ToString("00");
+                GameManager.Instance.localPlayer.playerCamera.blueScoreText.text = GameManager.Instance.blueTeamScore.ToString("00");
+                int totalToWin = KBConstants.GameConstants.maxScoreDeathmatch;
+                GameManager.Instance.localPlayer.playerCamera.timeRemainingNumberText.text = totalToWin.ToString();
+                GameManager.Instance.localPlayer.playerCamera.redHeldPointTotalText.text = GameManager.Instance.redHeldPointTotal.ToString("00");
+                GameManager.Instance.localPlayer.playerCamera.blueHeldPointTotalText.text = GameManager.Instance.blueHeldPointTotal.ToString("00");
+
                 break;
 
             default:

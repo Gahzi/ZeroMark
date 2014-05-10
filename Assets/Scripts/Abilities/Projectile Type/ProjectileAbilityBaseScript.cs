@@ -184,11 +184,11 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
                 switch (level)
                 {
                     case 0:
-                        Camera.main.GetComponent<ScreenShake>().StartShake(0.1000f, 0.5000f);
+                        Camera.main.GetComponent<ScreenShake>().StartShake(0.1000f, 0.7500f);
                         break;
 
                     case 1:
-                        Camera.main.GetComponent<ScreenShake>().StartShake(0.1000f, 1.0000f);
+                        Camera.main.GetComponent<ScreenShake>().StartShake(0.1000f, 1.2000f);
                         break;
 
                     case 2:

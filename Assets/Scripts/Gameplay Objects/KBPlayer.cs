@@ -15,12 +15,12 @@ public class KBPlayer : KBControllableGameObject
     private static readonly int droneLowerRotationSpeed = 5;
     private static readonly int droneUpperRotationSpeed = 100;
     private static readonly int droneMovementSpeed = 35;
-    private static readonly int droneBaseHealth = 150;
+    private static readonly int droneBaseHealth = 250;
     private static readonly float droneAccel = 0.04f;
     private static readonly float dronePowerDecel = 0.25f;
     private static readonly float droneFriction = 0.05f;
     private static readonly float droneReverseSpeedFraction = 1.0f;
-    private static readonly float droneRegenRate = 1.0f;
+    private static readonly float droneRegenRate = 2.0f;
 
     #endregion DRONE
 
@@ -36,13 +36,13 @@ public class KBPlayer : KBControllableGameObject
 
     #region TANK
 
-    private static readonly int tankLowerRotationSpeed = 200;
+    private static readonly int tankLowerRotationSpeed = 220;
     private static readonly int tankUpperRotationSpeed = 45;
     private static readonly int tankMovementSpeed = 15;
     private static readonly int tankBaseHealth = 1400;
-    private static readonly float tankAccel = 0.060f;
+    private static readonly float tankAccel = 0.070f;
     private static readonly float tankPowerDecel = 0.150f;
-    private static readonly float tankFriction = 0.010f;
+    private static readonly float tankFriction = 0.0150f;
     private static readonly float tankReverseSpeedFraction = 0.00f;
     private static readonly float tankRegenRate = 2.0f;
 
@@ -165,7 +165,7 @@ public class KBPlayer : KBControllableGameObject
 
     private float forwardAccel;
 
-    private new KBCamera camera;
+    public KBCamera playerCamera;
 
     public GameObject ammoHud;
 
@@ -236,7 +236,7 @@ public class KBPlayer : KBControllableGameObject
     {
         base.Start();
 
-        camera = Camera.main.GetComponent<KBCamera>();
+        playerCamera = Camera.main.GetComponent<KBCamera>();
 
         #region Resource & reference loading
 
@@ -301,8 +301,9 @@ public class KBPlayer : KBControllableGameObject
         Debug.DrawRay(upperBody.transform.position, upperBody.transform.TransformDirection(new Vector3(0, 0, 5.0f)), new Color(255, 0, 0, 255), 0.0f);
     }
 
-    private void FixedUpdate()
+    protected override void FixedUpdate()
     {
+        base.FixedUpdate();
         switch (GameManager.Instance.gameType)
         {
             case GameManager.GameType.CapturePoint:
@@ -611,7 +612,7 @@ public class KBPlayer : KBControllableGameObject
         }
     }
 
-    private new void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("BankZone"))
         {

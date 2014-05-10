@@ -6,10 +6,15 @@ namespace KBConstants
 
     public enum PlayerType { mech, drone, tank, core };
 
-    public enum ItemType { common, uncommon, rare, legendary, undefined };
-
     public class GameConstants
     {
+        public static readonly int maxGameTimeCapturePoint = 60 * 3;
+        public static readonly int maxGameTimeDeathmatch = 60 * 3;
+        public static readonly int maxScoreDeathmatch = 30;
+        public static readonly int maxGameTimeDataPulse = 60 * 3;
+        public static readonly int dataPulsePeriod = 60;
+        public static readonly int pointObjectDecayPeriod = 3;
+        public static readonly int pointObjectDecayPercentPerPeriod = 10;
         public static readonly float pointPercentDropOnDeath = 1.0f;
         public static readonly int levelOneThreshold = 5;
         public static readonly int levelTwoThreshold = 30;

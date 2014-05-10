@@ -6,7 +6,6 @@ using UnityEngine;
 /// </summary>
 public class Item : KBGameObject
 {
-    public ItemType itemType;
     public float respawnTime;
     private float respawnStart;
     public enum ItemState { isDown = 0, isPickedUp = 1, respawning = 2, disabled = 3 };
@@ -38,67 +37,11 @@ public class Item : KBGameObject
 
         //targetPosition = transform.position;
         targetScale = Vector3.one;
-        setItemType(ItemType.rare);
 
         transform.Rotate(Vector3.forward, 45);
         transform.Rotate(Vector3.right, 33.3f);
 
     }
-    public void setItemType(ItemType type)
-    {
-        itemType = type;
-        switch (type)
-        {
-            case ItemType.common:
-                renderer.material = Resources.Load<Material>(MaterialConstants.MATERIAL_NAMES[MaterialConstants.type.ItemCommon]);
-                break;
-
-            case ItemType.uncommon:
-                renderer.material = Resources.Load<Material>(MaterialConstants.MATERIAL_NAMES[MaterialConstants.type.ItemUncommon]);
-                break;
-
-            case ItemType.rare:
-                renderer.material = Resources.Load<Material>(MaterialConstants.MATERIAL_NAMES[MaterialConstants.type.ItemRare]);
-                break;
-
-            case ItemType.legendary:
-                renderer.material = Resources.Load<Material>(MaterialConstants.MATERIAL_NAMES[MaterialConstants.type.ItemLegendary]);
-                break;
-
-            case ItemType.undefined:
-                break;
-
-            default:
-                break;
-        }
-    }
-
-    //public ItemType GenerateType()
-    //{
-    //    int r = Random.Range(0, 100); // TODO : Need a way of creating items without random types
-
-    //    int legendaryChance = 5;
-    //    int rareChance = 15;
-    //    int uncommonChance = 30;
-    //    int commonChance = 100 - legendaryChance - rareChance - uncommonChance;
-
-    //    if (r < legendaryChance)
-    //    {
-    //        return ItemType.legendary;
-    //    }
-    //    else if (r >= legendaryChance && r < legendaryChance + rareChance)
-    //    {
-    //        return ItemType.rare;
-    //    }
-    //    else if (r >= legendaryChance + rareChance && r < legendaryChance + rareChance + uncommonChance)
-    //    {
-    //        return ItemType.uncommon;
-    //    }
-    //    else
-    //    {
-    //        return ItemType.common;
-    //    }
-    //}
 
     /// <summary>
     /// Update is called once per frame
@@ -169,7 +112,6 @@ public class Item : KBGameObject
             Quaternion rot = transform.rotation;
             int hlth = health;
             //ItemType itmType = itemType;
-            int itmType = (int)itemType;
             float rspwnTime = respawnTime;
             float rspwnStrt = respawnStart;
             int st = (int)state;
@@ -179,7 +121,6 @@ public class Item : KBGameObject
             stream.Serialize(ref pos);
             stream.Serialize(ref rot);
             stream.Serialize(ref hlth);
-            stream.Serialize(ref itmType);
             stream.Serialize(ref rspwnTime);
             stream.Serialize(ref rspwnStrt);
             stream.Serialize(ref st);
@@ -192,7 +133,6 @@ public class Item : KBGameObject
             Vector3 pos = Vector3.zero;
             Quaternion rot = Quaternion.identity;
             int hlth = 0;
-            int itmType = 0;
             float rspwnTime = 0;
             float rspwnStrt = 0;
             int st = 0;
@@ -202,7 +142,6 @@ public class Item : KBGameObject
             stream.Serialize(ref pos);
             stream.Serialize(ref rot);
             stream.Serialize(ref hlth);
-            stream.Serialize(ref itmType);
             stream.Serialize(ref rspwnTime);
             stream.Serialize(ref rspwnStrt);
             stream.Serialize(ref st);
@@ -212,7 +151,6 @@ public class Item : KBGameObject
             transform.position = pos;
             transform.rotation = rot;          // this sample doesn't smooth rotation
             health = hlth;
-            itemType = (ItemType)itmType;
             respawnTime = rspwnTime;
             respawnStart = rspwnStrt;
             state = (ItemState)st;

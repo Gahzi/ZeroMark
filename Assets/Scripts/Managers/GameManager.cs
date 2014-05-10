@@ -31,11 +31,12 @@ public class GameManager : Photon.MonoBehaviour
     public int blueTeamScore;
     public int redCaptures = 0;
     public int blueCaptures = 0;
+    public int redHeldPointTotal;
+    public int blueHeldPointTotal;
     private List<List<String>> playerStatData;
     private float startTime;
     public float gameTime;
-    public float gameTimeMax;
-    public int dataPulsePeriod = 60;
+    private float gameTimeMax;
     private float lastDataPulse;
     public HitFX dataPulseEffect;
 
@@ -84,7 +85,6 @@ public class GameManager : Photon.MonoBehaviour
         killTags = new List<KillTag>();
         bankZones = new List<BankZone>();
         playerSpawnZones = new List<PlayerSpawnPoint>();
-
     }
 
     private void Start()
@@ -119,7 +119,7 @@ public class GameManager : Photon.MonoBehaviour
             Team nextTeam = Team.None;
             GameManager.Instance.CreateObject((int)ObjectConstants.type.Player, Vector3.zero, Quaternion.identity, (int)nextTeam);
         }
-        
+
         gameType = (GameType)PhotonNetwork.room.customProperties["GameType"];
     }
 
@@ -155,8 +155,6 @@ public class GameManager : Photon.MonoBehaviour
 
     private void OnGUI()
     {
-        //GUI.Box(new Rect(Screen.width / 2 - 50, 0, 100, 40), "Blue" + System.Environment.NewLine +  blueTeamScore.ToString());
-        //GUI.Box(new Rect(Screen.width / 2 + 50, 0, 100, 40), "Red" + System.Environment.NewLine + redTeamScore.ToString());
     }
 
     private void FixedUpdate()
@@ -166,7 +164,23 @@ public class GameManager : Photon.MonoBehaviour
             switch (state)
             {
                 case GameState.PreGame:
-                    gameTimeMax = 60.0f * 5.0f;
+                    switch (gameType)
+                    {
+                        case GameType.CapturePoint:
+                            gameTimeMax = GameConstants.maxGameTimeCapturePoint;
+                            break;
+
+                        case GameType.DataPulse:
+                            gameTimeMax = GameConstants.maxGameTimeDataPulse;
+                            break;
+
+                        case GameType.Deathmatch:
+                            gameTimeMax = GameConstants.maxGameTimeDeathmatch;
+                            break;
+
+                        default:
+                            break;
+                    }
                     lastDataPulse = Time.time;
                     state = GameState.InGame;
                     break;
@@ -175,6 +189,28 @@ public class GameManager : Photon.MonoBehaviour
                     gameTime += Time.deltaTime;
 
                     CheckGameOver();
+
+                    redHeldPointTotal = 0;
+                    blueHeldPointTotal = 0;
+                    for (int i = 0; i < players.Count; i++)
+                    {
+                        switch (players[i].team)
+                        {
+                            case Team.Red:
+                                redHeldPointTotal += players[i].currentPoints;
+                                break;
+
+                            case Team.Blue:
+                                blueHeldPointTotal += players[i].currentPoints;
+                                break;
+
+                            case Team.None:
+                                break;
+
+                            default:
+                                break;
+                        }
+                    }
 
                     //CheckPlayerUpgradePoints();
                     //RunGui();
@@ -276,16 +312,19 @@ public class GameManager : Photon.MonoBehaviour
             case 0:
                 team = Team.Red;
                 break;
+
             case 1:
                 team = Team.Blue;
                 break;
+
             case 2:
                 team = Team.None;
                 break;
+
             default:
                 break;
         }
-        
+
         switch (team)
         {
             case Team.Red:
@@ -372,7 +411,7 @@ public class GameManager : Photon.MonoBehaviour
 
             case GameType.DataPulse:
 
-                if (Time.time > lastDataPulse + dataPulsePeriod)
+                if (Time.time > lastDataPulse + GameConstants.dataPulsePeriod)
                 {
                     RunDataPulse();
                 }

@@ -6,8 +6,6 @@ public class KillTag : KBGameObject
 
     public int pointValue;
     public TextMesh textMesh;
-    public int decayPercent = 10;
-    public int decayPeriod = 3;
     private float timer;
 
     public override void Start()
@@ -16,7 +14,7 @@ public class KillTag : KBGameObject
         //textMesh = GetComponentInChildren<TextMesh>();
     }
 
-    private new void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         KBPlayer player = other.gameObject.GetComponent<KBPlayer>();
         if(player != null && player.team != Team.None)
@@ -61,9 +59,9 @@ public class KillTag : KBGameObject
 
         if (pointValue > 1)
         {
-            if (Time.time > timer + decayPeriod)
+            if (Time.time > timer + GameConstants.pointObjectDecayPeriod)
             {
-                gameObject.GetPhotonView().RPC("SetPointValue", PhotonTargets.AllBuffered, Mathf.RoundToInt((float)pointValue * ((100.0f - (float)decayPercent) / 100.0f)));
+                gameObject.GetPhotonView().RPC("SetPointValue", PhotonTargets.All, Mathf.RoundToInt((float)pointValue * ((100.0f - (float)GameConstants.pointObjectDecayPercentPerPeriod) / 100.0f)));
                 transform.localScale = Vector3.one * (1.0f + ((float)pointValue / 100.0f));
             }
         }
