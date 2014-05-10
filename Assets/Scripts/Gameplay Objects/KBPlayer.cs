@@ -1086,7 +1086,7 @@ public class KBPlayer : KBControllableGameObject
 
         player.particleSystem.Emit(5000);
 
-        int n = 5;
+        int n = GameConstants.explosionChaffAmount;
         Chaff c = null;
         for (int i = 0; i < n; i++)
         {
@@ -1257,34 +1257,34 @@ public class KBPlayer : KBControllableGameObject
         while (pointsToDrop > 0)
         {
             int thisTagValue = 0;
-            if (pointsToDrop <= 8)
+            if (pointsToDrop <= 4)
             {
                 thisTagValue = 1;
             }
-            else if (pointsToDrop > 8 && pointsToDrop <= 32)
+            else if (pointsToDrop > 4 && pointsToDrop <= 8)
+            {
+                thisTagValue = 4;
+            }
+            else if (pointsToDrop > 8 && pointsToDrop <= 16)
             {
                 thisTagValue = 8;
             }
-            else if (pointsToDrop > 32 && pointsToDrop <= 128)
+            else if (pointsToDrop > 16)
             {
-                thisTagValue = 32;
-            }
-            else if (pointsToDrop > 128)
-            {
-                thisTagValue = 128;
+                thisTagValue = 16;
             }
 
             GameObject newTag = null;
             if (team == Team.Blue)
             {
-                newTag = GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagBlue, center, Quaternion.identity, (int)team);
+                newTag = GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagBlue, center + Vector3.up * 2, Quaternion.identity, (int)team);
             }
             else if (team == Team.Red)
             {
-                newTag = GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagRed, center, Quaternion.identity, (int)team);
+                newTag = GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagRed, center + Vector3.up * 2, Quaternion.identity, (int)team);
             }
+            newTag.transform.localScale = Vector3.one / 2;
             newTag.transform.localScale *= 1.0f + (pointsToDrop / 100.0f);
-            newTag.transform.Translate(new Vector3(UnityEngine.Random.Range(-10.0f, 10.0f), 0, UnityEngine.Random.Range(-10.0f, 10.0f)));
             newTag.GetPhotonView().RPC("SetPointValue", PhotonTargets.AllBuffered, thisTagValue);
             pointsToDrop -= thisTagValue;
         }

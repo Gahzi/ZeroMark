@@ -78,4 +78,33 @@ public class KillTag : KBGameObject
     {
         GameManager.Instance.killTags.Add(this);
     }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.isWriting)
+        {
+            int _val = pointValue;
+            Vector3 _pos = transform.position;
+            Vector3 _scl = transform.localScale;
+
+            stream.Serialize(ref _val);
+            stream.Serialize(ref _pos);
+            stream.Serialize(ref _scl);
+        }
+        else
+        {
+            int _val = 0;
+            Vector3 _pos = Vector3.zero;
+            Vector3 _scl = Vector3.one;
+
+            stream.Serialize(ref _val);
+            stream.Serialize(ref _pos);
+            stream.Serialize(ref _scl);
+
+            pointValue = _val;
+            transform.position = _pos;
+            transform.localScale = _scl;
+        }
+    }
+
 }
