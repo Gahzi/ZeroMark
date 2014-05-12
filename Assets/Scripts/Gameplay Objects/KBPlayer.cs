@@ -1536,6 +1536,7 @@ public class KBPlayer : KBControllableGameObject
             gameObject.GetComponent<BoxCollider>().enabled = true;
             upperBody.SetActive(true);
             lowerBody.SetActive(true);
+            levelSprite[0].SetActive(true);
 
             //if (team == KBConstants.Team.Blue)
             //{

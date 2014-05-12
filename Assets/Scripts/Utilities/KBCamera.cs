@@ -81,18 +81,18 @@ public class KBCamera : MonoBehaviour
 
             #region temporary level text
 
-            if (attachedPlayer.guns.Length > 0)
-            {
-                if (attachedPlayer.guns[0] != null)
-                {
-                    int l = attachedPlayer.guns[0].level + 1;   
-                    levelText.text = "(" + attachedPlayer.currentPoints.ToString() + "pts.)" + "Lvl." + l.ToString();
-                }
-                else
-                {
-                    levelText.text = "";
-                }
-            }
+            //if (attachedPlayer.guns.Length > 0)
+            //{
+            //    if (attachedPlayer.guns[0] != null)
+            //    {
+            //        int l = attachedPlayer.guns[0].level + 1;   
+            //        levelText.text = "(" + attachedPlayer.currentPoints.ToString() + "pts.)" + "Lvl." + l.ToString();
+            //    }
+            //    else
+            //    {
+            //        levelText.text = "";
+            //    }
+            //}
 
             #endregion temporary level text
         }
