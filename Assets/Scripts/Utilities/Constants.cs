@@ -17,7 +17,7 @@ namespace KBConstants
         public static readonly int pointObjectDecayPercentPerPeriod = 0;
         public static readonly float pointPercentDropOnDeath = 1.0f;
         public static readonly int levelOneThreshold = 5;
-        public static readonly int levelTwoThreshold = 30;
+        public static readonly int levelTwoThreshold = 29;
         public static readonly int decalLifetime = 5;
         public static readonly int explosionChaffAmount = 3; // Amount of chaff is this value ^ 3
     }
@@ -69,7 +69,7 @@ namespace KBConstants
             {type.HomingRocketLevel1, 150},
             {type.HomingRocketLevel2, 200},
 
-            {type.SniperLevel0, 450},
+            {type.SniperLevel0, 445},
             {type.SniperLevel1, 450},
             {type.SniperLevel2, 450},
             

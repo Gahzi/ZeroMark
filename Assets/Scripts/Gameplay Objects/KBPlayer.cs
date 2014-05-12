@@ -90,6 +90,7 @@ public class KBPlayer : KBControllableGameObject
     private float timeInBankZone;
     private bool inBankZone;
     public GameObject bankIndicator;
+    public int currentLevel;
 
     public TimerScript timer;
     private float movespeed;
@@ -172,6 +173,8 @@ public class KBPlayer : KBControllableGameObject
     public Chaff chaff;
 
     public bool hasSwitchedSinceDeath;
+
+    public GameObject[] levelSprite;
 
     #endregion TempRegion
 
@@ -419,6 +422,53 @@ public class KBPlayer : KBControllableGameObject
         {
             useController = !useController;
         }
+
+        if (currentPoints < GameConstants.levelOneThreshold)
+        {
+            SetLevel(0);
+        }
+        else if (currentPoints >= GameConstants.levelOneThreshold && currentPoints <= GameConstants.levelTwoThreshold)
+        {
+            SetLevel(1);
+        }
+        else if (currentPoints > GameConstants.levelTwoThreshold)
+        {
+            SetLevel(2);
+        }
+
+
+    }
+
+    private void SetLevel(int level)
+    {
+        if (currentLevel != level)
+        {
+            switch (level)
+            {
+                case 0:
+                    levelSprite[0].SetActive(true);
+                    levelSprite[1].SetActive(false);
+                    levelSprite[2].SetActive(false);
+                    currentLevel = 0;
+                    break;
+                case 1:
+                    levelSprite[0].SetActive(false);
+                    levelSprite[1].SetActive(true);
+                    levelSprite[2].SetActive(false);
+                    currentLevel = 1;
+                    break;
+                case 2:
+                    levelSprite[0].SetActive(false);
+                    levelSprite[1].SetActive(false);
+                    levelSprite[2].SetActive(true);
+                    currentLevel = 2;
+                    break;
+
+
+                default:
+                    break;
+            }
+        }
     }
 
     public void ScorePoints(int value)
@@ -642,7 +692,7 @@ public class KBPlayer : KBControllableGameObject
 
             if (other.gameObject.tag.StartsWith("SpawnDroneRed") || other.gameObject.tag.StartsWith("SpawnMechRed") || other.gameObject.tag.StartsWith("SpawnTankRed"))
             {
-                if (GameManager.Instance.IsAbleToSpawnOnTeam(team,KBConstants.Team.Red))
+                if (GameManager.Instance.IsAbleToSpawnOnTeam(team, KBConstants.Team.Red))
                 {
                     SetTeam(Team.Red);
                     StartCoroutine(Spawn(other.gameObject.tag.ToString(), loadout));
@@ -654,7 +704,7 @@ public class KBPlayer : KBControllableGameObject
             }
             else if (other.gameObject.tag.StartsWith("SpawnDroneBlue") || other.gameObject.tag.StartsWith("SpawnMechBlue") || other.gameObject.tag.StartsWith("SpawnTankBlue"))
             {
-                if (GameManager.Instance.IsAbleToSpawnOnTeam(team,KBConstants.Team.Blue))
+                if (GameManager.Instance.IsAbleToSpawnOnTeam(team, KBConstants.Team.Blue))
                 {
                     SetTeam(Team.Blue);
                     StartCoroutine(Spawn(other.gameObject.tag.ToString(), loadout));
@@ -664,7 +714,7 @@ public class KBPlayer : KBControllableGameObject
                     //Can't Spawn as Blue Team Member
                 }
             }
-            
+
         }
     }
 
