@@ -36,8 +36,9 @@ public class GameManager : Photon.MonoBehaviour
     private List<List<String>> playerStatData;
     private float startTime;
     public float gameTime;
+    public float timeToNextPulse;
     private float gameTimeMax;
-    private float lastDataPulse;
+    public float lastDataPulse;
     public HitFX dataPulseEffect;
 
     private static GameManager instance;
@@ -98,6 +99,8 @@ public class GameManager : Photon.MonoBehaviour
         BankZone[] loadedBankZones = FindObjectsOfType<BankZone>();
         PlayerSpawnPoint[] loadedPSpawns = FindObjectsOfType<PlayerSpawnPoint>();
         ObjectPool.CreatePool(dataPulseEffect);
+
+        timeToNextPulse = GameConstants.dataPulsePeriod;
 
         foreach (BankZone b in loadedBankZones)
         {
@@ -187,7 +190,7 @@ public class GameManager : Photon.MonoBehaviour
 
                 case GameState.InGame:
                     gameTime += Time.deltaTime;
-
+                    timeToNextPulse -= Time.deltaTime;
                     CheckGameOver();
 
                     switch (gameType)
@@ -196,10 +199,6 @@ public class GameManager : Photon.MonoBehaviour
                             break;
 
                         case GameType.DataPulse:
-                            if (Time.time > lastDataPulse + GameConstants.dataPulsePeriod - 10)
-                            {
-                                Camera.main.GetComponent<KBCamera>().dataPulse.SetActive(true);
-                            }
                             break;
 
                         case GameType.Deathmatch:
@@ -323,6 +322,7 @@ public class GameManager : Photon.MonoBehaviour
         HitFX o = ObjectPool.Spawn(dataPulseEffect);
         o.Init();
         Camera.main.GetComponent<KBCamera>().dataPulse.SetActive(false);
+        timeToNextPulse = GameConstants.dataPulsePeriod;
     }
 
     [RPC]

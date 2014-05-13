@@ -306,6 +306,17 @@ public class GUIManager : MonoBehaviour
                 GameManager.Instance.localPlayer.playerCamera.blueHeldPointTotalText.text = GameManager.Instance.blueHeldPointTotal.ToString("00");
                 remainingGameTime = KBConstants.GameConstants.maxGameTimeDataPulse - GameManager.Instance.gameTime;
                 GameManager.Instance.localPlayer.playerCamera.timeRemainingNumberText.text = time;
+                //GameManager.Instance.localPlayer.playerCamera.dataPulseCountdown.text = GameManager.Instance.timeToNextPulse.ToString("00");
+                GameManager.Instance.localPlayer.playerCamera.dataPulseCountdown.text = remainingSecs.ToString("00");
+
+                if (GameManager.Instance.timeToNextPulse < 10.0001f)
+                {
+                    GameManager.Instance.localPlayer.playerCamera.dataPulseCountdown.color = new Color(255, 0, 255, 255);
+                }
+                else
+                {
+                    GameManager.Instance.localPlayer.playerCamera.dataPulseCountdown.color = new Color(255, 255, 255, 137);
+                }
                 break;
 
             case GameManager.GameType.Deathmatch:

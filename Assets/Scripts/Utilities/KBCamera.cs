@@ -18,8 +18,10 @@ public class KBCamera : MonoBehaviour
     public TextMesh gameTypeText;
     public TextMesh redHeldPointTotalText;
     public TextMesh blueHeldPointTotalText;
+    public TextMesh dataPulseCountdown;
     public GameObject dataPulse;
-    public GameObject fade;
+    public GameObject redScoreBar;
+    public GameObject blueScoreBar;
 
     private void Start()
     {
@@ -33,7 +35,7 @@ public class KBCamera : MonoBehaviour
     private void Update()
     {
         gameTypeText.text = Enum.GetName(typeof(GameManager.GameType), GameManager.Instance.gameType);
-        
+
         zoomTarget = 2.0f;
         if (attachedPlayer != null)
         {
@@ -51,6 +53,21 @@ public class KBCamera : MonoBehaviour
             //CAMERA_FOLLOW_DISTANCE = new Vector3(0, 22 * zoom, -12 * zoom); old
             CAMERA_FOLLOW_DISTANCE = new Vector3(0, 22 * zoom, -2 * zoom);
             transform.localPosition = Vector3.Lerp(transform.localPosition, CAMERA_FOLLOW_DISTANCE, 5.0f * Time.deltaTime);
+
+            int total = GameManager.Instance.redTeamScore + GameManager.Instance.blueTeamScore + 10;
+            redScoreBar.renderer.material.SetFloat("_Cutoff", Mathf.InverseLerp(total, 0, GameManager.Instance.redTeamScore));
+            blueScoreBar.renderer.material.SetFloat("_Cutoff", Mathf.InverseLerp(total, 0, GameManager.Instance.blueTeamScore));
+
+            if (Time.time > GameManager.Instance.lastDataPulse + KBConstants.GameConstants.dataPulsePeriod - 10)
+            {
+                dataPulse.SetActive(true);
+                //((Mathf.Sin(Time.time * speed) + 0.5f) * (lightMaxIntensity - lightMinIntensity)) + lightMinIntensity
+                float speed = 3.50f;
+                float min = 0.1f;
+                float max = 1.0f;
+                float alpha = ((Mathf.Sin(Time.time * speed) + 0.5f) * (max - min)) + min;
+                dataPulse.GetComponent<TextMesh>().color = new Color(1.0f, 0, 1.0f, alpha);
+            }
 
             #region CameraShiftingTowardLookDirection
 
