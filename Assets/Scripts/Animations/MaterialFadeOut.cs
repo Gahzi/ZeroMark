@@ -13,8 +13,18 @@ public class MaterialFadeOut : MonoBehaviour
         transparentColor = new Color(initColor.r, initColor.g, initColor.b, 0);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         gameObject.renderer.material.color = Color.Lerp(gameObject.renderer.material.color, transparentColor, fadeSpeed * Time.deltaTime);
+    }
+
+    public void Init()
+    {
+        renderer.material.color = initColor;
+    }
+
+    public void Init(Color color)
+    {
+
     }
 }

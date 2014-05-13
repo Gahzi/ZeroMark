@@ -15,11 +15,11 @@ public class KBCamera : MonoBehaviour
     public TextMesh redScoreText;
     public TextMesh blueScoreText;
     public TextMesh timeRemainingNumberText;
-    public TextMesh timeRemainingHeaderText;
     public TextMesh gameTypeText;
     public TextMesh redHeldPointTotalText;
     public TextMesh blueHeldPointTotalText;
     public GameObject dataPulse;
+    public GameObject fade;
 
     private void Start()
     {
@@ -107,4 +107,5 @@ public class KBCamera : MonoBehaviour
 
         #endregion DamageSplashVignette
     }
+
 }

@@ -153,7 +153,7 @@ public class KBPlayer : KBControllableGameObject
     public AudioClip[] gotHitSFX;
     public AudioClip deadSound;
     public AudioClip respawnSound;
-    public AudioClip dropSound;
+    public AudioClip fuzzSound;
 
     public int killCount;
     public int deathCount;
@@ -1103,6 +1103,7 @@ public class KBPlayer : KBControllableGameObject
             respawnTimer = timer.StartTimer(respawnTime);
             waitingForRespawn = true;
             audio.PlayOneShot(deadSound);
+            audio.PlayOneShot(fuzzSound);
         }
         else if (waitingForRespawn && photonView.isMine)
         {
@@ -1147,7 +1148,7 @@ public class KBPlayer : KBControllableGameObject
         player.lowerBody.SetActive(false);
         player.ammoHud.SetActive(false);
 
-        player.particleSystem.Emit(5000);
+        player.particleSystem.Emit(GameConstants.explosionParticleAmount);
 
         int n = GameConstants.explosionChaffAmount;
         Chaff c = null;
@@ -1289,6 +1290,10 @@ public class KBPlayer : KBControllableGameObject
         totalPointsLost += currentPoints;
         waitingForRespawn = false;
         acceptingInputs = true;
+        if (photonView.isMine)
+        {
+            Camera.main.GetComponent<CameraFadeOnStart>().Fade();
+        }
 
         for (int i = 0; i < guns.Length; i++)
         {

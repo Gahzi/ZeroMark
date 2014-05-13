@@ -20,6 +20,7 @@ namespace KBConstants
         public static readonly int levelTwoThreshold = 29;
         public static readonly int decalLifetime = 5;
         public static readonly int explosionChaffAmount = 3; // Amount of chaff is this value ^ 3
+        public static readonly int explosionParticleAmount = 500;
     }
 
     public class AbilityConstants
@@ -233,7 +234,8 @@ namespace KBConstants
             MachineGunReload01, MachineGunReload02,
             RocketFire01,
             PlasmaReload01,
-            SniperFire01
+            SniperFire01,
+            MineFire01
         };
 
         private static readonly IDictionary<clip, string> clipNames = new Dictionary<clip, string>

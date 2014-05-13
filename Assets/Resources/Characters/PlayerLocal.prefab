@@ -6761,9 +6761,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 957fa777d210fe14f80788e290655bf3, type: 3}
   - {fileID: 8300000, guid: 0cf11d2fd222e2049aa01d46fcf54731, type: 3}
   - {fileID: 8300000, guid: bbb0ce7ac2833724ba25910a9b753546, type: 3}
-  deadSound: {fileID: 8300000, guid: ddc969680db4a554ca932d92b0c2f7a0, type: 3}
+  deadSound: {fileID: 8300000, guid: 1c124b95689404941a8afc9579046b72, type: 3}
   respawnSound: {fileID: 8300000, guid: cdb9263ac481d8c42927ea23457a2977, type: 3}
-  dropSound: {fileID: 8300000, guid: daa2d4eddf7b26c498bec6ee65d38b0d, type: 3}
+  fuzzSound: {fileID: 8300000, guid: 594e2dea76be2a04a83d48d1ca06c2b8, type: 3}
   killCount: 0
   deathCount: 0
   currentPoints: 0

@@ -55878,6 +55878,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bgm: {fileID: 8300000, guid: 63b29e6cfcea3f044b702d74c8f01484, type: 3}
   clips: []
+  fuzz: {fileID: 8300000, guid: ce816718b91d7d3498bf525409a774d1, type: 3}
 --- !u!1 &957338900
 GameObject:
   m_ObjectHideFlags: 0
@@ -65622,9 +65623,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   team: 0
   health: 0
-  pointsToControl: 100
-  redPoints: 0
-  bluePoints: 0
   textPrefab: {fileID: 11400002, guid: 4c748e832ea40ac48b7504bd76976af0, type: 2}
 --- !u!1 &1133586799
 GameObject:
