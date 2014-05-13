@@ -415,7 +415,7 @@ public class KBPlayer : KBControllableGameObject
         // DEBUG FUNCTIONS
         if (Input.GetKeyDown(KeyCode.T))
         {
-            TakeDamage(100);
+            TakeDamage(stats.health);
         }
 
         if (Input.GetButtonDown("ToggleController"))
