@@ -191,6 +191,13 @@ public class GameManager : Photon.MonoBehaviour
                 case GameState.InGame:
                     gameTime += Time.deltaTime;
                     timeToNextPulse -= Time.deltaTime;
+
+                    if (timeToNextPulse <= 10.00001f)
+                    {
+                        AudioManager a = AudioManager.Instance;
+                        a.StartDataPulseSFX();
+                    }
+
                     CheckGameOver();
 
                     switch (gameType)
@@ -263,6 +270,7 @@ public class GameManager : Photon.MonoBehaviour
         {
             GameManager.TakeScreenshot(1);
         }
+
     }
 
     public GameObject CreateObject(int type, Vector3 position, Quaternion rotation, int newTeam)
@@ -323,6 +331,7 @@ public class GameManager : Photon.MonoBehaviour
         o.Init();
         Camera.main.GetComponent<KBCamera>().dataPulse.SetActive(false);
         timeToNextPulse = GameConstants.dataPulsePeriod;
+        AudioManager.Instance.playingDataPulse = false;
     }
 
     [RPC]
@@ -349,7 +358,7 @@ public class GameManager : Photon.MonoBehaviour
         return 0;
     }
 
-    public bool IsAbleToSpawnOnTeam(Team currentTeam,Team newTeam)
+    public bool IsAbleToSpawnOnTeam(Team currentTeam, Team newTeam)
     {
         if (currentTeam == newTeam)
         {

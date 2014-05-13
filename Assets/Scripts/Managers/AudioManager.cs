@@ -5,6 +5,9 @@ public class AudioManager : MonoBehaviour
 {
     public AudioClip bgm;
     public AudioClip[] clips;
+    public AudioClip dataPulseStage1;
+    public AudioClip dataPulseStage2;
+    public bool playingDataPulse;
 
     private static AudioManager instance;
 
@@ -18,7 +21,7 @@ public class AudioManager : MonoBehaviour
             }
             else
             {
-                instance = new GameObject("Game Manager").AddComponent<AudioManager>();
+                instance = FindObjectOfType<AudioManager>();
                 return instance;
             }
         }
@@ -29,10 +32,29 @@ public class AudioManager : MonoBehaviour
         //audio.clip = bgm;
         //audio.playOnAwake = true;
         //audio.volume = 0.35f;
+        playingDataPulse = false;
     }
 
     void Update()
     {
 
     }
+
+    private IEnumerator PlayDataPulseSFX()
+    {
+        playingDataPulse = true;
+        audio.PlayOneShot(dataPulseStage1);
+        yield return new WaitForSeconds(10.0f);
+        audio.PlayOneShot(dataPulseStage2);
+    }
+
+    public void StartDataPulseSFX()
+    {
+        if (!playingDataPulse)
+        {
+            StartCoroutine(PlayDataPulseSFX());
+        }
+    }
+
+
 }

@@ -19,9 +19,14 @@ public class KBCamera : MonoBehaviour
     public TextMesh redHeldPointTotalText;
     public TextMesh blueHeldPointTotalText;
     public TextMesh dataPulseCountdown;
+    public TextMesh nameText;
+    public TextMesh levelNumText;
+    public TextMesh ammoText;
+    public TextMesh typeText;
     public GameObject dataPulse;
     public GameObject redScoreBar;
     public GameObject blueScoreBar;
+    public TextMesh pointsText;
 
     private void Start()
     {
@@ -30,6 +35,7 @@ public class KBCamera : MonoBehaviour
         transform.parent = attachedPlayer.transform;
         transform.rotation = Quaternion.Euler(new Vector3(rotation, 0, 0));
         transform.localPosition = CAMERA_FOLLOW_DISTANCE;
+        nameText.text = attachedPlayer.gameObject.name;
     }
 
     private void Update()
@@ -67,6 +73,13 @@ public class KBCamera : MonoBehaviour
                 float max = 1.0f;
                 float alpha = ((Mathf.Sin(Time.time * speed) + 0.5f) * (max - min)) + min;
                 dataPulse.GetComponent<TextMesh>().color = new Color(1.0f, 0, 1.0f, alpha);
+            }
+            int level = attachedPlayer.currentLevel + 1;
+            levelNumText.text = level.ToString("0");
+            pointsText.text = attachedPlayer.currentPoints.ToString();
+            if (attachedPlayer.guns.Length > 0)
+            {
+                ammoText.text = attachedPlayer.guns[0].ammo.ToString("00");
             }
 
             #region CameraShiftingTowardLookDirection

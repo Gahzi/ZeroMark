@@ -169,6 +169,7 @@ public class KBPlayer : KBControllableGameObject
     public KBCamera playerCamera;
 
     public GameObject ammoHud;
+    public TextMesh nameText;
 
     public Chaff chaff;
 
@@ -267,6 +268,7 @@ public class KBPlayer : KBControllableGameObject
         ObjectPool.CreatePool(mechGibBody);
 
         hasSwitchedSinceDeath = false;
+        nameText.text = gameObject.name;
     }
 
     private void InitializeForRespawn()
@@ -714,6 +716,7 @@ public class KBPlayer : KBControllableGameObject
                     //Can't Spawn as Blue Team Member
                 }
             }
+            playerCamera.typeText.text = other.gameObject.GetComponentInChildren<TextMesh>().text;
 
         }
     }
@@ -1103,7 +1106,10 @@ public class KBPlayer : KBControllableGameObject
             respawnTimer = timer.StartTimer(respawnTime);
             waitingForRespawn = true;
             audio.PlayOneShot(deadSound);
-            audio.PlayOneShot(fuzzSound);
+            if (photonView.isMine)
+            {
+                audio.PlayOneShot(fuzzSound); 
+            }
         }
         else if (waitingForRespawn && photonView.isMine)
         {
@@ -1536,6 +1542,7 @@ public class KBPlayer : KBControllableGameObject
                 upperBody = upperBodyCore;
                 lowerBody = lowerBodyCore;
                 type = PlayerType.core;
+                currentPoints = 0;
             }
 
             gameObject.GetComponent<BoxCollider>().enabled = true;

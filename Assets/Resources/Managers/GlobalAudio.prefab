@@ -37,10 +37,10 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 3
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: .268999994
+  m_PlayOnAwake: 0
+  m_Volume: 1
   m_Pitch: 1
-  Loop: 1
+  Loop: 0
   Mute: 0
   Priority: 128
   DopplerLevel: 1
@@ -99,7 +99,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bgm: {fileID: 8300000, guid: 63b29e6cfcea3f044b702d74c8f01484, type: 3}
   clips: []
-  fuzz: {fileID: 8300000, guid: ce816718b91d7d3498bf525409a774d1, type: 3}
+  dataPulseStage1: {fileID: 8300000, guid: 8b75395775f50fb4abf4c11fce0079c5, type: 3}
+  dataPulseStage2: {fileID: 8300000, guid: f82375609712a494aa1a00f02da836e4, type: 3}
+  playingDataPulse: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

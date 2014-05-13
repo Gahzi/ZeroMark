@@ -46,10 +46,10 @@ public class MineLayer : ProjectileAbilityBaseScript
         {
             ObjectPool.CreatePool(projectileType[i]);
         }
-        sound = new AudioClip[2]
+        sound = new AudioClip[1]
         {
-            Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.PlasmaGunFire01]),
-            Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.PlasmaGunFire02]),
+            //Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.MineFire01]),
+            Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.MineFire02]),
         };
         reloadClip = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.PlasmaReload01]);
         SetLevel(0);

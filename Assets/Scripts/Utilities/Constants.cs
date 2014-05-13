@@ -235,7 +235,7 @@ namespace KBConstants
             RocketFire01,
             PlasmaReload01,
             SniperFire01,
-            MineFire01
+            MineFire01, MineFire02
         };
 
         private static readonly IDictionary<clip, string> clipNames = new Dictionary<clip, string>
@@ -256,7 +256,9 @@ namespace KBConstants
             {clip.CannonFire03, "sounds/cyberstorm select/gun single shots/subgun-18"},
             {clip.CannonFire04, "sounds/cyberstorm select/gun single shots/subgun-19"},
             {clip.CannonFire05, "sounds/cyberstorm select/gun single shots/subgun-20"},
-            {clip.SniperFire01, "sounds/cyberstorm select/gun single shots/artillery-21"}
+            {clip.SniperFire01, "sounds/cyberstorm select/gun single shots/artillery-21"},
+            {clip.MineFire01, "sounds/cyberstorm select/cuts/mine_single_01"},
+            {clip.MineFire02, "sounds/cyberstorm select/cuts/mine_single_02"}
         };
 
         public static IDictionary<clip, string> CLIP_NAMES { get { return clipNames; } }
