@@ -190,6 +190,25 @@ public class GameManager : Photon.MonoBehaviour
 
                     CheckGameOver();
 
+                    switch (gameType)
+                    {
+                        case GameType.CapturePoint:
+                            break;
+
+                        case GameType.DataPulse:
+                            if (Time.time > lastDataPulse + GameConstants.dataPulsePeriod - 10)
+                            {
+                                Camera.main.GetComponent<KBCamera>().dataPulse.SetActive(true);
+                            }
+                            break;
+
+                        case GameType.Deathmatch:
+                            break;
+
+                        default:
+                            break;
+                    }
+
                     redHeldPointTotal = 0;
                     blueHeldPointTotal = 0;
                     for (int i = 0; i < players.Count; i++)
@@ -303,6 +322,7 @@ public class GameManager : Photon.MonoBehaviour
         lastDataPulse = Time.time;
         HitFX o = ObjectPool.Spawn(dataPulseEffect);
         o.Init();
+        Camera.main.GetComponent<KBCamera>().dataPulse.SetActive(false);
     }
 
     [RPC]

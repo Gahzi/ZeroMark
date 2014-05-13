@@ -1554,6 +1554,7 @@ public class KBPlayer : KBControllableGameObject
             InitializeForRespawn();
             SetupAbilities();
             ammoHud.SetActive(true);
+            ammoHud.GetComponent<WeaponAmmoGUI>().Clear();
             hasSwitchedSinceDeath = true;
 
             if (photonView.isMine)

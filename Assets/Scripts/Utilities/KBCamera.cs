@@ -19,6 +19,7 @@ public class KBCamera : MonoBehaviour
     public TextMesh gameTypeText;
     public TextMesh redHeldPointTotalText;
     public TextMesh blueHeldPointTotalText;
+    public GameObject dataPulse;
 
     private void Start()
     {
