@@ -108,7 +108,7 @@ public class GUIManager : MonoBehaviour
         //room name
 
         GUI.skin.label = headerStyle;
-        GUIContent roomNameContent = new GUIContent("Room Name");
+        GUIContent roomNameContent = new GUIContent(PhotonNetwork.room.name);
         Rect roomNameRect = new Rect(statWidth * 0.5f, 0, GUI.skin.label.CalcSize(roomNameContent).x, GUI.skin.label.CalcSize(roomNameContent).y);
         GUI.Label(roomNameRect, roomNameContent);
 
@@ -193,7 +193,7 @@ public class GUIManager : MonoBehaviour
         //room name
 
         GUI.skin.label = headerStyle;
-        GUIContent roomNameContent = new GUIContent("Room Name");
+        GUIContent roomNameContent = new GUIContent(PhotonNetwork.room.name);
         Rect roomNameRect = new Rect(statWidth * 0.5f, 0, GUI.skin.label.CalcSize(roomNameContent).x, GUI.skin.label.CalcSize(roomNameContent).y);
         GUI.Label(roomNameRect, roomNameContent);
 

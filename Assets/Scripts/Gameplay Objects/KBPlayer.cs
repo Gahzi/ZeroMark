@@ -493,7 +493,7 @@ public class KBPlayer : KBControllableGameObject
     private void OnPhotonInstantiate(PhotonMessageInfo msg)
     {
         networkPlayer = msg.sender;
-        name += msg.sender.name;
+        name = msg.sender.name;
         SetStats();
         GameManager.Instance.players.Add(this);
     }

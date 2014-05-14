@@ -59,6 +59,8 @@ public class GameManager : Photon.MonoBehaviour
         }
     }
 
+    private float showEndTabTimer;
+
     #region PHOTON CONNECTION HANDLING
 
     private void OnPhotonPlayerConnected(PhotonPlayer player)
@@ -94,6 +96,8 @@ public class GameManager : Photon.MonoBehaviour
         startTime = Time.time;
         state = GameState.PreGame;
         gameType = GameType.DataPulse;
+
+        showEndTabTimer = 5.0f;
 
         KillTag[] loadedKillTags = FindObjectsOfType<KillTag>();
         BankZone[] loadedBankZones = FindObjectsOfType<BankZone>();
@@ -200,20 +204,20 @@ public class GameManager : Photon.MonoBehaviour
 
                     CheckGameOver();
 
-                    switch (gameType)
-                    {
-                        case GameType.CapturePoint:
-                            break;
+                    //switch (gameType)
+                    //{
+                    //    case GameType.CapturePoint:
+                    //        break;
 
-                        case GameType.DataPulse:
-                            break;
+                    //    case GameType.DataPulse:
+                    //        break;
 
-                        case GameType.Deathmatch:
-                            break;
+                    //    case GameType.Deathmatch:
+                    //        break;
 
-                        default:
-                            break;
-                    }
+                    //    default:
+                    //        break;
+                    //}
 
                     redHeldPointTotal = 0;
                     blueHeldPointTotal = 0;
@@ -245,20 +249,31 @@ public class GameManager : Photon.MonoBehaviour
                     Debug.Log("Red won");
                     localPlayer.acceptingInputs = false;
                     state = GameState.EndGame;
-                    GUIManager.Instance.state = GUIManager.GUIManagerState.ShowingEndGameTab;
+                    //GUIManager.Instance.state = GUIManager.GUIManagerState.ShowingEndGameTab;
                     break;
 
                 case GameState.BlueWins:
                     Debug.Log("Blue won");
                     localPlayer.acceptingInputs = false;
                     state = GameState.EndGame;
-                    GUIManager.Instance.state = GUIManager.GUIManagerState.ShowingEndGameTab;
+                    //GUIManager.Instance.state = GUIManager.GUIManagerState.ShowingEndGameTab;
                     break;
 
                 case GameState.Tie:
                     Debug.Log("Tie");
                     state = GameState.EndGame;
 
+                    break;
+
+                case GameState.EndGame:
+
+                    showEndTabTimer -= Time.fixedDeltaTime;
+
+                    if (showEndTabTimer <= 0 && GUIManager.Instance.state != GUIManager.GUIManagerState.ShowingEndGameTab)
+                    {
+                        GUIManager.Instance.state = GUIManager.GUIManagerState.ShowingEndGameTab;
+                    }
+                    
                     break;
 
                 default:

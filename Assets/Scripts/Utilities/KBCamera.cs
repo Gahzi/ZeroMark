@@ -23,6 +23,8 @@ public class KBCamera : MonoBehaviour
     public TextMesh levelNumText;
     public TextMesh ammoText;
     public TextMesh typeText;
+    public TextMesh RedWinsText;
+    public TextMesh BlueWinsText;
     public GameObject dataPulse;
     public GameObject redScoreBar;
     public GameObject blueScoreBar;
@@ -136,6 +138,25 @@ public class KBCamera : MonoBehaviour
         damageVignette.color = c;
 
         #endregion DamageSplashVignette
+
+        #region WinLoseTextDisplay
+
+        if (GameManager.Instance.State.Equals(GameManager.GameState.RedWins))
+        {
+            if(RedWinsText.gameObject.active == false)
+            {
+                RedWinsText.gameObject.active=true;
+            }
+        }
+        else if (GameManager.Instance.State.Equals(GameManager.GameState.BlueWins))
+        {
+            if(BlueWinsText.gameObject.active== false)
+            {
+                BlueWinsText.gameObject.active=true;
+            }
+        }
+
+        #endregion WinLoseTextDisplay
     }
 
 }
