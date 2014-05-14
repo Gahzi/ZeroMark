@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: KillTC_Red
-  m_Shader: {fileID: 10, guid: 0000000000000000f000000000000000, type: 0}
+  m_Shader: {fileID: 12, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: []
   m_CustomRenderQueue: -1
   m_SavedProperties:
@@ -32,8 +32,16 @@ Material:
         first:
           name: _EmissionLM
         second: 0
+      data:
+        first:
+          name: _Shininess
+        second: .078125
     m_Colors:
       data:
         first:
           name: _Color
+        second: {r: .647058845, g: .571262419, b: .147491336, a: 1}
+      data:
+        first:
+          name: _SpecColor
         second: {r: 1, g: 0, b: 0, a: 1}

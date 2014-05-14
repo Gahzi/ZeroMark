@@ -175,6 +175,8 @@ MonoBehaviour:
   lifetime: .5
   damage: 3
   owner: {fileID: 0}
+  canHitMultiplePlayers: 0
+  active: 0
   damageLevel: 
   projectileSpeed: 150
   inheritSpeed: 0
@@ -1265,7 +1267,7 @@ ParticleSystem:
   InitialModule:
     enabled: 1
     startLifetime:
-      scalar: .0700000003
+      scalar: .400000006
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -1422,7 +1424,7 @@ ParticleSystem:
         rgba: 4294967295
       maxColor:
         serializedVersion: 2
-        rgba: 4278253823
+        rgba: 4284522239
       minMaxState: 0
     startSize:
       scalar: 1
@@ -1491,8 +1493,8 @@ ParticleSystem:
         m_PostInfinity: 2
       minMaxState: 0
     gravityModifier: 0
-    inheritVelocity: -.379999995
-    maxNumParticles: 500
+    inheritVelocity: 0
+    maxNumParticles: 5000
   ShapeModule:
     serializedVersion: 2
     enabled: 1
@@ -1507,10 +1509,10 @@ ParticleSystem:
     m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
     randomDirection: 0
   EmissionModule:
-    enabled: 0
+    enabled: 1
     m_Type: 0
     rate:
-      scalar: 100
+      scalar: 1000
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -2284,7 +2286,7 @@ ParticleSystem:
     collisionMessages: 0
   SubModule:
     enabled: 0
-    subEmitterBirth: {fileID: 19800000}
+    subEmitterBirth: {fileID: 19800000, guid: b61a7e318287ee94c90843760a35fc2c, type: 2}
     subEmitterBirth1: {fileID: 0}
     subEmitterCollision: {fileID: 0}
     subEmitterCollision1: {fileID: 0}

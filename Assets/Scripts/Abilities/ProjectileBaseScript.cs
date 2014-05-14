@@ -61,24 +61,28 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
 
     protected override void FixedUpdate()
     {
-        base.FixedUpdate();
-        if (boxCollider != null)
+        if (active)
         {
-            boxCollider.size = Vector3.Lerp(boxCollider.size, boxColliderSize, 5.0f * Time.deltaTime);
+            base.FixedUpdate();
+            if (boxCollider != null)
+            {
+                boxCollider.size = Vector3.Lerp(boxCollider.size, boxColliderSize, 5.0f * Time.deltaTime);
+            }
+            if (aimedProjectile && homingProjectile)
+            {
+                Debug.LogWarning("Projectile cannot be both aimed & homing");
+            }
+            if (homingProjectile && targetPlayer != null)
+            {
+                DoHomingBehavior();
+            }
+            if (aimedProjectile)
+            {
+                DoAimedBehavior();
+            }
+            transform.Translate(Vector3.forward * (projectileSpeed + inheritSpeed) * Time.deltaTime);
         }
-        if (aimedProjectile && homingProjectile)
-        {
-            Debug.LogWarning("Projectile cannot be both aimed & homing");
-        }
-        if (homingProjectile && targetPlayer != null)
-        {
-            DoHomingBehavior();
-        }
-        if (aimedProjectile)
-        {
-            DoAimedBehavior();
-        }
-        transform.Translate(Vector3.forward * (projectileSpeed + inheritSpeed) * Time.deltaTime);
+
     }
 
     private void OnDrawGizmos()
@@ -108,41 +112,45 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
     {
         // Bullet will collide with anything that is a projectile, environment, or hitbox tagged.
         // If it hits a hitbox, it needs to inform the owner of the bullet that it has hit a player.
-        if (other.gameObject.CompareTag("Hitbox"))
+        if (active)
         {
-            KBGameObject o = other.gameObject.transform.parent.transform.parent.GetComponent<KBGameObject>();
-            KBPlayer victimPlayer = other.gameObject.transform.parent.transform.parent.GetComponent<KBPlayer>();
-
-            if (victimPlayer != null && !hitPlayer.Contains(victimPlayer.gameObject))
+            if (other.gameObject.CompareTag("Hitbox"))
             {
-                if (victimPlayer.Team != Team && victimPlayer.health > 0 && victimPlayer.invulnerabilityTime <= 0)
+                KBGameObject o = other.gameObject.transform.parent.transform.parent.GetComponent<KBGameObject>();
+                KBPlayer victimPlayer = other.gameObject.transform.parent.transform.parent.GetComponent<KBPlayer>();
+
+                if (victimPlayer != null && !hitPlayer.Contains(victimPlayer.gameObject))
                 {
-                    if (victimPlayer.photonView.isMine && owner != null)
+                    if (victimPlayer.Team != Team && victimPlayer.health > 0 && victimPlayer.invulnerabilityTime <= 0)
                     {
-                        int victimHealth = o.TakeDamage(damage);
-                        hitPlayer.Add(victimPlayer.gameObject);
-                        if (victimHealth <= 0)
+                        if (victimPlayer.photonView.isMine && owner != null)
                         {
-                            o.gameObject.GetComponent<KBPlayer>().Die(owner.gameObject);
+                            int victimHealth = o.TakeDamage(damage);
+                            hitPlayer.Add(victimPlayer.gameObject);
+                            if (victimHealth <= 0)
+                            {
+                                o.gameObject.GetComponent<KBPlayer>().Die(owner.gameObject);
+                            }
+                            owner.ConfirmHit(o.gameObject.GetComponent<KBPlayer>(), damage);
+                            DoOnHit();
                         }
-                        owner.ConfirmHit(o.gameObject.GetComponent<KBPlayer>(), damage);
-                        DoOnHit();
-                    }
-                    else if (owner != null)
-                    {
-                        //owner.ConfirmHitToOthers(victimPlayer.networkPlayer, damage);
-                        DoOnHit();
+                        else if (owner != null)
+                        {
+                            //owner.ConfirmHitToOthers(victimPlayer.networkPlayer, damage);
+                            DoOnHit();
+                        }
                     }
                 }
             }
-        }
-        if (collideWithEnvironment)
-        {
-            if (other.gameObject.CompareTag("Environment"))
+            if (collideWithEnvironment)
             {
-                DoOnHit();
+                if (other.gameObject.CompareTag("Environment"))
+                {
+                    DoOnHit();
+                }
             }
         }
+
     }
 
     public override void DoOnHit()

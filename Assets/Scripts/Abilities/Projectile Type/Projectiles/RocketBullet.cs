@@ -43,9 +43,10 @@ public class RocketBullet : ProjectileBaseScript
         base.FixedUpdate();
     }
 
-    public override void Reset()
+    public override IEnumerator Reset()
     {
+        yield return new WaitForSeconds(0);
         projectileSpeed = rocketInitSpeed;
-        base.Reset();
+        StartCoroutine(base.Reset());
     }
 }
