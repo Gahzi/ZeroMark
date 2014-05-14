@@ -27,6 +27,7 @@ namespace KBConstants
 
     public class GameConstants
     {
+        public static readonly float pregameTime = 30.0f;
         public static readonly int maxGameTimeCapturePoint = 60 * 3;
         public static readonly int maxGameTimeDeathmatch = 60 * 3;
         public static readonly int maxScoreDeathmatch = 30;

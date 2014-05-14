@@ -679,46 +679,52 @@ public class KBPlayer : KBControllableGameObject
         //        teleportationRecharge = 5.0f;
         //    }
         //}
-
-        if (other.gameObject.tag.StartsWith("Spawn"))
+        if (GameManager.Instance.state == GameManager.GameState.InGame)
         {
-            int loadout = 0;
-            if (other.gameObject.tag.EndsWith("1"))
+            if (other.gameObject.tag.StartsWith("Spawn"))
             {
-                loadout = 1;
-            }
-            else if (other.gameObject.tag.EndsWith("2"))
-            {
-                loadout = 2;
-            }
+                int loadout = 0;
+                if (other.gameObject.tag.EndsWith("1"))
+                {
+                    loadout = 1;
+                }
+                else if (other.gameObject.tag.EndsWith("2"))
+                {
+                    loadout = 2;
+                }
 
-            if (other.gameObject.tag.StartsWith("SpawnDroneRed") || other.gameObject.tag.StartsWith("SpawnMechRed") || other.gameObject.tag.StartsWith("SpawnTankRed"))
-            {
-                if (GameManager.Instance.IsAbleToSpawnOnTeam(team, KBConstants.Team.Red))
+                if (other.gameObject.tag.StartsWith("SpawnDroneRed") || other.gameObject.tag.StartsWith("SpawnMechRed") || other.gameObject.tag.StartsWith("SpawnTankRed"))
                 {
-                    SetTeam(Team.Red);
-                    StartCoroutine(Spawn(other.gameObject.tag.ToString(), loadout));
+                    if (GameManager.Instance.IsAbleToSpawnOnTeam(team, KBConstants.Team.Red))
+                    {
+                        SetTeam(Team.Red);
+                        StartCoroutine(Spawn(other.gameObject.tag.ToString(), loadout));
+                    }
+                    else
+                    {
+                        //Can't Spawn as Red Team Member
+                    }
                 }
-                else
+                else if (other.gameObject.tag.StartsWith("SpawnDroneBlue") || other.gameObject.tag.StartsWith("SpawnMechBlue") || other.gameObject.tag.StartsWith("SpawnTankBlue"))
                 {
-                    //Can't Spawn as Red Team Member
+                    if (GameManager.Instance.IsAbleToSpawnOnTeam(team, KBConstants.Team.Blue))
+                    {
+                        SetTeam(Team.Blue);
+                        StartCoroutine(Spawn(other.gameObject.tag.ToString(), loadout));
+                    }
+                    else
+                    {
+                        //Can't Spawn as Blue Team Member
+                    }
                 }
-            }
-            else if (other.gameObject.tag.StartsWith("SpawnDroneBlue") || other.gameObject.tag.StartsWith("SpawnMechBlue") || other.gameObject.tag.StartsWith("SpawnTankBlue"))
-            {
-                if (GameManager.Instance.IsAbleToSpawnOnTeam(team, KBConstants.Team.Blue))
+                if (photonView.isMine)
                 {
-                    SetTeam(Team.Blue);
-                    StartCoroutine(Spawn(other.gameObject.tag.ToString(), loadout));
+                    playerCamera.typeText.text = other.gameObject.GetComponentInChildren<TextMesh>().text;
                 }
-                else
-                {
-                    //Can't Spawn as Blue Team Member
-                }
-            }
-            playerCamera.typeText.text = other.gameObject.GetComponentInChildren<TextMesh>().text;
 
+            }
         }
+
     }
 
     private void OnTriggerStay(Collider other)
