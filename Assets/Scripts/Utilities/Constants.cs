@@ -6,12 +6,31 @@ namespace KBConstants
 
     public enum PlayerType { mech, drone, tank, core };
 
+    public class StringConstants
+    {
+        public static readonly string mechPrefix = "MCH.";
+        public static readonly string tankPrefix = "TNK.";
+        public static readonly string hunterPrefix = "HTR.";
+
+        public static readonly string mech0Name = "ASLT";
+        public static readonly string mech1Name = "LONG";
+        public static readonly string mech2Name = "PLSR";
+
+        public static readonly string tank0Name = "HEAT";
+        public static readonly string tank1Name = "DRVR";
+        public static readonly string tank2Name = "TRAP";
+
+        public static readonly string hunter0Name = "BRST";
+        public static readonly string hunter1Name = "RCPX";
+        public static readonly string hunter2Name = "PLSR";
+    }
+
     public class GameConstants
     {
         public static readonly int maxGameTimeCapturePoint = 60 * 3;
         public static readonly int maxGameTimeDeathmatch = 60 * 3;
         public static readonly int maxScoreDeathmatch = 30;
-        public static readonly int maxGameTimeDataPulse = 60 * 5;
+        public static readonly int maxGameTimeDataPulse = 60 * 3;
         public static readonly int dataPulsePeriod = 60;
         public static readonly int pointObjectDecayPeriod = 5;
         public static readonly int pointObjectDecayPercentPerPeriod = 0;
