@@ -1468,12 +1468,12 @@ TextMesh:
   m_GameObject: {fileID: 100000}
   m_Text: Blue Wins
   m_OffsetZ: 0
-  m_CharacterSize: 1
+  m_CharacterSize: .100000001
   m_LineSpacing: 1
   m_Anchor: 0
   m_Alignment: 0
   m_TabSize: 4
-  m_FontSize: 64
+  m_FontSize: 640
   m_FontStyle: 0
   m_RichText: 1
   m_Font: {fileID: 12800000, guid: 94c30db629a90c141ac77ea6ba41d48d, type: 3}
@@ -1909,12 +1909,12 @@ TextMesh:
   m_GameObject: {fileID: 100002}
   m_Text: Red Wins
   m_OffsetZ: 0
-  m_CharacterSize: 1
+  m_CharacterSize: .100000001
   m_LineSpacing: 1
   m_Anchor: 0
   m_Alignment: 0
   m_TabSize: 4
-  m_FontSize: 64
+  m_FontSize: 640
   m_FontStyle: 0
   m_RichText: 1
   m_Font: {fileID: 12800000, guid: 94c30db629a90c141ac77ea6ba41d48d, type: 3}
