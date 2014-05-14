@@ -60,7 +60,7 @@ public class GameManager : Photon.MonoBehaviour
         }
     }
 
-    private float showEndTabTimer;
+    private float showQuitButtonTimer;
 
     #region PHOTON CONNECTION HANDLING
 
@@ -99,7 +99,7 @@ public class GameManager : Photon.MonoBehaviour
         gameType = GameType.DataPulse;
         preGameWaitTime = GameConstants.pregameTime;
 
-        showEndTabTimer = 5.0f;
+        showQuitButtonTimer = 5.0f;
 
         KillTag[] loadedKillTags = FindObjectsOfType<KillTag>();
         BankZone[] loadedBankZones = FindObjectsOfType<BankZone>();
@@ -273,11 +273,11 @@ public class GameManager : Photon.MonoBehaviour
 
                 case GameState.EndGame:
 
-                    showEndTabTimer -= Time.fixedDeltaTime;
+                    showQuitButtonTimer -= Time.fixedDeltaTime;
 
-                    if (showEndTabTimer <= 0 && GUIManager.Instance.state != GUIManager.GUIManagerState.ShowingEndGameTab)
+                    if (showQuitButtonTimer <= 0 && GUIManager.Instance.state != GUIManager.GUIManagerState.ShowingEndGameTab)
                     {
-                        GUIManager.Instance.state = GUIManager.GUIManagerState.ShowingEndGameTab;
+                        Camera.main.GetComponent<KBCamera>().quitButton.SetActive(true);
                     }
                     
                     break;

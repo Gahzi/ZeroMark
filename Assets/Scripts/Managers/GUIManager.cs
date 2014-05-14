@@ -260,18 +260,6 @@ public class GUIManager : MonoBehaviour
                 GUI.Label(cPlayerPointsBankedRect, cPlayerPointsBankedContent);
             }
         }
-
-        //End Game Button
-
-        GUI.skin.label = endGameStyle;
-        Rect endGameRect = new Rect(statWidth * 0.5f, statHeight * 0.95f, GUI.skin.label.CalcSize(endGameContent).x, GUI.skin.label.CalcSize(endGameContent).y);
-        if (GUI.Button(endGameRect, endGameContent))
-        {
-            PhotonNetwork.LeaveRoom();
-            Application.LoadLevel(0);
-        }
-
-        GUI.EndGroup();
     }
 
     private void Update()

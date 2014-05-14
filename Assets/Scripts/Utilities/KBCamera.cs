@@ -23,8 +23,9 @@ public class KBCamera : MonoBehaviour
     public TextMesh levelNumText;
     public TextMesh ammoText;
     public TextMesh typeText;
-    public TextMesh RedWinsText;
-    public TextMesh BlueWinsText;
+    public TextMesh redWinsText;
+    public TextMesh blueWinsText;
+    public GameObject quitButton;
     public GameObject dataPulse;
     public GameObject redScoreBar;
     public GameObject blueScoreBar;
@@ -139,24 +140,31 @@ public class KBCamera : MonoBehaviour
 
         #endregion DamageSplashVignette
 
-        #region WinLoseTextDisplay
+        #region WinLoseTextAndButtonDisplay
 
         if (GameManager.Instance.State.Equals(GameManager.GameState.RedWins))
         {
-            if(RedWinsText.gameObject.active == false)
+            if(redWinsText.gameObject.activeInHierarchy == false)
             {
-                RedWinsText.gameObject.active=true;
+                redWinsText.gameObject.SetActive(true);
             }
         }
         else if (GameManager.Instance.State.Equals(GameManager.GameState.BlueWins))
         {
-            if(BlueWinsText.gameObject.active== false)
+            if (blueWinsText.gameObject.activeInHierarchy == false)
             {
-                BlueWinsText.gameObject.active=true;
+                blueWinsText.gameObject.SetActive(true);
+
             }
         }
 
-        #endregion WinLoseTextDisplay
+        #endregion WinLoseTextAndButtonDisplay
+    }
+
+    private void QuitGame()
+    {
+        PhotonNetwork.LeaveRoom();
+        Application.LoadLevel(0);
     }
 
 }
