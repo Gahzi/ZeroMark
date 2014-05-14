@@ -716,7 +716,10 @@ public class KBPlayer : KBControllableGameObject
                     //Can't Spawn as Blue Team Member
                 }
             }
-            playerCamera.typeText.text = other.gameObject.GetComponentInChildren<TextMesh>().text;
+            if (photonView.isMine)
+            {
+                playerCamera.typeText.text = other.gameObject.GetComponentInChildren<TextMesh>().text;
+            }
 
         }
     }
