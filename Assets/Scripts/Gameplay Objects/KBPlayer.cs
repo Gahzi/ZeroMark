@@ -1358,7 +1358,6 @@ public class KBPlayer : KBControllableGameObject
                 newTag = GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagRed, center + Vector3.up * 2, Quaternion.identity, (int)team);
             }
             //newTag.transform.localScale = Vector3.one / 2;
-            newTag.transform.localScale *= 1.0f + (pointsToDrop / 100.0f);
             newTag.GetPhotonView().RPC("SetPointValue", PhotonTargets.AllBuffered, thisTagValue);
             pointsToDrop -= thisTagValue;
         }

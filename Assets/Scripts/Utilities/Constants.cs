@@ -30,7 +30,7 @@ namespace KBConstants
         public static readonly int maxGameTimeCapturePoint = 60 * 3;
         public static readonly int maxGameTimeDeathmatch = 60 * 3;
         public static readonly int maxScoreDeathmatch = 30;
-        public static readonly int masScoreDataPulse = 100;
+        public static readonly int masScoreCapturePoint = 100;
         public static readonly int maxGameTimeDataPulse = 60 * 3;
         public static readonly int dataPulsePeriod = 60;
         public static readonly int pointObjectDecayPeriod = 5;

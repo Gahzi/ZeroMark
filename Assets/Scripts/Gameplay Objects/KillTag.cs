@@ -72,6 +72,7 @@ public class KillTag : KBGameObject
     {
         pointValue = _points;
         timer = Time.time;
+        transform.localScale *= 1.0f + (_points / 100.0f);
     }
 
     private void OnPhotonInstantiate(PhotonMessageInfo msg)
