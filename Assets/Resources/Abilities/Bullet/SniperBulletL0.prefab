@@ -141,13 +141,13 @@ TrailRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_SortingLayerID: 0
-  m_Time: .100000001
+  m_Time: .5
   m_StartWidth: .25
   m_EndWidth: .00999999978
   m_Colors:
     m_Color[0]:
       serializedVersion: 2
-      rgba: 4294956288
+      rgba: 4278190335
     m_Color[1]:
       serializedVersion: 2
       rgba: 4291493455
@@ -208,9 +208,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c235fc64cc0fb0643b381a86b1353dec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifetime: .5
+  lifetime: 0
   damage: 1
   owner: {fileID: 0}
+  canHitMultiplePlayers: 0
   damageLevel: 
   projectileSpeed: 400
   inheritSpeed: 0
@@ -1301,7 +1302,7 @@ ParticleSystem:
   InitialModule:
     enabled: 1
     startLifetime:
-      scalar: .0500000007
+      scalar: .150000006
       maxCurve:
         serializedVersion: 2
         m_Curve:
