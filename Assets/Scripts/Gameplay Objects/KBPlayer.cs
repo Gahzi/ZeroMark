@@ -1542,7 +1542,7 @@ public class KBPlayer : KBControllableGameObject
                 upperBody = upperBodyCore;
                 lowerBody = lowerBodyCore;
                 type = PlayerType.core;
-                currentPoints = 0;
+                //currentPoints = 0;
             }
 
             gameObject.GetComponent<BoxCollider>().enabled = true;
