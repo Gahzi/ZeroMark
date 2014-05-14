@@ -85,10 +85,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c19f029779b1fc469ae3040feef4f12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifetime: 10
-  damage: 0
+  lifetime: 1
+  damage: 10
   owner: {fileID: 0}
   canHitMultiplePlayers: 0
+  active: 0
   damageLevel: 
   projectileSpeed: 0
   inheritSpeed: 0

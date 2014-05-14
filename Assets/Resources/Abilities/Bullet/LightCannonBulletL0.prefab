@@ -140,7 +140,7 @@ TrailRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_SortingLayerID: 0
-  m_Time: .25
+  m_Time: .5
   m_StartWidth: .200000003
   m_EndWidth: .00499999989
   m_Colors:
@@ -149,16 +149,16 @@ TrailRenderer:
       rgba: 4292346111
     m_Color[1]:
       serializedVersion: 2
-      rgba: 4292280574
+      rgba: 3050766590
     m_Color[2]:
       serializedVersion: 2
-      rgba: 4292215037
+      rgba: 2480275709
     m_Color[3]:
       serializedVersion: 2
-      rgba: 4292149500
+      rgba: 1205141756
     m_Color[4]:
       serializedVersion: 2
-      rgba: 4292083963
+      rgba: 198443259
   m_MinVertexDistance: .100000001
   m_Autodestruct: 0
 --- !u!114 &11400000
@@ -175,13 +175,15 @@ MonoBehaviour:
   lifetime: .5
   damage: 1
   owner: {fileID: 0}
+  canHitMultiplePlayers: 0
+  active: 0
   damageLevel: 
   projectileSpeed: 40
   inheritSpeed: 0
   collideWithEnvironment: 1
   homingProjectile: 0
   aimedProjectile: 0
-  explosionPrefab: {fileID: 11400000, guid: 21897c768a636ab43b27cd57609ad170, type: 2}
+  explosionPrefab: {fileID: 11400000, guid: 4cae62a9dde0ddf45a35d7bde1f6e1b1, type: 2}
   targetPlayer: {fileID: 0}
   targetPosition: {x: 0, y: 0, z: 0}
 --- !u!135 &13500000
@@ -1261,11 +1263,11 @@ ParticleSystem:
   looping: 1
   prewarm: 1
   playOnAwake: 1
-  moveWithTransform: 0
+  moveWithTransform: 1
   InitialModule:
     enabled: 1
     startLifetime:
-      scalar: .200000003
+      scalar: .5
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -1422,10 +1424,10 @@ ParticleSystem:
         rgba: 4294967295
       maxColor:
         serializedVersion: 2
-        rgba: 2904686336
+        rgba: 2911991033
       minMaxState: 0
     startSize:
-      scalar: 1
+      scalar: .5
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -1491,8 +1493,8 @@ ParticleSystem:
         m_PostInfinity: 2
       minMaxState: 0
     gravityModifier: 0
-    inheritVelocity: -.379999995
-    maxNumParticles: 500
+    inheritVelocity: 0
+    maxNumParticles: 5000
   ShapeModule:
     serializedVersion: 2
     enabled: 1
@@ -1507,10 +1509,10 @@ ParticleSystem:
     m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
     randomDirection: 0
   EmissionModule:
-    enabled: 0
+    enabled: 1
     m_Type: 0
     rate:
-      scalar: 200
+      scalar: 100
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -1627,13 +1629,13 @@ ParticleSystem:
       maxGradient:
         key0:
           serializedVersion: 2
-          rgba: 2902458623
+          rgba: 2919235583
         key1:
           serializedVersion: 2
-          rgba: 3247082232
+          rgba: 255
         key2:
           serializedVersion: 2
-          rgba: 0
+          rgba: 3238002688
         key3:
           serializedVersion: 2
           rgba: 0
@@ -1659,7 +1661,7 @@ ParticleSystem:
         ctime7: 0
         atime0: 0
         atime1: 65535
-        atime2: 0
+        atime2: 65535
         atime3: 0
         atime4: 0
         atime5: 0
@@ -1759,7 +1761,7 @@ ParticleSystem:
     cycles: 1
     randomRow: 1
   VelocityModule:
-    enabled: 1
+    enabled: 0
     x:
       scalar: 1
       maxCurve:
