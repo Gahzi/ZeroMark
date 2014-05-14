@@ -461,11 +461,11 @@ public class GameManager : Photon.MonoBehaviour
         {
             case GameType.CapturePoint:
 
-                if (redTeamScore >= 100)
+                if (redTeamScore >= GameConstants.masScoreDataPulse)
                 {
                     state = GameState.RedWins;
                 }
-                else if (blueTeamScore >= 100)
+                else if (blueTeamScore >= GameConstants.maxGameTimeDataPulse)
                 {
                     state = GameState.BlueWins;
                 }
