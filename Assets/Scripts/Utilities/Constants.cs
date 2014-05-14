@@ -13,8 +13,8 @@ namespace KBConstants
         public static readonly string hunterPrefix = "HTR.";
 
         public static readonly string mech0Name = "ASLT";
-        public static readonly string mech1Name = "LONG";
-        public static readonly string mech2Name = "PLSR";
+        public static readonly string mech1Name = "PLSR";
+        public static readonly string mech2Name = "LONG";
 
         public static readonly string tank0Name = "HEAT";
         public static readonly string tank1Name = "DRVR";
