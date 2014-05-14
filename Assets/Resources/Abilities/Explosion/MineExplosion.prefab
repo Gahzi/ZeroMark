@@ -14,7 +14,7 @@ GameObject:
   - 54: {fileID: 5400000}
   - 114: {fileID: 11400000}
   m_Layer: 0
-  m_Name: RocketExplosion
+  m_Name: MineExplosion
   m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -86,7 +86,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifetime: 1
-  damage: 300
+  damage: 100
   owner: {fileID: 0}
   canHitMultiplePlayers: 1
   active: 0
@@ -99,7 +99,7 @@ MonoBehaviour:
   explosionPrefab: {fileID: 0}
   targetPlayer: {fileID: 0}
   targetPosition: {x: 0, y: 0, z: 0}
-  targetScale: {x: 35, y: 35, z: 35}
+  targetScale: {x: 10, y: 10, z: 10}
   growSpeed: 10
   fadeSpeed: 1
   originalMaterial: {fileID: 2100000, guid: 0b26d13c3739975499efc66abfac46eb, type: 2}

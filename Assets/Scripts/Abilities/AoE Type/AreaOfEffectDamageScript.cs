@@ -42,7 +42,7 @@ public class AreaOfEffectDamageScript : ProjectileBaseScript
     public override void Init(KBPlayer _owner)
     {
         base.Init(_owner);
-        lifetime = 10;
+        lifetime = KBConstants.GameConstants.defaultAOElifetime;
         transform.localScale = initScale;
         renderer.material.color = originalMaterial.color;
     }
