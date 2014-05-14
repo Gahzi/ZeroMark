@@ -17,7 +17,7 @@ public class GameManager : Photon.MonoBehaviour
 
     public List<BankZone> bankZones;
     private List<PlayerSpawnPoint> playerSpawnZones;
-    private GameState state = GameState.PreGame;
+    public GameState state = GameState.PreGame;
 
     public GameState State
     {
@@ -36,6 +36,7 @@ public class GameManager : Photon.MonoBehaviour
     private List<List<String>> playerStatData;
     private float startTime;
     public float gameTime;
+    public float preGameWaitTime;
     public float timeToNextPulse;
     private float gameTimeMax;
     public float lastDataPulse;
@@ -94,6 +95,7 @@ public class GameManager : Photon.MonoBehaviour
         startTime = Time.time;
         state = GameState.PreGame;
         gameType = GameType.DataPulse;
+        preGameWaitTime = GameConstants.pregameTime;
 
         KillTag[] loadedKillTags = FindObjectsOfType<KillTag>();
         BankZone[] loadedBankZones = FindObjectsOfType<BankZone>();
@@ -185,7 +187,11 @@ public class GameManager : Photon.MonoBehaviour
                             break;
                     }
                     lastDataPulse = Time.time;
-                    state = GameState.InGame;
+                    preGameWaitTime -= Time.deltaTime;
+                    if (preGameWaitTime <= 0.0f)
+                    {
+                        state = GameState.InGame;
+                    }
                     break;
 
                 case GameState.InGame:

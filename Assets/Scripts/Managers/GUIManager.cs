@@ -46,24 +46,20 @@ public class GUIManager : MonoBehaviour
 
     private void Start()
     {
-
         switch (GameManager.Instance.gameType)
         {
             case GameManager.GameType.CapturePoint:
                 {
-
                     break;
                 }
 
             case GameManager.GameType.DataPulse:
                 {
-
                     break;
                 }
 
             case GameManager.GameType.Deathmatch:
                 {
-
                     break;
                 }
         }
@@ -287,7 +283,6 @@ public class GUIManager : MonoBehaviour
         remainingSecs = (int)(remainingGameTime - (remainingMins * 60));
         string time = remainingMins.ToString("00") + ":" + remainingSecs.ToString("00");
 
-
         switch (GameManager.Instance.gameType)
         {
             case GameManager.GameType.CapturePoint:
@@ -300,23 +295,60 @@ public class GUIManager : MonoBehaviour
                 break;
 
             case GameManager.GameType.DataPulse:
+
+                switch (GameManager.Instance.state)
+                {
+                    case GameManager.GameState.PreGame:
+                        //((Mathf.Sin(Time.time * speed) + 0.5f) * (lightMaxIntensity - lightMinIntensity)) + lightMinIntensity
+                        float speed = 8.00f;
+                        float min = 0.3f;
+                        float max = 1.0f;
+                        float alpha = ((Mathf.Sin(Time.time * speed) + 0.5f) * (max - min)) + min;
+                        GameManager.Instance.localPlayer.playerCamera.dataPulseCountdown.GetComponent<TextMesh>().color = new Color(1.0f, 0, 0.0f, alpha);
+
+                        GameManager.Instance.localPlayer.playerCamera.dataPulseCountdown.text = GameManager.Instance.preGameWaitTime.ToString("00");
+
+
+                        break;
+
+                    case GameManager.GameState.InGame:
+                        GameManager.Instance.localPlayer.playerCamera.dataPulseCountdown.text = remainingSecs.ToString("00");
+
+                        if (GameManager.Instance.timeToNextPulse < 10.0001f)
+                        {
+                            GameManager.Instance.localPlayer.playerCamera.dataPulseCountdown.color = new Color(255, 0, 255, 255);
+                        }
+                        else
+                        {
+                            GameManager.Instance.localPlayer.playerCamera.dataPulseCountdown.color = new Color(255, 255, 255, 137);
+                        }
+
+                        break;
+
+                    case GameManager.GameState.RedWins:
+                        break;
+
+                    case GameManager.GameState.BlueWins:
+                        break;
+
+                    case GameManager.GameState.Tie:
+                        break;
+
+                    case GameManager.GameState.EndGame:
+                        break;
+
+                    default:
+                        break;
+                }
+
                 GameManager.Instance.localPlayer.playerCamera.redScoreText.text = GameManager.Instance.redTeamScore.ToString("00");
                 GameManager.Instance.localPlayer.playerCamera.blueScoreText.text = GameManager.Instance.blueTeamScore.ToString("00");
                 GameManager.Instance.localPlayer.playerCamera.redHeldPointTotalText.text = GameManager.Instance.redHeldPointTotal.ToString("00");
                 GameManager.Instance.localPlayer.playerCamera.blueHeldPointTotalText.text = GameManager.Instance.blueHeldPointTotal.ToString("00");
                 remainingGameTime = KBConstants.GameConstants.maxGameTimeDataPulse - GameManager.Instance.gameTime;
                 GameManager.Instance.localPlayer.playerCamera.timeRemainingNumberText.text = time;
-                //GameManager.Instance.localPlayer.playerCamera.dataPulseCountdown.text = GameManager.Instance.timeToNextPulse.ToString("00");
-                GameManager.Instance.localPlayer.playerCamera.dataPulseCountdown.text = remainingSecs.ToString("00");
 
-                if (GameManager.Instance.timeToNextPulse < 10.0001f)
-                {
-                    GameManager.Instance.localPlayer.playerCamera.dataPulseCountdown.color = new Color(255, 0, 255, 255);
-                }
-                else
-                {
-                    GameManager.Instance.localPlayer.playerCamera.dataPulseCountdown.color = new Color(255, 255, 255, 137);
-                }
+
                 break;
 
             case GameManager.GameType.Deathmatch:
