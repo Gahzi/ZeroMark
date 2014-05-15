@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class GameManager : Photon.MonoBehaviour
 {
-    public enum GameState { PreGame, InGame, RedWins, BlueWins, Tie, EndGame };
+    public enum GameState { PreGame, InGame, EndGame };
 
     public enum GameType { CapturePoint, DataPulse, Deathmatch };
 
@@ -193,7 +193,7 @@ public class GameManager : Photon.MonoBehaviour
                         default:
                             break;
                     }
-                    lastDataPulse = Time.time;
+                    lastDataPulse = gameTime;
                     preGameWaitTime -= Time.deltaTime;
                     if (preGameWaitTime <= 0.0f)
                     {
@@ -252,26 +252,6 @@ public class GameManager : Photon.MonoBehaviour
 
                     //CheckPlayerUpgradePoints();
                     //RunGui();
-                    break;
-
-                case GameState.RedWins:
-                    Debug.Log("Red won");
-                    localPlayer.acceptingInputs = false;
-                    state = GameState.EndGame;
-                    //GUIManager.Instance.state = GUIManager.GUIManagerState.ShowingEndGameTab;
-                    break;
-
-                case GameState.BlueWins:
-                    Debug.Log("Blue won");
-                    localPlayer.acceptingInputs = false;
-                    state = GameState.EndGame;
-                    //GUIManager.Instance.state = GUIManager.GUIManagerState.ShowingEndGameTab;
-                    break;
-
-                case GameState.Tie:
-                    Debug.Log("Tie");
-                    state = GameState.EndGame;
-
                     break;
 
                 case GameState.EndGame:
@@ -346,12 +326,53 @@ public class GameManager : Photon.MonoBehaviour
         }
     }
 
+    [RPC]
+    public void GameOver(int winTeam)
+    {
+        Team winningTeam = (Team)winTeam;
+
+        switch(winningTeam)
+        {
+            case Team.Red:
+            {
+                Debug.Log("Red won");
+                localPlayer.acceptingInputs = false;
+                Camera.main.GetComponent<KBCamera>().quitButton.SetActive(true);
+                Camera.main.GetComponent<KBCamera>().redWinsText.gameObject.SetActive(true);
+                state = GameState.EndGame;
+                break;
+            }
+                
+            case Team.Blue:
+            {
+                Debug.Log("Blue won");
+                localPlayer.acceptingInputs = false;
+                Camera.main.GetComponent<KBCamera>().quitButton.SetActive(true);
+                Camera.main.GetComponent<KBCamera>().blueWinsText.gameObject.SetActive(true);
+                state = GameState.EndGame;
+                break;    
+
+            }
+                
+            case Team.None:
+            {
+                Debug.Log("Tie");
+                localPlayer.acceptingInputs = false;
+                Camera.main.GetComponent<KBCamera>().quitButton.SetActive(true);
+                Camera.main.GetComponent<KBCamera>().tieText.gameObject.SetActive(true);
+                state = GameState.EndGame;
+                break;
+            }
+                
+        }
+    }
+
     private void RunDataPulse()
     {
         numOfPulses++;
         photonView.RPC("AddPointsToScore", PhotonTargets.All, (int)localPlayer.team, localPlayer.currentPoints);
         localPlayer.ScorePoints(localPlayer.currentPoints);
-        lastDataPulse = Time.time;
+        lastDataPulse = gameTime;
         HitFX o = ObjectPool.Spawn(dataPulseEffect);
         o.Init();
         Camera.main.GetComponent<KBCamera>().dataPulse.SetActive(false);
@@ -488,17 +509,17 @@ public class GameManager : Photon.MonoBehaviour
 
                 if (redTeamScore >= GameConstants.masScoreCapturePoint)
                 {
-                    state = GameState.RedWins;
+                    photonView.RPC("GameOver", PhotonTargets.AllBuffered, (int)Team.Red);
                 }
                 else if (blueTeamScore >= GameConstants.maxGameTimeDataPulse)
                 {
-                    state = GameState.BlueWins;
+                    photonView.RPC("GameOver", PhotonTargets.AllBuffered, (int)Team.Blue);
                 }
                 break;
 
             case GameType.DataPulse:
 
-                if (Time.time > lastDataPulse + GameConstants.dataPulsePeriod && numOfPulses < maxPulses)
+                if (gameTime > lastDataPulse + GameConstants.dataPulsePeriod && numOfPulses < maxPulses)
                 {
                     RunDataPulse();
                 }
@@ -513,11 +534,11 @@ public class GameManager : Photon.MonoBehaviour
 
                     if (redTeamScore > blueTeamScore)
                     {
-                        state = GameState.RedWins;
+                        photonView.RPC("GameOver", PhotonTargets.AllBuffered, (int)Team.Red);
                     }
                     else if (blueTeamScore > redTeamScore)
                     {
-                        state = GameState.BlueWins;
+                        photonView.RPC("GameOver", PhotonTargets.AllBuffered, (int)Team.Blue);
                     }
                 }
 
@@ -530,11 +551,11 @@ public class GameManager : Photon.MonoBehaviour
                 {
                     if (redTeamScore >= 30)
                     {
-                        state = GameState.RedWins;
+                        photonView.RPC("GameOver", PhotonTargets.AllBuffered, (int)Team.Red);
                     }
                     else if (blueTeamScore >= 30)
                     {
-                        state = GameState.BlueWins;
+                        photonView.RPC("GameOver", PhotonTargets.AllBuffered, (int)Team.Blue);
                     }
                 }
 

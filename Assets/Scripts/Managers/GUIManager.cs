@@ -313,15 +313,6 @@ public class GUIManager : MonoBehaviour
 
                         break;
 
-                    case GameManager.GameState.RedWins:
-                        break;
-
-                    case GameManager.GameState.BlueWins:
-                        break;
-
-                    case GameManager.GameState.Tie:
-                        break;
-
                     case GameManager.GameState.EndGame:
                         break;
 

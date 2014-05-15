@@ -40,4 +40,5 @@ MonoBehaviour:
   - AddPoints
   - SetPointValue
   - AddPointsToScore
+  - GameOver
   DisableAutoOpenWizard: 0
