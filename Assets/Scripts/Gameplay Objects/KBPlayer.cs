@@ -90,6 +90,7 @@ public class KBPlayer : KBControllableGameObject
     private float timeInBankZone;
     private bool inBankZone;
     public GameObject bankIndicator;
+    public int currentLevel;
 
     public TimerScript timer;
     private float movespeed;
@@ -152,7 +153,7 @@ public class KBPlayer : KBControllableGameObject
     public AudioClip[] gotHitSFX;
     public AudioClip deadSound;
     public AudioClip respawnSound;
-    public AudioClip dropSound;
+    public AudioClip fuzzSound;
 
     public int killCount;
     public int deathCount;
@@ -168,10 +169,13 @@ public class KBPlayer : KBControllableGameObject
     public KBCamera playerCamera;
 
     public GameObject ammoHud;
+    public TextMesh nameText;
 
     public Chaff chaff;
 
     public bool hasSwitchedSinceDeath;
+
+    public GameObject[] levelSprite;
 
     #endregion TempRegion
 
@@ -264,6 +268,7 @@ public class KBPlayer : KBControllableGameObject
         ObjectPool.CreatePool(mechGibBody);
 
         hasSwitchedSinceDeath = false;
+        nameText.text = gameObject.name;
     }
 
     private void InitializeForRespawn()
@@ -412,12 +417,59 @@ public class KBPlayer : KBControllableGameObject
         // DEBUG FUNCTIONS
         if (Input.GetKeyDown(KeyCode.T))
         {
-            TakeDamage(100);
+            TakeDamage(stats.health);
         }
 
         if (Input.GetButtonDown("ToggleController"))
         {
             useController = !useController;
+        }
+
+        if (currentPoints < GameConstants.levelOneThreshold)
+        {
+            SetLevel(0);
+        }
+        else if (currentPoints >= GameConstants.levelOneThreshold && currentPoints <= GameConstants.levelTwoThreshold)
+        {
+            SetLevel(1);
+        }
+        else if (currentPoints > GameConstants.levelTwoThreshold)
+        {
+            SetLevel(2);
+        }
+
+
+    }
+
+    private void SetLevel(int level)
+    {
+        if (currentLevel != level)
+        {
+            switch (level)
+            {
+                case 0:
+                    levelSprite[0].SetActive(true);
+                    levelSprite[1].SetActive(false);
+                    levelSprite[2].SetActive(false);
+                    currentLevel = 0;
+                    break;
+                case 1:
+                    levelSprite[0].SetActive(false);
+                    levelSprite[1].SetActive(true);
+                    levelSprite[2].SetActive(false);
+                    currentLevel = 1;
+                    break;
+                case 2:
+                    levelSprite[0].SetActive(false);
+                    levelSprite[1].SetActive(false);
+                    levelSprite[2].SetActive(true);
+                    currentLevel = 2;
+                    break;
+
+
+                default:
+                    break;
+            }
         }
     }
 
@@ -441,7 +493,7 @@ public class KBPlayer : KBControllableGameObject
     private void OnPhotonInstantiate(PhotonMessageInfo msg)
     {
         networkPlayer = msg.sender;
-        name += msg.sender.name;
+        name = msg.sender.name;
         SetStats();
         GameManager.Instance.players.Add(this);
     }
@@ -627,45 +679,52 @@ public class KBPlayer : KBControllableGameObject
         //        teleportationRecharge = 5.0f;
         //    }
         //}
-
-        if (other.gameObject.tag.StartsWith("Spawn"))
+        if (GameManager.Instance.state == GameManager.GameState.InGame)
         {
-            int loadout = 0;
-            if (other.gameObject.tag.EndsWith("1"))
+            if (other.gameObject.tag.StartsWith("Spawn"))
             {
-                loadout = 1;
-            }
-            else if (other.gameObject.tag.EndsWith("2"))
-            {
-                loadout = 2;
-            }
+                int loadout = 0;
+                if (other.gameObject.tag.EndsWith("1"))
+                {
+                    loadout = 1;
+                }
+                else if (other.gameObject.tag.EndsWith("2"))
+                {
+                    loadout = 2;
+                }
 
-            if (other.gameObject.tag.StartsWith("SpawnDroneRed") || other.gameObject.tag.StartsWith("SpawnMechRed") || other.gameObject.tag.StartsWith("SpawnTankRed"))
-            {
-                if (GameManager.Instance.IsAbleToSpawnOnTeam(team,KBConstants.Team.Red))
+                if (other.gameObject.tag.StartsWith("SpawnDroneRed") || other.gameObject.tag.StartsWith("SpawnMechRed") || other.gameObject.tag.StartsWith("SpawnTankRed"))
                 {
-                    SetTeam(Team.Red);
-                    StartCoroutine(Spawn(other.gameObject.tag.ToString(), loadout));
+                    if (GameManager.Instance.IsAbleToSpawnOnTeam(team, KBConstants.Team.Red))
+                    {
+                        SetTeam(Team.Red);
+                        StartCoroutine(Spawn(other.gameObject.tag.ToString(), loadout));
+                    }
+                    else
+                    {
+                        //Can't Spawn as Red Team Member
+                    }
                 }
-                else
+                else if (other.gameObject.tag.StartsWith("SpawnDroneBlue") || other.gameObject.tag.StartsWith("SpawnMechBlue") || other.gameObject.tag.StartsWith("SpawnTankBlue"))
                 {
-                    //Can't Spawn as Red Team Member
+                    if (GameManager.Instance.IsAbleToSpawnOnTeam(team, KBConstants.Team.Blue))
+                    {
+                        SetTeam(Team.Blue);
+                        StartCoroutine(Spawn(other.gameObject.tag.ToString(), loadout));
+                    }
+                    else
+                    {
+                        //Can't Spawn as Blue Team Member
+                    }
                 }
+                if (photonView.isMine)
+                {
+                    playerCamera.typeText.text = other.gameObject.GetComponentInChildren<TextMesh>().text;
+                }
+
             }
-            else if (other.gameObject.tag.StartsWith("SpawnDroneBlue") || other.gameObject.tag.StartsWith("SpawnMechBlue") || other.gameObject.tag.StartsWith("SpawnTankBlue"))
-            {
-                if (GameManager.Instance.IsAbleToSpawnOnTeam(team,KBConstants.Team.Blue))
-                {
-                    SetTeam(Team.Blue);
-                    StartCoroutine(Spawn(other.gameObject.tag.ToString(), loadout));
-                }
-                else
-                {
-                    //Can't Spawn as Blue Team Member
-                }
-            }
-            
         }
+
     }
 
     private void OnTriggerStay(Collider other)
@@ -1053,6 +1112,10 @@ public class KBPlayer : KBControllableGameObject
             respawnTimer = timer.StartTimer(respawnTime);
             waitingForRespawn = true;
             audio.PlayOneShot(deadSound);
+            if (photonView.isMine)
+            {
+                audio.PlayOneShot(fuzzSound);
+            }
         }
         else if (waitingForRespawn && photonView.isMine)
         {
@@ -1097,7 +1160,7 @@ public class KBPlayer : KBControllableGameObject
         player.lowerBody.SetActive(false);
         player.ammoHud.SetActive(false);
 
-        player.particleSystem.Emit(5000);
+        player.particleSystem.Emit(GameConstants.explosionParticleAmount);
 
         int n = GameConstants.explosionChaffAmount;
         Chaff c = null;
@@ -1239,6 +1302,10 @@ public class KBPlayer : KBControllableGameObject
         totalPointsLost += currentPoints;
         waitingForRespawn = false;
         acceptingInputs = true;
+        if (photonView.isMine)
+        {
+            Camera.main.GetComponent<CameraFadeOnStart>().Fade();
+        }
 
         for (int i = 0; i < guns.Length; i++)
         {
@@ -1297,7 +1364,6 @@ public class KBPlayer : KBControllableGameObject
                 newTag = GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagRed, center + Vector3.up * 2, Quaternion.identity, (int)team);
             }
             //newTag.transform.localScale = Vector3.one / 2;
-            newTag.transform.localScale *= 1.0f + (pointsToDrop / 100.0f);
             newTag.GetPhotonView().RPC("SetPointValue", PhotonTargets.AllBuffered, thisTagValue);
             pointsToDrop -= thisTagValue;
         }
@@ -1422,6 +1488,10 @@ public class KBPlayer : KBControllableGameObject
                         SetActiveIfFound(transform, "PlasmaGun", false);
                         SetActiveIfFound(transform, "LightCannon", false);
                         SetActiveIfFound(transform, "SniperRifle", false);
+                        SetActiveIfFound(transform, "MachineGunL", true);
+                        SetActiveIfFound(transform, "PlasmaGunL", false);
+                        SetActiveIfFound(transform, "LightCannonL", false);
+                        SetActiveIfFound(transform, "SniperRifleL", false);
                         break;
 
                     case 1:
@@ -1429,6 +1499,10 @@ public class KBPlayer : KBControllableGameObject
                         SetActiveIfFound(transform, "PlasmaGun", true);
                         SetActiveIfFound(transform, "LightCannon", false);
                         SetActiveIfFound(transform, "SniperRifle", false);
+                        SetActiveIfFound(transform, "MachineGunL", false);
+                        SetActiveIfFound(transform, "PlasmaGunL", true);
+                        SetActiveIfFound(transform, "LightCannonL", false);
+                        SetActiveIfFound(transform, "SniperRifleL", false);
                         break;
 
                     case 2:
@@ -1436,6 +1510,10 @@ public class KBPlayer : KBControllableGameObject
                         SetActiveIfFound(transform, "PlasmaGun", false);
                         SetActiveIfFound(transform, "SniperRifle", true);
                         SetActiveIfFound(transform, "LightCannon", false);
+                        SetActiveIfFound(transform, "MachineGunL", false);
+                        SetActiveIfFound(transform, "PlasmaGunL", false);
+                        SetActiveIfFound(transform, "LightCannonL", false);
+                        SetActiveIfFound(transform, "SniperRifleL", true);
                         break;
 
                     default:
@@ -1481,11 +1559,13 @@ public class KBPlayer : KBControllableGameObject
                 upperBody = upperBodyCore;
                 lowerBody = lowerBodyCore;
                 type = PlayerType.core;
+                //currentPoints = 0;
             }
 
             gameObject.GetComponent<BoxCollider>().enabled = true;
             upperBody.SetActive(true);
             lowerBody.SetActive(true);
+            levelSprite[0].SetActive(true);
 
             //if (team == KBConstants.Team.Blue)
             //{
@@ -1503,6 +1583,7 @@ public class KBPlayer : KBControllableGameObject
             InitializeForRespawn();
             SetupAbilities();
             ammoHud.SetActive(true);
+            ammoHud.GetComponent<WeaponAmmoGUI>().Clear();
             hasSwitchedSinceDeath = true;
 
             if (photonView.isMine)

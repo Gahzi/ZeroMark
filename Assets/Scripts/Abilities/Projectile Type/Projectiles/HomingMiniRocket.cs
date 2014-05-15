@@ -51,8 +51,9 @@ public class HomingMiniRocket : ProjectileBaseScript
         base.DoOnHit();
     }
 
-    public override void Reset()
+    public override IEnumerator Reset()
     {
+        yield return new WaitForSeconds(0);
         projectileSpeed = rocketInitSpeed;
         base.Reset();
     }

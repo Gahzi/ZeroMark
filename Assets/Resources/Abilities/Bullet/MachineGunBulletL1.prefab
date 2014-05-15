@@ -140,8 +140,8 @@ TrailRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_SortingLayerID: 0
-  m_Time: .100000001
-  m_StartWidth: .150000006
+  m_Time: .300000012
+  m_StartWidth: .200000003
   m_EndWidth: .00499999989
   m_Colors:
     m_Color[0]:
@@ -175,6 +175,8 @@ MonoBehaviour:
   lifetime: .5
   damage: 3
   owner: {fileID: 0}
+  canHitMultiplePlayers: 0
+  active: 0
   damageLevel: 
   projectileSpeed: 150
   inheritSpeed: 0
@@ -1265,7 +1267,7 @@ ParticleSystem:
   InitialModule:
     enabled: 1
     startLifetime:
-      scalar: .0700000003
+      scalar: .5
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -1422,10 +1424,10 @@ ParticleSystem:
         rgba: 4294967295
       maxColor:
         serializedVersion: 2
-        rgba: 4278253823
+        rgba: 4294967295
       minMaxState: 0
     startSize:
-      scalar: 1
+      scalar: .5
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -1491,14 +1493,14 @@ ParticleSystem:
         m_PostInfinity: 2
       minMaxState: 0
     gravityModifier: 0
-    inheritVelocity: -.379999995
-    maxNumParticles: 500
+    inheritVelocity: 0
+    maxNumParticles: 5000
   ShapeModule:
     serializedVersion: 2
     enabled: 1
-    type: 7
+    type: 4
     radius: .100000001
-    angle: 40
+    angle: 20
     length: 5
     boxX: 1
     boxY: 1
@@ -1507,10 +1509,10 @@ ParticleSystem:
     m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
     randomDirection: 0
   EmissionModule:
-    enabled: 0
+    enabled: 1
     m_Type: 0
     rate:
-      scalar: 100
+      scalar: 1000
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -1630,7 +1632,7 @@ ParticleSystem:
           rgba: 4294950912
         key1:
           serializedVersion: 2
-          rgba: 4287269624
+          rgba: 9079544
         key2:
           serializedVersion: 2
           rgba: 0
@@ -1759,7 +1761,7 @@ ParticleSystem:
     cycles: 1
     randomRow: 1
   VelocityModule:
-    enabled: 1
+    enabled: 0
     x:
       scalar: 1
       maxCurve:
@@ -2284,7 +2286,7 @@ ParticleSystem:
     collisionMessages: 0
   SubModule:
     enabled: 0
-    subEmitterBirth: {fileID: 19800000}
+    subEmitterBirth: {fileID: 19800000, guid: b61a7e318287ee94c90843760a35fc2c, type: 2}
     subEmitterBirth1: {fileID: 0}
     subEmitterCollision: {fileID: 0}
     subEmitterCollision1: {fileID: 0}

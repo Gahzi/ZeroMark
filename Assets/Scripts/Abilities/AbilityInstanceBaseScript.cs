@@ -29,6 +29,7 @@ abstract public class AbilityInstanceBaseScript : MonoBehaviour
     private TrailRenderer trailRenderer;
     private float originalTrailTime;
     public bool canHitMultiplePlayers;
+    public bool active;
 
     public virtual void Awake()
     {
@@ -62,6 +63,7 @@ abstract public class AbilityInstanceBaseScript : MonoBehaviour
         }
         team = _owner.team;
         owner = _owner;
+        active = true;
     }
 
     //public virtual void Init()
@@ -74,13 +76,13 @@ abstract public class AbilityInstanceBaseScript : MonoBehaviour
         if (Time.time - spawnTime > lifetime)
         {
             //DoOnHit(); // Uncomment this line to have projecticles "hit" on timeout
-            Reset();
+            StartCoroutine(Reset());
         }
     }
 
     public virtual void DoOnHit()
     {
-        Reset();
+        StartCoroutine(Reset());
     }
 
     public void ResetTrail()
@@ -88,8 +90,10 @@ abstract public class AbilityInstanceBaseScript : MonoBehaviour
         trailRenderer.time = originalTrailTime;
     }
 
-    public virtual void Reset()
+    public virtual IEnumerator Reset()
     {
+        active = false;
+        yield return new WaitForSeconds(1.0f);
         if (trailRenderer != null)
         {
             trailRenderer.time = -1;

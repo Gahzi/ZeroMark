@@ -6,20 +6,43 @@ namespace KBConstants
 
     public enum PlayerType { mech, drone, tank, core };
 
+    public class StringConstants
+    {
+        public static readonly string mechPrefix = "MCH.";
+        public static readonly string tankPrefix = "TNK.";
+        public static readonly string hunterPrefix = "HTR.";
+
+        public static readonly string mech0Name = "ASLT";
+        public static readonly string mech1Name = "PLSR";
+        public static readonly string mech2Name = "LONG";
+
+        public static readonly string tank0Name = "HEAT";
+        public static readonly string tank1Name = "DRVR";
+        public static readonly string tank2Name = "TRAP";
+
+        public static readonly string hunter0Name = "BRST";
+        public static readonly string hunter1Name = "RCPX";
+        public static readonly string hunter2Name = "PLSR";
+    }
+
     public class GameConstants
     {
+        public static readonly float pregameTime = 30.0f;
         public static readonly int maxGameTimeCapturePoint = 60 * 3;
         public static readonly int maxGameTimeDeathmatch = 60 * 3;
         public static readonly int maxScoreDeathmatch = 30;
-        public static readonly int maxGameTimeDataPulse = 60 * 5;
+        public static readonly int masScoreCapturePoint = 100;
+        public static readonly int maxGameTimeDataPulse = 60 * 3;
         public static readonly int dataPulsePeriod = 60;
         public static readonly int pointObjectDecayPeriod = 5;
         public static readonly int pointObjectDecayPercentPerPeriod = 0;
         public static readonly float pointPercentDropOnDeath = 1.0f;
         public static readonly int levelOneThreshold = 5;
-        public static readonly int levelTwoThreshold = 30;
+        public static readonly int levelTwoThreshold = 29;
         public static readonly int decalLifetime = 5;
         public static readonly int explosionChaffAmount = 3; // Amount of chaff is this value ^ 3
+        public static readonly int explosionParticleAmount = 5000;
+        public static readonly int defaultAOElifetime = 1;
     }
 
     public class AbilityConstants
@@ -69,7 +92,7 @@ namespace KBConstants
             {type.HomingRocketLevel1, 150},
             {type.HomingRocketLevel2, 200},
 
-            {type.SniperLevel0, 450},
+            {type.SniperLevel0, 445},
             {type.SniperLevel1, 450},
             {type.SniperLevel2, 450},
             
@@ -233,7 +256,8 @@ namespace KBConstants
             MachineGunReload01, MachineGunReload02,
             RocketFire01,
             PlasmaReload01,
-            SniperFire01
+            SniperFire01,
+            MineFire01, MineFire02
         };
 
         private static readonly IDictionary<clip, string> clipNames = new Dictionary<clip, string>
@@ -254,7 +278,9 @@ namespace KBConstants
             {clip.CannonFire03, "sounds/cyberstorm select/gun single shots/subgun-18"},
             {clip.CannonFire04, "sounds/cyberstorm select/gun single shots/subgun-19"},
             {clip.CannonFire05, "sounds/cyberstorm select/gun single shots/subgun-20"},
-            {clip.SniperFire01, "sounds/cyberstorm select/gun single shots/artillery-21"}
+            {clip.SniperFire01, "sounds/cyberstorm select/gun single shots/artillery-21"},
+            {clip.MineFire01, "sounds/cyberstorm select/cuts/mine_single_01"},
+            {clip.MineFire02, "sounds/cyberstorm select/cuts/mine_single_02"}
         };
 
         public static IDictionary<clip, string> CLIP_NAMES { get { return clipNames; } }

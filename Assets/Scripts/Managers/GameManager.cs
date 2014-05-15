@@ -17,7 +17,7 @@ public class GameManager : Photon.MonoBehaviour
 
     public List<BankZone> bankZones;
     private List<PlayerSpawnPoint> playerSpawnZones;
-    private GameState state = GameState.PreGame;
+    public GameState state = GameState.PreGame;
 
     public GameState State
     {
@@ -36,8 +36,10 @@ public class GameManager : Photon.MonoBehaviour
     private List<List<String>> playerStatData;
     private float startTime;
     public float gameTime;
+    public float preGameWaitTime;
+    public float timeToNextPulse;
     private float gameTimeMax;
-    private float lastDataPulse;
+    public float lastDataPulse;
     public HitFX dataPulseEffect;
 
     private static GameManager instance;
@@ -57,6 +59,8 @@ public class GameManager : Photon.MonoBehaviour
             }
         }
     }
+
+    private float showEndTabTimer;
 
     #region PHOTON CONNECTION HANDLING
 
@@ -93,11 +97,16 @@ public class GameManager : Photon.MonoBehaviour
         startTime = Time.time;
         state = GameState.PreGame;
         gameType = GameType.DataPulse;
+        preGameWaitTime = GameConstants.pregameTime;
+
+        showEndTabTimer = 5.0f;
 
         KillTag[] loadedKillTags = FindObjectsOfType<KillTag>();
         BankZone[] loadedBankZones = FindObjectsOfType<BankZone>();
         PlayerSpawnPoint[] loadedPSpawns = FindObjectsOfType<PlayerSpawnPoint>();
         ObjectPool.CreatePool(dataPulseEffect);
+
+        timeToNextPulse = GameConstants.dataPulsePeriod;
 
         foreach (BankZone b in loadedBankZones)
         {
@@ -182,13 +191,39 @@ public class GameManager : Photon.MonoBehaviour
                             break;
                     }
                     lastDataPulse = Time.time;
-                    state = GameState.InGame;
+                    preGameWaitTime -= Time.deltaTime;
+                    if (preGameWaitTime <= 0.0f)
+                    {
+                        state = GameState.InGame;
+                    }
                     break;
 
                 case GameState.InGame:
                     gameTime += Time.deltaTime;
+                    timeToNextPulse -= Time.deltaTime;
+
+                    if (timeToNextPulse <= 10.00001f)
+                    {
+                        AudioManager a = AudioManager.Instance;
+                        a.StartDataPulseSFX();
+                    }
 
                     CheckGameOver();
+
+                    //switch (gameType)
+                    //{
+                    //    case GameType.CapturePoint:
+                    //        break;
+
+                    //    case GameType.DataPulse:
+                    //        break;
+
+                    //    case GameType.Deathmatch:
+                    //        break;
+
+                    //    default:
+                    //        break;
+                    //}
 
                     redHeldPointTotal = 0;
                     blueHeldPointTotal = 0;
@@ -220,20 +255,31 @@ public class GameManager : Photon.MonoBehaviour
                     Debug.Log("Red won");
                     localPlayer.acceptingInputs = false;
                     state = GameState.EndGame;
-                    GUIManager.Instance.state = GUIManager.GUIManagerState.ShowingEndGameTab;
+                    //GUIManager.Instance.state = GUIManager.GUIManagerState.ShowingEndGameTab;
                     break;
 
                 case GameState.BlueWins:
                     Debug.Log("Blue won");
                     localPlayer.acceptingInputs = false;
                     state = GameState.EndGame;
-                    GUIManager.Instance.state = GUIManager.GUIManagerState.ShowingEndGameTab;
+                    //GUIManager.Instance.state = GUIManager.GUIManagerState.ShowingEndGameTab;
                     break;
 
                 case GameState.Tie:
                     Debug.Log("Tie");
                     state = GameState.EndGame;
 
+                    break;
+
+                case GameState.EndGame:
+
+                    showEndTabTimer -= Time.fixedDeltaTime;
+
+                    if (showEndTabTimer <= 0 && GUIManager.Instance.state != GUIManager.GUIManagerState.ShowingEndGameTab)
+                    {
+                        GUIManager.Instance.state = GUIManager.GUIManagerState.ShowingEndGameTab;
+                    }
+                    
                     break;
 
                 default:
@@ -245,6 +291,7 @@ public class GameManager : Photon.MonoBehaviour
         {
             GameManager.TakeScreenshot(1);
         }
+
     }
 
     public GameObject CreateObject(int type, Vector3 position, Quaternion rotation, int newTeam)
@@ -303,6 +350,9 @@ public class GameManager : Photon.MonoBehaviour
         lastDataPulse = Time.time;
         HitFX o = ObjectPool.Spawn(dataPulseEffect);
         o.Init();
+        Camera.main.GetComponent<KBCamera>().dataPulse.SetActive(false);
+        timeToNextPulse = GameConstants.dataPulsePeriod;
+        AudioManager.Instance.playingDataPulse = false;
     }
 
     [RPC]
@@ -329,7 +379,7 @@ public class GameManager : Photon.MonoBehaviour
         return 0;
     }
 
-    public bool IsAbleToSpawnOnTeam(Team currentTeam,Team newTeam)
+    public bool IsAbleToSpawnOnTeam(Team currentTeam, Team newTeam)
     {
         if (currentTeam == newTeam)
         {
@@ -432,11 +482,11 @@ public class GameManager : Photon.MonoBehaviour
         {
             case GameType.CapturePoint:
 
-                if (redTeamScore >= 100)
+                if (redTeamScore >= GameConstants.masScoreCapturePoint)
                 {
                     state = GameState.RedWins;
                 }
-                else if (blueTeamScore >= 100)
+                else if (blueTeamScore >= GameConstants.maxGameTimeDataPulse)
                 {
                     state = GameState.BlueWins;
                 }

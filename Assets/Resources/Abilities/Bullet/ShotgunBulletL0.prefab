@@ -140,7 +140,7 @@ TrailRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_SortingLayerID: 0
-  m_Time: .0700000003
+  m_Time: .200000003
   m_StartWidth: .200000003
   m_EndWidth: .00999999978
   m_Colors:
@@ -175,6 +175,8 @@ MonoBehaviour:
   lifetime: .5
   damage: 1
   owner: {fileID: 0}
+  canHitMultiplePlayers: 0
+  active: 0
   damageLevel: 
   projectileSpeed: 70
   inheritSpeed: 0
