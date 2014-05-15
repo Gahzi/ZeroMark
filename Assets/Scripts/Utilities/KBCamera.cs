@@ -23,6 +23,7 @@ public class KBCamera : MonoBehaviour
     public TextMesh levelNumText;
     public TextMesh ammoText;
     public TextMesh typeText;
+    public TextMesh tieText;
     public TextMesh redWinsText;
     public TextMesh blueWinsText;
     public TextMesh pregameText;
@@ -165,21 +166,21 @@ public class KBCamera : MonoBehaviour
 
         #region WinLoseTextAndButtonDisplay
 
-        if (GameManager.Instance.State.Equals(GameManager.GameState.RedWins))
-        {
-            if(redWinsText.gameObject.activeInHierarchy == false)
-            {
-                redWinsText.gameObject.SetActive(true);
-            }
-        }
-        else if (GameManager.Instance.State.Equals(GameManager.GameState.BlueWins))
-        {
-            if (blueWinsText.gameObject.activeInHierarchy == false)
-            {
-                blueWinsText.gameObject.SetActive(true);
+        //if (GameManager.Instance.State.Equals(GameManager.GameState.RedWins))
+        //{
+        //    if(redWinsText.gameObject.activeInHierarchy == false)
+        //    {
+        //        redWinsText.gameObject.SetActive(true);
+        //    }
+        //}
+        //else if (GameManager.Instance.State.Equals(GameManager.GameState.BlueWins))
+        //{
+        //    if (blueWinsText.gameObject.activeInHierarchy == false)
+        //    {
+        //        blueWinsText.gameObject.SetActive(true);
 
-            }
-        }
+        //    }
+        //}
 
         #endregion WinLoseTextAndButtonDisplay
     }
