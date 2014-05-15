@@ -23,8 +23,10 @@ public class KBCamera : MonoBehaviour
     public TextMesh levelNumText;
     public TextMesh ammoText;
     public TextMesh typeText;
-    public TextMesh RedWinsText;
-    public TextMesh BlueWinsText;
+    public TextMesh redWinsText;
+    public TextMesh blueWinsText;
+    public TextMesh pregameText;
+    public GameObject quitButton;
     public GameObject dataPulse;
     public GameObject redScoreBar;
     public GameObject blueScoreBar;
@@ -84,6 +86,28 @@ public class KBCamera : MonoBehaviour
                 ammoText.text = attachedPlayer.guns[0].ammo.ToString("00");
             }
 
+            if (GameManager.Instance.State == GameManager.GameState.PreGame)
+            {
+                if (pregameText.gameObject.activeInHierarchy != true)
+                {
+                    pregameText.gameObject.SetActive(true);
+                }
+
+                //((Mathf.Sin(Time.time * speed) + 0.5f) * (lightMaxIntensity - lightMinIntensity)) + lightMinIntensity
+                float speed = 3.50f;
+                float min = 0.1f;
+                float max = 1.0f;
+                float alpha = ((Mathf.Sin(Time.time * speed) + 0.5f) * (max - min)) + min;
+                pregameText.GetComponent<TextMesh>().color = new Color(1.0f, 0, 1.0f, alpha);
+            }
+            else
+            {
+                if (pregameText.gameObject.activeInHierarchy == true)
+                {
+                    pregameText.gameObject.SetActive(false);
+                }
+            }
+
             #region CameraShiftingTowardLookDirection
 
             float x, y;
@@ -139,24 +163,31 @@ public class KBCamera : MonoBehaviour
 
         #endregion DamageSplashVignette
 
-        #region WinLoseTextDisplay
+        #region WinLoseTextAndButtonDisplay
 
         if (GameManager.Instance.State.Equals(GameManager.GameState.RedWins))
         {
-            if(RedWinsText.gameObject.active == false)
+            if(redWinsText.gameObject.activeInHierarchy == false)
             {
-                RedWinsText.gameObject.active=true;
+                redWinsText.gameObject.SetActive(true);
             }
         }
         else if (GameManager.Instance.State.Equals(GameManager.GameState.BlueWins))
         {
-            if(BlueWinsText.gameObject.active== false)
+            if (blueWinsText.gameObject.activeInHierarchy == false)
             {
-                BlueWinsText.gameObject.active=true;
+                blueWinsText.gameObject.SetActive(true);
+
             }
         }
 
-        #endregion WinLoseTextDisplay
+        #endregion WinLoseTextAndButtonDisplay
+    }
+
+    private void QuitGame()
+    {
+        PhotonNetwork.LeaveRoom();
+        Application.LoadLevel(0);
     }
 
 }

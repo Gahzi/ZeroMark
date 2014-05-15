@@ -41,6 +41,8 @@ public class GameManager : Photon.MonoBehaviour
     private float gameTimeMax;
     public float lastDataPulse;
     public HitFX dataPulseEffect;
+    public int numOfPulses;
+    public int maxPulses;
 
     private static GameManager instance;
 
@@ -60,7 +62,7 @@ public class GameManager : Photon.MonoBehaviour
         }
     }
 
-    private float showEndTabTimer;
+    private float showQuitButtonTimer;
 
     #region PHOTON CONNECTION HANDLING
 
@@ -99,14 +101,12 @@ public class GameManager : Photon.MonoBehaviour
         gameType = GameType.DataPulse;
         preGameWaitTime = GameConstants.pregameTime;
 
-        showEndTabTimer = 5.0f;
+        showQuitButtonTimer = 5.0f;
 
         KillTag[] loadedKillTags = FindObjectsOfType<KillTag>();
         BankZone[] loadedBankZones = FindObjectsOfType<BankZone>();
         PlayerSpawnPoint[] loadedPSpawns = FindObjectsOfType<PlayerSpawnPoint>();
         ObjectPool.CreatePool(dataPulseEffect);
-
-        timeToNextPulse = GameConstants.dataPulsePeriod;
 
         foreach (BankZone b in loadedBankZones)
         {
@@ -181,6 +181,9 @@ public class GameManager : Photon.MonoBehaviour
 
                         case GameType.DataPulse:
                             gameTimeMax = GameConstants.maxGameTimeDataPulse;
+                            timeToNextPulse = GameConstants.dataPulsePeriod;
+                            numOfPulses = 0;
+                            maxPulses = (int)gameTimeMax / GameConstants.dataPulsePeriod;
                             break;
 
                         case GameType.Deathmatch:
@@ -273,11 +276,11 @@ public class GameManager : Photon.MonoBehaviour
 
                 case GameState.EndGame:
 
-                    showEndTabTimer -= Time.fixedDeltaTime;
+                    showQuitButtonTimer -= Time.fixedDeltaTime;
 
-                    if (showEndTabTimer <= 0 && GUIManager.Instance.state != GUIManager.GUIManagerState.ShowingEndGameTab)
+                    if (showQuitButtonTimer <= 0 && GUIManager.Instance.state != GUIManager.GUIManagerState.ShowingEndGameTab)
                     {
-                        GUIManager.Instance.state = GUIManager.GUIManagerState.ShowingEndGameTab;
+                        Camera.main.GetComponent<KBCamera>().quitButton.SetActive(true);
                     }
                     
                     break;
@@ -345,6 +348,7 @@ public class GameManager : Photon.MonoBehaviour
 
     private void RunDataPulse()
     {
+        numOfPulses++;
         photonView.RPC("AddPointsToScore", PhotonTargets.All, (int)localPlayer.team, localPlayer.currentPoints);
         localPlayer.ScorePoints(localPlayer.currentPoints);
         lastDataPulse = Time.time;
@@ -494,13 +498,19 @@ public class GameManager : Photon.MonoBehaviour
 
             case GameType.DataPulse:
 
-                if (Time.time > lastDataPulse + GameConstants.dataPulsePeriod)
+                if (Time.time > lastDataPulse + GameConstants.dataPulsePeriod && numOfPulses < maxPulses)
                 {
                     RunDataPulse();
                 }
 
                 if (IsGameTimeOver())
                 {
+                    if (numOfPulses < maxPulses)
+                    {
+                        RunDataPulse();
+                        numOfPulses = maxPulses;
+                    }
+
                     if (redTeamScore > blueTeamScore)
                     {
                         state = GameState.RedWins;

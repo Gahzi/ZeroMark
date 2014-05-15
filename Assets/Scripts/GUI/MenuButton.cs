@@ -4,7 +4,7 @@
 public class MenuButton : MonoBehaviour
 {
 
-    public MainMenuScript menu;
+    public GameObject menu;
     public bool callMethod;
     public string MenuMethodToCall;
     private bool clicked = false;
