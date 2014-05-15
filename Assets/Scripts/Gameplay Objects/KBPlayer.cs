@@ -271,7 +271,7 @@ public class KBPlayer : KBControllableGameObject
         hasSwitchedSinceDeath = false;
         nameText.text = gameObject.name;
 
-        fractionMultiplier = 9.0f;
+        fractionMultiplier = 14.0f;
     }
 
     private void InitializeForRespawn()
