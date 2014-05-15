@@ -372,7 +372,7 @@ public class KBPlayer : KBControllableGameObject
 
         mousePos = Input.mousePosition;
 
-        fraction = fraction + Time.deltaTime * 9;
+        fraction = fraction + Time.deltaTime * 18;
 
         if (photonView.isMine)
         {
