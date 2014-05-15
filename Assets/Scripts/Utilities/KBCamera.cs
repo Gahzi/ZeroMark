@@ -25,6 +25,7 @@ public class KBCamera : MonoBehaviour
     public TextMesh typeText;
     public TextMesh redWinsText;
     public TextMesh blueWinsText;
+    public TextMesh pregameText;
     public GameObject quitButton;
     public GameObject dataPulse;
     public GameObject redScoreBar;
@@ -83,6 +84,28 @@ public class KBCamera : MonoBehaviour
             if (attachedPlayer.guns.Length > 0)
             {
                 ammoText.text = attachedPlayer.guns[0].ammo.ToString("00");
+            }
+
+            if (GameManager.Instance.State == GameManager.GameState.PreGame)
+            {
+                if (pregameText.gameObject.activeInHierarchy != true)
+                {
+                    pregameText.gameObject.SetActive(true);
+                }
+
+                //((Mathf.Sin(Time.time * speed) + 0.5f) * (lightMaxIntensity - lightMinIntensity)) + lightMinIntensity
+                float speed = 3.50f;
+                float min = 0.1f;
+                float max = 1.0f;
+                float alpha = ((Mathf.Sin(Time.time * speed) + 0.5f) * (max - min)) + min;
+                pregameText.GetComponent<TextMesh>().color = new Color(1.0f, 0, 1.0f, alpha);
+            }
+            else
+            {
+                if (pregameText.gameObject.activeInHierarchy == true)
+                {
+                    pregameText.gameObject.SetActive(false);
+                }
             }
 
             #region CameraShiftingTowardLookDirection
