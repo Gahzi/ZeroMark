@@ -228,6 +228,8 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
             projectile.inheritSpeed = _inheritSpeed;
             projectile.Team = firedBy.Team;
             projectile.Init(firedBy);
+            projectile.lifetime = 100.0f;
+            projectile.setLifetimeForMaxRange(maxRange);
             projectile.damage = projectile.damageLevel[level];
 
             Collider[] collider = owner.GetComponentsInChildren<Collider>();
