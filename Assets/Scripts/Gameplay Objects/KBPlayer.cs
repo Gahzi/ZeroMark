@@ -420,6 +420,15 @@ public class KBPlayer : KBControllableGameObject
             TakeDamage(stats.health);
         }
 
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            currentPoints += 5;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            GenerateKillTags(currentPoints, transform.position);
+        }
+
         if (Input.GetButtonDown("ToggleController"))
         {
             useController = !useController;
