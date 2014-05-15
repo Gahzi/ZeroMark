@@ -68,7 +68,7 @@ public class KBCamera : MonoBehaviour
             redScoreBar.renderer.material.SetFloat("_Cutoff", Mathf.InverseLerp(total, 0, GameManager.Instance.redTeamScore));
             blueScoreBar.renderer.material.SetFloat("_Cutoff", Mathf.InverseLerp(total, 0, GameManager.Instance.blueTeamScore));
 
-            if (Time.time > GameManager.Instance.lastDataPulse + KBConstants.GameConstants.dataPulsePeriod - 10)
+            if (GameManager.Instance.gameTime > GameManager.Instance.lastDataPulse + KBConstants.GameConstants.dataPulsePeriod - 10)
             {
                 dataPulse.SetActive(true);
                 //((Mathf.Sin(Time.time * speed) + 0.5f) * (lightMaxIntensity - lightMinIntensity)) + lightMinIntensity
