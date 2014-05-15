@@ -75,7 +75,7 @@ public class KBCamera : MonoBehaviour
                 float speed = 3.50f;
                 float min = 0.1f;
                 float max = 1.0f;
-                float alpha = ((Mathf.Sin(Time.time * speed) + 0.5f) * (max - min)) + min;
+                float alpha = ((Mathf.Sin(GameManager.Instance.gameTime * speed) + 0.5f) * (max - min)) + min;
                 dataPulse.GetComponent<TextMesh>().color = new Color(1.0f, 0, 1.0f, alpha);
             }
             int level = attachedPlayer.currentLevel + 1;

@@ -193,7 +193,7 @@ public class GameManager : Photon.MonoBehaviour
                         default:
                             break;
                     }
-                    lastDataPulse = Time.time;
+                    lastDataPulse = gameTime;
                     preGameWaitTime -= Time.deltaTime;
                     if (preGameWaitTime <= 0.0f)
                     {
@@ -351,7 +351,7 @@ public class GameManager : Photon.MonoBehaviour
         numOfPulses++;
         photonView.RPC("AddPointsToScore", PhotonTargets.All, (int)localPlayer.team, localPlayer.currentPoints);
         localPlayer.ScorePoints(localPlayer.currentPoints);
-        lastDataPulse = Time.time;
+        lastDataPulse = gameTime;
         HitFX o = ObjectPool.Spawn(dataPulseEffect);
         o.Init();
         Camera.main.GetComponent<KBCamera>().dataPulse.SetActive(false);
@@ -498,7 +498,7 @@ public class GameManager : Photon.MonoBehaviour
 
             case GameType.DataPulse:
 
-                if (Time.time > lastDataPulse + GameConstants.dataPulsePeriod && numOfPulses < maxPulses)
+                if (gameTime > lastDataPulse + GameConstants.dataPulsePeriod && numOfPulses < maxPulses)
                 {
                     RunDataPulse();
                 }
