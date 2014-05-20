@@ -449,8 +449,6 @@ public class KBPlayer : KBControllableGameObject
         {
             SetLevel(2);
         }
-
-
     }
 
     private void SetLevel(int level)
@@ -465,19 +463,20 @@ public class KBPlayer : KBControllableGameObject
                     levelSprite[2].SetActive(false);
                     currentLevel = 0;
                     break;
+
                 case 1:
                     levelSprite[0].SetActive(false);
                     levelSprite[1].SetActive(true);
                     levelSprite[2].SetActive(false);
                     currentLevel = 1;
                     break;
+
                 case 2:
                     levelSprite[0].SetActive(false);
                     levelSprite[1].SetActive(false);
                     levelSprite[2].SetActive(true);
                     currentLevel = 2;
                     break;
-
 
                 default:
                     break;
@@ -733,10 +732,8 @@ public class KBPlayer : KBControllableGameObject
                 {
                     playerCamera.typeText.text = other.gameObject.GetComponentInChildren<TextMesh>().text;
                 }
-
             }
         }
-
     }
 
     private void OnTriggerStay(Collider other)
@@ -1285,7 +1282,6 @@ public class KBPlayer : KBControllableGameObject
                         break;
                     }
 
-
                 default:
                     break;
             }
@@ -1465,6 +1461,9 @@ public class KBPlayer : KBControllableGameObject
                         SetActiveIfFound(transform, "LightCannon", false);
                         SetActiveIfFound(transform, "PlasmaGun", false);
                         SetActiveIfFound(transform, "MachineGun", false);
+                        SetActiveIfFound(transform, "LightCannonL", false);
+                        SetActiveIfFound(transform, "PlasmaGunL", false);
+                        SetActiveIfFound(transform, "ShotgunL", true);
 
                         break;
 
@@ -1473,6 +1472,9 @@ public class KBPlayer : KBControllableGameObject
                         SetActiveIfFound(transform, "LightCannon", true);
                         SetActiveIfFound(transform, "PlasmaGun", false);
                         SetActiveIfFound(transform, "MachineGun", false);
+                        SetActiveIfFound(transform, "LightCannonL", true);
+                        SetActiveIfFound(transform, "PlasmaGunL", false);
+                        SetActiveIfFound(transform, "ShotgunL", false);
 
                         break;
 
@@ -1481,6 +1483,9 @@ public class KBPlayer : KBControllableGameObject
                         SetActiveIfFound(transform, "LightCannon", false);
                         SetActiveIfFound(transform, "PlasmaGun", true);
                         SetActiveIfFound(transform, "MachineGun", false);
+                        SetActiveIfFound(transform, "LightCannonL", false);
+                        SetActiveIfFound(transform, "PlasmaGunL", true);
+                        SetActiveIfFound(transform, "ShotgunL", false);
 
                         break;
 
