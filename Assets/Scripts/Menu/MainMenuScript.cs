@@ -55,8 +55,9 @@ public class MainMenuScript : Photon.MonoBehaviour
         //mapComboBoxList[4] = new GUIContent("Floating City 7");
         //mapComboBoxList[5] = new GUIContent("Floating City 8");
 
-        mapComboBoxList = new GUIContent[1];
+        mapComboBoxList = new GUIContent[2];
         mapComboBoxList[0] = new GUIContent("Floating City 7");
+        mapComboBoxList[1] = new GUIContent("Floating City 8");
 
 
         listStyle.normal.textColor = Color.white;
