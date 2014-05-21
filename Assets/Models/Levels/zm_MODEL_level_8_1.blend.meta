@@ -1,0 +1,103 @@
+fileFormatVersion: 2
+guid: ed46fa460b6044904a1ec8b60c8cf3fa
+ModelImporter:
+  serializedVersion: 15
+  fileIDToRecycleName:
+    100000: zm_MESH_colliders
+    100002: zm_MESH_floor
+    100004: zm_MESH_groundTexture
+    100006: zm_MESH_outerBarrier
+    100008: zm_MESH_tankLrg
+    100010: zm_MESH_tankMed
+    100012: zm_MESH_tankSm
+    100014: //RootNode
+    400000: zm_MESH_colliders
+    400002: zm_MESH_floor
+    400004: zm_MESH_groundTexture
+    400006: zm_MESH_outerBarrier
+    400008: zm_MESH_tankLrg
+    400010: zm_MESH_tankMed
+    400012: zm_MESH_tankSm
+    400014: //RootNode
+    2300000: zm_MESH_colliders
+    2300002: zm_MESH_floor
+    2300004: zm_MESH_groundTexture
+    2300006: zm_MESH_outerBarrier
+    2300008: zm_MESH_tankLrg
+    2300010: zm_MESH_tankMed
+    2300012: zm_MESH_tankSm
+    3300000: zm_MESH_colliders
+    3300002: zm_MESH_floor
+    3300004: zm_MESH_groundTexture
+    3300006: zm_MESH_outerBarrier
+    3300008: zm_MESH_tankLrg
+    3300010: zm_MESH_tankMed
+    3300012: zm_MESH_tankSm
+    4300000: zm_MESH_outerBarrier
+    4300002: zm_MESH_floor
+    4300004: zm_MESH_colliders
+    4300006: zm_MESH_groundTexture
+    4300008: zm_MESH_tankLrg
+    4300010: zm_MESH_tankMed
+    4300012: zm_MESH_tankSm
+    6400000: zm_MESH_colliders
+    6400002: zm_MESH_floor
+    6400004: zm_MESH_groundTexture
+    6400006: zm_MESH_outerBarrier
+    6400008: zm_MESH_tankLrg
+    6400010: zm_MESH_tankMed
+    6400012: zm_MESH_tankSm
+    7400000: Default Take
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 1
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  userData: 
