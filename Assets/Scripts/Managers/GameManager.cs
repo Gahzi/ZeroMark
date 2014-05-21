@@ -7,7 +7,7 @@ public class GameManager : Photon.MonoBehaviour
 {
     public enum GameState { PreGame, InGame, EndGame };
 
-    public enum GameType { CapturePoint, DataPulse, Deathmatch };
+    public enum GameType { DataPulse, Deathmatch, CapturePoint };
 
     public GameType gameType;
 

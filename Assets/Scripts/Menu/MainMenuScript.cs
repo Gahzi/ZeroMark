@@ -23,7 +23,7 @@ public class MainMenuScript : Photon.MonoBehaviour
     public AudioClip pressClip;
 
     private int gameTypeInt = 0;
-	private string[] gameTypeStrings = {"CapturePoint", "DataPulse", "Deathmatch"};
+	private string[] gameTypeStrings = { "DataPulse", "Deathmatch"};
 
     GUIContent[] mapComboBoxList;
     private ComboBoxGUI mapComboBoxControl;// = new ComboBox();
