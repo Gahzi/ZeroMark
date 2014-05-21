@@ -21,8 +21,9 @@ public class WeaponAmmoGUI : MonoBehaviour
             }
             else
             {
-                int ammo = attachedAbility[i].ammo * attachedAbility[i].burstSize;
-                text[i].text = ammo.ToString();
+                //int ammo = attachedAbility[i].ammo * attachedAbility[i].burstSize;
+                //text[i].text = ammo.ToString();
+                text[i].text = "";
             }
         }
     }

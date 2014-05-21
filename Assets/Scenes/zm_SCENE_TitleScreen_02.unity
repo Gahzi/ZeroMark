@@ -65285,7 +65285,7 @@ TextMesh:
     type: 2}
   m_PrefabInternal: {fileID: 2099784655}
   m_GameObject: {fileID: 1433613612}
-  m_Text: development build v0.9.0417
+  m_Text: game center student show 2014
   m_OffsetZ: 0
   m_CharacterSize: .0500000007
   m_LineSpacing: 1
@@ -65328,7 +65328,7 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 2099784655}
   m_GameObject: {fileID: 1433613612}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 92904d0dd3819b849bb6d9e93b773ef8, type: 3}
   m_Name: 
@@ -68171,7 +68171,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: .219926596, g: .171626285, b: .470588237, a: 1}
+  m_BackGroundColor: {r: .156195939, g: .17225346, b: .198529422, a: 1}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -68179,7 +68179,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: .300000012
-  far clip plane: 1000
+  far clip plane: 15
   field of view: 40
   orthographic: 0
   orthographic size: 5
@@ -95390,6 +95390,14 @@ Prefab:
       propertyPath: menu
       value: 
       objectReference: {fileID: 2070671103}
+    - target: {fileID: 11400030, guid: 20dc237a97ee7274fa6551e82039c73d, type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 10200008, guid: 20dc237a97ee7274fa6551e82039c73d, type: 2}
+      propertyPath: m_Text
+      value: game center student show 2014
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 20dc237a97ee7274fa6551e82039c73d, type: 2}
   m_RootGameObject: {fileID: 1209145591}

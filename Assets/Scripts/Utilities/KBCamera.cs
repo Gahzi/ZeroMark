@@ -32,6 +32,7 @@ public class KBCamera : MonoBehaviour
     public GameObject redScoreBar;
     public GameObject blueScoreBar;
     public TextMesh pointsText;
+    public GameObject playerInfoText;
 
     private void Start()
     {
@@ -46,6 +47,18 @@ public class KBCamera : MonoBehaviour
     private void Update()
     {
         gameTypeText.text = Enum.GetName(typeof(GameManager.GameType), GameManager.Instance.gameType);
+
+        if (attachedPlayer.type == KBConstants.PlayerType.core)
+        {
+            playerInfoText.SetActive(false);
+        }
+        else
+        {
+            if (!playerInfoText.activeSelf)
+            {
+                playerInfoText.SetActive(true);
+            }
+        }
 
         zoomTarget = 2.0f;
         if (attachedPlayer != null)
@@ -137,22 +150,6 @@ public class KBCamera : MonoBehaviour
 
             #endregion CameraShiftingTowardLookDirection
 
-            #region temporary level text
-
-            //if (attachedPlayer.guns.Length > 0)
-            //{
-            //    if (attachedPlayer.guns[0] != null)
-            //    {
-            //        int l = attachedPlayer.guns[0].level + 1;   
-            //        levelText.text = "(" + attachedPlayer.currentPoints.ToString() + "pts.)" + "Lvl." + l.ToString();
-            //    }
-            //    else
-            //    {
-            //        levelText.text = "";
-            //    }
-            //}
-
-            #endregion temporary level text
         }
 
         #region DamageSplashVignette
