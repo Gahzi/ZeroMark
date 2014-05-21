@@ -266,7 +266,7 @@ public class GUIManager : MonoBehaviour
     {
         float remainingGameTime = 0f;
         int remainingMins, remainingSecs = 0;
-        remainingGameTime = KBConstants.GameConstants.maxGameTimeCapturePoint - GameManager.Instance.gameTime;
+        remainingGameTime = KBConstants.GameConstants.maxGameTimeDataPulse - GameManager.Instance.gameTime;
         remainingMins = Mathf.FloorToInt(remainingGameTime / 60.0f);
         remainingSecs = (int)(remainingGameTime - (remainingMins * 60));
         string time = remainingMins.ToString("00") + ":" + remainingSecs.ToString("00");

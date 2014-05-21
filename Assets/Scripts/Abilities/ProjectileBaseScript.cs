@@ -169,7 +169,7 @@ abstract public class ProjectileBaseScript : AbilityInstanceBaseScript
 
     public void setLifetimeForMaxRange(int maxRange)
     {
-        lifetime = maxRange / projectileSpeed;
+        lifetime = maxRange / (projectileSpeed + inheritSpeed);
     }
 
     protected virtual void DoHomingBehavior()

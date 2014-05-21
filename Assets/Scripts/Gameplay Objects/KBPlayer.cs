@@ -106,6 +106,7 @@ public class KBPlayer : KBControllableGameObject
     private Vector3 latestCorrectPos;
     private Vector3 onUpdatePos;
     private float fraction;
+    public float fractionMultiplier;
 
     public AudioClip itemPickupClip;
     public GameObject upperBody;
@@ -269,6 +270,8 @@ public class KBPlayer : KBControllableGameObject
 
         hasSwitchedSinceDeath = false;
         nameText.text = gameObject.name;
+
+        fractionMultiplier = 14.0f;
     }
 
     private void InitializeForRespawn()
@@ -372,7 +375,7 @@ public class KBPlayer : KBControllableGameObject
 
         mousePos = Input.mousePosition;
 
-        fraction = fraction + Time.deltaTime * 9;
+        fraction = fraction + Time.deltaTime * fractionMultiplier;
 
         if (photonView.isMine)
         {
@@ -418,6 +421,15 @@ public class KBPlayer : KBControllableGameObject
         if (Input.GetKeyDown(KeyCode.T))
         {
             TakeDamage(stats.health);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            currentPoints += 5;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            GenerateKillTags(currentPoints, transform.position);
         }
 
         if (Input.GetButtonDown("ToggleController"))
