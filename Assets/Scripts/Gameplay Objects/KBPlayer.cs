@@ -1304,6 +1304,12 @@ public class KBPlayer : KBControllableGameObject
     /// </summary>
     private void RespawnToPrespawn()
     {
+        Vector3 deathPosition = transform.position;
+        if (team != Team.None)
+        {
+            GenerateKillTags(currentPoints, deathPosition);
+        }   
+     
         //Spawn as Core
         photonView.RPC("SwitchType", PhotonTargets.AllBuffered, "SpawnCore", 0);
 
@@ -1324,17 +1330,12 @@ public class KBPlayer : KBControllableGameObject
         gameObject.GetComponent<BoxCollider>().enabled = true;
 
         Camera.main.GetComponent<ScreenShake>().StopShake();
-        Vector3 deathPosition = transform.position;
         transform.position = GameObject.FindGameObjectWithTag("Prespawn").transform.position;
         health = coreBaseHealth;
 
-        if (team != Team.None)
-        {
-            GenerateKillTags(currentPoints, deathPosition);
-        }
     }
 
-    private void GenerateKillTags(int _points, Vector3 center)
+    private void GenerateKillTags(int _points, Vector3 position)
     {
         int pointsToDrop = Mathf.FloorToInt(_points * GameConstants.pointPercentDropOnDeath);
         if (pointsToDrop == 0)
@@ -1365,11 +1366,11 @@ public class KBPlayer : KBControllableGameObject
             GameObject newTag = null;
             if (team == Team.Blue)
             {
-                newTag = GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagBlue, center + Vector3.up * 2, Quaternion.identity, (int)team);
+                newTag = GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagBlue, position, Quaternion.identity, (int)team);
             }
             else if (team == Team.Red)
             {
-                newTag = GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagRed, center + Vector3.up * 2, Quaternion.identity, (int)team);
+                newTag = GameManager.Instance.CreateObject((int)ObjectConstants.type.KillTagRed, position, Quaternion.identity, (int)team);
             }
             //newTag.transform.localScale = Vector3.one / 2;
             newTag.GetPhotonView().RPC("SetPointValue", PhotonTargets.AllBuffered, thisTagValue);

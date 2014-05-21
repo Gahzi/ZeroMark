@@ -38,7 +38,7 @@ public class MainMenuScript : Photon.MonoBehaviour
         playerName = "";
 
         //Default host values
-        hostTitle = PlayerPrefs.GetString("hostTitle", "Guests server");
+        hostTitle = PlayerPrefs.GetString("hostTitle", "Game 00");
         hostMaxPlayers = PlayerPrefs.GetInt("hostPlayers", 8);
 
         if (!PhotonNetwork.connected)

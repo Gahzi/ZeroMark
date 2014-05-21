@@ -294,7 +294,8 @@ public class GameManager : Photon.MonoBehaviour
 
             case ObjectConstants.type.KillTagBlue:
                 {
-                    GameObject newKillTagBlueObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.KillTagBlue], position, Quaternion.Euler(33.3f, 330.0f, 48.36f), 0);
+                    GameObject newKillTagBlueObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.KillTagBlue], position, rotation, 0);
+                    newKillTagBlueObject.rigidbody.AddExplosionForce(10, newKillTagBlueObject.transform.position + Vector3.up, 1.0f);
                     KillTag newKillTagBlue = newKillTagBlueObject.GetComponent<KillTag>();
                     newKillTagBlue.team = (Team)newTeam;
                     //newKillTagBlueObject.transform.Translate(new Vector3(UnityEngine.Random.Range(-10.0f, 10.0f), 0, UnityEngine.Random.Range(-10.0f, 10.0f)));
@@ -303,7 +304,8 @@ public class GameManager : Photon.MonoBehaviour
 
             case ObjectConstants.type.KillTagRed:
                 {
-                    GameObject newKillTagRedObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.KillTagRed], position, Quaternion.Euler(33.3f, 330.0f, 48.36f), 0);
+                    GameObject newKillTagRedObject = PhotonNetwork.Instantiate(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.KillTagRed], position, rotation, 0);
+                    newKillTagRedObject.rigidbody.AddExplosionForce(10, newKillTagRedObject.transform.position + Vector3.up, 1.0f);
                     KillTag newKillTagRed = newKillTagRedObject.GetComponent<KillTag>();
                     newKillTagRed.team = (Team)newTeam;
                     //newKillTagRedObject.transform.Translate(new Vector3(UnityEngine.Random.Range(-10.0f, 10.0f), 0, UnityEngine.Random.Range(-10.0f, 10.0f)));
