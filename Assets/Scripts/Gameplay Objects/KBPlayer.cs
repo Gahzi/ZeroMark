@@ -20,7 +20,7 @@ public class KBPlayer : KBControllableGameObject
     private static readonly float dronePowerDecel = 0.25f;
     private static readonly float droneFriction = 0.05f;
     private static readonly float droneReverseSpeedFraction = 1.0f;
-    private static readonly float droneRegenRate = 2.0f;
+    private static readonly float droneRegenRate = 5.0f;
 
     #endregion DRONE
 
@@ -30,7 +30,7 @@ public class KBPlayer : KBControllableGameObject
     private static readonly int mechUpperRotationSpeed = 50;
     private static readonly int mechMovementSpeed = 25;
     private static readonly int mechBaseHealth = 450;
-    private static readonly float mechRegenRate = 1.0f;
+    private static readonly float mechRegenRate = 5.0f;
 
     #endregion MECH
 
@@ -44,7 +44,7 @@ public class KBPlayer : KBControllableGameObject
     private static readonly float tankPowerDecel = 0.150f;
     private static readonly float tankFriction = 0.0150f;
     private static readonly float tankReverseSpeedFraction = 0.00f;
-    private static readonly float tankRegenRate = 2.0f;
+    private static readonly float tankRegenRate = 6.0f;
 
     #endregion TANK
 
@@ -420,7 +420,7 @@ public class KBPlayer : KBControllableGameObject
         // DEBUG FUNCTIONS
         if (Input.GetKeyDown(KeyCode.T))
         {
-            TakeDamage(stats.health);
+            TakeDamage(stats.health / 2);
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha1))

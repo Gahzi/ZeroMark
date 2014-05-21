@@ -156,7 +156,14 @@ public class KBCamera : MonoBehaviour
 
         Color c = Color.white;
         float percentHealth = (float)attachedPlayer.health / (float)attachedPlayer.stats.health;
-        c.a = 1.0f - percentHealth;
+        if (percentHealth < 1.0f)
+        {
+            c.a = 0.50f - (percentHealth - 0.5f);
+        }
+        else
+        {
+            c.a = 0.0f;
+        }
         damageVignette.color = c;
 
         #endregion DamageSplashVignette

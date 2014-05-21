@@ -178,7 +178,7 @@ MonoBehaviour:
   canHitMultiplePlayers: 0
   active: 0
   damageLevel: 
-  projectileSpeed: 80
+  projectileSpeed: 100
   inheritSpeed: 0
   collideWithEnvironment: 1
   homingProjectile: 0

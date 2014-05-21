@@ -81,9 +81,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5d593f1421717a4eb9bc6759d38680d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetScale: {x: 400, y: .00999999978, z: 400}
-  growSpeed: 8
-  fadeSpeed: .00999999978
+  targetScale: {x: 600, y: .00999999978, z: 600}
+  growSpeed: .800000012
+  fadeSpeed: 2
   originalMaterial: {fileID: 2100000, guid: 445f3485bcf615f4f8bab8dc59e8126f, type: 2}
 --- !u!1001 &100100000
 Prefab:

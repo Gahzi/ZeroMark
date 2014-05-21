@@ -51,7 +51,7 @@ public class SniperRifle : ProjectileAbilityBaseScript
             Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.SniperFire01]),
             //Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.PlasmaGunFire02]),
         };
-        reloadClip = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.PlasmaReload01]);
+        reloadClip = Resources.Load<AudioClip>(AudioConstants.CLIP_NAMES[AudioConstants.clip.MachineGunReload02]);
         SetLevel(0);
 
         casing = Resources.Load<ShellCasing>(KBConstants.ObjectConstants.PREFAB_NAMES[KBConstants.ObjectConstants.type.SniperShellCasing]);

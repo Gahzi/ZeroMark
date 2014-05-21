@@ -39,7 +39,7 @@ namespace KBConstants
         public static readonly float pointPercentDropOnDeath = 1.0f;
         public static readonly int levelOneThreshold = 5;
         public static readonly int levelTwoThreshold = 29;
-        public static readonly int decalLifetime = 5;
+        public static readonly int decalLifetime = 10;
         public static readonly int explosionChaffAmount = 3; // Amount of chaff is this value ^ 3
         public static readonly int explosionParticleAmount = 5000;
         public static readonly int defaultAOElifetime = 1;
@@ -84,9 +84,9 @@ namespace KBConstants
             {type.RocketLevel1, 200},
             {type.RocketLevel2, 200},
 
-            {type.LightCannonLevel0, 40},
-            {type.LightCannonLevel1, 40},
-            {type.LightCannonLevel2, 44},
+            {type.LightCannonLevel0, 60},
+            {type.LightCannonLevel1, 60},
+            {type.LightCannonLevel2, 70},
 
             {type.HomingRocketLevel0, 35},
             {type.HomingRocketLevel1, 150},
@@ -269,7 +269,7 @@ namespace KBConstants
             {clip.MachineGunFire02, "sounds/cyberstorm select/cuts/machinegun_triple_01"},
             {clip.RocketFire01, "sounds/cyberstorm select/gun single shots/rocket-07"},
             {clip.MachineGunReload01, "sounds/cyberstorm select/reload/machine-sequence-03"},
-            {clip.MachineGunReload02, "sounds/cyberstorm select/reload/machine-sequence-04"},
+            {clip.MachineGunReload02, "sounds/cyberstorm select/reload/zm_audio_reload_01"},
             {clip.PlasmaReload01, "sounds/cyberstorm select/reload/tr_2-reployservo-01"},
             {clip.ItemPickup01, "sounds/cyberstorm select/item attach/interface-servos-06"},
             {clip.LightCannonFire01, "sounds/cyberstorm select/cuts/laserfire_01"},
