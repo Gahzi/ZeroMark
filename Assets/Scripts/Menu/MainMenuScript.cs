@@ -25,6 +25,10 @@ public class MainMenuScript : Photon.MonoBehaviour
     private int gameTypeInt = 0;
 	private string[] gameTypeStrings = { "DataPulse", "Deathmatch"};
 
+    private int playerTypeInt = 0;
+    private string[] playerTypeStrings = { "Player", "Spectator"};
+
+
     GUIContent[] mapComboBoxList;
     private ComboBoxGUI mapComboBoxControl;// = new ComboBox();
     private GUIStyle listStyle = new GUIStyle();
@@ -47,13 +51,6 @@ public class MainMenuScript : Photon.MonoBehaviour
 
     private void Start()
     {
-        //mapComboBoxList = new GUIContent[6];
-        //mapComboBoxList[0] = new GUIContent("Floating City 3");
-        //mapComboBoxList[1] = new GUIContent("Floating City 4");
-        //mapComboBoxList[2] = new GUIContent("Floating City 5");
-        //mapComboBoxList[3] = new GUIContent("Floating City 6");
-        //mapComboBoxList[4] = new GUIContent("Floating City 7");
-        //mapComboBoxList[5] = new GUIContent("Floating City 8");
 
         mapComboBoxList = new GUIContent[2];
         mapComboBoxList[0] = new GUIContent("Floating City 7");
@@ -131,10 +128,18 @@ public class MainMenuScript : Photon.MonoBehaviour
         GUILayout.EndHorizontal();
         GUILayout.Space(25);
 
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("Player Type: ");
+        GUILayout.FlexibleSpace();
+        playerTypeInt = GUILayout.Toolbar(playerTypeInt, playerTypeStrings);
+        GUILayout.EndHorizontal();
+
         if (GUILayout.Button("Next"))
         {
             if (!playerName.Trim().Equals(""))
             {
+                Hashtable customPlayerProperties = new Hashtable() { { "PlayerType", playerTypeInt }};
+                PhotonNetwork.player.SetCustomProperties(customPlayerProperties);
                 currentGUIMethod = "join";
                 PhotonNetwork.playerName = playerName;
                 OpenServerBrowser();

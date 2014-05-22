@@ -125,8 +125,18 @@ public class GameManager : Photon.MonoBehaviour
 
         if (PhotonNetwork.connected)
         {
-            Team nextTeam = Team.None;
-            GameManager.Instance.CreateObject((int)ObjectConstants.type.Player, Vector3.zero, Quaternion.identity, (int)nextTeam);
+            PlayerMode plyrMode = (PlayerMode)PhotonNetwork.player.customProperties["PlayerType"];
+
+            if (plyrMode == PlayerMode.Player)
+            {
+                Team nextTeam = Team.None;
+                GameManager.Instance.CreateObject((int)ObjectConstants.type.Player, Vector3.zero, Quaternion.identity, (int)nextTeam);
+            }
+            else if (plyrMode == PlayerMode.Spectator)
+            {
+                Team nextTeam = Team.None;
+                GameManager.Instance.CreateObject((int)ObjectConstants.type.Spectator, Vector3.zero, Quaternion.identity, (int)nextTeam);
+            }
         }
 
         gameType = (GameType)PhotonNetwork.room.customProperties["GameType"];
@@ -290,6 +300,12 @@ public class GameManager : Photon.MonoBehaviour
                     newPlayer.photonView.RPC("Setup", PhotonTargets.AllBuffered, PhotonNetwork.player, (int)newTeam);
                     newPlayer.photonView.RPC("SwitchType", PhotonTargets.AllBuffered, "SpawnCore", 0);
                     return newPlayerObject;
+                }
+
+            case ObjectConstants.type.Spectator:
+                {
+                    GameObject newSpectatorObject = (GameObject)GameObject.Instantiate(Resources.Load(ObjectConstants.PREFAB_NAMES[ObjectConstants.type.Spectator]));
+                    return newSpectatorObject;
                 }
 
             case ObjectConstants.type.KillTagBlue:

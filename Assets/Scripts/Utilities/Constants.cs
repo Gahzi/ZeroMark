@@ -4,6 +4,7 @@ namespace KBConstants
 {
     public enum Team { Red = 0, Blue = 1, None = 2 };
 
+    public enum PlayerMode { Player = 0, Spectator = 1 };
     public enum PlayerType { mech, drone, tank, core };
 
     public class StringConstants
@@ -121,7 +122,7 @@ namespace KBConstants
     {
         public enum type
         {
-            Player, Gamepad, Item, PlayerCamera, BasicRigidbodyCube,
+            Player, Spectator, Gamepad, Item, PlayerCamera, BasicRigidbodyCube,
             MachinegunBulletLevel0, MachinegunBulletLevel1, MachinegunBulletLevel2,
             RocketBulletLevel0, RocketBulletLevel1, RocketBulletLevel2,
             PlasmaBulletLevel0, PlasmaBulletLevel1, PlasmaBulletLevel2,
@@ -143,6 +144,7 @@ namespace KBConstants
         private static readonly IDictionary<type, string> prefabNames = new Dictionary<type, string>
         {
             {type.Player,"Characters/PlayerLocal"},
+            {type.Spectator, "Characters/SpectatorLocal"},
 			{type.Gamepad, "Gamepads/Gamepad"},
             {type.Item, "Items/Item"},
             {type.PlayerCamera, "Cameras/Player Camera"},
