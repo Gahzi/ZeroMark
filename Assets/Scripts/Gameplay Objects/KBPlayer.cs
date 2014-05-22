@@ -1329,7 +1329,11 @@ public class KBPlayer : KBControllableGameObject
         ammoHud.SetActive(false);
         gameObject.GetComponent<BoxCollider>().enabled = true;
 
-        Camera.main.GetComponent<ScreenShake>().StopShake();
+        if (photonView.isMine)
+        {
+            Camera.main.GetComponent<ScreenShake>().StopShake();
+
+        }
         transform.position = GameObject.FindGameObjectWithTag("Prespawn").transform.position;
         health = coreBaseHealth;
 
