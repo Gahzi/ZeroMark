@@ -241,6 +241,7 @@ public class KBPlayer : KBControllableGameObject
     {
         base.Start();
 
+
         playerCamera = Camera.main.GetComponent<KBCamera>();
 
         #region Resource & reference loading
@@ -1334,7 +1335,11 @@ public class KBPlayer : KBControllableGameObject
         ammoHud.SetActive(false);
         gameObject.GetComponent<BoxCollider>().enabled = true;
 
-        Camera.main.GetComponent<ScreenShake>().StopShake();
+        if (photonView.isMine)
+        {
+            Camera.main.GetComponent<ScreenShake>().StopShake();
+        }
+        
         transform.position = GameObject.FindGameObjectWithTag("Prespawn").transform.position;
         health = coreBaseHealth;
 
