@@ -1462,9 +1462,6 @@ public class KBPlayer : KBControllableGameObject
                         SetActiveIfFound(transform, "LightCannon", false);
                         SetActiveIfFound(transform, "PlasmaGun", false);
                         SetActiveIfFound(transform, "MachineGun", false);
-                        SetActiveIfFound(transform, "LightCannonL", false);
-                        SetActiveIfFound(transform, "PlasmaGunL", false);
-                        SetActiveIfFound(transform, "ShotgunL", true);
 
                         break;
 
@@ -1473,9 +1470,6 @@ public class KBPlayer : KBControllableGameObject
                         SetActiveIfFound(transform, "LightCannon", true);
                         SetActiveIfFound(transform, "PlasmaGun", false);
                         SetActiveIfFound(transform, "MachineGun", false);
-                        SetActiveIfFound(transform, "LightCannonL", true);
-                        SetActiveIfFound(transform, "PlasmaGunL", false);
-                        SetActiveIfFound(transform, "ShotgunL", false);
 
                         break;
 
@@ -1484,9 +1478,6 @@ public class KBPlayer : KBControllableGameObject
                         SetActiveIfFound(transform, "LightCannon", false);
                         SetActiveIfFound(transform, "PlasmaGun", true);
                         SetActiveIfFound(transform, "MachineGun", false);
-                        SetActiveIfFound(transform, "LightCannonL", false);
-                        SetActiveIfFound(transform, "PlasmaGunL", true);
-                        SetActiveIfFound(transform, "ShotgunL", false);
 
                         break;
 
@@ -1506,10 +1497,7 @@ public class KBPlayer : KBControllableGameObject
                         SetActiveIfFound(transform, "PlasmaGun", false);
                         SetActiveIfFound(transform, "LightCannon", false);
                         SetActiveIfFound(transform, "SniperRifle", false);
-                        SetActiveIfFound(transform, "MachineGunL", true);
-                        SetActiveIfFound(transform, "PlasmaGunL", false);
-                        SetActiveIfFound(transform, "LightCannonL", false);
-                        SetActiveIfFound(transform, "SniperRifleL", false);
+
                         break;
 
                     case 1:
@@ -1517,10 +1505,6 @@ public class KBPlayer : KBControllableGameObject
                         SetActiveIfFound(transform, "PlasmaGun", true);
                         SetActiveIfFound(transform, "LightCannon", false);
                         SetActiveIfFound(transform, "SniperRifle", false);
-                        SetActiveIfFound(transform, "MachineGunL", false);
-                        SetActiveIfFound(transform, "PlasmaGunL", true);
-                        SetActiveIfFound(transform, "LightCannonL", false);
-                        SetActiveIfFound(transform, "SniperRifleL", false);
                         break;
 
                     case 2:
@@ -1528,10 +1512,7 @@ public class KBPlayer : KBControllableGameObject
                         SetActiveIfFound(transform, "PlasmaGun", false);
                         SetActiveIfFound(transform, "SniperRifle", true);
                         SetActiveIfFound(transform, "LightCannon", false);
-                        SetActiveIfFound(transform, "MachineGunL", false);
-                        SetActiveIfFound(transform, "PlasmaGunL", false);
-                        SetActiveIfFound(transform, "LightCannonL", false);
-                        SetActiveIfFound(transform, "SniperRifleL", true);
+
                         break;
 
                     default:
