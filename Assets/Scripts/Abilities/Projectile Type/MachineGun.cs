@@ -6,7 +6,7 @@ public class MachineGun : ProjectileAbilityBaseScript
     #region CONSTANTS
 
     public static float COOLDOWN_0 = 0.550f;
-    public static int RANGE_0 = 100;
+    public static int RANGE_0 = 200;
     public static float RELOAD_TIME_0 = 2.300f;
     public static int CLIP_SIZE_0 = 12;
     public static int BURST_SIZE_0 = 3;
@@ -14,7 +14,7 @@ public class MachineGun : ProjectileAbilityBaseScript
     public static float SPREAD_0 = 0.500f;
 
     public static float COOLDOWN_1 = 0.5335f;
-    public static int RANGE_1 = 100;
+    public static int RANGE_1 = 200;
     public static float RELOAD_TIME_1 = 2.200f;
     public static int CLIP_SIZE_1 = 7;
     public static int BURST_SIZE_1 = 5;
@@ -22,7 +22,7 @@ public class MachineGun : ProjectileAbilityBaseScript
     public static float SPREAD_1 = 0.550f;
 
     public static float COOLDOWN_2 = 0.520f;
-    public static int RANGE_2 = 100;
+    public static int RANGE_2 = 200;
     public static float RELOAD_TIME_2 = 2.100f;
     public static int CLIP_SIZE_2 = 7;
     public static int BURST_SIZE_2 = 5;
