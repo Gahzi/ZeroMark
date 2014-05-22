@@ -36,9 +36,9 @@ AudioSource:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   serializedVersion: 3
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 0
-  m_Volume: 1
+  m_audioClip: {fileID: 8300000, guid: c998b0775c27e9d41b90f7df2e1f59a9, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: .888000011
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -48,9 +48,9 @@ AudioSource:
   MaxDistance: 500
   Pan2D: 0
   rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
+  BypassEffects: 1
+  BypassListenerEffects: 1
+  BypassReverbZones: 1
   rolloffCustomCurve:
     serializedVersion: 2
     m_Curve:
@@ -97,7 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a992f642c4b92b3478d2613eacf811e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bgm: {fileID: 8300000, guid: 63b29e6cfcea3f044b702d74c8f01484, type: 3}
+  bgm: {fileID: 8300000, guid: c998b0775c27e9d41b90f7df2e1f59a9, type: 3}
   clips: []
   dataPulseStage1: {fileID: 8300000, guid: 8b75395775f50fb4abf4c11fce0079c5, type: 3}
   dataPulseStage2: {fileID: 8300000, guid: f82375609712a494aa1a00f02da836e4, type: 3}
