@@ -13,9 +13,9 @@ SceneSettings:
 --- !u!104 &2
 RenderSettings:
   m_Fog: 1
-  m_FogColor: {r: .218460649, g: .129595578, b: .375, a: 1}
+  m_FogColor: {r: 0, g: 0, b: 0, a: 1}
   m_FogMode: 3
-  m_FogDensity: .0170000009
+  m_FogDensity: .075000003
   m_LinearFogStart: -0
   m_LinearFogEnd: 295.519989
   m_AmbientLight: {r: 0, g: 0, b: 0, a: .701960802}
@@ -67838,7 +67838,7 @@ AudioSource:
   m_GameObject: {fileID: 1492969331}
   m_Enabled: 1
   serializedVersion: 3
-  m_audioClip: {fileID: 8300000, guid: 440859f8c730f5e478495ab6c90e5cdb, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -68135,7 +68135,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e653d08d21ce9453591b1dc2100fdfcd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  intensity: .670000017
+  intensity: 2
   threshhold: .200000003
   blurSpread: 19.8700008
   separableBlurShader: {fileID: 4800000, guid: e97c14fbb5ea04c3a902cc533d7fc5d1, type: 3}
@@ -68179,7 +68179,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: .300000012
-  far clip plane: 15
+  far clip plane: 5000
   field of view: 40
   orthographic: 0
   orthographic size: 5
@@ -72967,7 +72967,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1590843302
 Transform:
   m_ObjectHideFlags: 0

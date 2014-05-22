@@ -203,30 +203,30 @@ public class GameManager : Photon.MonoBehaviour
 
                 case GameState.InGame:
                     gameTime += Time.deltaTime;
-                    timeToNextPulse -= Time.deltaTime;
 
-                    if (timeToNextPulse <= 10.00001f)
+                    switch (gameType)
                     {
-                        AudioManager a = AudioManager.Instance;
-                        a.StartDataPulseSFX();
+                        case GameType.DataPulse:
+                            timeToNextPulse -= Time.deltaTime;
+                            if (timeToNextPulse <= 10.00001f)
+                            {
+                                AudioManager a = AudioManager.Instance;
+                                a.StartDataPulseSFX();
+                            }
+
+                            break;
+
+                        case GameType.Deathmatch:
+                            break;
+
+                        case GameType.CapturePoint:
+                            break;
+
+                        default:
+                            break;
                     }
 
                     CheckGameOver();
-
-                    //switch (gameType)
-                    //{
-                    //    case GameType.CapturePoint:
-                    //        break;
-
-                    //    case GameType.DataPulse:
-                    //        break;
-
-                    //    case GameType.Deathmatch:
-                    //        break;
-
-                    //    default:
-                    //        break;
-                    //}
 
                     redHeldPointTotal = 0;
                     blueHeldPointTotal = 0;
@@ -262,7 +262,7 @@ public class GameManager : Photon.MonoBehaviour
                     {
                         Camera.main.GetComponent<KBCamera>().quitButton.SetActive(true);
                     }
-                    
+
                     break;
 
                 default:
@@ -274,7 +274,6 @@ public class GameManager : Photon.MonoBehaviour
         {
             GameManager.TakeScreenshot(1);
         }
-
     }
 
     public GameObject CreateObject(int type, Vector3 position, Quaternion rotation, int newTeam)
@@ -333,39 +332,37 @@ public class GameManager : Photon.MonoBehaviour
     {
         Team winningTeam = (Team)winTeam;
 
-        switch(winningTeam)
+        switch (winningTeam)
         {
             case Team.Red:
-            {
-                Debug.Log("Red won");
-                localPlayer.acceptingInputs = false;
-                Camera.main.GetComponent<KBCamera>().quitButton.SetActive(true);
-                Camera.main.GetComponent<KBCamera>().redWinsText.gameObject.SetActive(true);
-                state = GameState.EndGame;
-                break;
-            }
-                
-            case Team.Blue:
-            {
-                Debug.Log("Blue won");
-                localPlayer.acceptingInputs = false;
-                Camera.main.GetComponent<KBCamera>().quitButton.SetActive(true);
-                Camera.main.GetComponent<KBCamera>().blueWinsText.gameObject.SetActive(true);
-                state = GameState.EndGame;
-                break;    
+                {
+                    Debug.Log("Red won");
+                    localPlayer.acceptingInputs = false;
+                    Camera.main.GetComponent<KBCamera>().quitButton.SetActive(true);
+                    Camera.main.GetComponent<KBCamera>().redWinsText.gameObject.SetActive(true);
+                    state = GameState.EndGame;
+                    break;
+                }
 
-            }
-                
+            case Team.Blue:
+                {
+                    Debug.Log("Blue won");
+                    localPlayer.acceptingInputs = false;
+                    Camera.main.GetComponent<KBCamera>().quitButton.SetActive(true);
+                    Camera.main.GetComponent<KBCamera>().blueWinsText.gameObject.SetActive(true);
+                    state = GameState.EndGame;
+                    break;
+                }
+
             case Team.None:
-            {
-                Debug.Log("Tie");
-                localPlayer.acceptingInputs = false;
-                Camera.main.GetComponent<KBCamera>().quitButton.SetActive(true);
-                Camera.main.GetComponent<KBCamera>().tieText.gameObject.SetActive(true);
-                state = GameState.EndGame;
-                break;
-            }
-                
+                {
+                    Debug.Log("Tie");
+                    localPlayer.acceptingInputs = false;
+                    Camera.main.GetComponent<KBCamera>().quitButton.SetActive(true);
+                    Camera.main.GetComponent<KBCamera>().tieText.gameObject.SetActive(true);
+                    state = GameState.EndGame;
+                    break;
+                }
         }
     }
 
