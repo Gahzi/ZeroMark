@@ -363,7 +363,11 @@ public class GameManager : Photon.MonoBehaviour
             case Team.Blue:
                 {
                     Debug.Log("Blue won");
-                    localPlayer.acceptingInputs = false;
+
+                    if (localPlayer != null)
+                    {
+                        localPlayer.acceptingInputs = false;
+                    }
                     Camera.main.GetComponent<KBCamera>().quitButton.SetActive(true);
                     Camera.main.GetComponent<KBCamera>().blueWinsText.gameObject.SetActive(true);
                     state = GameState.EndGame;

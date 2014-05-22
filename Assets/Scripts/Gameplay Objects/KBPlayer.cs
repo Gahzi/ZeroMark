@@ -423,18 +423,13 @@ public class KBPlayer : KBControllableGameObject
             TakeDamage(stats.health / 2);
         }
 
-        //if (Input.GetKeyDown(KeyCode.Alpha1))
-        //{
-        //    currentPoints += 5;
-        //}
-        //if (Input.GetKeyDown(KeyCode.Alpha3))
-        //{
-        //    GenerateKillTags(currentPoints, transform.position);
-        //}
-
-        if (Input.GetKeyDown(KeyCode.F1))
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            Application.LoadLevel(0);
+            currentPoints += 5;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            GenerateKillTags(currentPoints, transform.position);
         }
 
         if (Input.GetButtonDown("ToggleController"))
@@ -1334,7 +1329,11 @@ public class KBPlayer : KBControllableGameObject
         ammoHud.SetActive(false);
         gameObject.GetComponent<BoxCollider>().enabled = true;
 
-        Camera.main.GetComponent<ScreenShake>().StopShake();
+        if (photonView.isMine)
+        {
+            Camera.main.GetComponent<ScreenShake>().StopShake();
+
+        }
         transform.position = GameObject.FindGameObjectWithTag("Prespawn").transform.position;
         health = coreBaseHealth;
 
