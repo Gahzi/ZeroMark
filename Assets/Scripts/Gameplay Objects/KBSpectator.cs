@@ -13,7 +13,7 @@ public class KBSpectator : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         attachedCamera = gameObject.GetComponent<Camera>();
-	
+        GameObject.Find("GlobalAudio").GetComponent<AudioSource>().mute = false;
 	}
 	
 	// Update is called once per frame
