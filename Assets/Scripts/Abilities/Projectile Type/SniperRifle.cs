@@ -7,7 +7,7 @@ public class SniperRifle : ProjectileAbilityBaseScript
     #region CONSTANTS
 
     public static float COOLDOWN_0 = 1.20f;
-    public static int RANGE_0 = 100;
+    public static int RANGE_0 = 200;
     public static float RELOAD_TIME_0 = 1.7f;
     public static int CLIP_SIZE_0 = 1;
     public static int BURST_SIZE_0 = 1;
@@ -15,7 +15,7 @@ public class SniperRifle : ProjectileAbilityBaseScript
     public static float SPREADMAX_0 = 0.0f;
 
     public static float COOLDOWN_1 = 1.10f;
-    public static int RANGE_1 = 100;
+    public static int RANGE_1 = 200;
     public static float RELOAD_TIME_1 = 1.5f;
     public static int CLIP_SIZE_1 = 1;
     public static int BURST_SIZE_1 = 1;
@@ -24,7 +24,7 @@ public class SniperRifle : ProjectileAbilityBaseScript
     public static float SPREADMAX_1 = 0.0f;
 
     public static float COOLDOWN_2 = 0.90f;
-    public static int RANGE_2 = 100;
+    public static int RANGE_2 = 200;
     public static float RELOAD_TIME_2 = 1.3f;
     public static int CLIP_SIZE_2 = 1;
     public static int BURST_SIZE_2 = 1;

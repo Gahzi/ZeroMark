@@ -6,7 +6,7 @@ public class RockatLauncher : ProjectileAbilityBaseScript
     #region CONSTANTS
 
     public static float COOLDOWN_0 = 1.0f;
-    public static int RANGE_0 = 100;
+    public static int RANGE_0 = 300;
     public static float RELOAD_TIME_0 = 3.5f;
     public static int CLIP_SIZE_0 = 1;
     public static int BURST_SIZE_0 = 1;
@@ -14,7 +14,7 @@ public class RockatLauncher : ProjectileAbilityBaseScript
     public static float SPREAD_0 = 5.0f;
 
     public static float COOLDOWN_1 = 0.8f;
-    public static int RANGE_1 = 100;
+    public static int RANGE_1 = 300;
     public static float RELOAD_TIME_1 = 3.5f;
     public static int CLIP_SIZE_1 = 1;
     public static int BURST_SIZE_1 = 1;
@@ -22,7 +22,7 @@ public class RockatLauncher : ProjectileAbilityBaseScript
     public static float SPREAD_1 = 5.0f;
 
     public static float COOLDOWN_2 = 0.6f;
-    public static int RANGE_2 = 100;
+    public static int RANGE_2 = 300;
     public static float RELOAD_TIME_2 = 2.5f;
     public static int CLIP_SIZE_2 = 3;
     public static int BURST_SIZE_2 = 1;

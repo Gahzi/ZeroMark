@@ -6,7 +6,7 @@ public class HeavyCannon : ProjectileAbilityBaseScript
     #region CONSTANTS
 
     public static float COOLDOWN_0 = 0.100f;
-    public static int RANGE_0 = 100;
+    public static int RANGE_0 = 200;
     public static float RELOAD_TIME_0 = 2.300f;
     public static int CLIP_SIZE_0 = 20;
     public static int BURST_SIZE_0 = 2;
@@ -14,7 +14,7 @@ public class HeavyCannon : ProjectileAbilityBaseScript
     public static float SPREAD_0 = 1.000f;
 
     public static float COOLDOWN_1 = 0.0750f;
-    public static int RANGE_1 = 100;
+    public static int RANGE_1 = 200;
     public static float RELOAD_TIME_1 = 2.000f;
     public static int CLIP_SIZE_1 = 30;
     public static int BURST_SIZE_1 = 3;
@@ -22,7 +22,7 @@ public class HeavyCannon : ProjectileAbilityBaseScript
     public static float SPREAD_1 = 1.000f;
 
     public static float COOLDOWN_2 = 0.100f;
-    public static int RANGE_2 = 100;
+    public static int RANGE_2 = 200;
     public static float RELOAD_TIME_2 = 1.800f;
     public static int CLIP_SIZE_2 = 45;
     public static int BURST_SIZE_2 = 4;
