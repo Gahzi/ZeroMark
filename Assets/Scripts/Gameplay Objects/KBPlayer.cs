@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using XInputDotNetPure;
 
 [RequireComponent(typeof(PhotonView))]
 [RequireComponent(typeof(CharacterController))]
@@ -62,17 +61,6 @@ public class KBPlayer : KBControllableGameObject
     #endregion CORE
 
     #endregion CONSTANTS
-
-    #region GamepadParameters
-
-    public bool useController;
-    private bool playerIndexSet = false;
-    public PlayerIndex playerIndex;
-    public GamePadState gamepadState;
-    public GamePadState gamepadPrevState;
-    public float stickDeadzone;
-
-    #endregion GamepadParameters
 
     #region TempRegion
 
@@ -380,31 +368,7 @@ public class KBPlayer : KBControllableGameObject
             {
                 playerPositionOnScreen = Camera.main.WorldToScreenPoint(transform.position);
                 mousePlayerDiff = playerPositionOnScreen - mousePos;
-                if (useController)
-                {
-                    if (!playerIndexSet || !gamepadPrevState.IsConnected)
-                    {
-                        for (int i = 0; i < 4; ++i)
-                        {
-                            PlayerIndex testPlayerIndex = (PlayerIndex)i;
-                            GamePadState testState = GamePad.GetState(testPlayerIndex);
-                            if (testState.IsConnected)
-                            {
-                                Debug.Log(string.Format("GamePad found {0}", testPlayerIndex));
-                                playerIndex = testPlayerIndex;
-                                playerIndexSet = true;
-                            }
-                        }
-                    }
-
-                    gamepadPrevState = gamepadState;
-                    gamepadState = GamePad.GetState(playerIndex);
-                    ControlGamepad();
-                }
-                else
-                {
-                    ControlKBAM();
-                }
+                ControlKBAM();
             }
         }
         else
@@ -418,11 +382,6 @@ public class KBPlayer : KBControllableGameObject
         if (Input.GetKeyDown(KeyCode.T))
         {
             TakeDamage(stats.health);
-        }
-
-        if (Input.GetButtonDown("ToggleController"))
-        {
-            useController = !useController;
         }
 
         if (currentPoints < GameConstants.levelOneThreshold)
@@ -739,190 +698,6 @@ public class KBPlayer : KBControllableGameObject
             timeInBankZone = 0.0f;
             bankIndicator.SetActive(false);
         }
-    }
-
-    private void ControlGamepad()
-    {
-        if (!Screen.lockCursor)
-        {
-            Screen.lockCursor = true;
-        }
-        if (Screen.showCursor)
-        {
-            Screen.showCursor = false;
-        }
-
-        #region Movement
-
-        float modifiedMoveSpeed = 0;
-        if (tankStyleMove)
-        {
-            float accel = 0;
-            float decel = 0;
-            float friction = 0;
-            float reverseSpeed = 0;
-            switch (type)
-            {
-                case PlayerType.drone:
-                    accel = droneAccel;
-                    decel = dronePowerDecel;
-                    friction = droneFriction;
-                    reverseSpeed = droneReverseSpeedFraction;
-                    break;
-
-                case PlayerType.tank:
-                    accel = tankAccel;
-                    decel = tankPowerDecel;
-                    friction = tankFriction;
-                    reverseSpeed = tankReverseSpeedFraction;
-                    break;
-
-                case PlayerType.core:
-                    accel = coreAccel;
-                    decel = corePowerDecel;
-                    friction = coreFriction;
-                    reverseSpeed = coreReverseSpeedFraction;
-                    break;
-            }
-
-            // Movement
-            if (gamepadState.ThumbSticks.Left.Y > stickDeadzone)
-            {
-                forwardAccel = Mathf.Lerp(forwardAccel, 1.0f, accel);
-            }
-            else if (gamepadState.ThumbSticks.Left.Y < stickDeadzone && gamepadState.ThumbSticks.Left.Y > -stickDeadzone)
-            {
-                forwardAccel = Mathf.Lerp(forwardAccel, 0.0f, friction);
-            }
-            else if (gamepadState.ThumbSticks.Left.Y < -stickDeadzone)
-            {
-                forwardAccel = Mathf.Lerp(forwardAccel, -reverseSpeed, decel);
-            }
-            modifiedMoveSpeed = movespeed * forwardAccel * collisionStopMod;
-            charController.SimpleMove(lowerBody.transform.forward * modifiedMoveSpeed);
-            if (collisionStopMod == 0)
-            {
-                forwardAccel = 0;
-            }
-
-            // Rotation
-            lowerBody.transform.Rotate(Vector3.up, gamepadState.ThumbSticks.Left.X * lowerbodyRotateSpeed * Time.deltaTime);
-            Quaternion newRot = Quaternion.LookRotation(new Vector3(gamepadState.ThumbSticks.Right.X, 0, gamepadState.ThumbSticks.Right.Y));
-            upperBody.transform.rotation = Quaternion.Lerp(upperBody.transform.rotation, newRot, upperbodyRotateSpeed * Time.deltaTime);
-        }
-        else
-        {
-            // Movement
-            Vector3 m = Vector3.zero;
-
-            float x, y;
-
-            if (gamepadState.ThumbSticks.Left.Y > stickDeadzone || gamepadState.ThumbSticks.Left.Y < -stickDeadzone)
-            {
-                y = gamepadState.ThumbSticks.Left.Y;
-            }
-            else
-            {
-                y = 0;
-            }
-
-            if (gamepadState.ThumbSticks.Left.X > stickDeadzone || gamepadState.ThumbSticks.Left.X < -stickDeadzone)
-            {
-                x = gamepadState.ThumbSticks.Left.X;
-            }
-            else
-            {
-                x = 0;
-            }
-
-            m = new Vector3(x, 0, y);
-            modifiedMoveSpeed = movespeed;
-            charController.SimpleMove(m.normalized * modifiedMoveSpeed);
-
-            //Rotation
-            Quaternion newRot = Quaternion.LookRotation(new Vector3(gamepadState.ThumbSticks.Right.X, 0, gamepadState.ThumbSticks.Right.Y));
-            upperBody.transform.rotation = Quaternion.Lerp(upperBody.transform.rotation, newRot, upperbodyRotateSpeed * Time.deltaTime);
-            if (m.normalized != Vector3.zero)
-            {
-                Quaternion bottomRotation = Quaternion.LookRotation(m.normalized);
-                lowerBody.transform.rotation = Quaternion.Lerp(lowerBody.transform.rotation, bottomRotation, lowerbodyRotateSpeed * Time.deltaTime);
-            }
-        }
-
-        #endregion Movement
-
-        #region Weapons
-
-        if (guns.Length > 0)
-        {
-            if ((gamepadState.Triggers.Left != 0 || gamepadState.Triggers.Right != 0))
-            {
-                if (gamepadState.Triggers.Right > 0)
-                {
-                    if (guns[0].ammo <= 0 || gamepadState.Buttons.X == ButtonState.Pressed)
-                    {
-                        int[] reloadingGuns = { 0 };
-                        photonView.RPC("Reload", PhotonTargets.All, reloadingGuns);
-                    }
-                    else
-                    {
-                        if (guns[0].available)
-                        {
-                            int[] shootingGuns = { 0 };
-                            float[] speeds = { modifiedMoveSpeed };
-                            photonView.RPC("Fire", PhotonTargets.All, shootingGuns, speeds);
-                        }
-                    }
-                }
-                if (gamepadState.Buttons.RightShoulder == ButtonState.Pressed && guns.Length > 1)
-                {
-                    if (guns[1].ammo <= 0)
-                    {
-                        guns[1].ammo = 0;
-                        int[] reloadingGuns = { 1 };
-                        photonView.RPC("Reload", PhotonTargets.All, reloadingGuns);
-                    }
-                    else
-                    {
-                        if (guns[1].available)
-                        {
-                            int[] shootingGuns = { 1 };
-                            float[] speeds = { modifiedMoveSpeed };
-                            photonView.RPC("Fire", PhotonTargets.All, shootingGuns, speeds);
-                        }
-                    }
-                }
-            }
-
-            //if (gamepadState.Buttons.LeftShoulder == ButtonState.Pressed)
-            //{
-            //    int[] reloadingGuns = { 0 };
-            //    photonView.RPC("Reload", PhotonTargets.All, reloadingGuns);
-            //}
-
-            //if (gamepadState.Buttons.RightShoulder == ButtonState.Pressed)
-            //{
-            //    int[] reloadingGuns = { 1 };
-            //    photonView.RPC("Reload", PhotonTargets.All, reloadingGuns);
-            //}
-        }
-
-        if (gamepadState.Buttons.Start == ButtonState.Pressed)
-        {
-            if (GUIManager.Instance.state.Equals(GUIManager.GUIManagerState.Hidden))
-            {
-                GUIManager.Instance.state = GUIManager.GUIManagerState.ShowingStatTab;
-            }
-        }
-        else
-        {
-            if (GUIManager.Instance.state.Equals(GUIManager.GUIManagerState.ShowingStatTab))
-            {
-                GUIManager.Instance.state = GUIManager.GUIManagerState.Hidden;
-            }
-        }
-
-        #endregion Weapons
     }
 
     private void ControlKBAM()
@@ -1630,19 +1405,5 @@ public class KBPlayer : KBControllableGameObject
         }
 
         return foundGameObjects;
-    }
-
-    public IEnumerator GamepadVibrateTriggers(float time)
-    {
-        GamePad.SetVibration(playerIndex, gamepadState.Triggers.Left, gamepadState.Triggers.Right);
-        yield return new WaitForSeconds(time);
-        GamePad.SetVibration(playerIndex, 0, 0);
-    }
-
-    public IEnumerator GamepadVibrateAll(float time, float magnitude)
-    {
-        GamePad.SetVibration(playerIndex, magnitude, magnitude);
-        yield return new WaitForSeconds(time);
-        GamePad.SetVibration(playerIndex, 0, 0);
     }
 }

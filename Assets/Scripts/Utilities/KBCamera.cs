@@ -112,24 +112,13 @@ public class KBCamera : MonoBehaviour
             #region CameraShiftingTowardLookDirection
 
             float x, y;
-            if (attachedPlayer.useController)
-            {
-                x = attachedPlayer.gamepadState.ThumbSticks.Right.X;
-                y = attachedPlayer.gamepadState.ThumbSticks.Right.Y;
-            }
-            else
-            {
-                x = -attachedPlayer.mousePlayerDiff.x;
-                y = -attachedPlayer.mousePlayerDiff.y;
-            }
+            x = -attachedPlayer.mousePlayerDiff.x;
+            y = -attachedPlayer.mousePlayerDiff.y;
 
             Vector3 lookDir = new Vector3(x, 0, y).normalized;
             float moveMagnitude = 1.5f;
-            if (attachedPlayer.useController && y < 0)
-            {
-                moveMagnitude = 2.5f;
-            }
-            else if (y > 0)
+            
+            if(y > 0)
             {
                 moveMagnitude = 2.5f;
             }

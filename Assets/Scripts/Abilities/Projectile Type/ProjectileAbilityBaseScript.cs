@@ -2,7 +2,6 @@
 using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
-using XInputDotNetPure;
 
 /// <summary>
 /// Basic projectile ability class. Fires attached ammo type @ firerate
@@ -264,10 +263,6 @@ public abstract class ProjectileAbilityBaseScript : AbilitySlotBaseScript
             {
                 yield return new WaitForEndOfFrame();
             }
-
-            StartCoroutine(owner.GamepadVibrateTriggers(0.1250f));
-
-
         }
 
     }
